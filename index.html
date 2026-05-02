@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CampusConnect UI | Student Marketplace for University of Ibadan</title>
+  <!-- Bootstrap 5 + Icons + Google Fonts + AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #ffffff;
+      color: #1a2c2e;
+      overflow-x: hidden;
+    }
+
+    /* soft, earthy accent palette — no aggressive blues */
+    :root {
+      --accent: #2c7a5e;
+      --accent-light: #eaf7f0;
+      --accent-dark: #1f5e48;
+      --warm-gray: #f8f9fa;
+      --card-border: #eef2f0;
+      --text-dark: #1e2a2c;
+      --text-muted: #5a6e6f;
+    }
+
+    .btn-primary-custom {
+      background-color: var(--accent);
+      border: none;
+      padding: 12px 30px;
+      font-weight: 600;
+      border-radius: 40px;
+      transition: all 0.2s ease;
+      color: white;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 6px rgba(44, 122, 94, 0.15);
+    }
+
+    .btn-primary-custom:hover {
+      background-color: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(44, 122, 94, 0.2);
+      color: white;
+    }
+
+    .btn-outline-custom {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      padding: 10px 24px;
+      border-radius: 40px;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .btn-outline-custom:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      color: var(--accent-dark);
+    }
+
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
+      padding: 16px 0;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: #2d3e40;
+      margin: 0 8px;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .hero-section {
+      padding: 100px 0 80px;
+      background: linear-gradient(135deg, #ffffff 0%, #fefcf5 100%);
+    }
+
+    .hero-title {
+      font-size: 3.3rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-dark);
+    }
+
+    .badge-verify {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      padding: 5px 14px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .step-card {
+      background: white;
+      border-radius: 32px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.25s;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.03);
+      height: 100%;
+    }
+
+    .step-card:hover {
+      transform: translateY(-8px);
+      border-color: #ddece6;
+      box-shadow: 0 20px 30px -12px rgba(44, 122, 94, 0.08);
+    }
+
+    .step-icon {
+      font-size: 2.8rem;
+      background: var(--accent-light);
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin: 0 auto 1.2rem;
+      color: var(--accent);
+    }
+
+    .benefit-list li {
+      margin-bottom: 12px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .benefit-list i {
+      color: var(--accent);
+      font-size: 1.2rem;
+      width: 28px;
+    }
+
+    .testimonial-card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.8rem;
+      border: 1px solid var(--card-border);
+      transition: 0.2s;
+      height: 100%;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .stat-number {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .footer {
+      background-color: #fafaf8;
+      border-top: 1px solid #ecece6;
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      margin-right: 28px;
+      font-size: 0.9rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    .category-badge {
+      background: #f5f7f5;
+      padding: 8px 20px;
+      border-radius: 60px;
+      font-weight: 500;
+      color: #2f5147;
+      transition: 0.2s;
+    }
+
+    .category-badge:hover {
+      background: var(--accent-light);
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.3rem;
+      }
+      .hero-section {
+        padding: 60px 0 50px;
+      }
+      .step-card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#"><i class="fas fa-handshake me-2" style="color: #2c7a5e;"></i>CampusConnect UI</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#how-it-works">How it works</a></li>
+        <li class="nav-item"><a class="nav-link" href="#benefits">Benefits</a></li>
+        <li class="nav-item"><a class="nav-link" href="#testimonials">Trust</a></li>
+        <li class="nav-item ms-lg-2"><a class="btn btn-outline-custom btn-sm" href="#"><i class="fas fa-user-plus me-1"></i>Sign up</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section" id="home">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-up" data-aos-duration="800">
+        <div class="badge-verify mb-3"><i class="fas fa-shield-alt me-1"></i> verified @ui.edu.ng only</div>
+        <h1 class="hero-title">Buy and sell used items safely on UI campus</h1>
+        <p class="lead text-muted mt-3">Only verified University of Ibadan students. No strangers. No scams. Meet face-to-face on campus with complete trust.</p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="#" class="btn btn-primary-custom"><i class="fas fa-envelope me-2"></i>Get Started – Sign Up with Your UI Email</a>
+          <a href="#how-it-works" class="btn btn-outline-custom">Learn more <i class="fas fa-arrow-right ms-2"></i></a>
+        </div>
+        <div class="mt-4">
+          <span class="text-muted small"><i class="fas fa-check-circle text-success me-1"></i> 500+ UI students already saving money</span>
+        </div>
+      </div>
+      <div class="col-lg-6 text-center" data-aos="fade-left" data-aos-duration="800" data-aos-delay="100">
+        <div class="bg-white p-4 rounded-4 shadow-sm d-inline-block">
+          <img src="https://placehold.co/500x400/eef2f0/2c7a5e?text=Campus+Marketplace+UI" alt="Student marketplace illustration" class="img-fluid rounded-3" style="max-height: 340px; object-fit: cover;">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats row / social proof -->
+<div class="container mt-2 mb-4">
+  <div class="row text-center g-4 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-number">35k+</div>
+        <div class="text-muted small">UI Students eligible</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-number">₦0</div>
+        <div class="text-muted small">Listing fees (basic)</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-number">100%</div>
+        <div class="text-muted small">Hall-verified trust badge</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-number">⚡️</div>
+        <div class="text-muted small">Meet @ Library / Cafeteria</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- How It Works Section + extra safety preview -->
+<section id="how-it-works" class="py-5">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="badge-verify mb-2">simple & secure</span>
+      <h2 class="display-6 fw-semibold">How CampusConnect works</h2>
+      <p class="text-muted col-lg-7 mx-auto">Designed for UI students, by a UI student. Zero complexity, maximum safety.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-envelope-open-text"></i></div>
+          <h5 class="fw-bold">1. Sign up with UI email</h5>
+          <p class="text-muted">Use your @ui.edu.ng or @stu.ui.edu.ng — only current students get access. Instant verification.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-camera-retro"></i></div>
+          <h5 class="fw-bold">2. Post what you want to sell</h5>
+          <p class="text-muted">Add photos, set a price, choose category (textbooks, electronics, furniture, etc.). Takes 1 minute.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-handshake"></i></div>
+          <h5 class="fw-bold">3. Meet on campus & exchange</h5>
+          <p class="text-muted">Chat, agree on a spot (library, faculty lobby, common room). Cash or transfer — no delivery stress.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits + Extra safety card -->
+<section id="benefits" class="py-5 bg-light" style="background-color: #fefcf8 !important;">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <span class="badge-verify mb-2">why students love us</span>
+        <h2 class="fw-semibold mb-3">The smarter way to sell & shop on campus</h2>
+        <ul class="benefit-list list-unstyled mt-4">
+          <li><i class="fas fa-user-check"></i> <strong>Only UI students (verified)</strong> – No outsiders, no anonymous profiles.</li>
+          <li><i class="fas fa-building"></i> <strong>Meet at library or cafeteria (safe)</strong> – CCTV areas, open spaces.</li>
+          <li><i class="fas fa-truck-fast"></i> <strong>No delivery fees</strong> – Walk 5 minutes, save money and hassle.</li>
+          <li><i class="fas fa-eye-slash"></i> <strong>Free to browse</strong> – No hidden costs, just fair transactions.</li>
+          <li><i class="fas fa-star"></i> <strong>Hall verification badge</strong> – Confirm your residence, earn trust and sell faster.</li>
+        </ul>
+        <div class="mt-4">
+          <a href="#" class="btn btn-primary-custom">Join 500+ UI students →</a>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="bg-white p-4 rounded-4 shadow-sm border">
+          <div class="d-flex gap-3 mb-3">
+            <i class="fas fa-shield-alt fa-2x" style="color: var(--accent);"></i>
+            <div>
+              <h5 class="fw-semibold">No strangers, only Badgers</h5>
+              <p class="text-muted mb-0">Every user is tied to a UI email. If something goes wrong — you know their hall, department and can report instantly. We’ve built a zero-tolerance moderation system.</p>
+            </div>
+          </div>
+          <hr>
+          <div class="d-flex gap-3">
+            <i class="fas fa-gavel fa-2x" style="color: var(--accent);"></i>
+            <div>
+              <h5 class="fw-semibold">Transaction peace of mind</h5>
+              <p class="text-muted mb-0">Our in-app reporting and rating system keeps campus commerce honest. Top sellers get a 'Trusted Seller' badge.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Categories Section (extra for engagement) -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <h3 class="fw-semibold">What's selling right now 🔥</h3>
+      <p class="text-muted">From past questions to new tech — find what you need.</p>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center gap-3 mb-5" data-aos="fade-up" data-aos-delay="100">
+      <span class="category-badge"><i class="fas fa-book me-1"></i> Textbooks</span>
+      <span class="category-badge"><i class="fas fa-mobile-alt me-1"></i> Electronics</span>
+      <span class="category-badge"><i class="fas fa-couch me-1"></i> Furniture</span>
+      <span class="category-badge"><i class="fas fa-tshirt me-1"></i> Clothing</span>
+      <span class="category-badge"><i class="fas fa-wrench me-1"></i> Appliances</span>
+      <span class="category-badge"><i class="fas fa-bicycle me-1"></i> Sporting goods</span>
+    </div>
+
+    <div class="row g-4" data-aos="fade-up">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <span class="badge bg-white text-dark border px-3 py-1 rounded-pill">📖 Like New</span>
+              <small class="text-muted">2 hrs ago</small>
+            </div>
+            <h5 class="card-title mt-2">ECO 211 - Principles of Economics</h5>
+            <p class="card-text text-muted small">Barely used, no highlights. Original price ₦8000, selling for ₦3500</p>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span class="fw-bold text-success">₦3,500</span>
+              <span class="text-muted"><i class="fas fa-map-marker-alt"></i> Mellanby Hall</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <span class="badge bg-white text-dark border px-3 py-1 rounded-pill">📱 Good</span>
+              <small class="text-muted">Yesterday</small>
+            </div>
+            <h5 class="card-title mt-2">HP Laptop Core i5 / 8GB RAM</h5>
+            <p class="card-text text-muted small">Perfect for programming, Microsoft office. Battery lasts 4hrs.</p>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span class="fw-bold text-success">₦145,000</span>
+              <span class="text-muted"><i class="fas fa-map-marker-alt"></i> Independence Hall</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <span class="badge bg-white text-dark border px-3 py-1 rounded-pill">🛋️ Fair</span>
+              <small class="text-muted">3 days ago</small>
+            </div>
+            <h5 class="card-title mt-2">Desk + Office Chair</h5>
+            <p class="card-text text-muted small">Wooden desk, sturdy chair. Moving out of Queen Elizabeth Hall.</p>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span class="fw-bold text-success">₦12,000</span>
+              <span class="text-muted"><i class="fas fa-map-marker-alt"></i> Queen Elizabeth</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <a href="#" class="btn btn-outline-custom">Browse all listings <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials & Trust Section -->
+<section id="testimonials" class="py-5" style="background-color: #fafaf6;">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h3 class="fw-semibold">Trusted by UI students, from 100L to final year</h3>
+      <p class="text-muted">Real stories inside the campus bubble</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="testimonial-card">
+          <div class="d-flex gap-2 mb-3">
+            <i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i>
+          </div>
+          <p class="fst-italic">“I sold my law textbooks in 2 days. No Jiji stress, and the buyer stays in my hostel. Perfect for last-minute cash before holidays.”</p>
+          <div class="d-flex align-items-center mt-3">
+            <i class="fas fa-user-circle fs-1 me-2 text-secondary"></i>
+            <div><strong>Tolani A.</strong><br><span class="text-muted small">Faculty of Law, Independence Hall</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="testimonial-card">
+          <div class="d-flex gap-2 mb-3"><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star-half-alt" style="color: #f5b042;"></i></div>
+          <p class="fst-italic">“I needed a mini-fridge and was scared of scammers. The hall verification on CampusConnect saved me. The seller had a verified badge.”</p>
+          <div class="d-flex align-items-center mt-3">
+            <i class="fas fa-user-circle fs-1 me-2 text-secondary"></i>
+            <div><strong>David O.</strong><br><span class="text-muted small">Engineering, Mellanby Hall</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="testimonial-card">
+          <div class="d-flex gap-2 mb-3"><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i><i class="fas fa-star" style="color: #f5b042;"></i></div>
+          <p class="fst-italic">“Finally a platform just for us. No strangers, no logistics headache. I met the buyer at the library. Simple, fast, and zero fee.”</p>
+          <div class="d-flex align-items-center mt-3">
+            <i class="fas fa-user-circle fs-1 me-2 text-secondary"></i>
+            <div><strong>Precious C.</strong><br><span class="text-muted small">Economics, Idia Hall</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA (Join 500+ UI Students) -->
+<section class="py-5">
+  <div class="container">
+    <div class="bg-white rounded-5 p-5 text-center shadow-sm border" data-aos="zoom-in" data-aos-duration="700">
+      <i class="fas fa-users fa-3x mb-3" style="color: var(--accent);"></i>
+      <h2 class="fw-bold">Join 500+ UI students already saving money</h2>
+      <p class="text-muted col-md-8 mx-auto mb-4">Start buying and selling within your community. No random people, only fellow Badgers.</p>
+      <a href="#" class="btn btn-primary-custom btn-lg"><i class="fas fa-user-graduate me-2"></i>Sign Up Now – It's free</a>
+      <p class="small text-muted mt-3">✅ required: @ui.edu.ng or @stu.ui.edu.ng email</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <a class="navbar-brand" href="#"><i class="fas fa-handshake me-2"></i>CampusConnect UI</a>
+        <p class="text-muted small mt-2">A student-led initiative to make campus commerce safe, affordable, and local.</p>
+      </div>
+      <div class="col-md-8">
+        <div class="footer-links d-flex flex-wrap justify-content-md-end">
+          <a href="#">About</a>
+          <a href="#">How it Works</a>
+          <a href="#">Contact</a>
+          <a href="#">Report Issue</a>
+          <a href="#"><i class="fab fa-instagram me-1"></i> Instagram</a>
+          <a href="#"><i class="fab fa-whatsapp me-1"></i> WhatsApp</a>
+        </div>
+      </div>
+      <div class="col-12 mt-4 text-center text-muted small">
+        © 2026 CampusConnect UI — University of Ibadan. Only for verified students.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 800,
+    easing: 'ease-out-cubic',
+    once: true,
+    offset: 50
+  });
+  // simple smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === "#" || href === "") return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
