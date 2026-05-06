@@ -9,228 +9,55 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/index.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* additional inline styles to ensure consistency for new sections */
+    .insight-card, .safety-card, .ambassador-card {
+      transition: transform 0.2s ease;
     }
-
-    body {
-      font-family: 'Inter', sans-serif;
+    .insight-card:hover, .safety-card:hover, .ambassador-card:hover {
+      transform: translateY(-4px);
+    }
+    .accordion-custom .accordion-button {
       background-color: #ffffff;
-      color: #1a2c2e;
-      overflow-x: hidden;
-    }
-
-    /* soft, earthy accent palette — no aggressive blues */
-    :root {
-      --accent: #2c7a5e;
-      --accent-light: #eaf7f0;
-      --accent-dark: #1f5e48;
-      --warm-gray: #f8f9fa;
-      --card-border: #eef2f0;
-      --text-dark: #1e2a2c;
-      --text-muted: #5a6e6f;
-    }
-
-    .btn-primary-custom {
-      background-color: var(--accent);
+      color: #1f2e2a;
+      font-weight: 600;
       border: none;
-      padding: 12px 30px;
+      box-shadow: none;
+    }
+    .accordion-custom .accordion-button:focus {
+      box-shadow: none;
+      border-color: rgba(44, 122, 94, 0.3);
+    }
+    .accordion-custom .accordion-button:not(.collapsed) {
+      background-color: #f8faf9;
+      color: #2c7a5e;
+    }
+    .trending-badge {
+      background: #fef3e2;
+      color: #b45309;
+      font-size: 0.75rem;
       font-weight: 600;
       border-radius: 40px;
-      transition: all 0.2s ease;
-      color: white;
-      font-size: 0.95rem;
-      box-shadow: 0 2px 6px rgba(44, 122, 94, 0.15);
+      padding: 4px 10px;
     }
-
-    .btn-primary-custom:hover {
-      background-color: var(--accent-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(44, 122, 94, 0.2);
-      color: white;
-    }
-
-    .btn-outline-custom {
-      background: transparent;
-      border: 1.5px solid var(--accent);
-      color: var(--accent);
-      padding: 10px 24px;
-      border-radius: 40px;
-      font-weight: 500;
-      transition: 0.2s;
-    }
-
-    .btn-outline-custom:hover {
-      background: var(--accent-light);
-      transform: translateY(-2px);
-      border-color: var(--accent);
-      color: var(--accent-dark);
-    }
-
-    .navbar {
-      background-color: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
-      padding: 16px 0;
-    }
-
-    .navbar-brand {
-      font-weight: 700;
-      font-size: 1.6rem;
-      color: var(--accent);
-      letter-spacing: -0.3px;
-    }
-
-    .nav-link {
-      font-weight: 500;
-      color: #2d3e40;
-      margin: 0 8px;
-    }
-
-    .nav-link:hover {
-      color: var(--accent);
-    }
-
-    .hero-section {
-      padding: 100px 0 80px;
-      background: linear-gradient(135deg, #ffffff 0%, #fefcf5 100%);
-    }
-
-    .hero-title {
-      font-size: 3.3rem;
-      font-weight: 700;
-      line-height: 1.2;
-      color: var(--text-dark);
-    }
-
-    .badge-verify {
-      background: var(--accent-light);
-      color: var(--accent-dark);
-      padding: 5px 14px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      display: inline-block;
-    }
-
-    .step-card {
-      background: white;
-      border-radius: 32px;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      transition: all 0.25s;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.03);
-      height: 100%;
-    }
-
-    .step-card:hover {
-      transform: translateY(-8px);
-      border-color: #ddece6;
-      box-shadow: 0 20px 30px -12px rgba(44, 122, 94, 0.08);
-    }
-
-    .step-icon {
-      font-size: 2.8rem;
-      background: var(--accent-light);
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      margin: 0 auto 1.2rem;
-      color: var(--accent);
-    }
-
-    .benefit-list li {
-      margin-bottom: 12px;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .benefit-list i {
-      color: var(--accent);
-      font-size: 1.2rem;
-      width: 28px;
-    }
-
-    .testimonial-card {
-      background: white;
-      border-radius: 28px;
-      padding: 1.8rem;
-      border: 1px solid var(--card-border);
-      transition: 0.2s;
-      height: 100%;
-    }
-
-    .stat-card {
-      text-align: center;
-      padding: 1rem;
-    }
-
-    .stat-number {
-      font-size: 2.3rem;
-      font-weight: 800;
-      color: var(--accent);
-    }
-
-    .footer {
-      background-color: #fafaf8;
-      border-top: 1px solid #ecece6;
-      padding: 3rem 0 2rem;
-    }
-
-    .footer-links a {
-      text-decoration: none;
-      color: var(--text-muted);
-      margin-right: 28px;
-      font-size: 0.9rem;
-    }
-
-    .footer-links a:hover {
-      color: var(--accent);
-    }
-
-    .category-badge {
-      background: #f5f7f5;
-      padding: 8px 20px;
-      border-radius: 60px;
-      font-weight: 500;
-      color: #2f5147;
-      transition: 0.2s;
-    }
-
-    .category-badge:hover {
-      background: var(--accent-light);
-      transform: scale(0.98);
-    }
-
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.3rem;
-      }
-      .hero-section {
-        padding: 60px 0 50px;
-      }
-      .step-card {
-        padding: 1.5rem;
-      }
+    .savings-highlight {
+      background: linear-gradient(120deg, #e6f9f0 0%, #d0f0e4 100%);
+      border-left: 4px solid #2c7a5e;
     }
   </style>
 </head>
 <body>
-
+<div id="particles-js"></div>
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg fixed-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
   <div class="container">
-    <a class="navbar-brand" href="#"><i class="fas fa-handshake me-2" style="color: #2c7a5e;"></i>CampusConnect UI</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-handshake me-2" style="color: #2c7a5e;"></i>
+      <span class="brand-text">CampusConnect UI</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarMain">
@@ -239,7 +66,7 @@
         <li class="nav-item"><a class="nav-link" href="#how-it-works">How it works</a></li>
         <li class="nav-item"><a class="nav-link" href="#benefits">Benefits</a></li>
         <li class="nav-item"><a class="nav-link" href="#testimonials">Trust</a></li>
-        <li class="nav-item ms-lg-2"><a class="btn btn-outline-custom btn-sm" href="#"><i class="fas fa-user-plus me-1"></i>Sign up</a></li>
+        <li class="nav-item ms-lg-2"><a class="btn btn-outline-custom btn-sm" href="/auth/auth.html"><i class="fas fa-user-plus me-1"></i>Sign up</a></li>
       </ul>
     </div>
   </div>
@@ -254,7 +81,7 @@
         <h1 class="hero-title">Buy and sell used items safely on UI campus</h1>
         <p class="lead text-muted mt-3">Only verified University of Ibadan students. No strangers. No scams. Meet face-to-face on campus with complete trust.</p>
         <div class="d-flex flex-wrap gap-3 mt-4">
-          <a href="#" class="btn btn-primary-custom"><i class="fas fa-envelope me-2"></i>Get Started – Sign Up with Your UI Email</a>
+          <a href="/auth/auth.html" class="btn btn-primary-custom"><i class="fas fa-envelope me-2"></i>Get Started – Sign Up with Your UI Email</a>
           <a href="#how-it-works" class="btn btn-outline-custom">Learn more <i class="fas fa-arrow-right ms-2"></i></a>
         </div>
         <div class="mt-4">
@@ -349,13 +176,13 @@
           <li><i class="fas fa-star"></i> <strong>Hall verification badge</strong> – Confirm your residence, earn trust and sell faster.</li>
         </ul>
         <div class="mt-4">
-          <a href="#" class="btn btn-primary-custom">Join 500+ UI students →</a>
+          <a href="/auth/auth.html" class="btn btn-primary-custom">Join 500+ UI students →</a>
         </div>
       </div>
       <div class="col-lg-6" data-aos="fade-left">
         <div class="bg-white p-4 rounded-4 shadow-sm border">
           <div class="d-flex gap-3 mb-3">
-            <i class="fas fa-shield-alt fa-2x" style="color: var(--accent);"></i>
+            <i class="fas fa-shield-alt fa-2x" style="color: var(--accent, #2c7a5e);"></i>
             <div>
               <h5 class="fw-semibold">No strangers, only Badgers</h5>
               <p class="text-muted mb-0">Every user is tied to a UI email. If something goes wrong — you know their hall, department and can report instantly. We’ve built a zero-tolerance moderation system.</p>
@@ -363,7 +190,7 @@
           </div>
           <hr>
           <div class="d-flex gap-3">
-            <i class="fas fa-gavel fa-2x" style="color: var(--accent);"></i>
+            <i class="fas fa-gavel fa-2x" style="color: var(--accent, #2c7a5e);"></i>
             <div>
               <h5 class="fw-semibold">Transaction peace of mind</h5>
               <p class="text-muted mb-0">Our in-app reporting and rating system keeps campus commerce honest. Top sellers get a 'Trusted Seller' badge.</p>
@@ -375,7 +202,7 @@
   </div>
 </section>
 
-<!-- Popular Categories Section (extra for engagement) -->
+<!-- Popular Categories Section + extra listings (more content) -->
 <section class="py-5">
   <div class="container">
     <div class="text-center mb-4" data-aos="fade-up">
@@ -391,6 +218,7 @@
       <span class="category-badge"><i class="fas fa-bicycle me-1"></i> Sporting goods</span>
     </div>
 
+    <!-- First row of listings -->
     <div class="row g-4" data-aos="fade-up">
       <div class="col-md-4">
         <div class="card border-0 shadow-sm h-100 rounded-4">
@@ -441,6 +269,59 @@
         </div>
       </div>
     </div>
+
+    <!-- Second row: More fresh listings (extra content) -->
+    <div class="row g-4 mt-4" data-aos="fade-up" data-aos-delay="150">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <span class="badge bg-white text-dark border px-3 py-1 rounded-pill">🔬 Almost New</span>
+              <small class="text-muted">5 hrs ago</small>
+            </div>
+            <h5 class="card-title mt-2">PHY 115 Lab Manual + Practical Guide</h5>
+            <p class="card-text text-muted small">Clean copy, solved exercises. Great for 100L practicals.</p>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span class="fw-bold text-success">₦2,200</span>
+              <span class="text-muted"><i class="fas fa-map-marker-alt"></i> Sultan Bello Hall</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <span class="badge bg-white text-dark border px-3 py-1 rounded-pill">🎧 Like New</span>
+              <small class="text-muted">1 day ago</small>
+            </div>
+            <h5 class="card-title mt-2">Sony WH-CH510 Wireless Headphones</h5>
+            <p class="card-text text-muted small">Original box, 6 months used. Great battery life.</p>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span class="fw-bold text-success">₦27,500</span>
+              <span class="text-muted"><i class="fas fa-map-marker-alt"></i> Idia Hall</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <span class="badge bg-white text-dark border px-3 py-1 rounded-pill">📚 Bundle</span>
+              <small class="text-muted">2 days ago</small>
+            </div>
+            <h5 class="card-title mt-2">Complete ACC 201 & 202 past questions</h5>
+            <p class="card-text text-muted small">Printed & spiral bound. Includes solutions.</p>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span class="fw-bold text-success">₦3,000</span>
+              <span class="text-muted"><i class="fas fa-map-marker-alt"></i> Nnamdi Azikiwe Hall</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="text-center mt-4">
       <a href="#" class="btn btn-outline-custom">Browse all listings <i class="fas fa-arrow-right ms-1"></i></a>
     </div>
@@ -491,14 +372,201 @@
   </div>
 </section>
 
+<!-- NEW: Price & Savings Insight + Trending Items (extra content) -->
+<section class="py-4">
+  <div class="container">
+    <div class="row g-4 align-items-stretch" data-aos="fade-up">
+      <div class="col-md-6">
+        <div class="bg-white p-4 rounded-4 shadow-sm h-100 savings-highlight">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <i class="fas fa-chart-line fa-2x" style="color: #2c7a5e;"></i>
+            <h4 class="fw-semibold mb-0">Students save 38% on average</h4>
+          </div>
+          <p class="text-muted">Compared to brand-new prices or external marketplaces. Our internal data shows that textbooks are 42% cheaper, electronics 33% cheaper, and furniture up to 50% less.</p>
+          <div class="mt-2">
+            <span class="trending-badge"><i class="fas fa-clock me-1"></i> Updated weekly</span>
+            <span class="trending-badge ms-2"><i class="fas fa-wallet me-1"></i> ₦2.4M saved by UI community</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="bg-white p-4 rounded-4 shadow-sm h-100">
+          <h5 class="fw-semibold"><i class="fas fa-fire" style="color: #e67e22;"></i> Top 5 most wanted items this week</h5>
+          <ul class="list-unstyled mt-3">
+            <li class="mb-2"><i class="fas fa-book text-success me-2"></i> CSC 301 past questions & materials — <strong>24 requests</strong></li>
+            <li class="mb-2"><i class="fas fa-laptop-code me-2"></i> HP/ Dell laptops (i5 & above) — <strong>18+ active buyers</strong></li>
+            <li class="mb-2"><i class="fas fa-tshirt me-2"></i> Faculty/society branded hoodies — <strong>11 listings wanted</strong></li>
+            <li class="mb-2"><i class="fas fa-microphone me-2"></i> Bluetooth speakers / mini soundbox — <strong>9 buyers</strong></li>
+            <li class="mb-2"><i class="fas fa-shoe-prints me-2"></i> Clean native/casual shoes (size 39-43) — <strong>trending 🔥</strong></li>
+          </ul>
+          <div class="alert alert-light border rounded-3 mt-2 p-2 text-center small">“Post what you need — get matched in 48h”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Safety Tips Section (extra) -->
+<section class="py-4">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <span class="badge-verify mb-2">stay safe</span>
+      <h3 class="fw-semibold">Transaction safety made simple</h3>
+      <p class="text-muted">CampusConnect promotes secure meetups & verified identities</p>
+    </div>
+    <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-md-3 col-sm-6">
+        <div class="safety-card text-center p-3 bg-white rounded-4 shadow-sm h-100">
+          <i class="fas fa-map-marker-alt fa-2x mb-2" style="color: #2c7a5e;"></i>
+          <h6 class="fw-bold">📍 Meet at UI hotspots</h6>
+          <p class="small text-muted">Library, cafeterias, faculty buildings or halls with CCTV.</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="safety-card text-center p-3 bg-white rounded-4 shadow-sm h-100">
+          <i class="fas fa-credit-card fa-2x mb-2" style="color: #2c7a5e;"></i>
+          <h6 class="fw-bold">Inspect before payment</h6>
+          <p class="small text-muted">Always test electronics/check book condition before transfer.</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="safety-card text-center p-3 bg-white rounded-4 shadow-sm h-100">
+          <i class="fas fa-comment-dots fa-2x mb-2" style="color: #2c7a5e;"></i>
+          <h6 class="fw-bold">Report suspicious users</h6>
+          <p class="small text-muted">One-click report button & supportive moderation team.</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="safety-card text-center p-3 bg-white rounded-4 shadow-sm h-100">
+          <i class="fas fa-id-badge fa-2x mb-2" style="color: #2c7a5e;"></i>
+          <h6 class="fw-bold">Hall verification badge</h6>
+          <p class="small text-muted">Users with verified halls earn 3x more trust & faster sales.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Campus Ambassador & community (extra) -->
+<section class="py-4">
+  <div class="container">
+    <div class="row align-items-center g-4 bg-white rounded-4 shadow-sm p-4" data-aos="fade-up">
+      <div class="col-md-8">
+        <h4 class="fw-semibold"><i class="fas fa-star-of-life me-2" style="color:#e67e22;"></i> Become a Hall Ambassador</h4>
+        <p class="text-muted mb-2">Earn campus rewards and build your CV while helping fellow students trade safely. Ambassadors get exclusive CampusConnect merch, gift vouchers, and leadership recognition.</p>
+        <p class="small fst-italic">✨ “I’m the Idia Hall rep — I’ve hosted 2 meetup events and got a data bonus!” — <strong>Adaeze N.</strong></p>
+        <a href="#" class="btn btn-sm btn-outline-custom mt-1">Apply for ambassador program →</a>
+      </div>
+      <div class="col-md-4 text-center">
+        <i class="fas fa-users fa-4x" style="color: #c3e0d5;"></i>
+        <div class="mt-2"><span class="badge bg-success text-white">7 halls already enrolled</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Accordion Section (extra content) -->
+<section class="py-5" style="background-color: #f9fbf8;">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <h3 class="fw-semibold">Got questions? We've got answers.</h3>
+      <p class="text-muted">Everything you need to know about CampusConnect UI</p>
+    </div>
+    <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-lg-8">
+        <div class="accordion accordion-custom" id="faqAccordion">
+          <div class="accordion-item border-0 mb-3 shadow-sm rounded-4">
+            <h2 class="accordion-header">
+              <button class="accordion-button rounded-4" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                How do I verify my UI email?
+              </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted">Simply sign up with your @ui.edu.ng or @stu.ui.edu.ng address. You'll receive a one-time OTP to confirm ownership. It takes less than 2 minutes and grants you full access.</div>
+            </div>
+          </div>
+          <div class="accordion-item border-0 mb-3 shadow-sm rounded-4">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed rounded-4" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                Is there any fee for selling or buying?
+              </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted">No! CampusConnect is completely free for basic listings. We may introduce premium featured listings in future, but core marketplace remains free for UI students.</div>
+            </div>
+          </div>
+          <div class="accordion-item border-0 mb-3 shadow-sm rounded-4">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed rounded-4" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                How do I report a scam or bad transaction?
+              </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted">Use the in-app “Report” button on any listing or chat. Our moderation team reviews within hours. Repeated violations lead to permanent ban from the platform.</div>
+            </div>
+          </div>
+          <div class="accordion-item border-0 mb-3 shadow-sm rounded-4">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed rounded-4" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                Can I sell items if I'm a fresher?
+              </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted">Absolutely! Any verified student can post items. Freshmen often sell A-level materials, past questions, or dorm essentials.</div>
+            </div>
+          </div>
+          <div class="accordion-item border-0 shadow-sm rounded-4">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed rounded-4" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                What if an item is not as described?
+              </button>
+            </h2>
+            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted">Always inspect before payment. If seller misrepresented, you can leave a rating and report the user. Our dispute team mediates when necessary to ensure fairness.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact & Support Section (original) -->
+<section class="py-5" id="contact">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <h3 class="fw-semibold">📞 Need help? Reach out</h3>
+      <p class="text-muted">We're here to assist you with any questions or concerns.</p>
+    </div>
+    <div class="row justify-content-center g-4" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-md-5">
+        <div class="bg-white p-4 rounded-4 shadow-sm border text-center h-100">
+          <i class="fas fa-phone-alt fa-2x mb-3" style="color: #2c7a5e;"></i>
+          <h5 class="fw-semibold">Call or WhatsApp</h5>
+          <p class="mb-0"><a href="tel:+2348012345678" class="text-decoration-none" style="color: #1f5e4a;">+234 801 234 5678</a></p>
+          <small class="text-muted">Mon–Fri, 9am–5pm</small>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="bg-white p-4 rounded-4 shadow-sm border text-center h-100">
+          <i class="fas fa-envelope fa-2x mb-3" style="color: #2c7a5e;"></i>
+          <h5 class="fw-semibold">Email us</h5>
+          <p class="mb-0"><a href="mailto:support@campusconnect.ui" class="text-decoration-none" style="color: #1f5e4a;">support@campusconnect.ui</a></p>
+          <small class="text-muted">We reply within 24 hours</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Final CTA (Join 500+ UI Students) -->
 <section class="py-5">
   <div class="container">
     <div class="bg-white rounded-5 p-5 text-center shadow-sm border" data-aos="zoom-in" data-aos-duration="700">
-      <i class="fas fa-users fa-3x mb-3" style="color: var(--accent);"></i>
+      <i class="fas fa-users fa-3x mb-3" style="color: #2c7a5e;"></i>
       <h2 class="fw-bold">Join 500+ UI students already saving money</h2>
       <p class="text-muted col-md-8 mx-auto mb-4">Start buying and selling within your community. No random people, only fellow Badgers.</p>
-      <a href="#" class="btn btn-primary-custom btn-lg"><i class="fas fa-user-graduate me-2"></i>Sign Up Now – It's free</a>
+      <a href="/auth/auth.html" class="btn btn-primary-custom btn-lg"><i class="fas fa-user-graduate me-2"></i>Sign Up Now – It's free</a>
       <p class="small text-muted mt-3">✅ required: @ui.edu.ng or @stu.ui.edu.ng email</p>
     </div>
   </div>
@@ -515,11 +583,9 @@
       <div class="col-md-8">
         <div class="footer-links d-flex flex-wrap justify-content-md-end">
           <a href="#">About</a>
-          <a href="#">How it Works</a>
-          <a href="#">Contact</a>
-          <a href="#">Report Issue</a>
-          <a href="#"><i class="fab fa-instagram me-1"></i> Instagram</a>
-          <a href="#"><i class="fab fa-whatsapp me-1"></i> WhatsApp</a>
+          <a href="#how-it-works">How it Works</a>
+          <a href="#contact">Contact</a>
+          <a href="/t/report_issue.html">Report Issue</a>
         </div>
       </div>
       <div class="col-12 mt-4 text-center text-muted small">
@@ -532,25 +598,10 @@
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="assets/js/main.js"></script>
 <script>
-  AOS.init({
-    duration: 800,
-    easing: 'ease-out-cubic',
-    once: true,
-    offset: 50
-  });
-  // simple smooth scroll for anchor links
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      const href = this.getAttribute('href');
-      if (href === "#" || href === "") return;
-      const target = document.querySelector(href);
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  });
+
 </script>
 </body>
 </html>

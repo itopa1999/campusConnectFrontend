@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CampusConnect UI · Student Dashboard</title>
+  <!-- Bootstrap 5 + Icons + Google Fonts + AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <style>
+    /* Additional dashboard styles */
+    .dashboard-container {
+      padding-bottom: 5rem;
+      padding-top: 90px !important;
+    }
+    /* Bottom navigation bar (mobile) */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--card-border, #eef2f0);
+      padding: 0.5rem 1rem;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+    }
+    .nav-btn {
+      flex: 1;
+      text-align: center;
+      padding: 0.6rem 0;
+      border-radius: 40px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+    }
+    .nav-btn i {
+      font-size: 1.4rem;
+      margin-bottom: 0.2rem;
+      display: block;
+    }
+    .nav-btn span {
+      font-size: 0.75rem;
+    }
+    .nav-btn.active {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+    }
+    .post-circle {
+      background: var(--accent);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 12px rgba(44,122,94,0.3);
+      margin-top: -20px;
+      border: 3px solid white;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .post-circle:hover {
+      transform: scale(1.05);
+    }
+    /* Desktop buttons row */
+    .desktop-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .desktop-btn {
+      flex: 0 1 200px;
+      padding: 0.8rem 0;
+      border-radius: 60px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      background: white;
+      border: 1px solid var(--card-border);
+      transition: all 0.2s;
+    }
+    .desktop-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .desktop-btn.post-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+    }
+    /* Hide bottom nav on desktop, show on mobile */
+    @media (min-width: 768px) {
+      .bottom-nav {
+        display: none;
+      }
+      .dashboard-container {
+        padding-top: 100px !important;
+      }
+    }
+    @media (max-width: 767px) {
+      .desktop-actions {
+        display: none;
+      }
+      .dashboard-container {
+        padding-bottom: 5rem;
+      }
+      .footer {
+        margin-bottom: 70px;
+      }
+    }
+    .stat-card-sm {
+      background: white;
+      border-radius: 20px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid var(--card-border);
+    }
+    /* Modal styling */
+    .modal-content {
+      border-radius: 28px;
+      border: none;
+    }
+    .modal-header {
+      border-bottom: 1px solid var(--card-border);
+      background: white;
+      border-radius: 28px 28px 0 0;
+    }
+  </style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-handshake me-2" style="color: #2c7a5e;"></i>
+      <span class="brand-text">CampusConnect UI</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle fa-lg"></i> Tolani
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-id-card me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-shield-alt me-2"></i>Verification</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="auth.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Main dashboard content -->
+<div class="container dashboard-container">
+  <!-- Welcome header -->
+  <div class="row mb-4 mt-4" data-aos="fade-up">
+    <div class="col-12">
+      <h2 class="fw-semibold">Welcome back, Tolani 👋</h2>
+      <p class="text-muted">Ready to save money or earn some cash on campus?</p>
+    </div>
+  </div>
+
+  <!-- Desktop action buttons (visible on md+) -->
+  <div class="desktop-actions" data-aos="fade-up" data-aos-delay="100">
+    <div class="desktop-btn" data-mode="stats">📊 My Stats</div>
+    <div class="desktop-btn post-btn" data-mode="post">➕ Post Item</div>
+    <div class="desktop-btn" data-mode="buy">🛍️ Buy</div>
+  </div>
+
+  <!-- Dynamic content area -->
+  <div id="mainContent" data-aos="fade-up" data-aos-delay="150">
+    <!-- Stats/Seller view (default) -->
+    <div id="statsView">
+      <!-- Quick stats row -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-card-sm text-center">
+            <i class="fas fa-box-open fa-2x text-success mb-2"></i>
+            <h3 class="fw-bold">3</h3>
+            <span class="text-muted">Active listings</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card-sm text-center">
+            <i class="fas fa-chart-line fa-2x text-success mb-2"></i>
+            <h3 class="fw-bold">₦12,500</h3>
+            <span class="text-muted">Sales this month</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card-sm text-center">
+            <i class="fas fa-star fa-2x text-warning mb-2"></i>
+            <h3 class="fw-bold">4.8 ★</h3>
+            <span class="text-muted">Trust score</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card-sm text-center">
+            <i class="fas fa-user-check fa-2x text-success mb-2"></i>
+            <h3 class="fw-bold">65%</h3>
+            <span class="text-muted">Profile completion</span>
+            </div>
+        </div>
+      </div>
+
+      <!-- Your active listings -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-semibold">Your active listings</h5>
+        <a href="#" class="small text-decoration-none">View all →</a>
+      </div>
+      <div class="row g-3 mb-5">
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <img src="https://picsum.photos/id/26/300/180" class="card-img-top rounded-top-4" alt="book">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h6 class="fw-semibold">ECO 211 Textbook</h6>
+                <span class="badge bg-light text-dark">Like New</span>
+              </div>
+              <p class="text-success fw-bold mt-2">₦3,500</p>
+              <div class="d-flex justify-content-between small text-muted">
+                <span><i class="far fa-eye"></i> 24 views</span>
+              </div>
+              <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-sm btn-outline-custom flex-fill">Edit</button>
+                <button class="btn btn-sm btn-primary-custom flex-fill">Mark sold</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <img src="https://picsum.photos/id/0/300/180" class="card-img-top rounded-top-4" alt="laptop">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h6 class="fw-semibold">HP Laptop i5/8GB</h6>
+                <span class="badge bg-light text-dark">Good</span>
+              </div>
+              <p class="text-success fw-bold mt-2">₦145,000</p>
+              <div class="d-flex justify-content-between small text-muted">
+                <span><i class="far fa-eye"></i> 58 views</span>
+              </div>
+              <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-sm btn-outline-custom flex-fill">Edit</button>
+                <button class="btn btn-sm btn-primary-custom flex-fill">Mark sold</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <img src="https://picsum.photos/id/20/300/180" class="card-img-top rounded-top-4" alt="desk">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h6 class="fw-semibold">Desk + Office Chair</h6>
+                <span class="badge bg-light text-dark">Fair</span>
+              </div>
+              <p class="text-success fw-bold mt-2">₦12,000</p>
+              <div class="d-flex justify-content-between small text-muted">
+                <span><i class="far fa-eye"></i> 12 views</span>
+              </div>
+              <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-sm btn-outline-custom flex-fill">Edit</button>
+                <button class="btn btn-sm btn-primary-custom flex-fill">Mark sold</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Buy/Marketplace view (hidden initially) -->
+    <div id="buyView" style="display: none;">
+      <!-- Search bar -->
+      <div class="mb-4">
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0 rounded-start-pill"><i class="fas fa-search text-muted"></i></span>
+          <input type="text" class="form-control border-start-0 rounded-end-pill" placeholder="Search textbooks, phones, furniture...">
+        </div>
+      </div>
+      <!-- Categories -->
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <span class="category-badge"><i class="fas fa-book me-1"></i> Textbooks</span>
+        <span class="category-badge"><i class="fas fa-mobile-alt me-1"></i> Electronics</span>
+        <span class="category-badge"><i class="fas fa-couch me-1"></i> Furniture</span>
+        <span class="category-badge"><i class="fas fa-tshirt me-1"></i> Clothing</span>
+      </div>
+      <!-- Listings grid -->
+      <h5 class="fw-semibold mb-3">🔥 Trending near you</h5>
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <img src="https://picsum.photos/id/26/300/180" class="card-img-top rounded-top-4" alt="book">
+            <div class="card-body">
+              <span class="badge bg-light text-dark mb-2">Like New</span>
+              <h6 class="fw-semibold">ECO 211 - Principles of Economics</h6>
+              <p class="text-success fw-bold mt-2">₦3,500</p>
+              <p class="small text-muted"><i class="fas fa-map-marker-alt"></i> Mellanby Hall</p>
+              <button class="btn btn-sm btn-outline-custom w-100">View details</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <img src="https://picsum.photos/id/0/300/180" class="card-img-top rounded-top-4" alt="laptop">
+            <div class="card-body">
+              <span class="badge bg-light text-dark mb-2">Good</span>
+              <h6 class="fw-semibold">HP Laptop Core i5</h6>
+              <p class="text-success fw-bold mt-2">₦145,000</p>
+              <p class="small text-muted"><i class="fas fa-map-marker-alt"></i> Independence Hall</p>
+              <button class="btn btn-sm btn-outline-custom w-100">View details</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <img src="https://picsum.photos/id/20/300/180" class="card-img-top rounded-top-4" alt="desk">
+            <div class="card-body">
+              <span class="badge bg-light text-dark mb-2">Fair</span>
+              <h6 class="fw-semibold">Desk + Office Chair</h6>
+              <p class="text-success fw-bold mt-2">₦12,000</p>
+              <p class="small text-muted"><i class="fas fa-map-marker-alt"></i> Queen Elizabeth</p>
+              <button class="btn btn-sm btn-outline-custom w-100">View details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <a href="#" class="btn btn-outline-custom">Browse all listings →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile bottom navigation -->
+<div class="bottom-nav">
+  <button class="nav-btn" data-mode="stats">
+    <i class="fas fa-chart-simple"></i>
+    <span>Stats</span>
+  </button>
+  <div class="post-circle" data-mode="post">
+    <i class="fas fa-plus"></i>
+  </div>
+  <button class="nav-btn" data-mode="buy">
+    <i class="fas fa-bag-shopping"></i>
+    <span>Buy</span>
+  </button>
+</div>
+
+<!-- Modal for Post Listing -->
+<div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-semibold">Post new item</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="postForm">
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" placeholder="e.g., ECO 211 Textbook" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Price (₦)</label>
+            <input type="number" class="form-control" placeholder="3500" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select class="form-select">
+              <option>Textbooks</option>
+              <option>Electronics</option>
+              <option>Furniture</option>
+              <option>Clothing</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Condition</label>
+            <select class="form-select">
+              <option>Like New</option>
+              <option>Good</option>
+              <option>Fair</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" rows="3" placeholder="Describe your item..."></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Photo</label>
+            <input type="file" class="form-control" accept="image/*">
+          </div>
+          <button type="submit" class="btn btn-primary-custom w-100">Post Listing</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer (same as index but compact) -->
+<footer class="footer mt-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <a class="navbar-brand" href="#"><i class="fas fa-handshake me-2"></i>CampusConnect UI</a>
+        <p class="text-muted small mt-2">Student verified marketplace</p>
+      </div>
+      <div class="col-md-8">
+        <div class="footer-links d-flex flex-wrap justify-content-md-end gap-3">
+          <a href="/t/terms.html">Terms</a>
+          <a href="/t/privacy.html">Privacy</a>
+          <a href="/t/report_issue.html">Report</a>
+        </div>
+      </div>
+      <div class="col-12 mt-4 text-center text-muted small">
+        © 2026 CampusConnect UI — only @ui.edu.ng accounts
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+  // Mode switching logic
+  const statsView = document.getElementById('statsView');
+  const buyView = document.getElementById('buyView');
+  let currentMode = 'stats';
+
+  function setMode(mode) {
+    currentMode = mode;
+    if (mode === 'stats') {
+      statsView.style.display = 'block';
+      buyView.style.display = 'none';
+      document.querySelectorAll('.desktop-btn').forEach(btn => {
+        if (btn.getAttribute('data-mode') === 'stats') btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.getAttribute('data-mode') === 'stats') btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+    } else if (mode === 'buy') {
+      statsView.style.display = 'none';
+      buyView.style.display = 'block';
+      document.querySelectorAll('.desktop-btn').forEach(btn => {
+        if (btn.getAttribute('data-mode') === 'buy') btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.getAttribute('data-mode') === 'buy') btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+    } else if (mode === 'post') {
+      const postModal = new bootstrap.Modal(document.getElementById('postModal'));
+      postModal.show();
+    }
+  }
+
+  // Attach event listeners to desktop buttons
+  document.querySelectorAll('.desktop-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-mode');
+      setMode(mode);
+    });
+  });
+  // Attach to bottom nav buttons
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-mode');
+      setMode(mode);
+    });
+  });
+  document.querySelectorAll('.post-circle').forEach(el => {
+    el.addEventListener('click', () => setMode('post'));
+  });
+
+  // Handle post form submission (demo)
+  document.getElementById('postForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+      showToast('Item listed successfully! It will appear in your active listings.', 'success');
+    bootstrap.Modal.getInstance(document.getElementById('postModal'))?.hide();
+    document.getElementById('postForm')?.reset();
+  });
+
+  // Demo: mark sold buttons
+  document.querySelectorAll('.btn-primary-custom').forEach(btn => {
+    if (btn.textContent.trim() === 'Mark sold') {
+      btn.addEventListener('click', () => showToast('Item marked as sold. Well done!', 'success'));
+    }
+  });
+  // Demo: view details buttons in buy view
+  document.querySelectorAll('#buyView .btn-outline-custom').forEach(btn => {
+    btn.addEventListener('click', () => showToast('Item details view coming soon!', 'info', 2000));
+  });
+</script>
+</body>
+</html>

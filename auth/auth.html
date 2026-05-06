@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Join CampusConnect UI · Sign in or create account</title>
+  <!-- Bootstrap 5 + Icons + Google Fonts (same as main page) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/auth.css">
+  <style>
+    
+  </style>
+</head>
+<body>
+<div id="particles-js"></div>
+<div class="auth-wrapper">
+  <div class="auth-card" data-aos="fade-up" data-aos-duration="800">
+    <div class="text-center mb-3" data-aos="fade-right" data-aos-delay="100">
+      <i class="fas fa-handshake fa-3x" style="color: var(--accent); background: var(--accent-light); padding: 16px; border-radius: 60px;"></i>
+    </div>
+    <!-- Toggle tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-form="login">Sign in</button>
+      <button class="auth-tab" data-form="signup">Create account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="login-form" class="auth-form active-form">
+      <form id="loginFormElement">
+        <div class="mb-3">
+          <label class="form-label text-muted small fw-semibold">Email address (UI email)</label>
+          <input type="email" class="form-control" id="loginEmail" placeholder="you@ui.edu.ng" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label text-muted small fw-semibold">Password</label>
+          <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="rememberCheck" style="border-radius: 6px;">
+            <label class="form-check-label remember-check" for="rememberCheck">Remember me</label>
+          </div>
+          <a href="forget_password.html" class="forgot-link text-decoration-none">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary-custom w-100" id="loginBtn">Sign in →</button>
+      </form>
+      <div class="text-center mt-4">
+        <p class="small text-muted">Protected by UI email verification | <a style="color: var(--accent);" href="index.html">Home</a></p>
+      </div>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div id="signup-form" class="auth-form">
+      <form id="signupFormElement">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-semibold">First name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="John" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-semibold">Last name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Doe" required>
+          </div>
+        </div>
+        <div class="mt-3">
+          <label class="form-label text-muted small fw-semibold">Email address (UI or stu.ui)</label>
+          <input type="email" class="form-control" id="signupEmail" placeholder="you@ui.edu.ng" required>
+        </div>
+        <div class="mt-3">
+          <label class="form-label text-muted small fw-semibold">Phone number (<i class="fab fa-whatsapp me-1"></i>Whatsapp)</label>
+          <input type="tel" class="form-control" id="phoneNumber" placeholder="0803 123 4567" required>
+        </div>
+        <div class="mt-3">
+          <label class="form-label text-muted small fw-semibold">Password</label>
+          <input type="password" class="form-control" id="signupPassword" placeholder="Create a strong password" required>
+        </div>
+        <div class="form-check mt-3 mb-4">
+          <input class="form-check-input" type="checkbox" id="termsCheck" style="border-radius: 6px;">
+          <label class="form-check-label small text-muted" for="termsCheck">
+            I agree to the <a href="/t/terms.html" class="text-decoration-none" style="color: var(--accent);">Terms of Service</a> and <a href="/t/privacy.html" class="text-decoration-none" style="color: var(--accent);">Privacy Policy</a>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary-custom w-100" id="signupBtn">Create free account →</button>
+      </form>
+      <div class="text-center mt-4">
+        <p class="small text-muted">Only current UI students can join | <a style="color: var(--accent);" href="index.html">Home</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+
+// ========== Login with Real Backend (Store in Cookies) ==========
+const loginForm = document.getElementById('loginFormElement');
+const loginBtn = document.getElementById('loginBtn');
+const loginOriginalText = 'Sign in →';
+const LOGIN_URL = `${AUTH_URL}login-user`;
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const rememberMe = document.getElementById('rememberCheck').checked;
+
+  if (!email || !password) {
+    showToast('Please fill in all fields.', 'error');
+    return;
+  }
+
+  // if (!email.endsWith('@ui.edu.ng') && !email.endsWith('@stu.ui.edu.ng')) {
+  //   showToast('Please use a valid @ui.edu.ng or @stu.ui.edu.ng email.', 'error');
+  //   return;
+  // }
+
+  setButtonLoading(loginBtn, true, loginOriginalText);
+
+  try {
+    const response = await fetch(LOGIN_URL, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.is_success === true) {
+      const expiryDays = rememberMe ? 1 : null;
+      setCookie('access_token', result.data.access_token, expiryDays);    
+      setCookie('refresh_token', result.data.refresh_token, expiryDays);    
+      setCookie('user_id', result.data.user_id, expiryDays);           
+      setCookie('is_email_verified', result.data.is_email_verified, expiryDays);
+
+      showToast(result.message || 'Login successful! Redirecting...', 'success');
+
+      loginForm.reset();
+      document.getElementById('rememberCheck').checked = false;
+
+      setTimeout(() => {
+        window.location.href = '/dash/main.html';
+      }, 1000);
+    } else {
+      showToast(result.message || 'Invalid email or password.', 'error');
+    }
+  } catch (err) {
+    console.error('Login error:', err);
+    showToast('Network error. Could not connect to server.', 'error');
+  } finally {
+    setButtonLoading(loginBtn, false, loginOriginalText);
+  }
+});
+
+// ========== Signup with Real Backend ==========
+const signupForm = document.getElementById('signupFormElement');
+const signupBtn = document.getElementById('signupBtn');
+const signupOriginalText = 'Create free account →';
+const REGISTER_URL = `${AUTH_URL}register`;
+
+signupForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Check Terms checkbox
+  const termsChecked = document.getElementById('termsCheck').checked;
+  if (!termsChecked) {
+    showToast('You must agree to the Terms of Service and Privacy Policy.', 'error');
+    return;
+  }
+
+  // Gather fields
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const phone = document.getElementById('phoneNumber').value.trim();
+  const password = document.getElementById('signupPassword').value;
+
+  if (!firstName || !lastName || !email || !phone || !password) {
+    showToast('Please fill in all required fields.', 'error');
+    return;
+  }
+
+  if (password.length < 6) {
+    showToast('Password must be at least 6 characters.', 'error');
+    return;
+  }
+
+  setButtonLoading(signupBtn, true, signupOriginalText);
+
+  try {
+    const response = await fetch(REGISTER_URL, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        phone: phone,
+        password: password
+      })
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.is_success === true) {
+      showToast(result.message || 'Account created successfully! Please check your email for verification.', 'success');
+
+      signupForm.reset();
+      document.getElementById('termsCheck').checked = false;
+
+      // Switch to login tab after a short delay
+      setTimeout(() => {
+        document.querySelector('.auth-tab[data-form="login"]').click();
+        document.getElementById('loginEmail').value = email;
+      }, 1500);
+    } else {
+      showToast(result.message || 'Registration failed. Please try again.', 'error');
+    }
+  } catch (err) {
+    console.error('Signup error:', err);
+    showToast('Network error. Could not connect to server.', 'error');
+  } finally {
+    setButtonLoading(signupBtn, false, signupOriginalText);
+  }
+});
+
+  // ========== Smooth form switching (preserve button states) ==========
+  const tabs = document.querySelectorAll('.auth-tab');
+  const loginFormDiv = document.getElementById('login-form');
+  const signupFormDiv = document.getElementById('signup-form');
+
+  function switchForm(formName) {
+    if (formName === 'login') {
+      loginFormDiv.classList.add('active-form');
+      signupFormDiv.classList.remove('active-form');
+      tabs.forEach(tab => {
+        if (tab.dataset.form === 'login') tab.classList.add('active');
+        else tab.classList.remove('active');
+      });
+    } else {
+      signupFormDiv.classList.add('active-form');
+      loginFormDiv.classList.remove('active-form');
+      tabs.forEach(tab => {
+        if (tab.dataset.form === 'signup') tab.classList.add('active');
+        else tab.classList.remove('active');
+      });
+    }
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const form = tab.dataset.form;
+      switchForm(form);
+    });
+  });
+
+
+</script>
+</body>
+</html>

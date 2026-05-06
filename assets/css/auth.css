@@ -1,0 +1,87 @@
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+.auth-card {
+    background: white;
+    border-radius: 2rem;
+    border: 1px solid var(--card-border, #eef2f0);
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem 1.8rem;
+    transition: all 0.2s;
+}
+.auth-tabs {
+    display: flex;
+    gap: 0.5rem;
+    background: #f8faf7;
+    padding: 0.5rem;
+    border-radius: 60px;
+    margin-bottom: 2rem;
+}
+.auth-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.7rem 0;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    color: var(--text-muted, #5a6e6f);
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+.auth-tab.active {
+    background: var(--accent, #2c7a5e);
+    color: white;
+    box-shadow: 0 2px 8px rgba(44, 122, 94, 0.2);
+}
+.auth-form {
+    display: none;
+}
+.auth-form.active-form {
+    display: block;
+}
+.form-floating > label {
+    font-weight: 400;
+    color: #6c7a7b;
+}
+.form-control, .form-floating input {
+    border-radius: 28px;
+    border: 1px solid var(--card-border, #eef2f0);
+    background: white;
+    padding: 1rem 1.2rem;
+    font-size: 0.95rem;
+}
+.form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.1);
+    outline: none;
+}
+.forgot-link, .remember-check {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.forgot-link:hover {
+    color: var(--accent);
+}
+hr {
+    opacity: 0.4;
+}
+@media (max-width: 480px) {
+    .auth-card {
+    padding: 1.5rem;
+    }
+    .auth-tabs {
+    gap: 0.25rem;
+    }
+    .auth-tab {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    }
+}

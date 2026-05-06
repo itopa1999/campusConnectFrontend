@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CampusConnect · My Profile</title>
+  <!-- Bootstrap 5 + Icons + Google Fonts + AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <style>
+    /* Additional profile styles */
+    .profile-container {
+      padding-top: 100px;
+      padding-bottom: 4rem;
+    }
+    .cover-photo {
+      background: linear-gradient(135deg, #2c7a5e 0%, #1f5e48 100%);
+      height: 160px;
+      border-radius: 24px 24px 0 0;
+      position: relative;
+    }
+    .avatar-wrapper {
+      position: relative;
+      margin-top: -60px;
+      margin-left: 2rem;
+      width: 120px;
+      height: 120px;
+    }
+    .avatar-img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border: 4px solid white;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .edit-avatar-btn {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background: white;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      color: var(--accent);
+    }
+    .profile-card {
+      background: white;
+      border-radius: 28px;
+      border: 1px solid var(--card-border);
+      overflow: hidden;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (min-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .stat-badge {
+      background: var(--warm-gray);
+      border-radius: 20px;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .verification-badge {
+      background: #eaf7f0;
+      color: var(--accent);
+      padding: 0.3rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .info-label {
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .info-value {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+    .edit-profile-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 40px;
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+    }
+    .listing-thumb {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .rating-star {
+      color: #f5b042;
+    }
+    /* No bottom nav on profile page */
+    .footer {
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+<div id="particles-js"></div>
+<!-- Same Navbar as dashboard -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="main.html">
+      <i class="fas fa-handshake me-2" style="color: #2c7a5e;"></i>
+      <span class="brand-text">CampusConnect UI</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <li class="nav-item"><a class="nav-link" href="main.html">Dashboard</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle fa-lg"></i> Tolani
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-id-card me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-shield-alt me-2"></i>Verification</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="auth.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Profile Content -->
+<div class="container profile-container">
+  <div class="row" data-aos="fade-up">
+    <div class="col-lg-4 mb-4">
+      <!-- Sidebar Card -->
+      <div class="profile-card">
+        <div class="cover-photo"></div>
+        <div class="avatar-wrapper">
+          <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Avatar" class="avatar-img">
+          <div class="edit-avatar-btn" title="Change photo">
+            <i class="fas fa-camera fa-sm"></i>
+          </div>
+        </div>
+        <div class="p-4 pt-2">
+          <div class="d-flex justify-content-between align-items-start mt-2">
+            <div>
+              <h3 class="fw-semibold mb-0">Tolani Adebayo</h3>
+              <p class="text-muted small"><i class="fas fa-envelope me-1"></i> tolani.adebayo@stu.ui.edu.ng</p>
+            </div>
+            <span class="verification-badge"><i class="fas fa-check-circle me-1"></i> Verified ID</span>
+          </div>
+          <div class="mt-3">
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-star text-warning me-2"></i>
+              <span class="fw-semibold">4.8 ★</span>
+              <span class="text-muted ms-2">(12 reviews)</span>
+            </div>
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-shopping-bag me-2 text-muted"></i>
+              <span>8 completed transactions</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="fas fa-map-marker-alt me-2 text-muted"></i>
+              <span>UI, Ibadan</span>
+            </div>
+          </div>
+          <button class="edit-profile-btn w-100 mt-4"><i class="fas fa-pen me-2"></i>Edit Profile</button>
+        </div>
+      </div>
+
+      <!-- Contact Info Card -->
+      <div class="profile-card p-4 mt-4">
+        <h6 class="fw-semibold mb-3"><i class="fas fa-address-card me-2"></i>Contact & Academic</h6>
+        <div class="info-row">
+          <span class="info-label"><i class="fab fa-whatsapp me-2"></i>WhatsApp</span>
+          <span class="info-value">+234 812 345 6789</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fas fa-graduation-cap me-2"></i>Department</span>
+          <span class="info-value">Computer Science</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fas fa-building me-2"></i>Faculty</span>
+          <span class="info-value">Science</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fas fa-layer-group me-2"></i>Level</span>
+          <span class="info-value">400 Level</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fas fa-id-card me-2"></i>Matric No.</span>
+          <span class="info-value">19/52XX/001</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <!-- Stats Overview -->
+      <div class="stats-grid mb-4">
+        <div class="stat-badge">
+          <div class="stat-number">12</div>
+          <div class="text-muted small">Total listings</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-number">₦48.5k</div>
+          <div class="text-muted small">Total sales</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-number">3</div>
+          <div class="text-muted small">Active listings</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-number">98%</div>
+          <div class="text-muted small">Response rate</div>
+        </div>
+      </div>
+
+      <!-- Recent Reviews Tab / Activity -->
+      <div class="profile-card p-4 mb-4">
+        <ul class="nav nav-tabs border-0 mb-3" id="profileTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">⭐ Reviews (12)</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#listings" type="button" role="tab">📦 Active Listings</button>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <!-- Reviews Tab -->
+          <div class="tab-pane fade show active" id="reviews">
+            <div class="d-flex gap-3 mb-4">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle" width="48" height="48">
+              <div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="fw-semibold">Michael O.</span>
+                  <div class="rating-star"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                </div>
+                <p class="small text-muted">“Textbook was in perfect condition, fast meetup at Library gate.”</p>
+                <span class="small text-muted">2 days ago</span>
+              </div>
+            </div>
+            <div class="d-flex gap-3 mb-4">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle" width="48" height="48">
+              <div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="fw-semibold">Esther N.</span>
+                  <div class="rating-star"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                </div>
+                <p class="small text-muted">“Great seller, even gave me study tips. Will buy again.”</p>
+                <span class="small text-muted">1 week ago</span>
+              </div>
+            </div>
+            <div class="text-center mt-3">
+              <a href="#" class="small text-decoration-none">See all 12 reviews →</a>
+            </div>
+          </div>
+          <!-- Active Listings Tab -->
+          <div class="tab-pane fade" id="listings">
+            <div class="d-flex align-items-center gap-3 mb-3 pb-2 border-bottom">
+              <img src="https://picsum.photos/id/26/60/60" class="listing-thumb" alt="book">
+              <div class="flex-grow-1">
+                <h6 class="fw-semibold mb-0">ECO 211 Textbook</h6>
+                <p class="small text-muted mb-0">₦3,500 · Like New</p>
+              </div>
+              <span class="badge bg-success bg-opacity-10 text-success">Active</span>
+            </div>
+            <div class="d-flex align-items-center gap-3 mb-3 pb-2 border-bottom">
+              <img src="https://picsum.photos/id/0/60/60" class="listing-thumb" alt="laptop">
+              <div class="flex-grow-1">
+                <h6 class="fw-semibold mb-0">HP Laptop i5/8GB</h6>
+                <p class="small text-muted mb-0">₦145,000 · Good</p>
+              </div>
+              <span class="badge bg-success bg-opacity-10 text-success">Active</span>
+            </div>
+            <div class="d-flex align-items-center gap-3 mb-3 pb-2 border-bottom">
+              <img src="https://picsum.photos/id/20/60/60" class="listing-thumb" alt="desk">
+              <div class="flex-grow-1">
+                <h6 class="fw-semibold mb-0">Desk + Chair</h6>
+                <p class="small text-muted mb-0">₦12,000 · Fair</p>
+              </div>
+              <span class="badge bg-success bg-opacity-10 text-success">Active</span>
+            </div>
+            <div class="text-center mt-3">
+              <a href="#" class="btn btn-sm btn-outline-custom">Manage all listings →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust & Verification note -->
+      <div class="alert alert-light border rounded-4 p-3 d-flex align-items-center gap-3" role="alert">
+        <i class="fas fa-shield-alt fa-2x text-success"></i>
+        <div>
+          <strong class="d-block">Verified Student</strong>
+          <span class="small text-muted">Your identity & student ID have been verified. This builds trust.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer (same as dashboard) -->
+<footer class="footer mt-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <a class="navbar-brand" href="#"><i class="fas fa-handshake me-2"></i>CampusConnect UI</a>
+        <p class="text-muted small mt-2">Student‑verified marketplace</p>
+      </div>
+      <div class="col-md-8">
+        <div class="footer-links d-flex flex-wrap justify-content-md-end gap-3">
+          <a href="/t/terms.html">Terms</a>
+          <a href="/t/privacy.html">Privacy</a>
+          <a href="/t/report_issue.html">Report</a>
+        </div>
+      </div>
+      <div class="col-12 mt-4 text-center text-muted small">
+        © 2026 CampusConnect UI — only @ui.edu.ng accounts
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+  // Dummy toasts / interactive (optional)
+  document.querySelector('.edit-profile-btn')?.addEventListener('click', () => {
+    alert('Edit profile form (coming soon)');
+  });
+  document.querySelector('.edit-avatar-btn')?.addEventListener('click', () => {
+    alert('Upload new profile picture');
+  });
+</script>
+</body>
+</html>
