@@ -1,80 +1,21 @@
-AOS.init({
-    duration: 800,
-    easing: 'ease-out-cubic',
-    once: true,
-    offset: 50
-  });
-  // simple smooth scroll for anchor links
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      const href = this.getAttribute('href');
-      if (href === "#" || href === "") return;
-      const target = document.querySelector(href);
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  });
+// ========== UTILITIES (always safe) ==========
+const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
+const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/'
 
-
-  window.onload = function() {
-    particlesJS('particles-js', {
-      "particles": {
-        "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
-        "color": { "value": "#2c7a5e" },
-        "shape": { "type": "circle" },
-        "opacity": { "value": 0.4, "random": true },
-        "size": { "value": 3, "random": true },
-        "line_linked": { "enable": true, "distance": 150, "color": "#2c7a5e", "opacity": 0.2, "width": 1 },
-        "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
-      },
-      "interactivity": {
-        "detect_on": "canvas",
-        "events": {
-          "onhover": { "enable": true, "mode": "repulse" },
-          "onclick": { "enable": true, "mode": "push" },
-          "resize": true
-        }
-      },
-      "retina_detect": true
-    });
-  };
-
-
-  /**
- * Show a toast notification (success or error)
- * @param {string} message - The text to display
- * @param {string} type - 'success' or 'error'
- * @param {number} duration - milliseconds to show (default 4000)
- */
 function showToast(message, type = 'success', duration = 4000) {
   const container = document.getElementById('toast-container');
   if (!container) return;
-
-  // Create toast element
   const toast = document.createElement('div');
   toast.className = `toast-message ${type}`;
-  
-  // Add icon based on type
   const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
-  toast.innerHTML = `
-    <i class="fas ${icon}"></i>
-    <span>${message}</span>
-  `;
-
+  toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
   container.appendChild(toast);
-
-  // Auto remove after duration
   setTimeout(() => {
     toast.classList.add('fade-out');
-    setTimeout(() => {
-      if (toast.parentNode) toast.parentNode.removeChild(toast);
-    }, 300);
+    setTimeout(() => toast.remove(), 300);
   }, duration);
 }
 
-// ========== Spinner helper ==========
 function setButtonLoading(btn, isLoading, originalText) {
   if (isLoading) {
     btn.disabled = true;
@@ -86,30 +27,181 @@ function setButtonLoading(btn, isLoading, originalText) {
   }
 }
 
-// Helper: set cookie with optional days (if days = null, session cookie)
 function setCookie(name, value, days) {
   let cookieString = `${name}=${value}; path=/`;
-  if (days !== null && days !== undefined) {
+  if (days != null) {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
     cookieString += `; expires=${expires.toUTCString()}`;
   }
-  // For session cookies, we omit "expires" and "max-age"
   document.cookie = cookieString;
 }
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  }
 
-// Delete only the authentication-related cookies
 function deleteAuthCookies() {
-  const cookiesToDelete = [
-    'access_token',
-    'refresh_token',
-    'user_id',
-    'is_email_verified'];
-  cookiesToDelete.forEach(name => {
+  ['access_token', 'refresh_token', 'user_id', 'is_email_verified'].forEach(name => {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
   });
 }
 
+// ========== OPTIONAL FEATURES (safe) ==========
+function initOptionalFeatures() {
+  // AOS
+  if (typeof AOS !== 'undefined' && AOS.init) {
+    AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
+  }
+  // Smooth scroll for anchor links
+  const anchors = document.querySelectorAll('a[href^="#"]');
+  if (anchors.length) {
+    anchors.forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#' || href === '') return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  }
+  // ParticlesJS
+  if (typeof particlesJS !== 'undefined' && document.getElementById('particles-js')) {
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 60, density: { enable: true, value_area: 800 } },
+        color: { value: '#2c7a5e' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.4, random: true },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: '#2c7a5e', opacity: 0.2, width: 1 },
+        move: { enable: true, speed: 1, direction: 'none', random: false, straight: false, out_mode: 'out' }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: { enable: true, mode: 'repulse' },
+          onclick: { enable: true, mode: 'push' },
+          resize: true
+        }
+      },
+      retina_detect: true
+    });
+  }
+}
 
-AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
+// ========== MODAL SYSTEM ==========
+class FormModal {
+  constructor() {
+    this.modal = document.getElementById('formModal');
+    if (!this.modal) return;
+    this.titleEl = document.getElementById('formModalTitle');
+    this.bodyEl = document.getElementById('formModalBody');
+    this.footerEl = document.getElementById('formModalFooter');
+    this.closeBtn = document.getElementById('closeFormModalBtn');
+    this.isOpen = false;
+    this.modal.addEventListener('click', (e) => { if (e.target === this.modal) this.close(); });
+    this.closeBtn?.addEventListener('click', () => this.close());
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.isOpen) this.close(); });
+  }
+  open({ title, formHtml, onSubmit, submitLabel = 'Submit', cancelLabel = 'Cancel', onClose = null }) {
+    if (!this.modal) return;
+    this.titleEl.textContent = title;
+    this.bodyEl.innerHTML = `<form id="dynamicFormModalForm">${formHtml}</form>`;
+    this.footerEl.innerHTML = '';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = cancelLabel;
+    cancelBtn.className = 'btn-secondary';
+    cancelBtn.addEventListener('click', () => this.close());
+    const submitBtn = document.createElement('button');
+    submitBtn.textContent = submitLabel;
+    submitBtn.className = 'btn-primary';
+    submitBtn.addEventListener('click', async () => {
+      const form = document.getElementById('dynamicFormModalForm');
+      if (onSubmit) await onSubmit(form);
+    });
+    this.footerEl.appendChild(cancelBtn);
+    this.footerEl.appendChild(submitBtn);
+    this.onCloseCallback = onClose;
+    this.modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    this.isOpen = true;
+  }
+  close() {
+    if (!this.modal) return;
+    this.modal.style.display = 'none';
+    document.body.style.overflow = '';
+    this.isOpen = false;
+    if (this.onCloseCallback) this.onCloseCallback();
+  }
+}
+
+class ConfirmModal {
+  constructor() {
+    this.modal = document.getElementById('confirmModal');
+    if (!this.modal) return;
+    this.titleEl = document.getElementById('confirmModalTitle');
+    this.messageEl = document.getElementById('confirmMessage');
+    this.footerEl = document.getElementById('confirmModalFooter');
+    this.closeBtn = document.getElementById('closeConfirmModalBtn');
+    this.isOpen = false;
+    this.modal.addEventListener('click', (e) => { if (e.target === this.modal) this.close(); });
+    this.closeBtn?.addEventListener('click', () => this.close());
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.isOpen) this.close(); });
+  }
+  open({ title = 'Confirm Action', message, onConfirm, onCancel = null, confirmText = 'Confirm', cancelText = 'Cancel' }) {
+    if (!this.modal) return;
+    this.titleEl.textContent = title;
+    this.messageEl.textContent = message;
+    this.footerEl.innerHTML = '';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = cancelText;
+    cancelBtn.className = 'btn-secondary';
+    cancelBtn.addEventListener('click', () => {
+      if (onCancel) onCancel();
+      this.close();
+    });
+    const confirmBtn = document.createElement('button');
+    confirmBtn.textContent = confirmText;
+    confirmBtn.className = 'btn-primary';
+    if (confirmText.toLowerCase().includes('delete')) confirmBtn.classList.add('btn-danger');
+    confirmBtn.addEventListener('click', async () => {
+      if (onConfirm) await onConfirm();
+      this.close();
+    });
+    this.footerEl.appendChild(cancelBtn);
+    this.footerEl.appendChild(confirmBtn);
+    this.modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    this.isOpen = true;
+  }
+  close() {
+    if (!this.modal) return;
+    this.modal.style.display = 'none';
+    document.body.style.overflow = '';
+    this.isOpen = false;
+  }
+}
+
+// Global modal instances (will be null if containers missing)
+let formModal = null;
+let confirmModal = null;
+
+// Initialize modals only if their HTML containers exist
+if (document.getElementById('formModal')) formModal = new FormModal();
+if (document.getElementById('confirmModal')) confirmModal = new ConfirmModal();
+
+// ========== START EVERYTHING AFTER DOM READY ==========
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initOptionalFeatures();
+  });
+} else {
+  initOptionalFeatures();
+}

@@ -118,3 +118,41 @@
         padding: 0.75rem 0;
     }
 }
+
+body {
+    visibility: hidden;
+}
+/* additional inline styles to ensure consistency for new sections */
+.insight-card, .safety-card, .ambassador-card {
+    transition: transform 0.2s ease;
+}
+.insight-card:hover, .safety-card:hover, .ambassador-card:hover {
+    transform: translateY(-4px);
+}
+.accordion-custom .accordion-button {
+    background-color: #ffffff;
+    color: #1f2e2a;
+    font-weight: 600;
+    border: none;
+    box-shadow: none;
+}
+.accordion-custom .accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(44, 122, 94, 0.3);
+}
+.accordion-custom .accordion-button:not(.collapsed) {
+    background-color: #f8faf9;
+    color: #2c7a5e;
+}
+.trending-badge {
+    background: #fef3e2;
+    color: #b45309;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 40px;
+    padding: 4px 10px;
+}
+.savings-highlight {
+    background: linear-gradient(120deg, #e6f9f0 0%, #d0f0e4 100%);
+    border-left: 4px solid #2c7a5e;
+}

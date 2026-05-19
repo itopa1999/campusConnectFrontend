@@ -1,0 +1,223 @@
+
+/* ========== MODAL OVERLAY & CONTAINER ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30, 42, 44, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 520px;
+  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--card-border, #eef2f0);
+  overflow: hidden;
+  animation: modalFadeIn 0.2s ease-out;
+  max-height: 90vh;
+}
+
+.confirm-modal-container {
+  max-width: 400px;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========== MODAL HEADER ========== */
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--card-border, #eef2f0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-dark, #1e2a2c);
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text-muted, #5a6e6f);
+  transition: all 0.15s;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.modal-close:hover {
+  color: var(--accent-dark, #1f5e48);
+  background-color: var(--accent-light, #eaf7f0);
+}
+
+/* ========== MODAL BODY ========== */
+.modal-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  max-height: 60vh;
+  padding: 1.5rem;
+  color: var(--text-dark, #1e2a2c);
+  line-height: 1.5;
+}
+
+/* Form styling inside modal */
+.modal-body form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.modal-body label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-dark, #1e2a2c);
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.modal-body input,
+.modal-body textarea,
+.modal-body select {
+  width: 100%;
+  padding: 1rem 1rem;
+  border-radius: 28px;
+    border: 1px solid var(--card-border, #eef2f0);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  background-color: white;
+  transition: all 0.2s;
+  color: var(--text-dark, #1e2a2c);
+}
+
+.modal-body input:focus,
+.modal-body textarea:focus,
+.modal-body select:focus {
+  outline: none;
+  border-color: var(--accent, #2c7a5e);
+  box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.15);
+}
+
+.modal-body input.error,
+.modal-body textarea.error,
+.modal-body select.error {
+  border-color: #c9423f;
+  background-color: #fff8f8;
+}
+
+.error-message {
+  color: #c9423f;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* ========== MODAL FOOTER ========== */
+.modal-footer {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background-color: white;
+  border-top: none;
+}
+
+.modal-header,
+.modal-footer {
+  flex-shrink: 0;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--accent, #2c7a5e);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-dark, #1f5e48);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--card-border, #eef2f0);
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-dark, #1e2a2c);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--warm-gray, #f8f9fa);
+  border-color: var(--text-muted, #5a6e6f);
+}
+
+.btn-danger {
+  background-color: #c9423f;
+  border: none;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #aa2e2b;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .modal-container {
+    width: 95%;
+  }
+  .modal-header, .modal-body, .modal-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background: var(--accent, #2c7a5e);
+  border-radius: 10px;
+}

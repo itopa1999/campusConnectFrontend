@@ -13,40 +13,7 @@
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/index.css">
   <style>
-    /* additional inline styles to ensure consistency for new sections */
-    .insight-card, .safety-card, .ambassador-card {
-      transition: transform 0.2s ease;
-    }
-    .insight-card:hover, .safety-card:hover, .ambassador-card:hover {
-      transform: translateY(-4px);
-    }
-    .accordion-custom .accordion-button {
-      background-color: #ffffff;
-      color: #1f2e2a;
-      font-weight: 600;
-      border: none;
-      box-shadow: none;
-    }
-    .accordion-custom .accordion-button:focus {
-      box-shadow: none;
-      border-color: rgba(44, 122, 94, 0.3);
-    }
-    .accordion-custom .accordion-button:not(.collapsed) {
-      background-color: #f8faf9;
-      color: #2c7a5e;
-    }
-    .trending-badge {
-      background: #fef3e2;
-      color: #b45309;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border-radius: 40px;
-      padding: 4px 10px;
-    }
-    .savings-highlight {
-      background: linear-gradient(120deg, #e6f9f0 0%, #d0f0e4 100%);
-      border-left: 4px solid #2c7a5e;
-    }
+    
   </style>
 </head>
 <body>
@@ -606,7 +573,56 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="assets/js/main.js"></script>
 <script>
+async function checkAuthenticationAndRedirect() {
+  const refreshToken = getCookie('refresh_token');
+  if (!refreshToken) {
+    document.body.style.visibility = 'visible';
+    return;
+  }
 
+  const verifyUrl = AUTH_URL + 'refresh-token';
+
+  try {
+    const response = await fetch(verifyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken })
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.is_success === true) {
+      if (result.data.access_token) {
+        setCookie('access_token', result.data.access_token, null);
+      }
+      if (result.data.refresh_token) {
+        setCookie('refresh_token', result.data.refresh_token, null);
+      }
+      if (result.data.user_id) {
+        setCookie('user_id', result.data.user_id, null);
+      }
+      if (result.data.is_email_verified !== undefined) {
+        setCookie('is_email_verified', result.data.is_email_verified, null);
+      }
+
+      window.location.href = 'http://127.0.0.1:5500/dash/main.html';
+    } else {
+      console.log('Session expired or invalid. Staying on homepage.');
+      document.body.style.visibility = 'visible';
+      deleteAuthCookies();
+    }
+  } catch (error) {
+    console.error('Error verifying authentication:', error);
+    document.body.style.visibility = 'visible';
+  }
+}
+
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', checkAuthenticationAndRedirect);
+} else {
+  checkAuthenticationAndRedirect();
+}
 </script>
 </body>
 </html>
