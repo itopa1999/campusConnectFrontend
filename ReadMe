@@ -1,0 +1,50 @@
+async function checkAuthenticationAndRedirect() {
+  const refreshToken = getCookie('refresh_token');
+  if (!refreshToken) {
+    document.body.style.visibility = 'visible';
+    return;
+  }
+
+  const verifyUrl = AUTH_URL + 'refresh-token';
+
+  try {
+    const response = await fetch(verifyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken })
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.is_success === true) {
+      if (result.data.access_token) {
+        setCookie('access_token', result.data.access_token, null);
+      }
+      if (result.data.refresh_token) {
+        setCookie('refresh_token', result.data.refresh_token, null);
+      }
+      if (result.data.user_id) {
+        setCookie('user_id', result.data.user_id, null);
+      }
+      if (result.data.is_email_verified !== undefined) {
+        setCookie('is_email_verified', result.data.is_email_verified, null);
+      }
+
+      window.location.href = 'http://127.0.0.1:5500/dash/main.html';
+    } else {
+      console.log('Session expired or invalid. Staying on homepage.');
+      document.body.style.visibility = 'visible';
+      deleteAuthCookies();
+    }
+  } catch (error) {
+    console.error('Error verifying authentication:', error);
+    document.body.style.visibility = 'visible';
+  }
+}
+
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', checkAuthenticationAndRedirect);
+} else {
+  checkAuthenticationAndRedirect();
+}

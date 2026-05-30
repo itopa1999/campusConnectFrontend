@@ -1,6 +1,7 @@
 // ========== UTILITIES (always safe) ==========
 const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
-const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/'
+const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
+const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
 
 function showToast(message, type = 'success', duration = 4000) {
   const container = document.getElementById('toast-container');

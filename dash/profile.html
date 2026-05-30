@@ -11,121 +11,70 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
-    /* Additional profile styles */
+    /* Profile page custom styles (uses variables from main.css) */
     .profile-container {
       padding-top: 100px;
       padding-bottom: 4rem;
     }
+    .profile-card {
+      background: white;
+      border-radius: 18px;
+      border: 1px solid var(--card-border);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 6px 20px rgba(17,24,24,0.04);
+    }
     .cover-photo {
-      background: linear-gradient(135deg, #2c7a5e 0%, #1f5e48 100%);
-      height: 160px;
-      border-radius: 24px 24px 0 0;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      height: 140px;
+      border-radius: 18px 18px 0 0;
       position: relative;
     }
     .avatar-wrapper {
       position: relative;
-      margin-top: -60px;
-      margin-left: 2rem;
-      width: 120px;
-      height: 120px;
+      margin-top: -56px;
+      margin-left: 1.25rem;
+      width: 112px;
+      height: 112px;
     }
     .avatar-img {
-      width: 120px;
-      height: 120px;
+      width: 112px;
+      height: 112px;
       object-fit: cover;
       border: 4px solid white;
       border-radius: 50%;
       background: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 18px rgba(17,24,24,0.06);
     }
     .edit-avatar-btn {
       position: absolute;
-      bottom: 5px;
-      right: 5px;
+      bottom: 6px;
+      right: 6px;
       background: white;
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 14px rgba(17,24,24,0.06);
       color: var(--accent);
     }
-    .profile-card {
-      background: white;
-      border-radius: 28px;
-      border: 1px solid var(--card-border);
-      overflow: hidden;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-    }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-    @media (min-width: 768px) {
-      .stats-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-    .stat-badge {
-      background: var(--warm-gray);
-      border-radius: 20px;
-      padding: 1rem;
-      text-align: center;
-      transition: all 0.2s;
-    }
-    .stat-number {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-    .verification-badge {
-      background: #eaf7f0;
-      color: var(--accent);
-      padding: 0.3rem 0.8rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.8rem 0;
-      border-bottom: 1px solid var(--card-border);
-    }
-    .info-label {
-      font-weight: 500;
-      color: var(--text-muted);
-    }
-    .info-value {
-      font-weight: 500;
-      color: var(--text-dark);
-    }
-    .edit-profile-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 40px;
-      padding: 0.6rem 1.5rem;
-      font-weight: 500;
-    }
-    .listing-thumb {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 12px;
-    }
-    .rating-star {
-      color: #f5b042;
-    }
-    /* No bottom nav on profile page */
-    .footer {
-      margin-top: 3rem;
-    }
+    .info-row { display:flex; justify-content:space-between; padding:0.75rem 0; border-bottom:1px solid var(--card-border); }
+    .info-label { color:var(--text-muted); font-weight:600 }
+    .info-value { color:var(--text-dark); font-weight:600 }
+    .stat-badge { background:var(--warm-gray); border-radius:14px; padding:1rem; text-align:center }
+    .stat-number { font-size:1.5rem; font-weight:700; color:var(--accent) }
+    .verification-badge { background:var(--accent-light); color:var(--accent); padding:0.28rem 0.75rem; border-radius:999px; font-weight:600 }
+    .badges-list img { width:44px; height:44px; object-fit:cover; border-radius:10px; border:1px solid var(--card-border) }
+    .section-title { font-weight:700; color:var(--text-dark); font-size:1rem }
+    .small-muted { color:var(--text-muted); font-size:0.9rem }
+    .edit-profile-btn { background:var(--accent); color:white; border-radius:999px; padding:0.55rem 1.2rem; border:none }
+    .listing-thumb { width:60px; height:60px; object-fit:cover; border-radius:12px }
+    .rating-star { color:#f5b042 }
+    .file-preview { max-width:100%; border-radius:8px; border:1px solid var(--card-border) }
+    @media (min-width: 992px) { .left-col-width{ width:360px } }
   </style>
 </head>
 <body>
@@ -138,13 +87,95 @@
       <span class="brand-text">CampusConnect UI</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-      <span class="navbar-toggler-icon"></span>
+      <div class="alert alert-light border rounded-4 p-3 d-flex align-items-center gap-3" role="alert">
     </button>
     <div class="collapse navbar-collapse" id="navbarMain">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
         <li class="nav-item"><a class="nav-link" href="main.html">Dashboard</a></li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle active" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+
+      <!-- Detailed About / Verification / Badges Card -->
+      <div class="profile-card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <div class="section-title">About & Details</div>
+            <div class="small-muted">Essential profile and academic information</div>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-outline-custom" id="edit-details">Edit</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="info-row">
+              <span class="info-label">Full name</span>
+              <span class="info-value">Tolani Adebayo</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Email</span>
+              <span class="info-value">tolani.adebayo@stu.ui.edu.ng</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Phone</span>
+              <span class="info-value">+234 812 345 6789</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Matric No.</span>
+              <span class="info-value">19/52XX/001</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-row">
+              <span class="info-label">Department</span>
+              <span class="info-value">Computer Science</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Faculty</span>
+              <span class="info-value">Science</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Level</span>
+              <span class="info-value">400</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Student ID Verified</span>
+              <span class="info-value"><span class="verification-badge"><i class="fas fa-check-circle me-1"></i> Verified</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <div class="section-title mb-2">Student ID</div>
+            <div class="small-muted mb-2">Uploaded ID used for verification</div>
+            <img src="https://picsum.photos/seed/id/400/320" alt="student id" class="file-preview">
+            <div class="d-flex gap-2 mt-2">
+              <button class="btn btn-sm btn-outline-custom">Download</button>
+              <button class="btn btn-sm btn-primary-custom">Replace</button>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="section-title mb-2">Badges & Achievements</div>
+            <div class="small-muted mb-2">Earned for reliability and positive reviews</div>
+            <div class="d-flex align-items-center gap-2 badges-list">
+              <img src="https://picsum.photos/seed/b1/44" alt="badge">
+              <img src="https://picsum.photos/seed/b2/44" alt="badge">
+              <img src="https://picsum.photos/seed/b3/44" alt="badge">
+              <div class="small-muted ms-2">+3 more</div>
+            </div>
+            <div class="mt-3">
+              <div class="section-title mb-2">Security</div>
+              <div class="small-muted mb-2">Manage account security</div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-custom">Change password</button>
+                <button class="btn btn-sm btn-outline-custom">Two‑factor auth</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
             <i class="fas fa-user-circle fa-lg"></i> Tolani
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
@@ -357,12 +388,33 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
-  // Dummy toasts / interactive (optional)
+  // Init AOS
+  AOS && AOS.init();
+
+  // Small interactive placeholders
+  document.querySelectorAll('.edit-avatar-btn, #edit-details').forEach(el => {
+    el?.addEventListener('click', () => {
+      alert('This action will open an edit modal in the real app.');
+    });
+  });
+
+  document.querySelectorAll('.btn-outline-custom').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const text = btn.textContent.trim();
+      if (text === 'Download') {
+        alert('Downloading student ID (placeholder)');
+      } else if (text === 'Replace') {
+        alert('Open file picker to replace the uploaded student ID');
+      } else if (text === 'Change password') {
+        alert('Redirect to change password flow');
+      } else if (text === 'Two‑factor auth') {
+        alert('Toggle two-factor auth settings');
+      }
+    });
+  });
+
   document.querySelector('.edit-profile-btn')?.addEventListener('click', () => {
     alert('Edit profile form (coming soon)');
-  });
-  document.querySelector('.edit-avatar-btn')?.addEventListener('click', () => {
-    alert('Upload new profile picture');
   });
 </script>
 </body>

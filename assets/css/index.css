@@ -114,14 +114,14 @@
     .navbar-brand .brand-text {
         display: none;
     }
-    .navbar {
-        padding: 0.75rem 0;
+    .site-header .navbar {
+        padding: 0;
     }
 }
 
-body {
+/* body {
     visibility: hidden;
-}
+} */
 /* additional inline styles to ensure consistency for new sections */
 .insight-card, .safety-card, .ambassador-card {
     transition: transform 0.2s ease;
