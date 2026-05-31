@@ -1,7 +1,7 @@
   // ========== Forgot Password with Real Backend ==========
 const forgotForm = document.getElementById('forgotFormElement');
 const resetBtn = document.getElementById('sendLinkBtn');
-const resetOriginalText = 'Send link';
+const resetOriginalText = 'Send reset link';
 const FORGOT_PASSWORD_URL = `${AUTH_URL}forgot-password`;
 
 forgotForm.addEventListener('submit', async (e) => {

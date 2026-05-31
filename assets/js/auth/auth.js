@@ -1,7 +1,7 @@
 // ========== Login with Real Backend (Store in Cookies) ==========
 const loginForm = document.getElementById('loginFormElement');
 const loginBtn = document.getElementById('loginBtn');
-const loginOriginalText = 'Sign in →';
+const loginOriginalText = 'Sign in';
 const LOGIN_URL = `${AUTH_URL}login-user`;
 
 loginForm.addEventListener('submit', async (e) => {
@@ -64,7 +64,7 @@ loginForm.addEventListener('submit', async (e) => {
 // ========== Signup with Real Backend ==========
 const signupForm = document.getElementById('signupFormElement');
 const signupBtn = document.getElementById('signupBtn');
-const signupOriginalText = 'Create free account →';
+const signupOriginalText = 'Create free account';
 const REGISTER_URL = `${AUTH_URL}register`;
 
 signupForm.addEventListener('submit', async (e) => {

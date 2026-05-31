@@ -3,99 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Join CampusConnect UI · Sign in or create account</title>
-  <!-- Bootstrap 5 + Icons + Google Fonts (same as main page) -->
+  <title>Join CampusConnect UI | Sign in or create account</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/auth.css">
-  <style>
-    
-  </style>
 </head>
 <body>
 <div id="particles-js"></div>
-<div class="auth-wrapper">
-  <div class="auth-card" data-aos="fade-up" data-aos-duration="800">
-    <div class="text-center mb-3" data-aos="fade-right" data-aos-delay="100">
-      <img src="../assets/img/icon.jpg" alt="CampusConnect UI" height="70" style="border-radius: 50px;">
-      <h4 class="mt-2 mb-3 fw-semibold" style="color: var(--accent);">CampusConnect UI</h4>
-    </div>
-    <!-- Toggle tabs -->
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-form="login">Sign in</button>
-      <button class="auth-tab" data-form="signup">Create account</button>
-    </div>
 
-    <!-- LOGIN FORM -->
-    <div id="login-form" class="auth-form active-form">
-      <form id="loginFormElement">
-        <div class="mb-3">
-          <label class="form-label text-muted small fw-semibold">Email address (UI email)</label>
-          <input type="email" class="form-control" id="loginEmail" placeholder="you@ui.edu.ng" required>
+<main class="auth-wrapper">
+  <div class="auth-shell" data-aos="fade-up" data-aos-duration="800">
+    <section class="auth-visual" aria-label="CampusConnect student marketplace">
+      <div class="auth-visual-content">
+        <div class="auth-brand">
+          <img src="../assets/img/icon.jpg" alt="CampusConnect UI">
+          <span>CampusConnect UI</span>
         </div>
-        <div class="mb-3">
-          <label class="form-label text-muted small fw-semibold">Password</label>
-          <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
+        <div>
+          <h1>Your trusted campus marketplace starts here.</h1>
+          <p>Sign in with your UI email, post items in minutes, and trade with students around campus with clearer verification and safer meetups.</p>
         </div>
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="rememberCheck" style="border-radius: 6px;">
-            <label class="form-check-label remember-check" for="rememberCheck">Remember me</label>
+        <div class="auth-proof-grid">
+          <div class="auth-proof">
+            <strong>UI</strong>
+            <span>student emails</span>
           </div>
-          <a href="forget_password.html" class="forgot-link text-decoration-none">Forgot password?</a>
+          <div class="auth-proof">
+            <strong>Safe</strong>
+            <span>campus meetups</span>
+          </div>
+          <div class="auth-proof">
+            <strong>Fast</strong>
+            <span>buy and sell</span>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary-custom w-100" id="loginBtn">Sign in →</button>
-      </form>
-      <div class="text-center mt-4">
-        <p class="small text-muted">Protected by UI email verification | <a style="color: var(--accent);" href="../index.html">Home</a></p>
       </div>
-    </div>
+    </section>
 
-    <!-- SIGNUP FORM -->
-    <div id="signup-form" class="auth-form">
-      <form id="signupFormElement">
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label text-muted small fw-semibold">First name</label>
-            <input type="text" class="form-control" id="firstName" placeholder="first_name" required>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label text-muted small fw-semibold">Last name</label>
-            <input type="text" class="form-control" id="lastName" placeholder="last_name" required>
-          </div>
-        </div>
-        <div class="mt-3">
-          <label class="form-label text-muted small fw-semibold">Email address (UI or stu.ui)</label>
-          <input type="email" class="form-control" id="signupEmail" placeholder="you@ui.edu.ng" required>
-        </div>
-        <div class="mt-3">
-          <label class="form-label text-muted small fw-semibold">Phone number (<i class="fab fa-whatsapp me-1"></i>Whatsapp)</label>
-          <input type="tel" class="form-control" id="phoneNumber" placeholder="0803 123 4567" required>
-        </div>
-        <div class="mt-3">
-          <label class="form-label text-muted small fw-semibold">Password</label>
-          <input type="password" class="form-control" id="signupPassword" placeholder="Create a strong password" required>
-        </div>
-        <div class="form-check mt-3 mb-4">
-          <input class="form-check-input" type="checkbox" id="termsCheck" style="border-radius: 6px;">
-          <label class="form-check-label small text-muted" for="termsCheck">
-            I agree to the <a href="../t/terms.html" class="text-decoration-none" style="color: var(--accent);">Terms of Service</a> and <a href="../t/privacy.html" class="text-decoration-none" style="color: var(--accent);">Privacy Policy</a>
-          </label>
-        </div>
-        <button type="submit" class="btn btn-primary-custom w-100" id="signupBtn">Create free account →</button>
-      </form>
-      <div class="text-center mt-4">
-        <p class="small text-muted">Only current UI students can join | <a style="color: var(--accent);" href="../index.html">Home</a></p>
+    <section class="auth-card" aria-label="Authentication form">
+      <div class="auth-card-header">
+        <img src="../assets/img/icon.jpg" alt="CampusConnect UI" class="auth-logo">
+        <h2>Welcome back</h2>
+        <p>Access your dashboard or create a verified student account.</p>
       </div>
-    </div>
+
+      <div class="auth-tabs" role="tablist" aria-label="Authentication tabs">
+        <button class="auth-tab active" data-form="login" type="button">Sign in</button>
+        <button class="auth-tab" data-form="signup" type="button">Create account</button>
+      </div>
+
+      <div id="login-form" class="auth-form active-form">
+        <form id="loginFormElement">
+          <div class="mb-3">
+            <label class="form-label small" for="loginEmail">Email address</label>
+            <input type="email" class="form-control" id="loginEmail" placeholder="you@stu.ui.edu.ng" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small" for="loginPassword">Password</label>
+            <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+          </div>
+          <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rememberCheck" style="border-radius: 6px;">
+              <label class="form-check-label remember-check" for="rememberCheck">Remember me</label>
+            </div>
+            <a href="forget_password.html" class="forgot-link text-decoration-none">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn btn-primary-custom w-100" id="loginBtn">Sign in</button>
+        </form>
+        <div class="auth-meta text-center mt-4">
+          Protected by UI email verification. <a class="auth-home-link" href="../index.html">Return home</a>
+        </div>
+      </div>
+
+      <div id="signup-form" class="auth-form">
+        <form id="signupFormElement">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small" for="firstName">First name</label>
+              <input type="text" class="form-control" id="firstName" placeholder="Tolani" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small" for="lastName">Last name</label>
+              <input type="text" class="form-control" id="lastName" placeholder="Adebayo" required>
+            </div>
+          </div>
+          <div class="mt-3">
+            <label class="form-label small" for="signupEmail">UI email address</label>
+            <input type="email" class="form-control" id="signupEmail" placeholder="you@stu.ui.edu.ng" required>
+          </div>
+          <div class="mt-3">
+            <label class="form-label small" for="phoneNumber">WhatsApp phone number</label>
+            <input type="tel" class="form-control" id="phoneNumber" placeholder="0803 123 4567" required>
+          </div>
+          <div class="mt-3">
+            <label class="form-label small" for="signupPassword">Password</label>
+            <input type="password" class="form-control" id="signupPassword" placeholder="Create a strong password" required>
+          </div>
+          <div class="form-check mt-3 mb-4">
+            <input class="form-check-input" type="checkbox" id="termsCheck" style="border-radius: 6px;">
+            <label class="form-check-label small text-muted" for="termsCheck">
+              I agree to the <a href="../t/terms.html" class="auth-home-link">Terms</a> and <a href="../t/privacy.html" class="auth-home-link">Privacy Policy</a>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary-custom w-100" id="signupBtn">Create free account</button>
+        </form>
+        <div class="auth-meta text-center mt-4">
+          Only current UI students can join. <a class="auth-home-link" href="../index.html">Return home</a>
+        </div>
+      </div>
+    </section>
   </div>
-</div>
+</main>
 
-<!-- Toast Notification Container -->
 <div id="toast-container" class="toast-container"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -103,9 +127,5 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script src="../assets/js/auth/auth.js"></script>
-<script>
-
-
-</script>
 </body>
 </html>
