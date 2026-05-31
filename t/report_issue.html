@@ -42,6 +42,27 @@
       object-fit: cover;
     }
 
+    .support-nav .navbar-toggler {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: 1px solid rgba(44, 122, 94, 0.18);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .support-nav .navbar-toggler:focus {
+      box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.14);
+    }
+
+    .support-nav-actions {
+      justify-content: flex-end;
+    }
+
+    .support-nav-actions .btn {
+      white-space: nowrap;
+    }
+
     .support-shell {
       padding-top: 110px;
       padding-bottom: 4rem;
@@ -184,6 +205,27 @@
       .support-shell {
         padding-top: 92px;
       }
+
+      .support-nav-menu {
+        flex-basis: 100%;
+      }
+
+      .support-nav-menu.show,
+      .support-nav-menu.collapsing {
+        margin-top: 0.75rem;
+      }
+
+      .support-nav-actions {
+        padding: 0.75rem;
+        border: 1px solid rgba(44, 122, 94, 0.12);
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 16px 34px rgba(31, 94, 72, 0.1);
+      }
+
+      .support-nav-actions .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -191,15 +233,20 @@
 <div id="particles-js"></div>
 <div id="toast-container" class="toast-container"></div>
 
-<nav class="navbar support-nav fixed-top">
+<nav class="navbar navbar-expand-md support-nav fixed-top">
   <div class="container">
     <a class="support-brand" href="../index.html">
       <img src="../assets/img/icon.jpg" alt="CampusConnect UI">
       <span>CampusConnect UI</span>
     </a>
-    <div class="d-flex gap-2">
-      <a class="btn btn-outline-custom btn-sm" href="terms.html">Terms</a>
-      <a class="btn btn-outline-custom btn-sm" href="privacy.html">Privacy</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#supportNavMenu" aria-controls="supportNavMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse support-nav-menu" id="supportNavMenu">
+      <div class="support-nav-actions d-flex flex-column flex-md-row gap-2 ms-md-auto mt-2 mt-md-0">
+        <a class="btn btn-outline-custom btn-sm" href="terms.html">Terms</a>
+        <a class="btn btn-outline-custom btn-sm" href="privacy.html">Privacy</a>
+      </div>
     </div>
   </div>
 </nav>
