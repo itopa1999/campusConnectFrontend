@@ -97,6 +97,22 @@ function initOptionalFeatures() {
   }
 }
 
+function initScrollToTop() {
+  const scrollTopBtn = document.querySelector('[data-scroll-top]');
+  if (!scrollTopBtn) return;
+
+  const toggleScrollButton = () => {
+    scrollTopBtn.classList.toggle('is-visible', window.scrollY > 360);
+  };
+
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', toggleScrollButton, { passive: true });
+  toggleScrollButton();
+}
+
 // ========== MODAL SYSTEM ==========
 class FormModal {
   constructor() {
@@ -202,7 +218,9 @@ if (document.getElementById('confirmModal')) confirmModal = new ConfirmModal();
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     initOptionalFeatures();
+    initScrollToTop();
   });
 } else {
   initOptionalFeatures();
+  initScrollToTop();
 }
