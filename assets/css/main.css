@@ -1,7 +1,15 @@
-* {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -9,6 +17,39 @@ body {
     background-color: #ffffff;
     color: #1a2c2e;
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+body,
+main,
+section,
+.container-fluid {
+    max-width: 100%;
+}
+
+@media (min-width: 992px) {
+    .container {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+a,
+button,
+.btn,
+.badge,
+.card,
+.accordion-button {
+    overflow-wrap: anywhere;
 }
 
 /* soft, earthy accent palette — no aggressive blues */
@@ -58,6 +99,8 @@ body {
     color: white;
     font-size: 0.95rem;
     box-shadow: 0 2px 6px rgba(44, 122, 94, 0.15);
+    max-width: 100%;
+    white-space: normal;
 }
 
 .btn-primary-custom:hover {
@@ -75,6 +118,8 @@ body {
     border-radius: 40px;
     font-weight: 500;
     transition: 0.2s;
+    max-width: 100%;
+    white-space: normal;
 }
 
 .btn-outline-custom:hover {
@@ -319,6 +364,7 @@ body {
     color: var(--text-muted);
     margin-right: 28px;
     font-size: 0.9rem;
+    margin-bottom: 0.75rem;
 }
 
 .footer-links a:hover {
@@ -409,6 +455,11 @@ body {
 
 /* Mobile & tablet: center the toast */
 @media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   .toast-container {
     right: 50%;
     transform: translateX(50%);

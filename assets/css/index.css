@@ -1,5 +1,6 @@
 .hero-section {
     padding: 100px 0 80px;
+    overflow: hidden;
 }
 
 .hero-title {
@@ -7,6 +8,7 @@
     font-weight: 700;
     line-height: 1.2;
     color: var(--text-dark);
+    overflow-wrap: anywhere;
 }
 
 .badge-verify {
@@ -53,7 +55,7 @@
     margin-bottom: 12px;
     font-size: 1rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
 }
 
@@ -91,6 +93,9 @@
     font-weight: 500;
     color: #2f5147;
     transition: 0.2s;
+    max-width: 100%;
+    text-align: center;
+    overflow-wrap: anywhere;
 }
 
 .category-badge:hover {
@@ -98,15 +103,70 @@
     transform: scale(0.98);
 }
 
+@media (max-width: 991.98px) {
+    [data-aos] {
+        transform: none !important;
+    }
+
+    .container > .row.bg-white,
+    .container > .row[class*=" bg-white"] {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
 @media (max-width: 768px) {
+
     .hero-title {
-    font-size: 2.3rem;
+        font-size: 2.3rem;
     }
+
     .hero-section {
-    padding: 60px 0 50px;
+        padding: 82px 0 50px;
     }
+
     .step-card {
-    padding: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .hero-section .bg-white,
+    #benefits .bg-white,
+    .savings-highlight,
+    section .bg-white,
+    .testimonial-card,
+    .step-card {
+        border-radius: 18px !important;
+    }
+
+    .card-body > .d-flex,
+    .card-body > .d-flex.justify-content-between,
+    .card-body > .d-flex.justify-content-between.align-items-center {
+        align-items: flex-start !important;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .card-body .text-muted,
+    .card-body .badge,
+    .card-body small {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .benefit-list li,
+    #benefits .d-flex,
+    .savings-highlight .d-flex {
+        flex-wrap: wrap;
+    }
+
+    .footer-links {
+        justify-content: flex-start !important;
+        gap: 0.35rem 1rem;
+    }
+
+    .footer-links a {
+        margin-right: 0;
     }
 }
 
@@ -116,6 +176,56 @@
     }
     .site-header .navbar {
         padding: 0;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .lead {
+        font-size: 1rem;
+    }
+
+    .hero-section .btn,
+    .btn-primary-custom,
+    .btn-outline-custom {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-section .bg-white,
+    #benefits .bg-white,
+    section .bg-white,
+    .testimonial-card,
+    .step-card {
+        padding: 1.25rem !important;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+    }
+
+    .trending-badge {
+        display: inline-flex;
+        margin: 0.25rem 0.25rem 0 0 !important;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+}
+
+@media (max-width: 380px) {
+    .hero-title {
+        font-size: 1.75rem;
+    }
+
+    h2,
+    .display-6 {
+        font-size: 1.55rem;
+    }
+
+    h3 {
+        font-size: 1.35rem;
     }
 }
 
