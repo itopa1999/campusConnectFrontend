@@ -35,6 +35,12 @@ body {
     overflow-wrap: anywhere;
 }
 
+@media (max-width: 768px) {
+    .hero-title, .badge-verify, .hero-section .lead, .text-muted{
+        padding:0 10px;
+    }
+}
+
 .hero-section .lead {
     max-width: 620px;
     line-height: 1.75;
