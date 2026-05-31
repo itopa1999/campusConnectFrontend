@@ -3,153 +3,345 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CampusConnect UI · Terms & Conditions</title>
-  <!-- Bootstrap 5 + FontAwesome + Google Fonts + AOS -->
+  <title>CampusConnect UI | Terms of Service</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
-  <!-- reuse same CSS variables and base styles from main.css (but self‑contained) -->
   <style>
-    
-    .terms-wrapper {
-      min-height: 100vh;
+    body {
+      background:
+        radial-gradient(circle at 8% 10%, rgba(44, 122, 94, 0.12), transparent 26rem),
+        radial-gradient(circle at 88% 16%, rgba(56, 111, 164, 0.12), transparent 24rem),
+        linear-gradient(180deg, #f8fbf8 0%, #ffffff 48%, #f7faf8 100%);
+    }
+
+    .policy-nav {
+      border-bottom: 1px solid rgba(44, 122, 94, 0.1);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 14px 38px rgba(31, 94, 72, 0.06);
+    }
+
+    .policy-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: var(--text-dark);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .policy-brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .policy-shell {
+      padding-top: 110px;
+      padding-bottom: 4rem;
+    }
+
+    .policy-hero {
+      border: 1px solid rgba(44, 122, 94, 0.12);
+      border-radius: 30px;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      background:
+        linear-gradient(135deg, rgba(21, 70, 52, 0.96), rgba(44, 122, 94, 0.82)),
+        url("https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1500&q=80") center/cover;
+      color: #ffffff;
+      box-shadow: 0 24px 70px rgba(31, 94, 72, 0.16);
+    }
+
+    .policy-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .policy-hero h1 {
+      max-width: 780px;
+      margin: 1rem 0 0.75rem;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .policy-hero p {
+      max-width: 740px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .policy-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .policy-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.88);
+      font-weight: 700;
+    }
+
+    .policy-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 290px) minmax(0, 1fr);
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .policy-sidebar,
+    .policy-document {
+      border: 1px solid rgba(44, 122, 94, 0.11);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 18px 48px rgba(30, 42, 44, 0.06);
+      backdrop-filter: blur(12px);
+    }
+
+    .policy-sidebar {
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      padding: 1rem;
+    }
+
+    .policy-sidebar a {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 3rem 1.5rem;
-    }
-    .terms-card {
-      background: white;
-      border-radius: 2rem;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
-      max-width: 950px;
-      width: 100%;
-      padding: 2.5rem 2rem;
-    }
-    .terms-card h1 {
-      font-size: 1.9rem;
-      font-weight: 700;
-      color: var(--accent-dark);
-      border-left: 4px solid var(--accent);
-      padding-left: 1rem;
-      margin: 1.5rem 0 1rem;
-    }
-    .terms-card h2 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--accent-dark);
-      margin-top: 1.8rem;
-      margin-bottom: 0.8rem;
-    }
-    .terms-card p, .terms-card li {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      color: var(--text-dark);
-    }
-    .terms-card .last-updated {
-      font-size: 0.8rem;
+      gap: 0.55rem;
+      padding: 0.75rem 0.85rem;
+      border-radius: 14px;
       color: var(--text-muted);
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--card-border);
-      padding-bottom: 0.75rem;
-    }
-    .back-link {
-      display: inline-block;
-      margin-top: 2rem;
-      color: var(--accent);
+      font-weight: 700;
       text-decoration: none;
-      font-weight: 500;
-      transition: 0.2s;
     }
-    .back-link:hover {
+
+    .policy-sidebar a:hover {
       color: var(--accent-dark);
-      transform: translateX(-4px);
+      background: var(--accent-light);
     }
-    hr {
-      opacity: 0.3;
+
+    .policy-document {
+      padding: clamp(1.25rem, 3vw, 2.25rem);
     }
-    @media (max-width: 600px) {
-      .terms-card {
-        padding: 1.5rem;
+
+    .policy-section {
+      padding: 1.35rem 0;
+      border-bottom: 1px solid rgba(44, 122, 94, 0.1);
+      scroll-margin-top: 110px;
+    }
+
+    .policy-section:first-child {
+      padding-top: 0;
+    }
+
+    .policy-section:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .policy-section h2 {
+      color: var(--accent-dark);
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 0.7rem;
+    }
+
+    .policy-section p,
+    .policy-section li {
+      color: var(--text-dark);
+      line-height: 1.75;
+    }
+
+    .policy-section ul {
+      margin-bottom: 0;
+      padding-left: 1.25rem;
+    }
+
+    .callout {
+      padding: 1rem;
+      border-radius: 18px;
+      background: var(--accent-light);
+      border: 1px solid rgba(44, 122, 94, 0.12);
+    }
+
+    .page-footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 991.98px) {
+      .policy-layout {
+        grid-template-columns: 1fr;
       }
-      .terms-card h1 {
-        font-size: 1.5rem;
+
+      .policy-sidebar {
+        position: static;
       }
     }
   </style>
 </head>
 <body>
 <div id="particles-js"></div>
-<div class="terms-wrapper">
-  <div class="terms-card" data-aos="fade-up" data-aos-duration="800">
-    <!-- brand icon & title -->
-    <div class="text-center mb-3" data-aos="fade-right" data-aos-delay="100">
-      <img src="../assets/img/icon.jpg" alt="CampusConnect UI" height="70" style="border-radius: 50px;">
-      <h2 class="mt-2 fw-semibold" style="color: var(--accent);">CampusConnect UI</h2>
+
+<nav class="navbar policy-nav fixed-top">
+  <div class="container">
+    <a class="policy-brand" href="../index.html">
+      <img src="../assets/img/icon.jpg" alt="CampusConnect UI">
+      <span>CampusConnect UI</span>
+    </a>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-custom btn-sm" href="privacy.html">Privacy</a>
+      <a class="btn btn-primary-custom btn-sm" href="report_issue.html">Report</a>
     </div>
-    <h1>Terms & Conditions</h1>
-    <div class="last-updated">📅 Last updated: May 2026 | Version 1.0</div>
-    <p>Welcome to <strong>CampusConnect UI</strong> – a student‑to‑student marketplace exclusively for verified University of Ibadan students. By accessing or using our platform (website, web app, or any related services), you agree to be bound by these Terms. If you do not agree, please do not use CampusConnect UI.</p>
-
-    <h2>1. Eligibility & Verification</h2>
-    <p>1.1 Only current students of the University of Ibadan with an active <code>@ui.edu.ng</code> or <code>@stu.ui.edu.ng</code> email address may register.<br>
-    1.2 You must provide accurate, truthful information during registration, including your full name, department, hall of residence, and valid UI email.<br>
-    1.3 CampusConnect UI reserves the right to suspend or terminate any account that provides false information or circumvents verification methods.</p>
-
-    <h2>2. User Conduct & Prohibited Items</h2>
-    <p>2.1 You agree to use the platform only for lawful purposes and to respect other users.<br>
-    2.2 Prohibited items include but are not limited to: illegal drugs, weapons, stolen goods, counterfeit products, alcohol, tobacco, or any item that violates Nigerian law or UI policies.<br>
-    2.3 You may not post “test” listings, spam, duplicate listings, or items that do not physically exist.<br>
-    2.4 Harassment, threats, fraud, or any form of intimidation will lead to immediate permanent ban and may be reported to the University authorities.</p>
-
-    <h2>3. Transactions & Fees</h2>
-    <p>3.1 Listing basic items is currently free. Optional “featured” or “boosted” listings may carry a small fee, clearly displayed before confirmation.<br>
-    3.2 When an item is sold, we may charge a nominal transaction fee (e.g., ₦50–₦500 depending on item price). This fee is non‑refundable once the transaction is marked as complete.<br>
-    3.3 All payments between buyer and seller are handled directly between users. CampusConnect UI is not a payment intermediary and is not responsible for payment disputes, though we encourage using secure methods (cash on meeting, bank transfer with verification).</p>
-
-    <h2>4. Safety & Meeting Protocol</h2>
-    <p>4.1 Always meet in public, well‑lit campus locations (e.g., Kenneth Dike Library, faculty lobbies, cafeteria).<br>
-    4.2 Inspect the item before paying. Do not send money in advance to strangers.<br>
-    4.3 Use the in‑app chat or WhatsApp to agree on meeting time and place. Keep records of your conversation.<br>
-    4.4 CampusConnect UI provides a “Hall Verified” badge but does not guarantee the trustworthiness of any individual. You are solely responsible for your safety and decisions.</p>
-
-    <h2>5. Reporting & Moderation</h2>
-    <p>5.1 If you encounter a suspicious listing, scam attempt, or abusive user, click “Report” or contact us at <strong>support@campusconnect.ui</strong>.<br>
-    5.2 We will investigate all reports within 48 hours and may remove listings, suspend accounts, or permanently ban users who violate these Terms.<br>
-    5.3 False reporting to harass other users is also a violation and may result in penalties.</p>
-
-    <h2>6. Intellectual Property & Content</h2>
-    <p>6.1 You retain ownership of the photos and descriptions you post. However, you grant CampusConnect UI a non‑exclusive, royalty‑free license to display, store, and promote your listings across the platform.<br>
-    6.2 You may not copy, scrape, or reproduce any part of the platform without written permission.</p>
-
-    <h2>7. Limitation of Liability</h2>
-    <p>CampusConnect UI is provided “as is” and “as available”. We do not guarantee that the platform will be error‑free or uninterrupted. To the fullest extent permitted by law, we are not liable for any direct, indirect, incidental, or consequential damages arising from your use of the platform, including any loss of money, reputation, or items – except in cases of our gross negligence.</p>
-
-    <h2>8. Termination</h2>
-    <p>We may suspend or terminate your account immediately if you breach any term, engage in fraudulent activity, or pose a safety risk to the community. You may delete your own account at any time via profile settings.</p>
-
-    <h2>9. Changes to These Terms</h2>
-    <p>We may update these Terms from time to time. Material changes will be notified via email or a prominent notice on the platform. Continued use after changes constitutes acceptance of the new Terms.</p>
-
-    <h2>10. Governing Law & Contact</h2>
-    <p>These Terms are governed by the laws of the Federal Republic of Nigeria. Any disputes shall first be attempted to be resolved informally via <strong>legal@campusconnect.ui</strong>.</p>
-
-    <hr>
-    <p class="text-muted small">By using CampusConnect UI, you acknowledge that you have read, understood, and agreed to these Terms & Conditions. You also affirm that you are a current UI student and will comply with all university regulations regarding private sales on campus.</p>
-
-    <a href="#" class="back-link" onclick="history.back(); return false;">← Back to CampusConnect</a>
   </div>
-</div>
+</nav>
+
+<main class="container policy-shell">
+  <section class="policy-hero" data-aos="fade-up">
+    <span class="policy-eyebrow"><i class="fas fa-file-contract"></i> Terms of Service</span>
+    <h1>The rules for using CampusConnect UI safely and fairly.</h1>
+    <p>These terms explain your responsibilities, our platform rules, prohibited items, safety expectations, and how we handle reports and enforcement.</p>
+    <div class="policy-meta">
+      <span><i class="fas fa-calendar-check"></i> Last updated: May 2026</span>
+      <span><i class="fas fa-file-contract"></i> Version 1.0</span>
+      <span><i class="fas fa-location-dot"></i> University of Ibadan</span>
+    </div>
+  </section>
+
+  <div class="policy-layout">
+    <aside class="policy-sidebar" aria-label="Terms sections">
+      <a href="#acceptance"><i class="fas fa-check-circle"></i> Acceptance</a>
+      <a href="#eligibility"><i class="fas fa-user-graduate"></i> Eligibility</a>
+      <a href="#conduct"><i class="fas fa-scale-balanced"></i> Conduct</a>
+      <a href="#listings"><i class="fas fa-tags"></i> Listings</a>
+      <a href="#transactions"><i class="fas fa-money-bill-transfer"></i> Transactions</a>
+      <a href="#safety"><i class="fas fa-shield-halved"></i> Safety</a>
+      <a href="#moderation"><i class="fas fa-flag"></i> Reports</a>
+      <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+    </aside>
+
+    <article class="policy-document" data-aos="fade-up" data-aos-delay="100">
+      <section class="policy-section" id="acceptance">
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing or using CampusConnect UI, you agree to these Terms of Service and our Privacy Policy. If you do not agree, you should not create an account, post listings, contact users, or use the platform.</p>
+        <div class="callout">
+          <strong>Important:</strong> CampusConnect UI is a marketplace platform. We do not own, inspect, guarantee, or sell the items posted by users.
+        </div>
+      </section>
+
+      <section class="policy-section" id="eligibility">
+        <h2>2. Eligibility and Account Verification</h2>
+        <ul>
+          <li>You must be a current University of Ibadan student or an approved member of the campus community.</li>
+          <li>You must provide accurate information, including your name, UI email address, department, and other requested verification details.</li>
+          <li>You are responsible for keeping your login credentials private and for all activity on your account.</li>
+          <li>We may suspend or remove accounts that use false information, impersonate others, bypass verification, or create safety risks.</li>
+        </ul>
+      </section>
+
+      <section class="policy-section" id="conduct">
+        <h2>3. User Conduct</h2>
+        <ul>
+          <li>Treat other users respectfully and communicate honestly.</li>
+          <li>Do not harass, threaten, deceive, spam, or pressure other users.</li>
+          <li>Do not post false, misleading, duplicate, stolen, or unavailable items.</li>
+          <li>Do not use CampusConnect UI for illegal activity or activity that violates University of Ibadan rules.</li>
+        </ul>
+      </section>
+
+      <section class="policy-section" id="listings">
+        <h2>4. Listings and Prohibited Items</h2>
+        <p>You are responsible for the accuracy, legality, and availability of every item you list. Photos, titles, prices, descriptions, categories, and condition must be truthful.</p>
+        <p>Prohibited items include weapons, illegal drugs, stolen goods, counterfeit goods, alcohol, tobacco, exam materials sold against university rules, unsafe products, and any item prohibited by Nigerian law or University of Ibadan policy.</p>
+      </section>
+
+      <section class="policy-section" id="transactions">
+        <h2>5. Transactions, Payments, and Fees</h2>
+        <ul>
+          <li>Buyers and sellers are responsible for agreeing on price, location, payment method, inspection, and exchange.</li>
+          <li>CampusConnect UI may offer free listings, promoted listings, or transaction-related features. Any fees will be shown before confirmation.</li>
+          <li>Unless explicitly stated, CampusConnect UI is not a payment processor, escrow service, guarantor, or delivery service.</li>
+          <li>Inspect items before paying and keep transaction records until the exchange is complete.</li>
+        </ul>
+      </section>
+
+      <section class="policy-section" id="safety">
+        <h2>6. Safety Guidelines</h2>
+        <ul>
+          <li>Meet in public, well-lit campus locations whenever possible.</li>
+          <li>Do not send money in advance to unknown users.</li>
+          <li>Check the item carefully before paying.</li>
+          <li>Keep screenshots or records of important conversations.</li>
+          <li>Report suspicious behavior immediately through the report page.</li>
+        </ul>
+      </section>
+
+      <section class="policy-section" id="moderation">
+        <h2>7. Reports, Moderation, and Enforcement</h2>
+        <p>We may review listings, accounts, messages, and reports to protect the community. We may remove content, limit features, suspend accounts, ban users, or cooperate with university or legal authorities where appropriate.</p>
+        <p>False reports, retaliatory reports, or abuse of the reporting system may also lead to enforcement action.</p>
+      </section>
+
+      <section class="policy-section">
+        <h2>8. Intellectual Property</h2>
+        <p>You keep ownership of your photos, descriptions, and content, but you give CampusConnect UI permission to host, display, process, and promote that content as needed to operate the platform.</p>
+      </section>
+
+      <section class="policy-section">
+        <h2>9. Disclaimers and Limitation of Liability</h2>
+        <p>CampusConnect UI is provided on an "as is" and "as available" basis. We do not guarantee uninterrupted access, error-free service, user behavior, item quality, or transaction outcomes. To the fullest extent allowed by law, we are not liable for losses arising from user transactions or misuse of the platform.</p>
+      </section>
+
+      <section class="policy-section">
+        <h2>10. Updates to These Terms</h2>
+        <p>We may update these terms as the platform changes. If the changes are material, we will provide reasonable notice. Continued use of CampusConnect UI after updates means you accept the revised terms.</p>
+      </section>
+
+      <section class="policy-section" id="contact">
+        <h2>11. Contact and Disputes</h2>
+        <p>If you have questions about these terms, reports, account issues, or disputes, contact us through the report page or email <strong>legal@campusconnect.ui</strong>.</p>
+        <div class="page-footer-actions">
+          <a href="report_issue.html" class="btn btn-primary-custom">Report an issue</a>
+          <a href="../index.html" class="btn btn-outline-custom">Back to home</a>
+        </div>
+      </section>
+    </article>
+  </div>
+</main>
+
+<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
-<script>
-</script>
 </body>
 </html>
