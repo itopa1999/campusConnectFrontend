@@ -342,8 +342,209 @@ button,
     }
 }
 
+.dashboard-page {
+    padding-bottom: 60px;
+}
+
+.dashboard-hero {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 30px;
+    margin-top: 3.5rem;
+    padding: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top left, rgba(44, 122, 94, 0.12), transparent 40%);
+    pointer-events: none;
+}
+
+.hero-premium-label {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: 0.82rem;
+}
+
+.dashboard-stat-card {
+    transition: transform 0.3s ease, box-shadow 0.35s ease;
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 26px 42px rgba(44, 122, 94, 0.12);
+}
+
+.dashboard-card {
+    border: 1px solid rgba(44, 122, 94, 0.1);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 52px rgba(44, 122, 94, 0.08);
+}
+
+.navbar-light .dropdown-menu {
+    border-radius: 18px;
+    border: 1px solid rgba(44, 122, 94, 0.12);
+    box-shadow: 0 18px 42px rgba(31, 94, 72, 0.12);
+    backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.98);
+}
+
+.dropdown-item {
+    color: #1f5e48;
+    font-weight: 600;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background: rgba(44, 122, 94, 0.08);
+    color: #164732;
+}
+
+.dashboard-mobile-actions .action-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(44, 122, 94, 0.12);
+}
+
+.dashboard-mobile-actions .action-link {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stats-row .dashboard-stat-card {
+    background: #ffffff;
+    border: 1px solid var(--card-border);
+}
+
+.dashboard-stat-card .stat-label {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-bottom: 0.65rem;
+}
+
+.dashboard-stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.dashboard-tabs-section {
+    margin-top: -1.25rem;
+}
+
+.dashboard-pills .nav-link {
+    border-radius: 999px;
+    padding: 0.9rem 1.4rem;
+    color: #2c7a5e;
+    border: 1px solid transparent;
+    font-weight: 600;
+}
+
+.dashboard-pills .nav-link.active {
+    background: var(--accent);
+    color: #ffffff;
+    box-shadow: 0 14px 34px rgba(44, 122, 94, 0.12);
+}
+
+.dashboard-card,
+.listing-card,
+.activity-item,
+.summary-tile {
+    background: #ffffff;
+}
+
+.dashboard-card {
+    border: 1px solid var(--card-border);
+}
+
+.dashboard-list-group .list-group-item {
+    border-color: transparent;
+}
+
+.listing-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.listing-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 42px rgba(31, 94, 72, 0.08);
+}
+
+.dashboard-activity-list .activity-item {
+    border: 1px solid var(--card-border);
+}
+
+.dashboard-mobile-actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1070;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.98);
+    border-top: 1px solid rgba(44, 122, 94, 0.12);
+    box-shadow: 0 -12px 26px rgba(31, 94, 72, 0.08);
+}
+
+.dashboard-mobile-actions .action-link {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.75rem 0.5rem;
+    border-radius: 18px;
+    text-decoration: none;
+    color: var(--accent-dark);
+    background: #f6fbf7;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.dashboard-mobile-actions .action-link i {
+    font-size: 1.25rem;
+}
+
+@media (max-width: 767.98px) {
+    .dashboard-page {
+        padding-bottom: 120px;
+    }
+
+    .dashboard-hero {
+        margin-top: 3.75rem;
+    }
+
+    .dashboard-tabs-section {
+        margin-top: -0.4rem;
+    }
+
+    .dashboard-footer-spacer {
+        display: block;
+        height: 8rem;
+    }
 
     .footer {
+        padding-bottom: 3rem;
+    }
+}
+
+.dashboard-footer-spacer {
+    display: none;
+}
+
+.footer {
     background-color: #fafaf8;
     border-top: 1px solid #ecece6;
     padding: 3rem 0 2rem;
