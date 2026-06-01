@@ -16,6 +16,11 @@ loginForm.addEventListener('submit', async (e) => {
     return;
   }
 
+  if (password.length < 6) {
+    showToast('Password must be at least 6 characters.', 'error');
+    return;
+  }
+
   // if (!email.endsWith('@ui.edu.ng') && !email.endsWith('@stu.ui.edu.ng')) {
   //   showToast('Please use a valid @ui.edu.ng or @stu.ui.edu.ng email.', 'error');
   //   return;
