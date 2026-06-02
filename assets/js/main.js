@@ -29,13 +29,21 @@ function setButtonLoading(btn, isLoading, originalText) {
 }
 
 function setCookie(name, value, days) {
-  let cookieString = `${name}=${value}; path=/`;
+  let cookieString = `${name}=${encodeURIComponent(value)}; path=/`;
+
   if (days != null) {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
     cookieString += `; expires=${expires.toUTCString()}`;
   }
   document.cookie = cookieString;
+}
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
 }
 
 function getCookie(name) {
@@ -51,7 +59,7 @@ function deleteAuthCookies() {
   });
 }
 
-// ========== OPTIONAL FEATURES (safe) ==========
+
 function initOptionalFeatures() {
   // AOS
   if (typeof AOS !== 'undefined' && AOS.init) {

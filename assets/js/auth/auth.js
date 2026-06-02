@@ -41,11 +41,15 @@ loginForm.addEventListener('submit', async (e) => {
     const result = await response.json();
 
     if (response.ok && result.is_success === true) {
-      const expiryDays = rememberMe ? 1 : null;
+      
+      const expiryDays = rememberMe ? 7 : null;
+
       setCookie('access_token', result.data.access_token, expiryDays);    
       setCookie('refresh_token', result.data.refresh_token, expiryDays);    
       setCookie('user_id', result.data.user_id, expiryDays);           
       setCookie('is_email_verified', result.data.is_email_verified, expiryDays);
+
+      sessionStorage.setItem('rememberMe', rememberMe ? 'true' : 'false');
 
       showToast(result.message || 'Login successful! Redirecting...', 'success');
 
