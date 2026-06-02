@@ -11,6 +11,7 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
   <style>
   </style>
 </head>
@@ -50,7 +51,7 @@
       <div class="row align-items-end">
         <div class="col-lg-7">
           <span class="badge-verify mb-3">student dashboard</span>
-          <h1 class="display-6 fw-semibold">Welcome back, Tolani</h1>
+          <h1 class="display-6 fw-semibold">Welcome back, <span id="dashboardUserName">Tolani</span></h1>
           <p class="text-muted mb-4">Track your campus listings, messages, sales and trust score in one place with exceptional clarity and style.</p>
         </div>
         <div class="col-lg-5 text-lg-end" data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
@@ -87,12 +88,11 @@
             <div class="stat-value" id="trustScoreValue">0%</div>
             <small class="text-muted">Verified student badge</small>
           </div>
-          
         </div>
         <div class="col-12 col-md-3 col-lg-3">
           <div class="dashboard-stat-card shadow-sm rounded-4 p-4">
             <div class="stat-label">Points Balance</div>
-            <div class="stat-value" id="pointsBalance">0</div>
+            <div class="stat-value" id="pointsBalanceValue">0</div>
             <small class="text-muted">Available points for posting listings</small>
           </div>
         </div>
@@ -131,7 +131,7 @@
                   <div class="col-6">
                     <div class="summary-tile p-3 rounded-4 bg-light">
                       <div class="small text-muted">Points balance</div>
-                      <strong id="pointsBalance">3</strong>
+                      <strong id="summaryPointsBalance">3</strong>
                       <div class="small text-muted">Posting an item costs 1 point.</div>
                     </div>
                   </div>
@@ -142,28 +142,8 @@
             <div class="col-lg-5">
               <div class="dashboard-card shadow-sm rounded-4 p-4 h-100" data-aos="fade-left" data-aos-duration="700">
                 <h5 class="mb-3">Upcoming Expirations Listings</h5>
-                <div class="list-group list-group-flush dashboard-list-group">
-                  <div class="list-group-item px-0 py-3">
-                    <div class="d-flex justify-content-between mb-2">
-                      <strong>Textbook pickup</strong>
-                      <span class="text-muted small">Tomorrow</span>
-                    </div>
-                    <p class="mb-0 text-muted small">Meet at University Library, 2pm.</p>
-                  </div>
-                  <div class="list-group-item px-0 py-3">
-                    <div class="d-flex justify-content-between mb-2">
-                      <strong>Electronics inspection</strong>
-                      <span class="text-muted small">Fri</span>
-                    </div>
-                    <p class="mb-0 text-muted small">Mellanby Hall, bring charger and receipt.</p>
-                  </div>
-                  <div class="list-group-item px-0 py-3">
-                    <div class="d-flex justify-content-between mb-2">
-                      <strong>Café quick meet</strong>
-                      <span class="text-muted small">Sun</span>
-                    </div>
-                    <p class="mb-0 text-muted small">Confirmed buyer will pay in cash.</p>
-                  </div>
+                <div class="list-group list-group-flush dashboard-list-group" id="upcomingExpirationsList">
+                  <div class="list-group-item px-0 py-3 text-muted small">Loading upcoming expirations...</div>
                 </div>
               </div>
             </div>
@@ -180,35 +160,11 @@
               <a href="../dash/create-listing.html" class="btn btn-outline-custom mt-3 mt-md-0">Add new listing</a>
             </div>
 
-            <div class="row g-3" id="">
-              <div class="col-md-6">
-                <div class="listing-card rounded-4 border p-3 h-100">
-                  <div class="d-flex justify-content-between align-items-start mb-2">
-                    <span class="badge bg-white text-dark border">Textbook</span>
-                    <span class="text-muted small">3 hrs ago</span>
-                  </div>
-                  <h6 class="mb-2">BIO 102 past questions</h6>
-                  <p class="text-muted small mb-3">Original book, clean condition. Pickup at UI Library.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <strong class="text-success">&#8358;2,500</strong>
-                    <button class="btn btn-sm btn-outline-custom">Edit</button>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="listing-card rounded-4 border p-3 h-100">
-                  <div class="d-flex justify-content-between align-items-start mb-2">
-                    <span class="badge bg-white text-dark border">Furniture</span>
-                    <span class="text-muted small">Yesterday</span>
-                  </div>
-                  <h6 class="mb-2">Wood chair and desk</h6>
-                  <p class="text-muted small mb-3">Still strong, ideal for hostels. Near Yemoja.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <strong class="text-success">&#8358;11,000</strong>
-                    <button class="btn btn-sm btn-outline-custom">View</button>
-                  </div>
-                </div>
-              </div>
+            <div class="row g-3" id="latestListingsContainer">
+              <div class="col-12 text-muted small">Loading latest listings...</div>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+              <a href="../dash/listings.html" class="btn btn-outline-custom btn-sm">View all listings</a>
             </div>
           </div>
         </div>
@@ -242,13 +198,17 @@
 <script src="../assets/js/main.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const apiUrl = '/api/dashboard/';
+    const apiUrl = DASHBOARD_URL;
     const activeListingsCount = document.getElementById('activeListingsCount');
-    const salesThisMonthValue = document.getElementById('salesThisMonthValue');
+    const expiredListingsCount = document.getElementById('expiredListingsCount');
+    const soldListingsCount = document.getElementById('soldListingsCount');
     const trustScoreValue = document.getElementById('trustScoreValue');
     const profileCompletionValue = document.getElementById('profileCompletionValue');
-    const listingsContainer = document.getElementById('listingsContainer');
-    const listingPlaceholder = document.getElementById('listingPlaceholder');
+    const pointsBalanceValue = document.getElementById('pointsBalanceValue');
+    const summaryPointsBalance = document.getElementById('summaryPointsBalance');
+    const dashboardUserName = document.getElementById('dashboardUserName');
+    const upcomingExpirationsList = document.getElementById('upcomingExpirationsList');
+    const latestListingsContainer = document.getElementById('latestListingsContainer');
 
     const formatCurrency = amount => {
       const value = Number(amount) || 0;
@@ -259,24 +219,45 @@
       }).format(value);
     };
 
-    const renderListings = listings => {
-      if (!listings || listings.length === 0) {
-        listingsContainer.innerHTML = '<div class="col-12 text-muted small">No active listings yet.</div>';
+    const renderUpcomingListings = items => {
+      if (!upcomingExpirationsList) return;
+      if (!Array.isArray(items) || items.length === 0) {
+        upcomingExpirationsList.innerHTML = '<div class="list-group-item px-0 py-3 text-muted small">No upcoming expirations.</div>';
         return;
       }
 
-      listingsContainer.innerHTML = listings.map(listing => `
+      upcomingExpirationsList.innerHTML = items.map(item => `
+        <div class="list-group-item px-0 py-3">
+          <div class="d-flex justify-content-between mb-2">
+            <strong>${item.title || 'Untitled'}</strong>
+            <span class="text-muted small">${item.expires_at_humanized || ''}</span>
+          </div>
+          <p class="mb-0 text-muted small">${item.description || ''}</p>
+          ${item.hostpost_names?.length ? `<div class="small text-muted mt-2"><i class="fas fa-map-marker-alt"></i> ${item.hostpost_names.join(' | ')}</div>` : ''}
+        </div>
+      `).join('');
+    };
+
+    const renderLatestListings = items => {
+      if (!latestListingsContainer) return;
+      if (!Array.isArray(items) || items.length === 0) {
+        latestListingsContainer.innerHTML = '<div class="col-12 text-muted small">No latest listings yet.</div>';
+        return;
+      }
+
+      latestListingsContainer.innerHTML = items.map(item => `
         <div class="col-md-6">
           <div class="listing-card rounded-4 border p-3 h-100">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <span class="badge bg-white text-dark border">${listing.category}</span>
-              <span class="text-muted small">${new Date(listing.created_at).toLocaleDateString('en-GB')}</span>
+            <div class="d-flex justify-content-between">
+              <span class="badge bg-white text-dark border px-3 py-1 rounded-pill"><i class="fas fa-book me-1"></i> ${item.category || 'Listing'}</span>
+              <small class="text-muted">${item.created_at_humanized || ''}</small>
             </div>
-            <h6 class="mb-2">${listing.title}</h6>
-            <p class="text-muted small mb-3">Expires ${new Date(listing.expires_at).toLocaleDateString('en-GB')}</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <strong class="text-success">${formatCurrency(listing.price)}</strong>
-              <a href="../auth/auth.html" class="btn btn-sm btn-outline-custom">Manage</a>
+            <h5 class="card-title mt-2 mb-2">${item.title || 'Untitled'}</h5>
+            <p class="card-text text-muted small listing-description mb-3">${item.description || ''}</p>
+            <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap mt-2">
+              <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
+              <span class="text-muted"><i class="fas fa-map-marker-alt"></i> ${item.hostpost_names?.join(' | ') || 'Unknown location'}</span>
+              <a href="../dash/listings.html" class="btn btn-sm btn-outline-custom mt-2">Manage</a>
             </div>
           </div>
         </div>
@@ -284,23 +265,38 @@
     };
 
     const showError = message => {
-      if (listingsContainer) {
-        listingsContainer.innerHTML = `<div class="col-12 text-danger small">${message}</div>`;
-      }
+      if (latestListingsContainer) latestListingsContainer.innerHTML = `<div class="col-12 text-danger small">${message}</div>`;
+      if (upcomingExpirationsList) upcomingExpirationsList.innerHTML = `<div class="list-group-item px-0 py-3 text-danger small">${message}</div>`;
     };
 
-    fetch(apiUrl, { credentials: 'include' })
+    const populateDashboard = payload => {
+      if (!payload) return;
+      if (dashboardUserName) dashboardUserName.textContent = payload.user || payload.first_name || 'Student';
+      if (activeListingsCount) activeListingsCount.textContent = payload.total_active ?? 0;
+      if (expiredListingsCount) expiredListingsCount.textContent = payload.total_expired ?? 0;
+      if (soldListingsCount) soldListingsCount.textContent = payload.total_sold ?? 0;
+      if (trustScoreValue) trustScoreValue.textContent = `${Number(payload.trust_score ?? 0).toFixed(0)}%`;
+      if (profileCompletionValue) profileCompletionValue.textContent = `${payload.profile_completion ?? 0}%`;
+      if (pointsBalanceValue) pointsBalanceValue.textContent = payload.points_balance ?? 0;
+      if (summaryPointsBalance) summaryPointsBalance.textContent = payload.points_balance ?? 0;
+      renderUpcomingListings(payload.upcoming_expiring_listings);
+      renderLatestListings(payload.latest_listings);
+    };
+
+    fetch(apiUrl, {
+      headers: {
+        ...getAuthHeaders(),
+        'Accept': 'application/json'
+      },
+      credentials: 'include'
+    })
       .then(response => {
         if (!response.ok) throw new Error('Dashboard API error');
         return response.json();
       })
       .then(json => {
         const payload = json.data || json;
-        activeListingsCount.textContent = payload.active_listings_count ?? 0;
-        salesThisMonthValue.textContent = formatCurrency(payload.sales_this_month ?? 0);
-        trustScoreValue.textContent = `${Number(payload.trust_score ?? 0).toFixed(0)}%`;
-        profileCompletionValue.textContent = `${payload.profile_completion ?? 0}%`;
-        renderListings(payload.listings || []);
+        populateDashboard(payload);
       })
       .catch(() => {
         showError('Unable to load dashboard data.');

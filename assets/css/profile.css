@@ -1,0 +1,23 @@
+
+/* Profile page specific styles */
+.profile-header .profile-avatar i {
+    font-size: 6rem;
+}
+.profile-header .stat {
+    text-align: center;
+}
+.review-card {
+    background: #fff;
+}
+.review-card .text-warning {
+    letter-spacing: 1px;
+}
+.rating-display .fs-4 {
+    line-height: 1;
+}
+.profile-header .btn {
+    border-radius: 12px;
+}
+.listing-actions .btn {
+    min-width: 100px;
+}

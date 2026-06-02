@@ -2,6 +2,7 @@
 const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
 const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
 const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
+const DASHBOARD_URL = `${CAMPUS_URL}dashboard`;
 
 function showToast(message, type = 'success', duration = 4000) {
   const container = document.getElementById('toast-container');
@@ -46,12 +47,11 @@ function getCookie(name) {
   return null;
 }
 
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-  }
+function getAuthHeaders() {
+  const token = getCookie('access_token') || getCookie('auth_token') || getCookie('token');
+  if (!token) return {};
+  return { Authorization: `Bearer ${token}` };
+}
 
 function deleteAuthCookies() {
   ['access_token', 'refresh_token', 'user_id', 'is_email_verified'].forEach(name => {

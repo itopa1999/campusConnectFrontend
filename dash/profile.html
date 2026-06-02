@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CampusConnect UI · Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/profile.css">
+  <style></style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" data-aos="fade-down" data-aos-duration="800">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-handshake me-2" style="color: #2c7a5e;"></i>
+      <span style="color: #2c7a5e;" class="brand-text">CampusConnect UI</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <li class="nav-item"><a class="nav-link" href="main.html">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="listings.html">Listings</a></li>
+        <li class="nav-item"><a class="nav-link" href="create-listing.html">Post</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="pt-5 mt-4">
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="bg-white rounded-4 shadow-sm p-4 text-center profile-header">
+          <div class="profile-avatar mb-3">
+            <i class="fas fa-user-circle fa-6x text-secondary"></i>
+          </div>
+          <h4 class="fw-semibold" id="profileName">Salawu Lucky</h4>
+          <p class="text-muted small mb-3">salawu.lucky@stu.ui.edu.ng</p>
+
+          <div class="d-flex justify-content-between gap-2 stats-row mb-3">
+            <div class="stat p-2 rounded-3 bg-light w-100">
+              <div class="small text-muted">Points</div>
+              <strong id="profilePoints">3</strong>
+            </div>
+            <div class="stat p-2 rounded-3 bg-light w-100">
+              <div class="small text-muted">Trust</div>
+              <strong id="profileTrust">0%</strong>
+            </div>
+          </div>
+
+          <a href="payment.html" class="btn btn-primary-custom w-100 mb-2">Add points</a>
+          <a href="listings.html" class="btn btn-outline-custom w-100">My listings</a>
+        </div>
+
+        <div class="bg-white rounded-4 shadow-sm p-4 mt-4">
+          <h6 class="mb-3">Student Verification</h6>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="fas fa-envelope text-success"></i>
+            <div>
+              <div class="small text-muted">Email</div>
+              <strong>Verified @stu.ui.edu.ng</strong>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-id-badge text-success"></i>
+            <div>
+              <div class="small text-muted">Hall</div>
+              <strong>Idia Hall</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
+          <h5 class="mb-3">Account Information</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="small text-muted">Full name</label>
+              <div class="fw-semibold">Salawu Lucky</div>
+            </div>
+            <div class="col-md-6">
+              <label class="small text-muted">Email</label>
+              <div class="fw-semibold">salawu.lucky@stu.ui.edu.ng</div>
+            </div>
+            <div class="col-md-6">
+              <label class="small text-muted">Phone</label>
+              <div class="fw-semibold">+234 801 234 5678</div>
+            </div>
+            <div class="col-md-6">
+              <label class="small text-muted">Member since</label>
+              <div class="fw-semibold">2024</div>
+            </div>
+          </div>
+
+          <div class="mt-3 d-flex gap-2">
+            <button class="btn btn-outline-custom">Edit profile</button>
+            <button class="btn btn-sm btn-secondary" id="changePasswordBtn">Change password</button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
+          <h5 class="mb-3">Trust & Reviews</h5>
+          <div class="d-flex align-items-center mb-3 gap-3">
+            <div class="rating-display">
+              <span class="fw-bold fs-4">4.6</span>
+              <div class="small text-muted">(12 reviews)</div>
+            </div>
+            <div>
+              <div class="small text-muted">Overall trust score</div>
+              <div class="progress mt-1" style="height:10px; width:180px;">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 46%;" aria-valuenow="46" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="reviewsList">
+            <!-- dummy reviews -->
+            <div class="review-card p-3 rounded-3 border mb-2">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <strong>From: Aisha K.</strong>
+                  <div class="small text-muted">On: COS102 listing</div>
+                </div>
+                <div class="text-end">
+                  <div class="text-warning">★★★★☆</div>
+                  <div class="small text-muted">2 weeks ago</div>
+                </div>
+              </div>
+              <div class="small text-muted">"Prompt meetup and item as described. Thank you!"</div>
+            </div>
+
+            <div class="review-card p-3 rounded-3 border mb-2">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <strong>From: Daniel O.</strong>
+                  <div class="small text-muted">On: PHY 115 manual</div>
+                </div>
+                <div class="text-end">
+                  <div class="text-warning">★★★★★</div>
+                  <div class="small text-muted">1 month ago</div>
+                </div>
+              </div>
+              <div class="small text-muted">"Great seller — honest pricing and quick communication."</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-4 shadow-sm p-4">
+          <h5 class="mb-3">Settings</h5>
+          <form id="settingsForm">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="small text-muted">Email notifications</label>
+                <select class="form-select">
+                  <option>Enabled</option>
+                  <option>Disabled</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="small text-muted">Profile visibility</label>
+                <select class="form-select">
+                  <option>Public (UI students)</option>
+                  <option>Private</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-3 d-flex gap-2">
+              <button type="submit" class="btn btn-primary-custom">Save settings</button>
+              <button type="button" class="btn btn-outline-custom">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // placeholder handlers for password change
+    document.getElementById('changePasswordBtn').addEventListener('click', () => {
+      alert('Change password flow (placeholder)');
+    });
+  });
+</script>
+</body>
+</html>

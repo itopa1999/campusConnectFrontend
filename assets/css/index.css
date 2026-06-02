@@ -437,6 +437,18 @@ section .bg-white {
         gap: 0.5rem;
     }
 
+    .card-body > .d-flex.justify-content-between.align-items-center span {
+        min-width: 0;
+    }
+
+    .card-body > .d-flex.justify-content-between.align-items-center .text-muted {
+        white-space: normal;
+    }
+
+    .card-text {
+        white-space: pre-line;
+    }
+
     .benefit-list li,
     #benefits .d-flex,
     .savings-highlight .d-flex {
