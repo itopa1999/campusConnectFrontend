@@ -143,7 +143,13 @@
               <div class="dashboard-card shadow-sm rounded-4 p-4 h-100" data-aos="fade-left" data-aos-duration="700">
                 <h5 class="mb-3">Upcoming Expirations Listings</h5>
                 <div class="list-group list-group-flush dashboard-list-group" id="upcomingExpirationsList">
-                  <div class="list-group-item px-0 py-3 text-muted small">Loading upcoming expirations...</div>
+                  <div class="dashboard-empty-state">
+                    <span class="empty-icon"><i class="fas fa-hourglass-half"></i></span>
+                    <div>
+                      <h6>No upcoming expirations</h6>
+                      <p>Your active listings are in good shape right now. Expiring items will appear here automatically.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -161,7 +167,15 @@
             </div>
 
             <div class="row g-3" id="latestListingsContainer">
-              <div class="col-12 text-muted small">Loading latest listings...</div>
+              <div class="col-12">
+                <div class="dashboard-empty-state">
+                  <span class="empty-icon"><i class="fas fa-box-open"></i></span>
+                  <div>
+                    <h6>No listings yet</h6>
+                    <p>Post your first item and it will show here with price, category, and manage actions.</p>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="d-flex justify-content-end mt-3">
               <a href="../dash/listings.html" class="btn btn-outline-custom btn-sm">View all listings</a>
@@ -222,7 +236,15 @@
     const renderUpcomingListings = items => {
       if (!upcomingExpirationsList) return;
       if (!Array.isArray(items) || items.length === 0) {
-        upcomingExpirationsList.innerHTML = '<div class="list-group-item px-0 py-3 text-muted small">No upcoming expirations.</div>';
+        upcomingExpirationsList.innerHTML = `
+          <div class="dashboard-empty-state">
+            <span class="empty-icon"><i class="fas fa-hourglass-half"></i></span>
+            <div>
+              <h6>No upcoming expirations</h6>
+              <p>Your active listings are in good shape right now. Expiring items will appear here automatically.</p>
+            </div>
+          </div>
+        `;
         return;
       }
 
@@ -241,7 +263,17 @@
     const renderLatestListings = items => {
       if (!latestListingsContainer) return;
       if (!Array.isArray(items) || items.length === 0) {
-        latestListingsContainer.innerHTML = '<div class="col-12 text-muted small">No latest listings yet.</div>';
+        latestListingsContainer.innerHTML = `
+          <div class="col-12">
+            <div class="dashboard-empty-state">
+              <span class="empty-icon"><i class="fas fa-box-open"></i></span>
+              <div>
+                <h6>No listings yet</h6>
+                <p>Post your first item and it will show here with price, category, and manage actions.</p>
+              </div>
+            </div>
+          </div>
+        `;
         return;
       }
 
@@ -265,8 +297,34 @@
     };
 
     const showError = message => {
-      if (latestListingsContainer) latestListingsContainer.innerHTML = `<div class="col-12 text-danger small">${message}</div>`;
-      if (upcomingExpirationsList) upcomingExpirationsList.innerHTML = `<div class="list-group-item px-0 py-3 text-danger small">${message}</div>`;
+      if (latestListingsContainer) {
+        latestListingsContainer.innerHTML = `
+          <div class="col-12">
+            <div class="dashboard-network-state">
+              <div class="d-flex align-items-start gap-3">
+                <span class="state-icon"><i class="fas fa-wifi"></i></span>
+                <div>
+                  <h6>Network hiccup</h6>
+                  <p>${message} Please check your connection and try again in a moment.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      if (upcomingExpirationsList) {
+        upcomingExpirationsList.innerHTML = `
+          <div class="dashboard-network-state">
+            <div class="d-flex align-items-start gap-3">
+              <span class="state-icon"><i class="fas fa-wifi"></i></span>
+              <div>
+                <h6>Network hiccup</h6>
+                <p>${message} Please check your connection and try again in a moment.</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
     };
 
     const populateDashboard = payload => {
@@ -279,6 +337,8 @@
       if (profileCompletionValue) profileCompletionValue.textContent = `${payload.profile_completion ?? 0}%`;
       if (pointsBalanceValue) pointsBalanceValue.textContent = payload.points_balance ?? 0;
       if (summaryPointsBalance) summaryPointsBalance.textContent = payload.points_balance ?? 0;
+      const meterFill = document.querySelector('.meter-fill');
+      if (meterFill) meterFill.style.width = `${Math.min(Number(payload.profile_completion ?? 0), 100)}%`;
       renderUpcomingListings(payload.upcoming_expiring_listings);
       renderLatestListings(payload.latest_listings);
     };

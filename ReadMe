@@ -48,6 +48,3 @@ if (document.readyState === 'loading') {
 } else {
   checkAuthenticationAndRedirect();
 }
-
-
-so i need to style it please each section should be like a perfect style for now use a dummy data please okay. lastly change password and other settings sha. 
