@@ -3,199 +3,344 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CampusConnect UI · Profile</title>
+  <title>CampusConnect UI · My Profile</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
-  <link rel="stylesheet" href="../assets/css/profile.css">
-  <style></style>
+  <style>
+    :root {
+      --primary: #2c7a5e;
+      --primary-dark: #1f5e4a;
+      --light-bg: #fefcf8;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fbf8;
+    }
+    .profile-avatar-large {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .stat-badge {
+      background: white;
+      border-radius: 1rem;
+      padding: 0.75rem;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .stat-badge:hover { transform: translateY(-3px); }
+    .verification-icon {
+      width: 40px;
+      height: 40px;
+      background: #e9f5ef;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+    .badge-custom {
+      background: #e9ecef;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .badge-custom i { margin-right: 6px; }
+    .rating-stars i { color: #f5b042; }
+    .progress-bar-custom {
+      height: 8px;
+      border-radius: 10px;
+      background-color: #e9ecef;
+    }
+    .progress-fill {
+      background: var(--primary);
+      width: 0%;
+      height: 100%;
+      border-radius: 10px;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .info-label { color: #6c757d; font-weight: 500; }
+    .info-value { font-weight: 600; color: #212529; }
+    @media (max-width: 768px) {
+      .info-row { flex-direction: column; gap: 5px; }
+    }
+    .section-card {
+      border-radius: 1.5rem;
+      border: none;
+      transition: all 0.2s;
+      background: white;
+    }
+    .btn-outline-custom {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      background: transparent;
+    }
+    .btn-outline-custom:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary-custom {
+      background: var(--primary);
+      border: none;
+      color: white;
+    }
+    .btn-primary-custom:hover {
+      background: var(--primary-dark);
+    }
+    footer {
+      background: white;
+      border-top: 1px solid #eee;
+      padding: 2rem 0;
+      margin-top: 3rem;
+    }
+  </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" data-aos="fade-down" data-aos-duration="800">
+
+<!-- Navigation (same style as original) -->
+<nav class="navbar navbar-expand-lg bg-white fixed-top shadow-sm" data-aos="fade-down">
   <div class="container">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand fw-bold" href="main.html">
       <i class="fas fa-handshake me-2" style="color: #2c7a5e;"></i>
-      <span style="color: #2c7a5e;" class="brand-text">CampusConnect UI</span>
+      <span style="color: #2c7a5e;">CampusConnect UI</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarMain">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center gap-2">
         <li class="nav-item"><a class="nav-link" href="main.html">Dashboard</a></li>
         <li class="nav-item"><a class="nav-link" href="listings.html">Listings</a></li>
         <li class="nav-item"><a class="nav-link" href="create-listing.html">Post</a></li>
+        <li class="nav-item"><a class="nav-link active fw-semibold" href="#">Profile</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
 <main class="pt-5 mt-4">
-  <div class="container py-5">
+  <div class="container py-4">
     <div class="row g-4">
+      
+      <!-- LEFT COLUMN: Avatar, stats, verification summary, badges -->
       <div class="col-lg-4">
-        <div class="bg-white rounded-4 shadow-sm p-4 text-center profile-header">
-          <div class="profile-avatar mb-3">
-            <i class="fas fa-user-circle fa-6x text-secondary"></i>
+        <div class="section-card shadow-sm p-4 text-center mb-4" data-aos="fade-right">
+          <div class="position-relative d-inline-block mb-3">
+            <img src="https://ui-avatars.com/api/?background=2c7a5e&color=fff&name=Salawu+Lucky" alt="Profile" class="profile-avatar-large">
+            <label for="profilePicUpload" class="position-absolute bottom-0 end-0 bg-white rounded-circle p-1 shadow-sm" style="cursor: pointer;">
+              <i class="fas fa-camera fa-sm text-primary"></i>
+            </label>
+            <input type="file" id="profilePicUpload" hidden accept="image/*">
           </div>
-          <h4 class="fw-semibold" id="profileName">Salawu Lucky</h4>
-          <p class="text-muted small mb-3">salawu.lucky@stu.ui.edu.ng</p>
-
-          <div class="d-flex justify-content-between gap-2 stats-row mb-3">
-            <div class="stat p-2 rounded-3 bg-light w-100">
-              <div class="small text-muted">Points</div>
-              <strong id="profilePoints">3</strong>
+          <h3 class="fw-bold mb-1">Salawu Lucky</h3>
+          <p class="text-muted small">salawu.lucky@stu.ui.edu.ng</p>
+          
+          <div class="row g-2 mt-3">
+            <div class="col-6">
+              <div class="stat-badge">
+                <i class="fas fa-coins fs-5" style="color: var(--primary);"></i>
+                <div class="small text-muted">Points</div>
+                <strong class="fs-5" id="pointsDisplay">3</strong>
+              </div>
             </div>
-            <div class="stat p-2 rounded-3 bg-light w-100">
-              <div class="small text-muted">Trust</div>
-              <strong id="profileTrust">0%</strong>
+            <div class="col-6">
+              <div class="stat-badge">
+                <i class="fas fa-star fs-5" style="color: var(--primary);"></i>
+                <div class="small text-muted">Trust score</div>
+                <strong class="fs-5" id="trustScore">46%</strong>
+              </div>
             </div>
           </div>
 
-          <a href="payment.html" class="btn btn-primary-custom w-100 mb-2">Add points</a>
-          <a href="listings.html" class="btn btn-outline-custom w-100">My listings</a>
+          <hr class="my-3">
+          <div class="text-start">
+            <h6 class="mb-3"><i class="fas fa-shield-alt me-2"></i>Verification summary</h6>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="verification-icon"><i class="fas fa-envelope"></i></span>
+              <div><strong>Email</strong><br><span class="small text-success">Verified @stu.ui.edu.ng</span></div>
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="verification-icon"><i class="fas fa-id-card"></i></span>
+              <div><strong>Student ID</strong><br><span class="small" id="studentIdStatus">Pending verification</span></div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="verification-icon"><i class="fas fa-building"></i></span>
+              <div><strong>Hall residence</strong><br><span class="small text-success">Idia Hall (verified)</span></div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <a href="payment.html" class="btn btn-primary-custom w-100 mb-2"><i class="fas fa-plus-circle me-1"></i>Add points</a>
+            <a href="listings.html" class="btn btn-outline-custom w-100"><i class="fas fa-list-ul me-1"></i>My listings</a>
+          </div>
         </div>
 
-        <div class="bg-white rounded-4 shadow-sm p-4 mt-4">
-          <h6 class="mb-3">Student Verification</h6>
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <i class="fas fa-envelope text-success"></i>
-            <div>
-              <div class="small text-muted">Email</div>
-              <strong>Verified @stu.ui.edu.ng</strong>
-            </div>
+        <!-- Badges earned -->
+        <div class="section-card shadow-sm p-4" data-aos="fade-right" data-aos-delay="100">
+          <h6 class="mb-3"><i class="fas fa-medal me-2"></i>Badges earned</h6>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="badge-custom"><i class="fas fa-check-circle text-success"></i> Email verified</span>
+            <span class="badge-custom"><i class="fas fa-home text-primary"></i> Hall verified</span>
+            <span class="badge-custom"><i class="fas fa-handshake text-warning"></i> Trusted seller</span>
+            <span class="badge-custom"><i class="fas fa-rocket"></i> Early adopter</span>
           </div>
-          <div class="d-flex align-items-center gap-2">
-            <i class="fas fa-id-badge text-success"></i>
-            <div>
-              <div class="small text-muted">Hall</div>
-              <strong>Idia Hall</strong>
-            </div>
-          </div>
+          <div class="mt-3 small text-muted">Complete your student ID verification to unlock the “ID verified” badge.</div>
         </div>
       </div>
 
+      <!-- RIGHT COLUMN: all user model fields grouped -->
       <div class="col-lg-8">
-        <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
-          <h5 class="mb-3">Account Information</h5>
+        <!-- Personal Information -->
+        <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left">
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+            <h5 class="mb-0"><i class="fas fa-user me-2" style="color: var(--primary);"></i>Personal Information</h5>
+            <button class="btn btn-sm btn-outline-custom" id="editPersonalBtn"><i class="fas fa-pen me-1"></i>Edit</button>
+          </div>
+          <div class="row g-3" id="personalInfoView">
+            <div class="col-md-6"><div class="info-row"><span class="info-label">Full name</span><span class="info-value">Salawu Lucky</span></div></div>
+            <div class="col-md-6"><div class="info-row"><span class="info-label">Email</span><span class="info-value">salawu.lucky@stu.ui.edu.ng</span></div></div>
+            <div class="col-md-6"><div class="info-row"><span class="info-label">Phone number</span><span class="info-value">+234 801 234 5678</span></div></div>
+            <div class="col-md-6"><div class="info-row"><span class="info-label">Member since</span><span class="info-value">2024</span></div></div>
+          </div>
+        </div>
+
+        <!-- Academic Details (matric, dept, faculty, level) -->
+        <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="50">
+          <h5 class="mb-3"><i class="fas fa-graduation-cap me-2" style="color: var(--primary);"></i>Academic Information</h5>
           <div class="row g-3">
-            <div class="col-md-6">
-              <label class="small text-muted">Full name</label>
-              <div class="fw-semibold">Salawu Lucky</div>
-            </div>
-            <div class="col-md-6">
-              <label class="small text-muted">Email</label>
-              <div class="fw-semibold">salawu.lucky@stu.ui.edu.ng</div>
-            </div>
-            <div class="col-md-6">
-              <label class="small text-muted">Phone</label>
-              <div class="fw-semibold">+234 801 234 5678</div>
-            </div>
-            <div class="col-md-6">
-              <label class="small text-muted">Member since</label>
-              <div class="fw-semibold">2024</div>
-            </div>
-          </div>
-
-          <div class="mt-3 d-flex gap-2">
-            <button class="btn btn-outline-custom">Edit profile</button>
-            <button class="btn btn-sm btn-secondary" id="changePasswordBtn">Change password</button>
+            <div class="col-md-6"><div class="info-row"><span class="info-label">Matric number</span><span class="info-value">UI/2022/12345</span></div></div>
+            <div class="col-md-6"><div class="info-row"><span class="info-label">Department</span><span class="info-value">Computer Science</span></div></div>
+            <div class="col-md-6"><div class="info-row"><span class="info-label">Faculty</span><span class="info-value">Science</span></div></div>
+            <div class="col-md-6"><div class="info-row"><span class="info-label">Level</span><span class="info-value">300 Level</span></div></div>
           </div>
         </div>
 
-        <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
-          <h5 class="mb-3">Trust & Reviews</h5>
-          <div class="d-flex align-items-center mb-3 gap-3">
-            <div class="rating-display">
-              <span class="fw-bold fs-4">4.6</span>
-              <div class="small text-muted">(12 reviews)</div>
-            </div>
+        <!-- Points Management (from Point model) -->
+        <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="100">
+          <h5 class="mb-3"><i class="fas fa-coins me-2" style="color: var(--primary);"></i>Points & Credits</h5>
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div>
-              <div class="small text-muted">Overall trust score</div>
-              <div class="progress mt-1" style="height:10px; width:180px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 46%;" aria-valuenow="46" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
+              <span class="text-muted">Available points</span>
+              <div class="display-6 fw-bold" id="pointsBalance">3</div>
+              <small class="text-muted">Each new listing costs 1 point</small>
+            </div>
+            <a href="payment.html" class="btn btn-primary-custom"><i class="fas fa-bolt me-1"></i>Top up points</a>
+          </div>
+          <hr>
+          <div class="small text-muted">📜 Transaction history</div>
+          <ul class="list-unstyled mt-2 small">
+            <li><i class="fas fa-plus-circle text-success me-2"></i> +3 points · Signup bonus (Jan 10, 2025)</li>
+            <li><i class="fas fa-minus-circle text-danger me-2"></i> -1 point · Listing “ECO 211 textbook” (Feb 1, 2025)</li>
+            <li><i class="fas fa-gift text-info me-2"></i> +5 points · Referral reward (Feb 10, 2025)</li>
+          </ul>
+        </div>
+
+        <!-- Trust & Reviews (average_rating, reviews) -->
+        <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="150">
+          <h5 class="mb-3"><i class="fas fa-star me-2" style="color: var(--primary);"></i>Trust & Reviews</h5>
+          <div class="d-flex align-items-center gap-4 flex-wrap mb-4">
+            <div>
+              <span class="display-6 fw-bold" id="avgRating">4.6</span>
+              <span class="text-muted">/5</span>
+              <div class="rating-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+            </div>
+            <div style="flex:1">
+              <div class="d-flex justify-content-between small"><span>Overall trust score</span><span id="trustPercent">46%</span></div>
+              <div class="progress-bar-custom mt-1"><div class="progress-fill" style="width:46%"></div></div>
+              <div class="small text-muted mt-1">Based on 12 reviews</div>
             </div>
           </div>
-
           <div id="reviewsList">
-            <!-- dummy reviews -->
-            <div class="review-card p-3 rounded-3 border mb-2">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <div>
-                  <strong>From: Aisha K.</strong>
-                  <div class="small text-muted">On: COS102 listing</div>
-                </div>
-                <div class="text-end">
-                  <div class="text-warning">★★★★☆</div>
-                  <div class="small text-muted">2 weeks ago</div>
-                </div>
+            <div class="review-item p-3 rounded-3 border mb-2">
+              <div class="d-flex justify-content-between align-items-start flex-wrap">
+                <div><strong>Aisha K.</strong> <span class="rating-stars small"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+                <small class="text-muted">2 weeks ago · COS102 textbook</small>
               </div>
-              <div class="small text-muted">"Prompt meetup and item as described. Thank you!"</div>
+              <p class="small text-muted mt-1 mb-0">“Prompt meetup and item as described. Thank you!”</p>
             </div>
-
-            <div class="review-card p-3 rounded-3 border mb-2">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <div>
-                  <strong>From: Daniel O.</strong>
-                  <div class="small text-muted">On: PHY 115 manual</div>
-                </div>
-                <div class="text-end">
-                  <div class="text-warning">★★★★★</div>
-                  <div class="small text-muted">1 month ago</div>
-                </div>
+            <div class="review-item p-3 rounded-3 border mb-2">
+              <div class="d-flex justify-content-between align-items-start flex-wrap">
+                <div><strong>Daniel O.</strong> <span class="rating-stars small"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+                <small class="text-muted">1 month ago · PHY 115 manual</small>
               </div>
-              <div class="small text-muted">"Great seller — honest pricing and quick communication."</div>
+              <p class="small text-muted mt-1 mb-0">“Great seller — honest pricing and quick communication.”</p>
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-4 shadow-sm p-4">
-          <h5 class="mb-3">Settings</h5>
+        <!-- Account Settings (notifications, visibility, change pass) -->
+        <div class="section-card shadow-sm p-4" data-aos="fade-left" data-aos-delay="200">
+          <h5 class="mb-3"><i class="fas fa-sliders-h me-2" style="color: var(--primary);"></i>Settings & Preferences</h5>
           <form id="settingsForm">
-            <div class="row g-3">
+            <div class="row g-3 mb-3">
               <div class="col-md-6">
-                <label class="small text-muted">Email notifications</label>
-                <select class="form-select">
+                <label class="form-label small fw-semibold">Email notifications</label>
+                <select class="form-select form-select-sm">
                   <option>Enabled</option>
                   <option>Disabled</option>
                 </select>
               </div>
               <div class="col-md-6">
-                <label class="small text-muted">Profile visibility</label>
-                <select class="form-select">
+                <label class="form-label small fw-semibold">Profile visibility</label>
+                <select class="form-select form-select-sm">
                   <option>Public (UI students)</option>
                   <option>Private</option>
                 </select>
               </div>
             </div>
-
-            <div class="mt-3 d-flex gap-2">
-              <button type="submit" class="btn btn-primary-custom">Save settings</button>
-              <button type="button" class="btn btn-outline-custom">Cancel</button>
+            <div class="d-flex flex-wrap gap-2">
+              <button type="submit" class="btn btn-primary-custom btn-sm">Save settings</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm" id="changePasswordBtn"><i class="fas fa-key me-1"></i>Change password</button>
+              <button type="button" class="btn btn-outline-danger btn-sm" id="uploadStudentIdBtn"><i class="fas fa-id-card me-1"></i>Upload student ID</button>
             </div>
           </form>
         </div>
-
       </div>
     </div>
   </div>
 </main>
 
+<footer>
+  <div class="container text-center">
+    <p class="text-muted small mb-0">&copy; 2025 CampusConnect UI — University of Ibadan. Only verified students.</p>
+  </div>
+</footer>
+
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<script src="../assets/js/main.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // placeholder handlers for password change
-    document.getElementById('changePasswordBtn').addEventListener('click', () => {
-      alert('Change password flow (placeholder)');
-    });
+  AOS.init({ duration: 600, once: true });
+  
+  // Simulate dynamic updates (in real backend, data would come from Django)
+  document.getElementById('editPersonalBtn')?.addEventListener('click', () => alert('Edit profile modal would open here.'));
+  document.getElementById('changePasswordBtn')?.addEventListener('click', () => alert('Password change flow (email OTP)'));
+  document.getElementById('uploadStudentIdBtn')?.addEventListener('click', () => alert('Upload student ID for verification.'));
+  document.getElementById('settingsForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Settings saved (demo)');
   });
+  document.getElementById('profilePicUpload')?.addEventListener('change', (e) => {
+    if(e.target.files.length) alert('Profile picture uploaded (simulated)');
+  });
+  
+  // Show points from localStorage or default
+  let points = localStorage.getItem('userPoints') || 3;
+  document.getElementById('pointsDisplay') && (document.getElementById('pointsDisplay').innerText = points);
+  document.getElementById('pointsBalance') && (document.getElementById('pointsBalance').innerText = points);
 </script>
 </body>
 </html>
