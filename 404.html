@@ -1,1 +1,156 @@
-404 site display
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Page not found | CampusConnect UI</title>
+  <!-- Bootstrap 5 + Icons + Google Fonts + AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="assets/img/icon.jpg">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/index.css">
+  <style>
+    /* Additional 404-specific tweaks (optional) */
+    .error-number {
+      font-size: 8rem;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, #2c7a5e 0%, #1f5e4a 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: none;
+    }
+    @media (min-width: 768px) {
+      .error-number { font-size: 12rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="particles-js"></div>
+<!-- Navigation (same as index) -->
+<header class="site-header fixed-top">
+  <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
+    <div class="container header-inner">
+      <a class="site-brand" href="index.html" aria-label="CampusConnect UI home">
+        <img src="assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo">
+        <span class="site-brand-name">
+          <span class="brand-full">CampusConnect UI</span>
+          <span class="brand-short">CampusConnect</span>
+        </span>
+      </a>
+
+      <button class="mobile-menu-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse site-menu" id="navbarMain">
+        <ul class="navbar-nav site-nav-list ms-lg-auto">
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#how-it-works">How it works</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#benefits">Benefits</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#testimonials">Trust</a></li>
+          <li class="nav-item site-nav-action"><a class="btn btn-outline-custom btn-sm site-signup-button" href="auth/auth.html"><i class="fas fa-user-plus me-1"></i>Sign up</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- 404 Hero Section -->
+<section class="hero-section" id="notfound">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7 mx-auto text-center" data-aos="fade-up" data-aos-duration="800">
+        <div class="badge-verify mb-3 d-inline-flex mx-auto"><i class="fas fa-compass me-1"></i> Oops – lost on campus?</div>
+        <h1 class="error-number display-1 fw-bold">404</h1>
+        <h2 class="fw-semibold mt-3">Page not found</h2>
+        <p class="lead text-muted mt-3">The page you are looking for might have been moved, deleted, or never existed. But don't worry – you can still find great deals and sell your items safely with other UI students.</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+          <a href="index.html" class="btn btn-primary-custom"><i class="fas fa-home me-2"></i>Back to homepage</a>
+          <a href="auth/auth.html" class="btn btn-outline-custom"><i class="fas fa-envelope me-2"></i>Sign in with UI email</a>
+        </div>
+        <div class="mt-5">
+          <span class="text-muted small"><i class="fas fa-shield-alt text-success me-1"></i> Still need help? <a href="index.html#contact" class="text-decoration-none">Contact support</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Suggested quick links (helpful for lost users) -->
+<section class="py-4">
+  <div class="container">
+    <div class="row g-4 text-center" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-md-4">
+        <div class="bg-white p-3 rounded-4 shadow-sm h-100">
+          <i class="fas fa-store fa-2x mb-2" style="color: #2c7a5e;"></i>
+          <h5 class="fw-semibold">Browse listings</h5>
+          <p class="small text-muted">Textbooks, electronics, furniture & more – all from verified UI students.</p>
+          <a href="index.html#IndexListing" class="btn btn-sm btn-outline-custom">Explore →</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-white p-3 rounded-4 shadow-sm h-100">
+          <i class="fas fa-user-plus fa-2x mb-2" style="color: #2c7a5e;"></i>
+          <h5 class="fw-semibold">Start selling</h5>
+          <p class="small text-muted">Join 500+ students. Free to list, free to chat, meet on campus.</p>
+          <a href="auth/auth.html" class="btn btn-sm btn-outline-custom">Sign up free →</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-white p-3 rounded-4 shadow-sm h-100">
+          <i class="fas fa-question-circle fa-2x mb-2" style="color: #2c7a5e;"></i>
+          <h5 class="fw-semibold">FAQs & safety</h5>
+          <p class="small text-muted">Learn how we verify UI emails and keep transactions secure.</p>
+          <a href="index.html#IndexFAQ" class="btn btn-sm btn-outline-custom">Read more →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer (exactly same as index, relative links work) -->
+<footer class="footer">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <a class="footer-brand" href="index.html">
+          <img src="assets/img/icon.jpg" alt="CampusConnect UI">
+          <span>CampusConnect UI</span>
+        </a>
+        <p class="text-muted small mt-2">A student-led initiative to make campus commerce safe, affordable, and local.</p>
+      </div>
+      <div class="col-md-8">
+        <div class="footer-links d-flex flex-wrap justify-content-md-end">
+          <a href="index.html#about">About</a>
+          <a href="index.html#how-it-works">How it Works</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="t/terms-and-conditions.html">Terms & Conditions</a>
+          <a href="t/privacy-and-policy.html">Privacy</a>
+          <a href="t/report-issue.html">Report Issue</a>
+        </div>
+      </div>
+      <div class="col-12 mt-4 text-center text-muted small">
+        &copy; <script>document.write(new Date().getFullYear())</script> CampusConnect UI - University of Ibadan. Only for verified students.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</button>
+
+<!-- Scripts (same as index) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
