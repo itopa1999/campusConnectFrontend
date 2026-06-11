@@ -1,3 +1,6 @@
+/* ------------------------------
+   RESET & BASE
+------------------------------ */
 *,
 *::before,
 *::after {
@@ -19,6 +22,8 @@ body {
     overflow-x: hidden;
     width: 100%;
     max-width: 100%;
+    position: relative;
+    background-color: transparent;
 }
 
 body,
@@ -52,7 +57,9 @@ button,
     overflow-wrap: anywhere;
 }
 
-/* soft, earthy accent palette — no aggressive blues */
+/* ------------------------------
+   COLOR PALETTE (CSS VARIABLES)
+------------------------------ */
 :root {
     --accent: #2c7a5e;
     --accent-light: #eaf7f0;
@@ -63,32 +70,39 @@ button,
     --text-muted: #5a6e6f;
 }
 
+/* ------------------------------
+   PARTICLES BACKGROUND
+------------------------------ */
 #particles-js {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;          /* stays behind content */
-    opacity: 2;          /* subtle visibility */
-    pointer-events: none; /* allows clicking through */
-  }
-  /* Ensure main content uses relative stacking */
-  body {
-    position: relative;
-    background-color: transparent; /* let particles show through slightly */
-  }
-  /* Keep white background on cards and sections for readability */
-  .hero-section, .step-card, .testimonial-card, .bg-white, .footer {
-    background-color: rgba(255, 255, 255, 0.92); /* slight transparency for blending */
+    z-index: -1;
+    opacity: 2;
+    pointer-events: none;
+}
+
+/* semi‑transparent backgrounds for readability */
+.hero-section,
+.step-card,
+.testimonial-card,
+.bg-white,
+.footer {
+    background-color: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(0px);
-  }
-  /* For sections that already have a light background, keep them readable */
-  section, .container {
+}
+
+section,
+.container {
     position: relative;
     z-index: 1;
 }
 
+/* ------------------------------
+   BUTTONS
+------------------------------ */
 .btn-primary-custom {
     background-color: var(--accent);
     border: none;
@@ -129,6 +143,9 @@ button,
     color: var(--accent-dark);
 }
 
+/* ------------------------------
+   SITE HEADER / NAVIGATION
+------------------------------ */
 .site-header {
     background: rgba(255, 255, 255, 0.97);
     border-bottom: 1px solid rgba(238, 242, 240, 0.95);
@@ -254,28 +271,23 @@ button,
         padding-top: 0.6rem;
         padding-bottom: 0.6rem;
     }
-
     .site-brand {
         max-width: calc(100% - 56px);
         font-size: 1.2rem;
     }
-
     .site-brand-logo {
         width: 38px;
         height: 38px;
         border-radius: 9px;
     }
-
     .site-menu {
         flex-basis: 100%;
         width: 100%;
     }
-
     .site-menu.show,
     .site-menu.collapsing {
         margin-top: 0.75rem;
     }
-
     .site-nav-list {
         width: 100%;
         align-items: stretch;
@@ -286,24 +298,20 @@ button,
         border-radius: 14px;
         box-shadow: 0 16px 34px rgba(31, 94, 72, 0.1);
     }
-
     .site-nav-list .nav-item {
         width: 100%;
     }
-
     .site-nav-link {
         width: 100%;
         padding: 0.9rem 0.85rem !important;
         border-radius: 10px;
         font-size: 0.98rem;
     }
-
     .site-nav-action {
         margin: 0.4rem 0 0;
         padding-top: 0.4rem;
         border-top: 1px solid var(--card-border);
     }
-
     .site-signup-button {
         width: 100%;
         min-height: 46px;
@@ -317,31 +325,29 @@ button,
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
     }
-
     .site-brand {
         gap: 0.5rem;
         font-size: 1.05rem;
     }
-
     .site-brand-logo {
         width: 34px;
         height: 34px;
     }
-
     .brand-full {
         display: none;
     }
-
     .brand-short {
         display: inline;
     }
-
     .mobile-menu-button {
         width: 40px;
         height: 40px;
     }
 }
 
+/* ------------------------------
+   FOOTER
+------------------------------ */
 .footer {
     background-color: #fafaf8;
     border-top: 1px solid #ecece6;
@@ -370,218 +376,232 @@ button,
     color: var(--accent);
 }
 
-
-/* Toast notification container */
+/* ------------------------------
+   TOAST NOTIFICATIONS
+------------------------------ */
 .toast-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 350px;
-  width: calc(100% - 40px);
-  pointer-events: none; /* allow clicking through container */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 350px;
+    width: calc(100% - 40px);
+    pointer-events: none;
 }
 
-/* Individual toast message */
 .toast-message {
-  background: white;
-  border-radius: 16px;
-  padding: 14px 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-left: 4px solid;
-  pointer-events: auto;
-  animation: slideDownFadeIn 0.3s ease forwards;
+    background: white;
+    border-radius: 16px;
+    padding: 14px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 4px solid;
+    pointer-events: auto;
+    animation: slideDownFadeIn 0.3s ease forwards;
 }
 
-/* Success type */
 .toast-message.success {
-  border-left-color: #2c7a5e;
-  background: #f0f9f4;
-  color: #1e5e48;
+    border-left-color: #2c7a5e;
+    background: #f0f9f4;
+    color: #1e5e48;
 }
 .toast-message.success i {
-  color: #2c7a5e;
+    color: #2c7a5e;
 }
 
-/* Error type */
 .toast-message.error {
-  border-left-color: #dc3545;
-  background: #fff5f5;
-  color: #a71d2a;
+    border-left-color: #dc3545;
+    background: #fff5f5;
+    color: #a71d2a;
 }
 .toast-message.error i {
-  color: #dc3545;
+    color: #dc3545;
 }
 
-/* Icon styling */
 .toast-message i {
-  font-size: 1.2rem;
-  width: 24px;
-  text-align: center;
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
 }
 
-/* Slide down + fade in animation */
 @keyframes slideDownFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Fade out animation */
 .toast-message.fade-out {
-  animation: fadeOutUp 0.3s ease forwards;
+    animation: fadeOutUp 0.3s ease forwards;
 }
 
 @keyframes fadeOutUp {
-  to {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
 }
 
-/* Scroll to top button */
+@media (max-width: 768px) {
+    html,
+    body {
+        overflow-x: clip;
+    }
+    .toast-container {
+        right: 50%;
+        transform: translateX(50%);
+        top: 20px;
+        max-width: 90%;
+        width: auto;
+        min-width: 280px;
+    }
+}
+
+/* ------------------------------
+   SCROLL TO TOP BUTTON
+------------------------------ */
 .scroll-top-btn {
-  position: fixed;
-  right: 1.25rem;
-  bottom: 1.25rem;
-  z-index: 1080;
-  width: 52px;
-  height: 52px;
-  border: 1px solid rgba(44, 122, 94, 0.18);
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent);
-  color: #ffffff;
-  box-shadow: 0 18px 36px rgba(31, 94, 72, 0.24);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(14px);
-  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease, background 0.2s ease;
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 1080;
+    width: 52px;
+    height: 52px;
+    border: 1px solid rgba(44, 122, 94, 0.18);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: #ffffff;
+    box-shadow: 0 18px 36px rgba(31, 94, 72, 0.24);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(14px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease, background 0.2s ease;
 }
 
 .scroll-top-btn:hover,
 .scroll-top-btn:focus {
-  background: var(--accent-dark);
-  color: #ffffff;
-  transform: translateY(10px) scale(1.04);
+    background: var(--accent-dark);
+    color: #ffffff;
+    transform: translateY(10px) scale(1.04);
 }
 
 .scroll-top-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.18), 0 18px 36px rgba(31, 94, 72, 0.24);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.18), 0 18px 36px rgba(31, 94, 72, 0.24);
 }
 
 .scroll-top-btn.is-visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .scroll-top-btn i {
-  font-size: 1.1rem;
-  line-height: 1;
+    font-size: 1.1rem;
+    line-height: 1;
 }
 
-/* Mobile & tablet: center the toast */
 @media (max-width: 768px) {
-  html,
-  body {
-    overflow-x: clip;
-  }
-
-  .toast-container {
-    right: 50%;
-    transform: translateX(50%);
-    top: 20px;
-    max-width: 90%;
-    width: auto;
-    min-width: 280px;
-  }
-
-  .scroll-top-btn {
-    right: 1rem;
-    bottom: 1rem;
-    width: 48px;
-    height: 48px;
-  }
+    .scroll-top-btn {
+        right: 1rem;
+        bottom: 1rem;
+        width: 48px;
+        height: 48px;
+    }
 }
 
-/* ensure spinners align nicely */
+/* ------------------------------
+   LOADER / SPINNER
+------------------------------ */
 .btn-spinner {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 50%;
-  border-top-color: var(--accent-dark);
-  animation: spin 0.6s linear infinite;
-  margin-right: 0.5rem;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--accent-dark);
+    animation: spin 0.6s linear infinite;
+    margin-right: 0.5rem;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Global Shimmer Skeleton ── */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ------------------------------
+   SKELETON LOADERS
+------------------------------ */
 .skeleton {
-  background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-  border-radius: 8px;
-}
-@keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+    background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 8px;
 }
 
-/* Reusable shape classes */
-.skeleton-text {
-  height: 16px;
-  margin-bottom: 10px;
-  border-radius: 8px;
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
-.skeleton-text.short  { width: 60%; }
-.skeleton-text.medium { width: 80%; }
+
+.skeleton-text {
+    height: 16px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+.skeleton-text.short {
+    width: 60%;
+}
+.skeleton-text.medium {
+    width: 80%;
+}
 
 .skeleton-heading {
-  height: 28px;
-  width: 40%;
-  margin-bottom: 16px;
-  border-radius: 8px;
+    height: 28px;
+    width: 40%;
+    margin-bottom: 16px;
+    border-radius: 8px;
 }
 
 .skeleton-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
 }
 
 .skeleton-card {
-  height: 200px;
-  border-radius: 12px;
+    height: 200px;
+    border-radius: 12px;
 }
 
 .skeleton-btn {
-  height: 48px;
-  width: 160px;
-  border-radius: 24px;
-  display: inline-block;
+    height: 48px;
+    width: 160px;
+    border-radius: 24px;
+    display: inline-block;
 }
 
 .skeleton-image {
-  width: 100%;
-  height: 200px;
-  border-radius: 12px;
+    width: 100%;
+    height: 200px;
+    border-radius: 12px;
 }

@@ -221,3 +221,40 @@
   background: var(--accent, #2c7a5e);
   border-radius: 10px;
 }
+
+/* Drag & drop area */
+.drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    background: #fafaf8;
+    transition: all 0.2s;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+.drop-area.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-light);
+}
+.drop-area i {
+    font-size: 2rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+.drop-area .small {
+    font-size: 0.8rem;
+}
+.image-preview {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.image-preview img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+}
