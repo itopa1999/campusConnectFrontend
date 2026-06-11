@@ -653,166 +653,24 @@
 <script src="assets/js/main.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
-  const reportBtn = document.getElementById('reportLostBtn');
-  if (reportBtn) {
-    reportBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      // Safety: check if formModal exists
-      if (typeof formModal === 'undefined' || !formModal) {
-        alert('Modal system not ready. Please refresh the page.');
-        return;
-      }
-
-      formModal.open({
-        title: 'Report Lost Item',
-        formHtml: `
-          <div class="mb-3">
-            <label class="form-label">Item name *</label>
-            <input type="text" name="item_name" class="form-control" placeholder="e.g., iPhone 13, Student ID, Blue Backpack" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Description *</label>
-            <textarea name="description" class="form-control" rows="3" placeholder="Colour, brand, distinguishing marks, etc." required></textarea>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Where was it found? *</label>
-            <input type="text" name="location" class="form-control" placeholder="e.g., Kennedy Library, Faculty of Science, Awo Hall" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Date found *</label>
-            <input type="date" name="date" class="form-control" required>
-          </div>
-
-          <hr class="my-4">
-          <h6 class="fw-bold">🔐 Owner verification questions (only the true owner will know these)</h6>
-          <p class="small text-muted">When someone claims this item, we'll ask them the same questions. If answers match, we'll share your contact details with them.</p>
-
-          <div class="mb-3">
-            <label class="form-label">Verification question 1 *</label>
-            <input type="text" name="verify_q1" class="form-control" placeholder="e.g., What colour is the item?" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Answer to question 1 *</label>
-            <input type="text" name="verify_a1" class="form-control" placeholder="e.g., Blue" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Verification question 2 *</label>
-            <input type="text" name="verify_q2" class="form-control" placeholder="e.g., Any unique mark or serial number?" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Answer to question 2 *</label>
-            <input type="text" name="verify_a2" class="form-control" placeholder="e.g., Small scratch on back" required>
-          </div>
-
-          <hr class="my-4">
-          <h6 class="fw-bold">📞 Your contact details (finder)</h6>
-
-          <div class="mb-3">
-            <label class="form-label">Your full name (finder) *</label>
-            <input type="text" name="finder_name" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Your email *</label>
-            <input type="email" name="finder_email" class="form-control" placeholder="@ui.edu.ng or personal" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Your phone number *</label>
-            <input type="tel" name="finder_phone" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Your department *</label>
-            <input type="text" name="finder_department" class="form-control" placeholder="e.g., Computer Science, Economics" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Upload image of the item (optional)</label>
-            <div class="drop-area" id="dropArea">
-              <i class="fas fa-cloud-upload-alt"></i>
-              <p>Drag & drop an image here or click to browse</p>
-              <input type="file" id="fileInput" accept="image/*" hidden>
-              <div class="small text-muted">JPEG, PNG up to 5MB</div>
-            </div>
-            <div class="image-preview" id="imagePreview"></div>
-          </div>
-        `,
-        submitLabel: 'Report Item',
-        onSubmit: async (form) => {
-          // Wait a tiny bit for any pending DOM updates
-          await new Promise(r => setTimeout(r, 10));
-          
-          const formData = new FormData(form);
-          const fileInput = document.getElementById('fileInput');
-          if (fileInput && fileInput.files.length > 0) {
-            formData.append('image', fileInput.files[0]);
-          }
-          
-          if (!formData.get('item_name') || !formData.get('description') || !formData.get('location') || !formData.get('finder_email')) {
-            alert('Please fill all required fields');
-            return;
-          }
-          
-          try {
-            // Replace with your actual backend endpoint
-            const response = await fetch('/api/lost-and-found/report/', {
-              method: 'POST',
-              body: formData
-            });
-            if (!response.ok) throw new Error('Server error');
-            const result = await response.json();
-            
-            if (typeof confirmModal !== 'undefined' && confirmModal) {
-              confirmModal.open({
-                title: 'Item Reported ✅',
-                message: 'Thank you for helping! If someone claims the item, we’ll match details and connect you with the owner.',
-                confirmText: 'OK',
-                onConfirm: () => formModal.close()
-              });
-            } else {
-              alert('Reported successfully!');
-              formModal.close();
-            }
-          } catch (err) {
-            alert('Failed to report. Please try again later.');
-            console.error(err);
-          }
-        }
-      });
-
-      // Delay drag‑&‑drop initialisation until modal DOM is injected
-      setTimeout(() => {
-        const dropArea = document.getElementById('dropArea');
-        const fileInput = document.getElementById('fileInput');
-        const previewContainer = document.getElementById('imagePreview');
-        if (!dropArea) return;
-
-        const previewImage = (file) => {
-          const reader = new FileReader();
-          reader.onload = (e) => { previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`; };
-          reader.readAsDataURL(file);
-        };
-
-        dropArea.addEventListener('click', () => fileInput.click());
-        dropArea.addEventListener('dragover', (e) => { e.preventDefault(); dropArea.classList.add('drag-over'); });
-        dropArea.addEventListener('dragleave', () => { dropArea.classList.remove('drag-over'); });
-        dropArea.addEventListener('drop', (e) => {
-          e.preventDefault();
-          dropArea.classList.remove('drag-over');
-          const file = e.dataTransfer.files[0];
-          if (file && file.type.startsWith('image/')) {
-            fileInput.files = e.dataTransfer.files;
-            previewImage(file);
-          } else {
-            alert('Please drop an image file.');
-          }
-        });
-        fileInput.addEventListener('change', () => {
-          if (fileInput.files.length) previewImage(fileInput.files[0]);
-        });
-      }, 200);
-    });
+  if (window.bootstrap) {
+    return;
   }
+
+  const menuButton = document.querySelector('.mobile-menu-button');
+  const menu = document.getElementById('navbarMain');
+
+  if (!menuButton || !menu) {
+    return;
+  }
+
+  menuButton.addEventListener('click', function () {
+    const isOpen = menu.classList.toggle('show');
+    menuButton.setAttribute('aria-expanded', String(isOpen));
+  });
+
 });
+
 </script>
 </body>
 </html>

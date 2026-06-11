@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lost & Found | CampusConnect UI</title>
+  <!-- Bootstrap 5 + Icons + Google Fonts + AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="assets/img/icon.jpg">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/index.css">
+  <link rel="stylesheet" href="assets/css/modal.css">
+  <style>
+    /* Additional styles for lost & found board */
+    .lost-item-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 1.25rem;
+      overflow: hidden;
+    }
+    .lost-item-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.08);
+    }
+    .verification-badge {
+      background: #fef7e0;
+      color: #b87c00;
+      font-size: 0.7rem;
+      border-radius: 50px;
+      padding: 0.25rem 0.75rem;
+    }
+    .item-image-placeholder {
+      background: #f1f3f2;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #adb5bd;
+      font-size: 2rem;
+    }
+    .search-filter-bar {
+      background: white;
+      border-radius: 60px;
+      padding: 0.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid #eef2f0;
+    }
+    .search-filter-bar input {
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 40px;
+      background: transparent;
+    }
+    .search-filter-bar input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .search-filter-bar button {
+      border-radius: 40px;
+      padding: 0.5rem 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .search-filter-bar {
+        border-radius: 20px;
+        flex-direction: column;
+        background: transparent;
+        border: none;
+        gap: 0.75rem;
+      }
+      .search-filter-bar input, .search-filter-bar button {
+        width: 100%;
+        border: 1px solid #eef2f0;
+        background: white;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="particles-js"></div>
+<!-- Navigation (same as index.html) -->
+<header class="site-header fixed-top">
+  <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
+    <div class="container header-inner">
+      <a class="site-brand" href="index.html" aria-label="CampusConnect UI home">
+        <img src="assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo">
+        <span class="site-brand-name">
+          <span class="brand-full">CampusConnect UI</span>
+          <span class="brand-short">CampusConnect</span>
+        </span>
+      </a>
+      <button class="mobile-menu-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse site-menu" id="navbarMain">
+        <ul class="navbar-nav site-nav-list ms-lg-auto">
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#how-it-works">How it works</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#benefits">Benefits</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#testimonials">Trust</a></li>
+          <li class="nav-item site-nav-action"><a class="btn btn-outline-custom btn-sm site-signup-button" href="auth/auth.html"><i class="fas fa-user-plus me-1"></i>Sign up</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="pt-5 mt-4">
+  <div class="container py-4">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <span class="badge-verify mb-2"><i class="fas fa-search me-1"></i> Lost & Found</span>
+      <h1 class="fw-bold">Help reunite belongings on campus</h1>
+      <p class="text-muted col-lg-7 mx-auto">Browse reported lost items. If you recognise something, claim it by answering the owner's verification questions.</p>
+      <div class="mt-3">
+        <button href="#" id="reportLostBtn" class="btn btn-outline-custom"><i class="fas fa-plus-circle me-2"></i>Report a lost item</button>
+      </div>
+    </div>
+
+    <!-- Search & filter bar -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-8">
+        <div class="search-filter-bar d-flex gap-2 align-items-center">
+          <i class="fas fa-search text-muted ps-3"></i>
+          <input type="text" id="searchInput" class="form-control" placeholder="Search by item name, location...">
+          <button id="searchBtn" class="btn btn-primary-custom"><i class="fas fa-filter me-1"></i>Filter</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items grid -->
+    <div id="itemsGrid" class="row g-4" data-aos="fade-up">
+      <!-- Items will be injected here from dummy API -->
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-success" role="status"></div>
+        <p class="mt-2">Loading lost items...</p>
+      </div>
+    </div>
+
+    <!-- No results message -->
+    <div id="noResultsMsg" class="text-center py-5 d-none">
+      <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+      <h5>No lost items match your search</h5>
+      <p class="text-muted">Try different keywords or <a href="index.html#lost-found-section">report a lost item</a> if you found something.</p>
+    </div>
+  </div>
+</main>
+
+<!-- Footer (same as index.html) -->
+<footer class="footer">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <a class="footer-brand" href="index.html">
+          <img src="assets/img/icon.jpg" alt="CampusConnect UI">
+          <span>CampusConnect UI</span>
+        </a>
+        <p class="text-muted small mt-2">A student-led initiative to make campus commerce safe, affordable, and local.</p>
+      </div>
+      <div class="col-md-8">
+        <div class="footer-links d-flex flex-wrap justify-content-md-end">
+          <a href="#">About</a>
+          <a href="index.html#how-it-works">How it Works</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="t/terms-and-conditions.html">Terms & Conditions</a>
+          <a href="t/privacy-and-policy.html">Privacy</a>
+          <a href="t/report-issue.html">Report Issue</a>
+        </div>
+      </div>
+      <div class="col-12 mt-4 text-center text-muted small">
+        &copy; <script>document.write(new Date().getFullYear())</script> CampusConnect UI - University of Ibadan. Only for verified students.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Modals (same as index.html) -->
+<div id="formModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 id="formModalTitle">Form Title</h3>
+      <button class="modal-close" id="closeFormModalBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="formModalBody"></div>
+    <div class="modal-footer" id="formModalFooter"></div>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container confirm-modal-container">
+    <div class="modal-header">
+      <h3 id="confirmModalTitle">Confirm Action</h3>
+      <button class="modal-close" id="closeConfirmModalBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="confirmModalBody">
+      <p id="confirmMessage"></p>
+    </div>
+    <div class="modal-footer" id="confirmModalFooter"></div>
+  </div>
+</div>
+
+<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</button>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.bootstrap) {
+    return;
+  }
+
+  const menuButton = document.querySelector('.mobile-menu-button');
+  const menu = document.getElementById('navbarMain');
+
+  if (!menuButton || !menu) {
+    return;
+  }
+
+  menuButton.addEventListener('click', function () {
+    const isOpen = menu.classList.toggle('show');
+    menuButton.setAttribute('aria-expanded', String(isOpen));
+  });
+
+});
+let dummyLostItems = [
+  {
+    id: 1,
+    item_name: "Black HP Laptop",
+    description: "HP Pavilion 15, Core i5, 8GB RAM. Has a small sticker of a lion on the palm rest.",
+    location: "Kennedy Library, 2nd floor",
+    date: "2025-06-10",
+    category: "electronics",
+    image_url: null,
+    finder_name: "Adebayo O.",
+    finder_email: "adebayo.o@stu.ui.edu.ng",
+    finder_phone: "08031234567",
+    finder_department: "Computer Science",
+    verify_q1: "What colour is the laptop?",
+    verify_a1: "black",
+    verify_q2: "What sticker is on it?",
+    verify_a2: "lion"
+  },
+  {
+    id: 2,
+    item_name: "Student ID Card",
+    description: "University of Ibadan ID card for Faculty of Science. Name: Amara E.",
+    location: "Awo Hall cafeteria",
+    date: "2025-06-11",
+    category: "id",
+    image_url: null,
+    finder_name: "Tunde B.",
+    finder_email: "tunde.b@stu.ui.edu.ng",
+    finder_phone: "08098765432",
+    finder_department: "Economics",
+    verify_q1: "What's the name on the ID?",
+    verify_a1: "Amara E.",
+    verify_q2: "What faculty?",
+    verify_a2: "Science"
+  },
+  {
+    id: 3,
+    item_name: "Blue Backpack",
+    description: "Nike backpack, two zippers, contains a notebook and a calculator.",
+    location: "Faculty of Arts, Lecture Theatre 1",
+    date: "2025-06-09",
+    category: "accessories",
+    image_url: null,
+    finder_name: "Chiamaka U.",
+    finder_email: "chiamaka.u@stu.ui.edu.ng",
+    finder_phone: "08055667788",
+    finder_department: "Arts",
+    verify_q1: "What brand is the backpack?",
+    verify_a1: "Nike",
+    verify_q2: "What color?",
+    verify_a2: "blue"
+  },
+  {
+    id: 4,
+    item_name: "Calculus Textbook",
+    description: "Thomas' Calculus, 14th edition. Some highlighting on chapter 3.",
+    location: "Science Lecture Theatre",
+    date: "2025-06-08",
+    category: "books",
+    image_url: null,
+    finder_name: "Samuel K.",
+    finder_email: "samuel.k@stu.ui.edu.ng",
+    finder_phone: "08044332211",
+    finder_department: "Mathematics",
+    verify_q1: "Which edition?",
+    verify_a1: "14th",
+    verify_q2: "Which chapter has highlighting?",
+    verify_a2: "3"
+  }
+];
+
+let currentFilter = { search: '', category: '' };
+
+// Function to render items
+function renderItems() {
+  const grid = document.getElementById('itemsGrid');
+  const noResults = document.getElementById('noResultsMsg');
+  
+  let filtered = [...dummyLostItems];
+  
+  // Filter by search (item name or location)
+  if (currentFilter.search) {
+    const term = currentFilter.search.toLowerCase();
+    filtered = filtered.filter(item => 
+      item.item_name.toLowerCase().includes(term) || 
+      item.location.toLowerCase().includes(term)
+    );
+  }
+  // Filter by category
+  if (currentFilter.category) {
+    filtered = filtered.filter(item => item.category === currentFilter.category);
+  }
+  
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    noResults.classList.remove('d-none');
+    return;
+  }
+  noResults.classList.add('d-none');
+  
+  grid.innerHTML = filtered.map(item => `
+    <div class="col-md-6 col-lg-4">
+      <div class="card lost-item-card h-100 border-0 shadow-sm">
+        <div class="item-image-placeholder">
+          ${item.image_url ? `<img src="${item.image_url}" class="w-100 h-100 object-fit-cover" alt="${item.item_name}">` : `<i class="fas fa-image"></i> No image`}
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="card-title fw-bold mb-0">${escapeHtml(item.item_name)}</h5>
+            <span class="verification-badge"><i class="fas fa-lock me-1"></i> Verified</span>
+          </div>
+          <p class="card-text small text-muted">${escapeHtml(item.description.substring(0, 100))}${item.description.length > 100 ? '...' : ''}</p>
+          <div class="mt-2 small text-muted">
+            <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
+            <i class="far fa-calendar-alt me-1"></i> ${formatDate(item.date)}
+          </div>
+        </div>
+        <div class="card-footer bg-transparent border-0 pb-3">
+          <button class="btn btn-sm btn-outline-custom w-100 claim-btn" data-id="${item.id}">
+            <i class="fas fa-hand-holding-heart me-1"></i> I found this / Claim
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  
+  // Attach claim button events
+  document.querySelectorAll('.claim-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const id = parseInt(btn.getAttribute('data-id'));
+      const item = dummyLostItems.find(i => i.id === id);
+      if (item) openClaimModal(item);
+    });
+  });
+}
+
+// Helper: escape HTML
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+// Open claim modal with verification questions
+function openClaimModal(item) {
+  if (typeof formModal === 'undefined' || !formModal) {
+    alert('Modal system not ready. Please refresh.');
+    return;
+  }
+  
+  formModal.open({
+    title: `Claim Item: ${item.item_name}`,
+    formHtml: `
+      <p class="text-muted small">The owner has set up verification questions to ensure you are the rightful owner. Answer correctly to reveal contact information.</p>
+      <div class="mb-3">
+        <label class="form-label fw-bold">Verification Question 1</label>
+        <div class="bg-light p-2 rounded">${escapeHtml(item.verify_q1)}</div>
+        <input type="text" name="answer1" class="form-control mt-2" placeholder="Your answer" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-bold">Verification Question 2</label>
+        <div class="bg-light p-2 rounded">${escapeHtml(item.verify_q2)}</div>
+        <input type="text" name="answer2" class="form-control mt-2" placeholder="Your answer" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Your name (claimant) *</label>
+        <input type="text" name="claimant_name" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Your email *</label>
+        <input type="email" name="claimant_email" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Your phone *</label>
+        <input type="tel" name="claimant_phone" class="form-control" required>
+      </div>
+      <div class="small text-muted">We will only share your details with the finder if your answers match.</div>
+    `,
+    submitLabel: 'Submit Claim',
+    onSubmit: async (form) => {
+      const answer1 = form.querySelector('[name="answer1"]').value.trim().toLowerCase();
+      const answer2 = form.querySelector('[name="answer2"]').value.trim().toLowerCase();
+      const claimantName = form.querySelector('[name="claimant_name"]').value.trim();
+      const claimantEmail = form.querySelector('[name="claimant_email"]').value.trim();
+      const claimantPhone = form.querySelector('[name="claimant_phone"]').value.trim();
+      
+      if (!answer1 || !answer2 || !claimantName || !claimantEmail || !claimantPhone) {
+        alert('Please fill all fields.');
+        return;
+      }
+      
+      // Compare answers (case-insensitive, trimmed)
+      const correct1 = (answer1 === item.verify_a1.toLowerCase());
+      const correct2 = (answer2 === item.verify_a2.toLowerCase());
+      
+      if (correct1 && correct2) {
+        // Show finder contact details
+        if (typeof confirmModal !== 'undefined' && confirmModal) {
+          confirmModal.open({
+            title: '✅ Verification Successful!',
+            message: `You answered correctly. Here is the finder's contact:\n\nName: ${item.finder_name}\nEmail: ${item.finder_email}\nPhone: ${item.finder_phone}\nDepartment: ${item.finder_department}\n\nPlease reach out to arrange the return.`,
+            confirmText: 'Got it',
+            onConfirm: () => formModal.close()
+          });
+        } else {
+          alert(`Verification passed! Finder contact: ${item.finder_name} (${item.finder_email}, ${item.finder_phone})`);
+          formModal.close();
+        }
+        // In a real app, you would also send an email to the finder etc.
+      } else {
+        confirmModal.open({
+          title: '❌ Verification Failed',
+          message: 'Your answers did not match the owner’s questions. Please double-check the item details and try again. If you believe this is your item, contact support@campusconnect.ui for assistance.',
+          confirmText: 'OK',
+          onConfirm: () => {}
+        });
+      }
+    }
+  });
+}
+
+// Load dummy data and render
+function loadLostItems() {
+  // Simulate API call
+  setTimeout(() => {
+    renderItems();
+  }, 300);
+}
+
+// Event listeners for search/filter
+document.getElementById('searchBtn').addEventListener('click', () => {
+  currentFilter.search = document.getElementById('searchInput').value;
+  currentFilter.category = document.getElementById('categoryFilter').value;
+  renderItems();
+});
+document.getElementById('searchInput').addEventListener('keyup', (e) => {
+  if (e.key === 'Enter') {
+    currentFilter.search = e.target.value;
+    currentFilter.category = document.getElementById('categoryFilter').value;
+    renderItems();
+  }
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  AOS.init({ duration: 600, once: true });
+  loadLostItems();
+  
+  // Mobile menu toggle (repeated from index)
+  const menuButton = document.querySelector('.mobile-menu-button');
+  const menu = document.getElementById('navbarMain');
+  if (menuButton && menu) {
+    menuButton.addEventListener('click', function () {
+      const isOpen = menu.classList.toggle('show');
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+    });
+  }
+});
+</script>
+</body>
+</html>

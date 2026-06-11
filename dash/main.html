@@ -7,18 +7,37 @@
   <!-- Bootstrap 5 + Icons + Google Fonts + AOS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/dashboard.css">
   <style>
+    /* Small extra fixes for meter-fill if not defined elsewhere */
+    .meter-fill {
+      height: 6px;
+      background: var(--accent);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+    .progress-bar-custom {
+      height: 6px;
+      border-radius: 10px;
+      background-color: #e2e8f0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: var(--accent);
+      height: 100%;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
 <div id="particles-js"></div>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" data-aos="fade-down" data-aos-duration="800">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" data-aos="fade-down" data-aos-duration="800">
   <div class="container">
     <a class="navbar-brand" href="#">
       <i class="fas fa-handshake me-2" style="color: #2c7a5e;"></i>
@@ -30,10 +49,10 @@
     <div class="collapse navbar-collapse" id="navbarMain">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-            <i class="fas fa-user-circle fa-lg"></i> Tolani
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user-circle fa-lg me-1"></i> Tolani
           </a>
-          <ul class="dropdown-menu dropdown-menu-end">
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 mt-2" aria-labelledby="userDropdown">
             <li><a class="dropdown-item" href="profile.html"><i class="fas fa-id-card me-2"></i>My Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="auth.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
@@ -46,103 +65,110 @@
 
 <!-- Main dashboard content -->
 <div class="dashboard-page">
+  <!-- Hero section -->
   <section id="dashboardHome" class="dashboard-hero py-5">
     <div class="container" data-aos="fade-up" data-aos-duration="900">
       <div class="row align-items-end">
         <div class="col-lg-7">
-          <span class="badge-verify mb-3">student dashboard</span>
+          <span class="badge-verify mb-3"><i class="fas fa-chart-line me-1"></i> student dashboard</span>
           <h1 class="display-6 fw-semibold">Welcome back, <span id="dashboardUserName">Tolani</span></h1>
           <p class="text-muted mb-4">Track your campus listings, messages, sales and trust score in one place with exceptional clarity and style.</p>
         </div>
         <div class="col-lg-5 text-lg-end" data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
-          <a href="../dash/create-listing.html" class="btn btn-primary-custom me-2 mb-2">Post a listing</a>
-          <a href="../dash/listings.html" class="btn btn-outline-custom mb-2">Browse listings</a>
+          <a href="../dash/create-listing.html" class="btn btn-primary-custom me-2 mb-2"><i class="fas fa-plus-circle me-1"></i>Post a listing</a>
+          <a href="../dash/listings.html" class="btn btn-outline-custom mb-2"><i class="fas fa-search me-1"></i>Browse listings</a>
         </div>
       </div>
 
+      <!-- Stats row -->
       <div class="row g-3 stats-row mt-4" data-aos="fade-up" data-aos-duration="700">
         <div class="col-6 col-md-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-4">
-            <div class="stat-label">Active listings</div>
+          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+            <div class="stat-label"><i class="fas fa-tag me-1"></i> Active listings</div>
             <div class="stat-value" id="activeListingsCount">0</div>
             <small class="text-muted">Live offers on campus</small>
           </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-4">
-            <div class="stat-label">Expired listings</div>
+          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+            <div class="stat-label"><i class="fas fa-clock me-1"></i> Expired listings</div>
             <div class="stat-value" id="expiredListingsCount">0</div>
-            <small class="text-muted">Listings that have expired</small>
+            <small class="text-muted">Past opportunities</small>
           </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-4">
-            <div class="stat-label">Sold listings</div>
+          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+            <div class="stat-label"><i class="fas fa-check-circle me-1"></i> Sold listings</div>
             <div class="stat-value" id="soldListingsCount">0</div>
             <small class="text-muted">Completed transactions</small>
           </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-4">
-            <div class="stat-label">Trust score</div>
+          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+            <div class="stat-label"><i class="fas fa-shield-alt me-1"></i> Trust score</div>
             <div class="stat-value" id="trustScoreValue">0%</div>
             <small class="text-muted">Verified student badge</small>
           </div>
         </div>
         <div class="col-12 col-md-3 col-lg-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-4">
-            <div class="stat-label">Points Balance</div>
+          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+            <div class="stat-label"><i class="fas fa-coins me-1"></i> Points Balance</div>
             <div class="stat-value" id="pointsBalanceValue">0</div>
-            <small class="text-muted">Available points for posting listings</small>
+            <small class="text-muted">Available for posting</small>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Tabs section -->
   <section class="dashboard-tabs-section py-4">
     <div class="container">
       <ul class="nav nav-pills dashboard-pills mb-4" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+          <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true"><i class="fas fa-home me-1"></i> Overview</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="listings-tab" data-bs-toggle="pill" data-bs-target="#listings" type="button" role="tab" aria-controls="listings" aria-selected="false">My listings</button>
+          <button class="nav-link" id="listings-tab" data-bs-toggle="pill" data-bs-target="#listings" type="button" role="tab" aria-controls="listings" aria-selected="false"><i class="fas fa-list-ul me-1"></i> My listings</button>
         </li>
       </ul>
 
       <div class="tab-content">
+        <!-- Overview tab -->
         <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
           <div class="row g-4">
             <div class="col-lg-7">
               <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                  <h5 class="mb-0">Quick summary</h5>
-                  <span class="badge bg-success bg-opacity-10 text-success">Live</span>
+                  <h5 class="mb-0"><i class="fas fa-chart-simple me-2"></i> Quick summary</h5>
+                  <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Live</span>
                 </div>
                 <p class="text-muted">Your CampusConnect profile is active. Keep posting relevant items for better trust.</p>
-                <div class="row g-3 mt-4">
+                <div class="row g-3 mt-2">
                   <div class="col-6">
-                    <div class="summary-tile p-3 rounded-4 bg-light">
-                      <div class="small text-muted">Profile completion</div>
-                      <strong id="profileCompletionValue">0%</strong>
+                    <div class="summary-tile p-3 rounded-4">
+                      <div class="small text-muted mb-1">Profile completion</div>
+                      <strong class="fs-3" id="profileCompletionValue">0%</strong>
+                      <div class="progress-bar-custom mt-2">
+                        <div class="progress-fill" id="profileMeterFill" style="width:0%"></div>
+                      </div>
                     </div>
                   </div>
                   <div class="col-6">
-                    <div class="summary-tile p-3 rounded-4 bg-light">
-                      <div class="small text-muted">Points balance</div>
-                      <strong id="summaryPointsBalance">3</strong>
-                      <div class="small text-muted">Posting an item costs 1 point.</div>
+                    <div class="summary-tile p-3 rounded-4">
+                      <div class="small text-muted mb-1">Points balance</div>
+                      <strong class="fs-3" id="summaryPointsBalance">3</strong>
+                      <div class="small text-muted mt-1">Posting an item costs 1 point.</div>
                     </div>
                   </div>
                 </div>
-                <a href="payment.html" class="btn btn-primary-custom btn-sm mt-3">Add more points</a>
+                <a href="payment.html" class="btn btn-primary-custom btn-sm mt-3"><i class="fas fa-bolt me-1"></i>Add more points</a>
               </div>
             </div>
             <div class="col-lg-5">
               <div class="dashboard-card shadow-sm rounded-4 p-4 h-100" data-aos="fade-left" data-aos-duration="700">
-                <h5 class="mb-3">Upcoming Expirations Listings</h5>
-                <div class="list-group list-group-flush dashboard-list-group" id="upcomingExpirationsList">
+                <h5 class="mb-3"><i class="fas fa-hourglass-half me-2"></i>Upcoming Expirations</h5>
+                <div id="upcomingExpirationsList">
                   <div class="dashboard-empty-state">
                     <span class="empty-icon"><i class="fas fa-hourglass-half"></i></span>
                     <div>
@@ -156,16 +182,16 @@
           </div>
         </div>
 
+        <!-- Listings tab -->
         <div class="tab-pane fade" id="listings" role="tabpanel" aria-labelledby="listings-tab">
           <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
             <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
               <div>
-                <h5 class="mb-1">My active listings</h5>
+                <h5 class="mb-1"><i class="fas fa-store me-2"></i>My active listings</h5>
                 <p class="text-muted mb-0">Manage your current offers and update prices.</p>
               </div>
-              <a href="../dash/create-listing.html" class="btn btn-outline-custom mt-3 mt-md-0">Add new listing</a>
+              <a href="../dash/create-listing.html" class="btn btn-outline-custom mt-3 mt-md-0"><i class="fas fa-plus me-1"></i>Add new listing</a>
             </div>
-
             <div class="row g-3" id="latestListingsContainer">
               <div class="col-12">
                 <div class="dashboard-empty-state">
@@ -178,7 +204,7 @@
               </div>
             </div>
             <div class="d-flex justify-content-end mt-3">
-              <a href="../dash/listings.html" class="btn btn-outline-custom btn-sm">View all listings</a>
+              <a href="../dash/listings.html" class="btn btn-outline-custom btn-sm">View all listings <i class="fas fa-arrow-right ms-1"></i></a>
             </div>
           </div>
         </div>
@@ -187,6 +213,7 @@
   </section>
 </div>
 
+<!-- Mobile bottom navigation -->
 <div class="dashboard-mobile-actions d-md-none">
   <a href="#dashboardHome" class="action-link">
     <i class="fas fa-home"></i>
@@ -223,6 +250,7 @@
     const dashboardUserName = document.getElementById('dashboardUserName');
     const upcomingExpirationsList = document.getElementById('upcomingExpirationsList');
     const latestListingsContainer = document.getElementById('latestListingsContainer');
+    const profileMeterFill = document.getElementById('profileMeterFill');
 
     const formatCurrency = amount => {
       const value = Number(amount) || 0;
@@ -247,15 +275,14 @@
         `;
         return;
       }
-
       upcomingExpirationsList.innerHTML = items.map(item => `
-        <div class="list-group-item px-0 py-3">
+        <div class="list-group-item px-0 py-3 border-0 border-bottom">
           <div class="d-flex justify-content-between mb-2">
-            <strong>${item.title || 'Untitled'}</strong>
-            <span class="text-muted small">${item.expires_at_humanized || ''}</span>
+            <strong>${escapeHtml(item.title || 'Untitled')}</strong>
+            <span class="text-muted small"><i class="far fa-clock me-1"></i>${item.expires_at_humanized || ''}</span>
           </div>
-          <p class="mb-0 text-muted small">${item.description || ''}</p>
-          ${item.hostpost_names?.length ? `<div class="small text-muted mt-2"><i class="fas fa-map-marker-alt"></i> ${item.hostpost_names.join(' | ')}</div>` : ''}
+          <p class="mb-0 text-muted small">${escapeHtml(item.description || '')}</p>
+          ${item.hostpost_names?.length ? `<div class="small text-muted mt-2"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.hostpost_names.join(' | '))}</div>` : ''}
         </div>
       `).join('');
     };
@@ -276,24 +303,33 @@
         `;
         return;
       }
-
       latestListingsContainer.innerHTML = items.map(item => `
         <div class="col-md-6">
-          <div class="listing-card rounded-4 border p-3 h-100">
+          <div class="listing-card rounded-4 p-3 h-100">
             <div class="d-flex justify-content-between">
-              <span class="badge bg-white text-dark border px-3 py-1 rounded-pill"><i class="fas fa-book me-1"></i> ${item.category || 'Listing'}</span>
-              <small class="text-muted">${item.created_at_humanized || ''}</small>
+              <span class="badge bg-white text-dark border px-3 py-1 rounded-pill"><i class="fas fa-tag me-1"></i> ${escapeHtml(item.category || 'Listing')}</span>
+              <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>${item.created_at_humanized || ''}</small>
             </div>
-            <h5 class="card-title mt-2 mb-2">${item.title || 'Untitled'}</h5>
-            <p class="card-text text-muted small listing-description mb-3">${item.description || ''}</p>
+            <h5 class="card-title mt-2 mb-2 fw-bold">${escapeHtml(item.title || 'Untitled')}</h5>
+            <p class="card-text text-muted small listing-description mb-3">${escapeHtml(item.description || '')}</p>
             <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap mt-2">
-              <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
-              <span class="text-muted"><i class="fas fa-map-marker-alt"></i> ${item.hostpost_names?.join(' | ') || 'Unknown location'}</span>
-              <a href="../dash/listings.html" class="btn btn-sm btn-outline-custom mt-2">Manage</a>
+              <span class="fw-bold text-success fs-5">${formatCurrency(item.price)}</span>
+              <span class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.hostpost_names?.join(' | ') || 'Unknown location')}</span>
+              <a href="../dash/listings.html" class="btn btn-sm btn-outline-custom mt-2">Manage <i class="fas fa-arrow-right ms-1"></i></a>
             </div>
           </div>
         </div>
       `).join('');
+    };
+
+    const escapeHtml = (str) => {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
     };
 
     const showError = message => {
@@ -335,17 +371,16 @@
       if (soldListingsCount) soldListingsCount.textContent = payload.total_sold ?? 0;
       if (trustScoreValue) trustScoreValue.textContent = `${Number(payload.trust_score ?? 0).toFixed(0)}%`;
       if (profileCompletionValue) profileCompletionValue.textContent = `${payload.profile_completion ?? 0}%`;
+      if (profileMeterFill) profileMeterFill.style.width = `${Math.min(Number(payload.profile_completion ?? 0), 100)}%`;
       if (pointsBalanceValue) pointsBalanceValue.textContent = payload.points_balance ?? 0;
       if (summaryPointsBalance) summaryPointsBalance.textContent = payload.points_balance ?? 0;
-      const meterFill = document.querySelector('.meter-fill');
-      if (meterFill) meterFill.style.width = `${Math.min(Number(payload.profile_completion ?? 0), 100)}%`;
       renderUpcomingListings(payload.upcoming_expiring_listings);
       renderLatestListings(payload.latest_listings);
     };
 
     fetch(apiUrl, {
       headers: {
-        ...getAuthHeaders(),
+        ...(typeof getAuthHeaders === 'function' ? getAuthHeaders() : {}),
         'Accept': 'application/json'
       },
       credentials: 'include'
