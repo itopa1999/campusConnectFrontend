@@ -677,13 +677,38 @@ document.addEventListener('DOMContentLoaded', function () {
             <textarea name="description" class="form-control" rows="3" placeholder="Colour, brand, distinguishing marks, etc." required></textarea>
           </div>
           <div class="mb-3">
-            <label class="form-label">Where was it lost/found? *</label>
+            <label class="form-label">Where was it found? *</label>
             <input type="text" name="location" class="form-control" placeholder="e.g., Kennedy Library, Faculty of Science, Awo Hall" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Date lost/found *</label>
+            <label class="form-label">Date found *</label>
             <input type="date" name="date" class="form-control" required>
           </div>
+
+          <hr class="my-4">
+          <h6 class="fw-bold">🔐 Owner verification questions (only the true owner will know these)</h6>
+          <p class="small text-muted">When someone claims this item, we'll ask them the same questions. If answers match, we'll share your contact details with them.</p>
+
+          <div class="mb-3">
+            <label class="form-label">Verification question 1 *</label>
+            <input type="text" name="verify_q1" class="form-control" placeholder="e.g., What colour is the item?" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Answer to question 1 *</label>
+            <input type="text" name="verify_a1" class="form-control" placeholder="e.g., Blue" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Verification question 2 *</label>
+            <input type="text" name="verify_q2" class="form-control" placeholder="e.g., Any unique mark or serial number?" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Answer to question 2 *</label>
+            <input type="text" name="verify_a2" class="form-control" placeholder="e.g., Small scratch on back" required>
+          </div>
+
+          <hr class="my-4">
+          <h6 class="fw-bold">📞 Your contact details (finder)</h6>
+
           <div class="mb-3">
             <label class="form-label">Your full name (finder) *</label>
             <input type="text" name="finder_name" class="form-control" required>
