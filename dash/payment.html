@@ -3,86 +3,433 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CampusConnect UI · Add Points</title>
+  <title>CampusConnect UI · Buy Points</title>
+  <!-- Bootstrap 5 + Icons + Fonts + AOS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <style>
+    /* Payment page specific styles */
+    .package-card {
+      transition: all 0.2s ease;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .package-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.08);
+    }
+    .package-card.selected {
+      border-color: var(--accent);
+      background: var(--accent-light);
+      box-shadow: 0 10px 25px rgba(44,122,94,0.15);
+    }
+    .package-card .package-price {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .package-card .package-points {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .payment-method-option {
+      border: 1px solid #eef2f0;
+      border-radius: 1rem;
+      padding: 1rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .payment-method-option:hover {
+      background: #f9fbf8;
+      border-color: var(--accent);
+    }
+    .payment-method-option.selected {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+    .summary-card {
+      background: #f8faf8;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .package-card .package-price { font-size: 1.5rem; }
+    }
+  </style>
 </head>
 <body>
 <div id="particles-js"></div>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" data-aos="fade-down" data-aos-duration="800">
-  <div class="container">
-    <a class="navbar-brand" href="main.html">
-      <i class="fas fa-handshake me-2" style="color: #2c7a5e;"></i>
-      <span style="color: #2c7a5e;" class="brand-text">CampusConnect UI</span>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarMain">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-        <li class="nav-item">
-          <a class="nav-link" href="main.html">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="listings.html">Listings</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="create-listing.html">Post</a>
-        </li>
-      </ul>
+<!-- Navigation (same as main.html) -->
+<header class="site-header fixed-top">
+  <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
+    <div class="container header-inner">
+      <a class="site-brand" href="main.html" aria-label="CampusConnect UI home">
+        <img src="../assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo">
+        <span class="site-brand-name">
+          <span class="brand-full">CampusConnect UI</span>
+          <span class="brand-short">CampusConnect</span>
+        </span>
+      </a>
+      <button class="mobile-menu-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse site-menu" id="navbarMain">
+        <ul class="navbar-nav site-nav-list ms-lg-auto">
+          <li class="nav-item"><a class="nav-link site-nav-link" href="main.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="listings.html">Listings</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="create-listing.html">Post</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="profile.html">Profile</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</header>
 
-<main class="pt-5 mt-5">
-  <section class="py-5">
-    <div class="container" data-aos="fade-up" data-aos-duration="900">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="dashboard-card rounded-4 shadow-sm p-4">
-            <h1 class="display-6 fw-semibold mb-3">Add more points</h1>
-            <p class="text-muted mb-4">Top up your points balance so you can keep posting new listings and stay active on CampusConnect.</p>
-            <div class="row g-3">
-              <div class="col-md-4">
-                <div class="p-4 rounded-4 bg-light text-center">
-                  <div class="h3 mb-2">5 pts</div>
-                  <div class="text-muted mb-3">Good for 5 listings</div>
-                  <a href="#" class="btn btn-outline-custom btn-sm">Continue</a>
+<main class="pt-5 mt-4">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="text-center mb-4" data-aos="fade-up">
+          <span class="badge-verify mb-2"><i class="fas fa-coins me-1"></i> Top up points</span>
+          <h1 class="fw-bold">Buy points to post more listings</h1>
+          <p class="text-muted col-lg-8 mx-auto">Each listing costs 1 point. Choose a package that suits your needs and pay securely.</p>
+        </div>
+
+        <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
+          <!-- Point packages -->
+          <div class="col-md-6 col-lg-3">
+            <div class="package-card bg-white p-4 text-center" data-points="5" data-price="2500" data-package="Starter">
+              <div class="package-points">⭐ 5 points</div>
+              <div class="package-price">₦2,500</div>
+              <div class="small text-muted">₦500 per point</div>
+              <div class="mt-3"><i class="fas fa-check-circle text-muted"></i> Post 5 items</div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="package-card bg-white p-4 text-center" data-points="12" data-price="5,000" data-package="Popular">
+              <div class="package-points">🔥 12 points</div>
+              <div class="package-price">₦5,000</div>
+              <div class="small text-muted">₦417 per point</div>
+              <div class="mt-3"><i class="fas fa-check-circle text-muted"></i> Best value</div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="package-card bg-white p-4 text-center" data-points="25" data-price="9,500" data-package="Pro">
+              <div class="package-points">🚀 25 points</div>
+              <div class="package-price">₦9,500</div>
+              <div class="small text-muted">₦380 per point</div>
+              <div class="mt-3"><i class="fas fa-check-circle text-muted"></i> Save 24%</div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="package-card bg-white p-4 text-center" data-points="60" data-price="20,000" data-package="Business">
+              <div class="package-points">🏆 60 points</div>
+              <div class="package-price">₦20,000</div>
+              <div class="small text-muted">₦333 per point</div>
+              <div class="mt-3"><i class="fas fa-check-circle text-muted"></i> Best for power sellers</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-5 g-4" data-aos="fade-up" data-aos-delay="150">
+          <!-- Payment methods -->
+          <div class="col-lg-6">
+            <div class="dashboard-card shadow-sm rounded-4 p-4">
+              <h5 class="fw-bold mb-3"><i class="fas fa-credit-card me-2"></i>Select payment method</h5>
+              <div class="payment-method-option d-flex align-items-center gap-3 mb-3" data-method="card">
+                <i class="fas fa-credit-card fa-2x text-muted"></i>
+                <div>
+                  <strong>Card (Visa, Mastercard, Verve)</strong>
+                  <div class="small text-muted">Pay instantly with your debit card</div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="p-4 rounded-4 bg-light text-center">
-                  <div class="h3 mb-2">10 pts</div>
-                  <div class="text-muted mb-3">Best value</div>
-                  <a href="#" class="btn btn-primary-custom btn-sm">Continue</a>
+              <div class="payment-method-option d-flex align-items-center gap-3 mb-3" data-method="transfer">
+                <i class="fas fa-university fa-2x text-muted"></i>
+                <div>
+                  <strong>Bank transfer</strong>
+                  <div class="small text-muted">Manual payment via bank – points added within 24h</div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="p-4 rounded-4 bg-light text-center">
-                  <div class="h3 mb-2">15 pts</div>
-                  <div class="text-muted mb-3">Save more</div>
-                  <a href="#" class="btn btn-outline-custom btn-sm">Continue</a>
+              <div class="payment-method-option d-flex align-items-center gap-3" data-method="ussd">
+                <i class="fas fa-mobile-alt fa-2x text-muted"></i>
+                <div>
+                  <strong>USSD / Mobile money</strong>
+                  <div class="small text-muted">Pay directly from your phone</div>
                 </div>
               </div>
             </div>
-            <div class="mt-4">
-              <p class="small text-muted">This page is a payment placeholder. Connect to your preferred campus payment method when you are ready to top up.</p>
+          </div>
+
+          <!-- Order summary -->
+          <div class="col-lg-6">
+            <div class="dashboard-card shadow-sm rounded-4 p-4">
+              <h5 class="fw-bold mb-3"><i class="fas fa-receipt me-2"></i>Order summary</h5>
+              <div class="summary-card">
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Selected package:</span>
+                  <strong id="selectedPackageName">None</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Points:</span>
+                  <strong id="selectedPoints">0</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <span>Total amount:</span>
+                  <strong class="fs-5 text-success" id="selectedPrice">₦0</strong>
+                </div>
+                <hr>
+                <div class="mb-3">
+                  <label class="form-label small">Payment method</label>
+                  <div id="selectedMethod" class="small text-muted">Not selected</div>
+                </div>
+                <button id="payNowBtn" class="btn btn-primary-custom w-100 py-3" disabled>Select package & payment method</button>
+                <div class="small text-muted mt-3 text-center">
+                  <i class="fas fa-lock me-1"></i> Secure payment – we never store your card details
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Bank transfer details (hidden until method selected) -->
+        <div id="bankDetails" class="mt-4 d-none">
+          <div class="alert alert-light border rounded-4 p-4">
+            <h6><i class="fas fa-university me-2"></i>Bank transfer instructions</h6>
+            <p class="small mb-1">Make a transfer to the account below and use your registered email as reference.</p>
+            <div class="bg-white p-3 rounded-3 mt-2">
+              <div><strong>Bank:</strong> Access Bank</div>
+              <div><strong>Account name:</strong> CampusConnect UI</div>
+              <div><strong>Account number:</strong> 0123456789</div>
+              <div><strong>Amount:</strong> <span id="bankAmount">₦0</span></div>
+            </div>
+            <div class="small text-muted mt-2">After transfer, upload proof of payment in your profile. Points will be added within 24 hours.</div>
+          </div>
+        </div>
+
+        <!-- USSD details -->
+        <div id="ussdDetails" class="mt-4 d-none">
+          <div class="alert alert-light border rounded-4 p-4">
+            <h6><i class="fas fa-mobile-alt me-2"></i>USSD payment</h6>
+            <p class="small">Dial <strong>*894*000#</strong> on your phone and follow the prompts. Use your CampusConnect email as reference.</p>
+            <div class="small text-muted mt-2">After payment, you'll receive an SMS confirmation. Points are added automatically.</div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </main>
+
+<!-- Mobile bottom navigation -->
+<div class="dashboard-mobile-actions d-md-none">
+  <a href="main.html" class="action-link">
+    <i class="fas fa-home"></i>
+    <span>Dashboard</span>
+  </a>
+  <a href="create-listing.html" class="action-link">
+    <i class="fas fa-plus-circle"></i>
+    <span>Post</span>
+  </a>
+  <a href="listings.html" class="action-link">
+    <i class="fas fa-list"></i>
+    <span>Listings</span>
+  </a>
+</div>
+
+<!-- Footer (same as main.html) -->
+<footer class="footer">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <a class="footer-brand" href="main.html">
+          <img src="../assets/img/icon.jpg" alt="CampusConnect UI">
+          <span>CampusConnect UI</span>
+        </a>
+        <p class="text-muted small mt-2">A student-led initiative to make campus commerce safe, affordable, and local.</p>
+      </div>
+      <div class="col-md-8">
+        <div class="footer-links d-flex flex-wrap justify-content-md-end">
+          <a href="#">About</a>
+          <a href="main.html#how-it-works">How it Works</a>
+          <a href="main.html#contact">Contact</a>
+          <a href="t/terms-and-conditions.html">Terms & Conditions</a>
+          <a href="t/privacy-and-policy.html">Privacy</a>
+          <a href="t/report-issue.html">Report Issue</a>
+        </div>
+      </div>
+      <div class="col-12 mt-4 text-center text-muted small">
+        &copy; <script>document.write(new Date().getFullYear())</script> CampusConnect UI - University of Ibadan. Only for verified students.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Modals -->
+<div id="formModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 id="formModalTitle">Form Title</h3>
+      <button class="modal-close" id="closeFormModalBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="formModalBody"></div>
+    <div class="modal-footer" id="formModalFooter"></div>
+  </div>
+</div>
+<div id="confirmModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container confirm-modal-container">
+    <div class="modal-header">
+      <h3 id="confirmModalTitle">Confirm Action</h3>
+      <button class="modal-close" id="closeConfirmModalBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="confirmModalBody">
+      <p id="confirmMessage"></p>
+    </div>
+    <div class="modal-footer" id="confirmModalFooter"></div>
+  </div>
+</div>
+
+<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
+<script>
+  // State
+  let selectedPackage = null;
+  let selectedMethod = null;
+
+  const packageCards = document.querySelectorAll('.package-card');
+  const methodOptions = document.querySelectorAll('.payment-method-option');
+  const payBtn = document.getElementById('payNowBtn');
+
+  function updateSummary() {
+    if (selectedPackage) {
+      const points = selectedPackage.getAttribute('data-points');
+      const price = selectedPackage.getAttribute('data-price');
+      const pkgName = selectedPackage.getAttribute('data-package');
+      document.getElementById('selectedPackageName').innerText = pkgName;
+      document.getElementById('selectedPoints').innerText = points;
+      document.getElementById('selectedPrice').innerHTML = `₦${price}`;
+    } else {
+      document.getElementById('selectedPackageName').innerText = 'None';
+      document.getElementById('selectedPoints').innerText = '0';
+      document.getElementById('selectedPrice').innerHTML = '₦0';
+    }
+    if (selectedMethod) {
+      const method = selectedMethod.getAttribute('data-method');
+      if (method === 'card') document.getElementById('selectedMethod').innerText = 'Card (instant)';
+      else if (method === 'transfer') document.getElementById('selectedMethod').innerText = 'Bank transfer (manual)';
+      else if (method === 'ussd') document.getElementById('selectedMethod').innerText = 'USSD / Mobile money';
+      // Show/hide additional details
+      document.getElementById('bankDetails').classList.add('d-none');
+      document.getElementById('ussdDetails').classList.add('d-none');
+      if (method === 'transfer') {
+        const amount = selectedPackage ? selectedPackage.getAttribute('data-price') : '0';
+        document.getElementById('bankAmount').innerHTML = `₦${amount}`;
+        document.getElementById('bankDetails').classList.remove('d-none');
+      } else if (method === 'ussd') {
+        document.getElementById('ussdDetails').classList.remove('d-none');
+      }
+    } else {
+      document.getElementById('selectedMethod').innerText = 'Not selected';
+      document.getElementById('bankDetails').classList.add('d-none');
+      document.getElementById('ussdDetails').classList.add('d-none');
+    }
+    payBtn.disabled = !(selectedPackage && selectedMethod);
+    if (selectedPackage && selectedMethod) {
+      payBtn.textContent = `Pay ₦${selectedPackage.getAttribute('data-price')}`;
+    } else {
+      payBtn.textContent = 'Select package & payment method';
+    }
+  }
+
+  // Package selection
+  packageCards.forEach(card => {
+    card.addEventListener('click', () => {
+      packageCards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedPackage = card;
+      updateSummary();
+    });
+  });
+
+  // Payment method selection
+  methodOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      methodOptions.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedMethod = opt;
+      updateSummary();
+    });
+  });
+
+  // Pay button action
+  payBtn.addEventListener('click', async () => {
+    if (!selectedPackage || !selectedMethod) return;
+    const points = selectedPackage.getAttribute('data-points');
+    const price = selectedPackage.getAttribute('data-price');
+    const method = selectedMethod.getAttribute('data-method');
+    const packageName = selectedPackage.getAttribute('data-package');
+
+    // Simulate API call
+    if (typeof confirmModal !== 'undefined') {
+      confirmModal.open({
+        title: 'Confirm payment',
+        message: `You are about to purchase ${points} points for ₦${price} via ${method.toUpperCase()}. Click confirm to proceed.`,
+        confirmText: 'Confirm',
+        onConfirm: async () => {
+          // Simulate payment processing
+          payBtn.disabled = true;
+          payBtn.innerHTML = '<span class="btn-spinner"></span> Processing...';
+          await new Promise(r => setTimeout(r, 1500));
+          // Success
+          const currentPoints = parseInt(localStorage.getItem('userPoints') || '3');
+          const newPoints = currentPoints + parseInt(points);
+          localStorage.setItem('userPoints', newPoints);
+          if (typeof confirmModal !== 'undefined') {
+            confirmModal.open({
+              title: 'Payment successful! 🎉',
+              message: `You have successfully purchased ${points} points. Your new balance is ${newPoints} points.`,
+              confirmText: 'Go to Dashboard',
+              onConfirm: () => {
+                window.location.href = 'main.html';
+              }
+            });
+          } else {
+            alert(`Payment successful! New balance: ${newPoints} points`);
+            window.location.href = 'main.html';
+          }
+        }
+      });
+    } else {
+      alert(`Demo: You would pay ₦${price} for ${points} points.`);
+      window.location.href = 'main.html';
+    }
+  });
+
+  // AOS init
+  document.addEventListener('DOMContentLoaded', () => {
+    AOS.init({ duration: 600, once: true });
+    // Mobile menu toggle
+    const menuButton = document.querySelector('.mobile-menu-button');
+    const menu = document.getElementById('navbarMain');
+    if (menuButton && menu) {
+      menuButton.addEventListener('click', function () {
+        const isOpen = menu.classList.toggle('show');
+        menuButton.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
+  });
+</script>
 </body>
 </html>
