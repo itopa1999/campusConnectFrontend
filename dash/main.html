@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/dashboard.css">
   <style>
-    /* Additional styling for My Listings cards */
+    /* Additional styling for My Listings cards and reviews */
     .listing-card {
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       border-radius: 1.25rem;
@@ -44,6 +44,15 @@
     .status-active { background: #eaf7f0; color: #2c7a5e; }
     .status-expired { background: #fff5f5; color: #dc3545; }
     .status-sold { background: #eef2f0; color: #5a6e6f; }
+    .review-item {
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .review-item:hover {
+      border-left-color: var(--accent);
+      background: #fefcf8;
+      transform: translateX(3px);
+    }
     @media (max-width: 768px) {
       .listing-image { height: 120px; }
     }
@@ -137,7 +146,7 @@
     </div>
   </section>
 
-  <!-- Tabs section -->
+  <!-- Tabs section (Overview, My listings, Reviews) -->
   <section class="dashboard-tabs-section py-4">
     <div class="container">
       <ul class="nav nav-pills dashboard-pills mb-4" role="tablist">
@@ -146,6 +155,9 @@
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="listings-tab" data-bs-toggle="pill" data-bs-target="#listings" type="button" role="tab" aria-controls="listings" aria-selected="false"><i class="fas fa-list-ul me-1"></i> My listings</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="reviews-tab" data-bs-toggle="pill" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false"><i class="fas fa-star me-1"></i> Reviews</button>
         </li>
       </ul>
 
@@ -184,29 +196,46 @@
             <div class="col-lg-5">
               <div class="dashboard-card shadow-sm rounded-4 p-4 h-100" data-aos="fade-left" data-aos-duration="700">
                 <h5 class="mb-3"><i class="fas fa-hourglass-half me-2"></i>Upcoming Expirations</h5>
-                <div id="upcomingExpirationsList">
-                  <!-- dummy data will fill here -->
-                </div>
+                <div id="upcomingExpirationsList"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- My Listings tab (enhanced) -->
+        <!-- My Listings tab (with Load More) -->
         <div class="tab-pane fade" id="listings" role="tabpanel" aria-labelledby="listings-tab">
           <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
             <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
               <div>
-                <h5 class="mb-1"><i class="fas fa-store me-2"></i>My active listings</h5>
+                <h5 class="mb-1"><i class="fas fa-store me-2"></i>My listings</h5>
                 <p class="text-muted mb-0">Manage your current offers and update prices.</p>
               </div>
               <a href="create-listing.html" class="btn btn-outline-custom mt-3 mt-md-0"><i class="fas fa-plus me-1"></i>Add new listing</a>
             </div>
-            <div class="row g-4" id="latestListingsContainer">
-              <!-- dynamic listing cards will appear here -->
+            <div class="row g-4" id="latestListingsContainer"></div>
+            <div class="text-center mt-4" id="listingsLoadMoreContainer" style="display: none;">
+              <button id="loadMoreListingsBtn" class="btn btn-outline-custom">Load more <i class="fas fa-arrow-down ms-1"></i></button>
             </div>
-            <div class="d-flex justify-content-end mt-4">
-              <a href="listings.html" class="btn btn-outline-custom btn-sm">View all listings <i class="fas fa-arrow-right ms-1"></i></a>
+          </div>
+        </div>
+
+        <!-- Reviews Tab (with Load More) -->
+        <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+          <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+              <div>
+                <h5 class="mb-1"><i class="fas fa-star me-2" style="color: #f5b042;"></i>Reviews from buyers</h5>
+                <p class="text-muted mb-0">What students say about their experience with you</p>
+              </div>
+              <div class="text-end">
+                <div class="display-6 fw-bold" id="avgRatingDisplay">0.0</div>
+                <div class="rating-stars" id="avgStars"></div>
+                <small class="text-muted" id="totalReviewsCount">0 reviews</small>
+              </div>
+            </div>
+            <div id="reviewsListContainer"></div>
+            <div class="text-center mt-4" id="reviewsLoadMoreContainer" style="display: none;">
+              <button id="loadMoreReviewsBtn" class="btn btn-outline-custom">Load more <i class="fas fa-arrow-down ms-1"></i></button>
             </div>
           </div>
         </div>
@@ -255,16 +284,55 @@
         { title: "HP Laptop Core i5", description: "Great condition, 8GB RAM", expires_at_humanized: "Expires in 2 days", hostpost_names: ["Kennedy Library"] },
         { title: "ECO 211 Textbook", description: "Like new, no highlights", expires_at_humanized: "Expires in 5 days", hostpost_names: ["Faculty of Social Sciences"] }
       ],
-      latest_listings: [
+      // All listings (9 items)
+      all_listings: [
         { id: 1, title: "HP Laptop Core i5 / 8GB RAM", description: "Perfect for programming, battery lasts 4hrs.", price: 145000, category: "Electronics", location: "Independence Hall", status: "active", image: null, created_at_humanized: "2 days ago" },
         { id: 2, title: "ECO 211 - Principles of Economics", description: "Barely used, no highlights.", price: 3500, category: "Textbooks", location: "Mellanby Hall", status: "active", image: null, created_at_humanized: "5 days ago" },
         { id: 3, title: "Desk + Office Chair", description: "Wooden desk, sturdy chair.", price: 12000, category: "Furniture", location: "Queen Elizabeth Hall", status: "active", image: null, created_at_humanized: "1 week ago" },
         { id: 4, title: "Sony Headphones", description: "Wireless, great sound.", price: 27500, category: "Electronics", location: "Idia Hall", status: "sold", image: null, created_at_humanized: "2 weeks ago" },
-        { id: 5, title: "PHY 115 Lab Manual", description: "Clean copy, solved exercises.", price: 2200, category: "Textbooks", location: "Sultan Bello Hall", status: "expired", image: null, created_at_humanized: "1 month ago" }
+        { id: 5, title: "PHY 115 Lab Manual", description: "Clean copy, solved exercises.", price: 2200, category: "Textbooks", location: "Sultan Bello Hall", status: "expired", image: null, created_at_humanized: "1 month ago" },
+        { id: 6, title: "Men's Nike Sneakers", description: "Size 42, like new.", price: 25000, category: "Clothing", location: "Kenneth Dike Hall", status: "active", image: null, created_at_humanized: "3 days ago" },
+        { id: 7, title: "IKEA Floor Lamp", description: "White, works perfectly.", price: 5500, category: "Furniture", location: "Mellanby Hall", status: "active", image: null, created_at_humanized: "4 days ago" },
+        { id: 8, title: "Calculus Textbook", description: "Thomas' Calculus, 14th ed.", price: 8000, category: "Textbooks", location: "Science Faculty", status: "active", image: null, created_at_humanized: "6 days ago" },
+        { id: 9, title: "Wireless Mouse", description: "Logitech, barely used.", price: 3500, category: "Electronics", location: "Idia Hall", status: "sold", image: null, created_at_humanized: "2 weeks ago" }
+      ],
+      // All reviews (8 items)
+      all_reviews: [
+        { from: "Aisha K.", rating: 5, comment: "Great seller, item exactly as described. Fast meetup at the library.", date: "2025-06-01" },
+        { from: "Daniel O.", rating: 4, comment: "Good communication, product was in good condition.", date: "2025-05-25" },
+        { from: "Peace E.", rating: 5, comment: "Trustworthy and friendly. Would buy again.", date: "2025-05-18" },
+        { from: "Emeka O.", rating: 4, comment: "Smooth transaction, item as promised.", date: "2025-05-10" },
+        { from: "Tolani S.", rating: 5, comment: "Very responsive and helpful seller.", date: "2025-05-05" },
+        { from: "Bola F.", rating: 3, comment: "Item was okay, but delivery was a bit delayed.", date: "2025-04-28" },
+        { from: "Chiamaka U.", rating: 5, comment: "Excellent experience. Highly recommend.", date: "2025-04-20" },
+        { from: "Michael B.", rating: 4, comment: "Good product, fair price.", date: "2025-04-15" }
       ]
     };
 
-    // Populate stats and UI elements
+    // Helper functions
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+    }
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+    function renderStars(rating) {
+      const full = Math.floor(rating);
+      const half = rating % 1 >= 0.5;
+      let html = '';
+      for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
+      if (half) html += '<i class="fas fa-star-half-alt"></i>';
+      for (let i = full + (half ? 1 : 0); i < 5; i++) html += '<i class="far fa-star"></i>';
+      return html;
+    }
+
+    // Populate stats and overview
     document.getElementById('dashboardUserName').innerText = dummyPayload.user;
     document.getElementById('activeListingsCount').innerText = dummyPayload.total_active;
     document.getElementById('expiredListingsCount').innerText = dummyPayload.total_expired;
@@ -300,74 +368,158 @@
       `).join('');
     }
 
-    // Render My Listings (enhanced cards)
+    // ---------- LOAD MORE FOR LISTINGS ----------
+    let listingsCurrentPage = 0;
+    const listingsPerPage = 3;
+    const allListings = dummyPayload.all_listings;
     const listingsContainer = document.getElementById('latestListingsContainer');
-    if (dummyPayload.latest_listings.length === 0) {
-      listingsContainer.innerHTML = `
-        <div class="col-12">
-          <div class="dashboard-empty-state">
-            <span class="empty-icon"><i class="fas fa-box-open"></i></span>
-            <div>
-              <h6>No listings yet</h6>
-              <p>Post your first item and it will show here with price, category, and manage actions.</p>
+    const listingsLoadMoreContainer = document.getElementById('listingsLoadMoreContainer');
+    const loadMoreListingsBtn = document.getElementById('loadMoreListingsBtn');
+
+    function renderListingCard(item) {
+      let statusClass = '';
+      let statusText = '';
+      if (item.status === 'active') { statusClass = 'status-active'; statusText = 'Active'; }
+      else if (item.status === 'expired') { statusClass = 'status-expired'; statusText = 'Expired'; }
+      else if (item.status === 'sold') { statusClass = 'status-sold'; statusText = 'Sold'; }
+      return `
+        <div class="col-md-6 col-lg-4">
+          <div class="listing-card h-100">
+            <div class="listing-image">
+              ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${item.title}">` : `<i class="fas fa-image"></i>`}
+            </div>
+            <div class="card-body p-3">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="card-title fw-bold fs-6 mb-0">${escapeHtml(item.title)}</h5>
+                <span class="status-badge ${statusClass}">${statusText}</span>
+              </div>
+              <p class="card-text text-muted small">${escapeHtml(item.description.substring(0, 80))}${item.description.length > 80 ? '…' : ''}</p>
+              <div class="mt-2 small text-muted">
+                <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
+                <i class="far fa-calendar-alt me-1"></i> ${item.created_at_humanized}
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
+                <span class="badge bg-white text-dark border px-2 py-1 rounded-pill">${escapeHtml(item.category)}</span>
+              </div>
+              <div class="d-grid gap-2 mt-3">
+                <a href="listing-detail.html?id=${item.id}" class="btn btn-sm btn-outline-custom">Manage <i class="fas fa-arrow-right ms-1"></i></a>
+              </div>
             </div>
           </div>
         </div>
       `;
-    } else {
-      listingsContainer.innerHTML = dummyPayload.latest_listings.map(item => {
-        let statusClass = '';
-        let statusText = '';
-        if (item.status === 'active') { statusClass = 'status-active'; statusText = 'Active'; }
-        else if (item.status === 'expired') { statusClass = 'status-expired'; statusText = 'Expired'; }
-        else if (item.status === 'sold') { statusClass = 'status-sold'; statusText = 'Sold'; }
-        
-        return `
-          <div class="col-md-6 col-lg-4">
-            <div class="listing-card h-100">
-              <div class="listing-image">
-                ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${item.title}">` : `<i class="fas fa-image"></i>`}
-              </div>
-              <div class="card-body p-3">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                  <h5 class="card-title fw-bold fs-6 mb-0">${escapeHtml(item.title)}</h5>
-                  <span class="status-badge ${statusClass}">${statusText}</span>
-                </div>
-                <p class="card-text text-muted small">${escapeHtml(item.description.substring(0, 80))}${item.description.length > 80 ? '…' : ''}</p>
-                <div class="mt-2 small text-muted">
-                  <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
-                  <i class="far fa-calendar-alt me-1"></i> ${item.created_at_humanized}
-                </div>
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                  <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
-                  <span class="badge bg-white text-dark border px-2 py-1 rounded-pill">${escapeHtml(item.category)}</span>
-                </div>
-                <div class="d-grid gap-2 mt-3">
-                  <a href="listing-detail.html?id=${item.id}" class="btn btn-sm btn-outline-custom">Manage <i class="fas fa-arrow-right ms-1"></i></a>
-                </div>
-              </div>
-            </div>
+    }
+
+    function loadMoreListings() {
+      const start = listingsCurrentPage * listingsPerPage;
+      const end = start + listingsPerPage;
+      const newItems = allListings.slice(start, end);
+      if (newItems.length === 0) {
+        loadMoreListingsBtn.disabled = true;
+        loadMoreListingsBtn.textContent = "No more listings";
+        return;
+      }
+      const cardsHtml = newItems.map(renderListingCard).join('');
+      listingsContainer.insertAdjacentHTML('beforeend', cardsHtml);
+      listingsCurrentPage++;
+      if (end >= allListings.length) {
+        loadMoreListingsBtn.disabled = true;
+        loadMoreListingsBtn.textContent = "No more listings";
+      }
+    }
+
+    function initListings() {
+      listingsCurrentPage = 0;
+      listingsContainer.innerHTML = '';
+      // Show button only if total > listingsPerPage
+      if (allListings.length > listingsPerPage) {
+        listingsLoadMoreContainer.style.display = 'block';
+        loadMoreListingsBtn.disabled = false;
+        loadMoreListingsBtn.textContent = "Load more";
+      } else {
+        listingsLoadMoreContainer.style.display = 'none';
+      }
+      // Load first page
+      const firstPageItems = allListings.slice(0, listingsPerPage);
+      listingsContainer.innerHTML = firstPageItems.map(renderListingCard).join('');
+      listingsCurrentPage = 1;
+      if (allListings.length <= listingsPerPage && loadMoreListingsBtn) {
+        loadMoreListingsBtn.disabled = true;
+        loadMoreListingsBtn.textContent = "No more listings";
+      }
+    }
+    if (loadMoreListingsBtn) loadMoreListingsBtn.addEventListener('click', loadMoreListings);
+    initListings();
+
+    // ---------- LOAD MORE FOR REVIEWS ----------
+    let reviewsCurrentPage = 0;
+    const reviewsPerPage = 3;
+    const allReviews = dummyPayload.all_reviews;
+    const reviewsContainer = document.getElementById('reviewsListContainer');
+    const reviewsLoadMoreContainer = document.getElementById('reviewsLoadMoreContainer');
+    const loadMoreReviewsBtn = document.getElementById('loadMoreReviewsBtn');
+
+    function renderReviewCard(review) {
+      return `
+        <div class="review-item p-3 mb-3 rounded-3 border">
+          <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
+            <strong>${escapeHtml(review.from)}</strong>
+            <div class="rating-stars small">${renderStars(review.rating)}</div>
+            <small class="text-muted">${new Date(review.date).toLocaleDateString('en-GB')}</small>
           </div>
-        `;
-      }).join('');
+          <p class="small text-muted mb-0">${escapeHtml(review.comment)}</p>
+        </div>
+      `;
     }
 
-    // Helper functions
-    function formatCurrency(amount) {
-      return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+    function loadMoreReviews() {
+      const start = reviewsCurrentPage * reviewsPerPage;
+      const end = start + reviewsPerPage;
+      const newReviews = allReviews.slice(start, end);
+      if (newReviews.length === 0) {
+        loadMoreReviewsBtn.disabled = true;
+        loadMoreReviewsBtn.textContent = "No more reviews";
+        return;
+      }
+      const reviewsHtml = newReviews.map(renderReviewCard).join('');
+      reviewsContainer.insertAdjacentHTML('beforeend', reviewsHtml);
+      reviewsCurrentPage++;
+      if (end >= allReviews.length) {
+        loadMoreReviewsBtn.disabled = true;
+        loadMoreReviewsBtn.textContent = "No more reviews";
+      }
     }
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      });
-    }
+    function initReviews() {
+      // Calculate average rating from all reviews
+      const avgRating = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+      document.getElementById('avgRatingDisplay').innerText = avgRating.toFixed(1);
+      document.getElementById('avgStars').innerHTML = renderStars(avgRating);
+      document.getElementById('totalReviewsCount').innerText = `${allReviews.length} reviews`;
 
-    // Mobile menu toggle (fallback if main.js doesn't handle)
+      reviewsCurrentPage = 0;
+      reviewsContainer.innerHTML = '';
+      if (allReviews.length > reviewsPerPage) {
+        reviewsLoadMoreContainer.style.display = 'block';
+        loadMoreReviewsBtn.disabled = false;
+        loadMoreReviewsBtn.textContent = "Load more";
+      } else {
+        reviewsLoadMoreContainer.style.display = 'none';
+      }
+      // Load first page
+      const firstPageReviews = allReviews.slice(0, reviewsPerPage);
+      reviewsContainer.innerHTML = firstPageReviews.map(renderReviewCard).join('');
+      reviewsCurrentPage = 1;
+      if (allReviews.length <= reviewsPerPage && loadMoreReviewsBtn) {
+        loadMoreReviewsBtn.disabled = true;
+        loadMoreReviewsBtn.textContent = "No more reviews";
+      }
+    }
+    if (loadMoreReviewsBtn) loadMoreReviewsBtn.addEventListener('click', loadMoreReviews);
+    initReviews();
+
+    // Mobile menu toggle fallback
     const menuButton = document.querySelector('.mobile-menu-button');
     const menu = document.getElementById('navbarMain');
     if (menuButton && menu) {
