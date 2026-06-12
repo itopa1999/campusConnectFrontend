@@ -15,11 +15,11 @@
     /* Additional styles for listings page */
     .listing-card {
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      border-radius: 1.25rem;
+      border-radius: 1rem;
       overflow: hidden;
       background: white;
       border: 1px solid rgba(44,122,94,0.1);
-      height: 100%;
+      cursor: pointer;
     }
     .listing-card:hover {
       transform: translateY(-5px);
@@ -39,50 +39,25 @@
       border-left: 4px solid var(--accent);
       padding-left: 1rem;
     }
-    .search-filter-bar {
-      background: white;
-      border-radius: 60px;
-      padding: 0.25rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-      border: 1px solid #eef2f0;
-    }
-    .search-filter-bar input, .search-filter-bar select {
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 40px;
-      background: transparent;
-    }
-    .search-filter-bar input:focus, .search-filter-bar select:focus {
-      outline: none;
-      box-shadow: none;
-    }
-    .search-filter-bar button {
-      border-radius: 40px;
-      padding: 0.5rem 1.5rem;
-    }
-    @media (max-width: 768px) {
-      .search-filter-bar {
-        border-radius: 20px;
-        flex-direction: column;
-        background: transparent;
-        border: none;
-        gap: 0.75rem;
-      }
-      .search-filter-bar input, .search-filter-bar select, .search-filter-bar button {
-        width: 100%;
-        border: 1px solid #eef2f0;
-        background: white;
-      }
-      .search-filter-bar button.btn-primary-custom {
-        background-color: var(--accent) !important;
-        color: white !important;
-      }
-    }
-    .no-results {
-      background: #fefcf8;
-      border-radius: 1rem;
-      padding: 2rem;
+    .load-more-btn {
+      margin-top: 2rem;
       text-align: center;
+    }
+    .badge-category {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 50px;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
   </style>
 </head>
@@ -123,26 +98,7 @@
       <p class="text-muted col-lg-7 mx-auto">Buy and sell used items safely within the UI community. All sellers are verified students.</p>
     </div>
 
-    <!-- Search & filter bar -->
-    <div class="row justify-content-center mb-5">
-      <div class="col-lg-10">
-        <div class="search-filter-bar d-flex gap-2 align-items-center">
-          <i class="fas fa-search text-muted ps-3"></i>
-          <input type="text" id="searchInput" class="form-control" placeholder="Search by title, description...">
-          <select id="categoryFilter" class="form-select w-auto">
-            <option value="">All categories</option>
-            <option value="textbooks">Textbooks</option>
-            <option value="electronics">Electronics</option>
-            <option value="furniture">Furniture</option>
-            <option value="clothing">Clothing</option>
-            <option value="other">Other</option>
-          </select>
-          <button id="searchBtn" class="btn btn-primary-custom"><i class="fas fa-filter me-1"></i>Filter</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sections: Hot sales, Top sales, Departmental sales, For you -->
+    <!-- Sections with dynamic loading -->
     <div id="sectionsContainer">
       <!-- Hot sales section -->
       <section class="mb-5" data-section="hot">
@@ -150,7 +106,8 @@
           <h3 class="fw-bold mb-0"><i class="fas fa-fire me-2" style="color: #e67e22;"></i>Hot sales 🔥</h3>
           <p class="text-muted">Trending items with high demand</p>
         </div>
-        <div class="row g-4 hot-grid"></div>
+        <div class="row g-3 hot-grid" data-page="1" data-total-pages="3"></div>
+        <div class="load-more-btn"><button class="btn btn-outline-custom load-more" data-section="hot">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
       </section>
 
       <!-- Top sales section -->
@@ -159,7 +116,8 @@
           <h3 class="fw-bold mb-0"><i class="fas fa-trophy me-2" style="color: #f5b042;"></i>Top sales 🏆</h3>
           <p class="text-muted">Best selling items this month</p>
         </div>
-        <div class="row g-4 top-grid"></div>
+        <div class="row g-3 top-grid" data-page="1" data-total-pages="3"></div>
+        <div class="load-more-btn"><button class="btn btn-outline-custom load-more" data-section="top">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
       </section>
 
       <!-- Departmental sales -->
@@ -168,7 +126,8 @@
           <h3 class="fw-bold mb-0"><i class="fas fa-building me-2" style="color: var(--accent);"></i>Departmental sales 📚</h3>
           <p class="text-muted">Popular in Computer Science, Economics, Engineering</p>
         </div>
-        <div class="row g-4 dept-grid"></div>
+        <div class="row g-3 dept-grid" data-page="1" data-total-pages="3"></div>
+        <div class="load-more-btn"><button class="btn btn-outline-custom load-more" data-section="dept">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
       </section>
 
       <!-- For you sales -->
@@ -177,20 +136,30 @@
           <h3 class="fw-bold mb-0"><i class="fas fa-user-check me-2" style="color: var(--accent-dark);"></i>For you 🎯</h3>
           <p class="text-muted">Recommended based on your department (Computer Science)</p>
         </div>
-        <div class="row g-4 foryou-grid"></div>
+        <div class="row g-3 foryou-grid" data-page="1" data-total-pages="3"></div>
+        <div class="load-more-btn"><button class="btn btn-outline-custom load-more" data-section="foryou">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
       </section>
-    </div>
-
-    <!-- No results message for all sections -->
-    <div id="globalNoResults" class="no-results d-none">
-      <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-      <h5>No listings match your search</h5>
-      <p class="text-muted">Try different keywords or <a href="create-listing.html">post your own listing</a>.</p>
     </div>
   </div>
 </main>
 
-<!-- Footer (exactly as main.html) -->
+<!-- Mobile bottom navigation (exactly as main.html) -->
+<div class="dashboard-mobile-actions d-md-none">
+  <a href="main.html" class="action-link">
+    <i class="fas fa-home"></i>
+    <span>Dashboard</span>
+  </a>
+  <a href="create-listing.html" class="action-link">
+    <i class="fas fa-plus-circle"></i>
+    <span>Post</span>
+  </a>
+  <a href="listings.html" class="action-link active">
+    <i class="fas fa-list"></i>
+    <span>Listings</span>
+  </a>
+</div>
+
+<!-- Footer (same as main.html) -->
 <footer class="footer">
   <div class="container">
     <div class="row align-items-center">
@@ -251,48 +220,57 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
-  // ---------- Dummy Data for each section ----------
-  const listingsData = {
-    hot: [
-      { id: 1, title: "ECO 211 - Principles of Economics", description: "Barely used, no highlights.", price: 3500, category: "textbooks", location: "Mellanby Hall", image: null, seller: "Oluwatobi A.", created_at: "2025-06-10T10:00:00" },
-      { id: 2, title: "HP Laptop Core i5 / 8GB RAM", description: "Perfect for programming, battery lasts 4hrs.", price: 145000, category: "electronics", location: "Independence Hall", image: null, seller: "Daniel O.", created_at: "2025-06-09T14:30:00" },
-      { id: 3, title: "Sony WH-CH510 Wireless Headphones", description: "Original box, 6 months used.", price: 27500, category: "electronics", location: "Idia Hall", image: null, seller: "Michael B.", created_at: "2025-06-07T16:20:00" },
-      { id: 4, title: "Men's Nike Air Max Sneakers (Size 42)", description: "Worn twice, like new.", price: 25000, category: "clothing", location: "Kenneth Dike Hall", image: null, seller: "Segun A.", created_at: "2025-06-05T13:10:00" }
-    ],
-    top: [
-      { id: 5, title: "Desk + Office Chair", description: "Wooden desk, sturdy chair.", price: 12000, category: "furniture", location: "Queen Elizabeth Hall", image: null, seller: "Tolani S.", created_at: "2025-06-08T09:15:00" },
-      { id: 6, title: "Complete ACC 201 & 202 Past Questions", description: "Printed & spiral bound. Includes solutions.", price: 3000, category: "textbooks", location: "Nnamdi Azikiwe Hall", image: null, seller: "Peace E.", created_at: "2025-06-06T11:45:00" },
-      { id: 7, title: "PHY 115 Lab Manual + Practical Guide", description: "Clean copy, solved exercises.", price: 2200, category: "textbooks", location: "Sultan Bello Hall", image: null, seller: "Chiamaka U.", created_at: "2025-06-11T08:00:00" },
-      { id: 8, title: "IKEA Floor Lamp", description: "White, works perfectly. Great for dorm room.", price: 5500, category: "furniture", location: "Mellanby Hall", image: null, seller: "Esther K.", created_at: "2025-06-04T19:30:00" }
-    ],
-    dept: [
-      { id: 9, title: "CSC 301 - Algorithms & Data Structures", description: "Latest edition, like new.", price: 4500, category: "textbooks", location: "Science Faculty", image: null, seller: "Emeka O.", created_at: "2025-06-09T12:00:00" },
-      { id: 10, title: "Python Programming for Beginners", description: "E-book (PDF) with exercises.", price: 1500, category: "textbooks", location: "Online", image: null, seller: "Adebayo T.", created_at: "2025-06-10T09:30:00" },
-      { id: 11, title: "Scientific Calculator (Casio fx-991ES)", description: "Perfect for engineering students.", price: 5500, category: "electronics", location: "Faculty of Technology", image: null, seller: "Femi K.", created_at: "2025-06-08T14:20:00" },
-      { id: 12, title: "Economics Past Questions (2015-2024)", description: "Compiled answers included.", price: 2500, category: "textbooks", location: "Economics Dept", image: null, seller: "Aminat B.", created_at: "2025-06-07T11:00:00" }
-    ],
-    foryou: [
-      { id: 13, title: "Intro to Machine Learning (CSC 401)", description: "Course notes + assignments.", price: 3000, category: "textbooks", location: "CS Dept", image: null, seller: "Dr. Akin", created_at: "2025-06-11T10:15:00" },
-      { id: 14, title: "Logitech Wireless Mouse", description: "Used for one semester, works perfectly.", price: 3500, category: "electronics", location: "Kenneth Dike", image: null, seller: "Tunde O.", created_at: "2025-06-09T16:00:00" },
-      { id: 15, title: "Java Programming Textbook (11th Ed)", description: "Clean, no writing.", price: 6000, category: "textbooks", location: "CS Department", image: null, seller: "Olamide S.", created_at: "2025-06-08T13:30:00" }
-    ]
-  };
+  // ---------- Dummy Data Generator for each section (infinite pages) ----------
+  function generateItems(sectionKey, page, itemsPerPage = 8) {
+    const baseNames = {
+      hot: ["🔥 iPhone 12", "🔥 Gaming Mouse", "🔥 Nike Air Max", "🔥 Desk Lamp", "🔥 Textbook", "🔥 Hoodie", "🔥 Speaker", "🔥 Calculator"],
+      top: ["🏆 Samsung Tablet", "🏆 Office Chair", "🏆 Headphones", "🏆 Backpack", "🏆 Sneakers", "🏆 Monitor", "🏆 Keyboard", "🏆 Jacket"],
+      dept: ["📘 CSC 401 Notes", "📗 Python Book", "📕 Economics Guide", "📙 Engineering Kit", "📔 Lab Coat", "📒 Calculator", "📓 Projector", "📚 Past Questions"],
+      foryou: ["🎓 ML Course Materials", "🎓 Logitech Mouse", "🎓 USB Drive", "🎓 Coding Desk", "🎓 Java Textbook", "🎓 Resume Template", "🎓 Hoodie", "🎓 Coffee Mug"]
+    };
+    const categories = ["textbooks", "electronics", "furniture", "clothing", "other"];
+    const prices = [1500, 2500, 4500, 8500, 12500, 25000, 55000, 120000];
+    const images = [null, null, null, null]; // placeholder always
 
-  // Helper functions
-  function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+    let items = [];
+    const names = baseNames[sectionKey] || baseNames.hot;
+    for (let i = 0; i < itemsPerPage; i++) {
+      const idx = ((page-1)*itemsPerPage + i) % names.length;
+      items.push({
+        id: `${sectionKey}_${page}_${i}`,
+        title: `${names[idx]} ${page > 1 ? `(Batch ${page})` : ''}`,
+        price: prices[(idx + page) % prices.length],
+        category: categories[(idx + page) % categories.length],
+        image: null
+      });
+    }
+    return items;
   }
 
-  function timeAgo(dateStr) {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-    if (diffMins < 60) return `${diffMins} min ago`;
-    if (diffHours < 24) return `${diffHours} hr ago`;
-    return `${diffDays} day ago`;
+  // Render a single card (image, category badge, title, price)
+  function renderCard(item) {
+    return `
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="listing-card h-100" data-id="${item.id}">
+          <div class="listing-image">
+            ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${item.title}">` : `<i class="fas fa-image"></i>`}
+          </div>
+          <div class="card-body p-2 p-md-3">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span class="badge-category">${escapeHtml(item.category)}</span>
+            </div>
+            <h5 class="card-title mt-1">${escapeHtml(item.title)}</h5>
+            <div class="mt-2">
+              <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
   }
 
   function escapeHtml(str) {
@@ -305,130 +283,89 @@
     });
   }
 
-  function renderCard(item) {
-    return `
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="listing-card h-100">
-          <div class="listing-image">
-            ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${item.title}">` : `<i class="fas fa-image"></i>`}
-          </div>
-          <div class="card-body p-3">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <h5 class="card-title fw-bold fs-6 mb-0">${escapeHtml(item.title)}</h5>
-              <span class="badge bg-white text-dark border px-2 py-1 rounded-pill small">${escapeHtml(item.category)}</span>
-            </div>
-            <p class="card-text text-muted small">${escapeHtml(item.description.substring(0, 60))}${item.description.length > 60 ? '…' : ''}</p>
-            <div class="mt-2 small text-muted">
-              <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
-              <i class="far fa-clock me-1"></i> ${timeAgo(item.created_at)} by ${escapeHtml(item.seller)}
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-              <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
-              <button class="btn btn-sm btn-outline-custom contact-seller-btn" data-seller="${escapeHtml(item.seller)}" data-item="${escapeHtml(item.title)}">
-                <i class="fas fa-comment-dots me-1"></i>Contact
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
+  // Load more items for a specific section
+  async function loadMore(sectionKey) {
+    const grid = document.querySelector(`.${sectionKey}-grid`);
+    if (!grid) return;
+    let currentPage = parseInt(grid.getAttribute('data-page') || '1');
+    const totalPages = parseInt(grid.getAttribute('data-total-pages') || '3');
+    if (currentPage >= totalPages) {
+      // Disable button or hide
+      const btn = document.querySelector(`.load-more[data-section="${sectionKey}"]`);
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "No more items";
+      }
+      return;
+    }
+    const nextPage = currentPage + 1;
+    // Simulate API call
+    const newItems = generateItems(sectionKey, nextPage, 8);
+    const newCards = newItems.map(item => renderCard(item)).join('');
+    grid.insertAdjacentHTML('beforeend', newCards);
+    grid.setAttribute('data-page', nextPage);
+    
+    // Re-attach click events to new cards
+    attachCardClickEvents();
   }
 
-  // Render all sections based on filters
-  function renderAllSections() {
-    const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
-    const category = document.getElementById('categoryFilter')?.value || '';
-    let anyVisible = false;
-
-    for (const [sectionKey, items] of Object.entries(listingsData)) {
-      const container = document.querySelector(`.${sectionKey}-grid`);
-      if (!container) continue;
-
-      let filtered = items;
-      if (searchTerm) {
-        filtered = filtered.filter(item => item.title.toLowerCase().includes(searchTerm) || item.description.toLowerCase().includes(searchTerm));
-      }
-      if (category) {
-        filtered = filtered.filter(item => item.category === category);
-      }
-
-      if (filtered.length === 0) {
-        container.innerHTML = `<div class="col-12"><p class="text-muted text-center py-3">No items in this section match your filters.</p></div>`;
-      } else {
-        anyVisible = true;
-        container.innerHTML = filtered.map(item => renderCard(item)).join('');
-      }
-    }
-
-    // Show/hide global no results message
-    const globalNoResults = document.getElementById('globalNoResults');
-    if (!anyVisible) {
-      globalNoResults.classList.remove('d-none');
-    } else {
-      globalNoResults.classList.add('d-none');
-    }
-
-    // Re-attach contact button events
-    document.querySelectorAll('.contact-seller-btn').forEach(btn => {
-      btn.removeEventListener('click', contactHandler);
-      btn.addEventListener('click', contactHandler);
+  // Attach click handler to cards (redirect to detail page)
+  function attachCardClickEvents() {
+    document.querySelectorAll('.listing-card').forEach(card => {
+      card.removeEventListener('click', cardClickHandler);
+      card.addEventListener('click', cardClickHandler);
     });
   }
 
-  async function contactHandler(e) {
-    const seller = e.currentTarget.getAttribute('data-seller');
-    const item = e.currentTarget.getAttribute('data-item');
+  function cardClickHandler(e) {
+    const id = this.getAttribute('data-id');
+    // For demo, we can open a modal or redirect to detail page
+    // For now, show alert (simulate navigation)
+    // In real app: window.location.href = `listing-detail.html?id=${id}`;
     if (typeof formModal !== 'undefined' && formModal) {
       formModal.open({
-        title: `Contact ${seller} about "${item}"`,
-        formHtml: `
-          <div class="mb-3">
-            <label class="form-label">Your name *</label>
-            <input type="text" name="buyer_name" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Your email *</label>
-            <input type="email" name="buyer_email" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Message *</label>
-            <textarea name="message" class="form-control" rows="4" placeholder="Hi, I'm interested in your item..."></textarea>
-          </div>
-        `,
-        submitLabel: 'Send Message',
-        onSubmit: async (form) => {
-          await new Promise(r => setTimeout(r, 500));
-          if (typeof confirmModal !== 'undefined' && confirmModal) {
-            confirmModal.open({
-              title: 'Message Sent ✅',
-              message: `Your message has been sent to ${seller}. They will reply via email.`,
-              confirmText: 'OK',
-              onConfirm: () => formModal.close()
-            });
-          } else {
-            alert('Message sent (demo)');
-            formModal.close();
-          }
-        }
+        title: 'Item Details',
+        formHtml: `<p>You clicked on item ID: ${id}</p><p>In a real app, this would open a detailed page with full description, seller info, and contact options.</p>`,
+        submitLabel: 'Close',
+        onSubmit: () => formModal.close()
       });
     } else {
-      alert('Contact feature coming soon');
+      alert(`View details for item ${id}`);
     }
   }
 
-  // Event listeners for filters
-  document.getElementById('searchBtn')?.addEventListener('click', () => renderAllSections());
-  document.getElementById('searchInput')?.addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') renderAllSections();
-  });
-  document.getElementById('categoryFilter')?.addEventListener('change', () => renderAllSections());
+  // Initialize all sections with first page
+  function initSections() {
+    const sections = ['hot', 'top', 'dept', 'foryou'];
+    sections.forEach(section => {
+      const grid = document.querySelector(`.${section}-grid`);
+      if (grid) {
+        const items = generateItems(section, 1, 8);
+        grid.innerHTML = items.map(item => renderCard(item)).join('');
+        grid.setAttribute('data-page', '1');
+        grid.setAttribute('data-total-pages', '3');
+      }
+    });
+    attachCardClickEvents();
 
-  // Initial render
+    // Add load more button listeners
+    document.querySelectorAll('.load-more').forEach(btn => {
+      btn.removeEventListener('click', loadMoreHandler);
+      btn.addEventListener('click', loadMoreHandler);
+    });
+  }
+
+  function loadMoreHandler(e) {
+    const section = e.currentTarget.getAttribute('data-section');
+    loadMore(section);
+  }
+
+  // Initial load
   document.addEventListener('DOMContentLoaded', () => {
     AOS.init({ duration: 600, once: true });
-    renderAllSections();
+    initSections();
 
-    // Mobile menu toggle (fallback if main.js doesn't handle)
+    // Mobile menu toggle (fallback)
     const menuButton = document.querySelector('.mobile-menu-button');
     const menu = document.getElementById('navbarMain');
     if (menuButton && menu) {
