@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CampusConnect UI · Create a Listing</title>
+  <!-- Bootstrap 5 + Icons + Fonts + AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <style>
+    /* Wizard step styling */
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #e2e8f0;
+      z-index: 1;
+    }
+    .step {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      position: relative;
+      z-index: 2;
+      background-color: white;
+    }
+    .step.active {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+    .step.completed {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+    .step-label {
+      position: absolute;
+      top: 45px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      color: var(--text-muted);
+    }
+    .step.active .step-label, .step.completed .step-label {
+      color: var(--accent-dark);
+      font-weight: 600;
+    }
+    @media (max-width: 576px) {
+      .step-label { font-size: 0.65rem; white-space: normal; width: 80px; text-align: center; left: -20px; }
+    }
+    .form-step {
+      display: none;
+    }
+    .form-step.active-step {
+      display: block;
+    }
+    .hotspot-checkboxes {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #eef2f0;
+      border-radius: 1rem;
+      padding: 0.75rem;
+    }
+    .helper-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<!-- Navigation (same as main.html) -->
+<header class="site-header fixed-top">
+  <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
+    <div class="container header-inner">
+      <a class="site-brand" href="main.html" aria-label="CampusConnect UI home">
+        <img src="../assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo">
+        <span class="site-brand-name">
+          <span class="brand-full">CampusConnect UI</span>
+          <span class="brand-short">CampusConnect</span>
+        </span>
+      </a>
+      <button class="mobile-menu-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse site-menu" id="navbarMain">
+        <ul class="navbar-nav site-nav-list ms-lg-auto">
+          <li class="nav-item"><a class="nav-link site-nav-link" href="main.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="listings.html">Listings</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link active fw-semibold" href="#">Post</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="profile.html">Profile</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="pt-5 mt-4">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5" data-aos="fade-up">
+          <div class="text-center mb-4">
+            <span class="badge-verify mb-2"><i class="fas fa-plus-circle me-1"></i> Sell or Request</span>
+            <h1 class="fw-bold">Create a new listing</h1>
+            <p class="text-muted">Fill in the details about your item. We'll help you connect with buyers safely on campus.</p>
+          </div>
+
+          <!-- Step Indicator -->
+          <div class="step-indicator">
+            <div class="step active" id="step1Indicator">1<span class="step-label">Basic info</span></div>
+            <div class="step" id="step2Indicator">2<span class="step-label">Location</span></div>
+            <div class="step" id="step3Indicator">3<span class="step-label">Options</span></div>
+            <div class="step" id="step4Indicator">4<span class="step-label">Review</span></div>
+          </div>
+
+          <!-- Form Steps -->
+          <form id="listingForm" class="mt-4">
+            <!-- Step 1: Basic Information -->
+            <div id="step1" class="form-step active-step">
+              <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Basic information</h5>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Title *</label>
+                <input type="text" class="form-control" name="title" placeholder="e.g., HP Laptop, ECO 211 Textbook" required>
+                <div class="helper-text">Be specific and clear. Include brand, model, or key feature.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Category *</label>
+                <select class="form-select" name="category" required>
+                  <option value="">Loading categories...</option>
+                </select>
+                <div class="helper-text">Choose the most relevant category.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Description *</label>
+                <textarea class="form-control" name="description" rows="4" placeholder="Describe condition, reason for selling, any defects, etc." required></textarea>
+                <div class="helper-text">Detailed descriptions help buyers trust you.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Price (₦) *</label>
+                <input type="number" class="form-control" name="price" step="0.01" placeholder="e.g., 3500" required>
+                <div class="helper-text">Enter amount in Naira. Be fair – students love good deals.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Listing type</label>
+                <div class="d-flex gap-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="listing_type" value="sell" id="typeSell" checked>
+                    <label class="form-check-label" for="typeSell">For Sale</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="listing_type" value="wanted" id="typeWanted">
+                    <label class="form-check-label" for="typeWanted">Wanted / ISO</label>
+                  </div>
+                </div>
+                <div class="helper-text">"Wanted" means you're looking to buy something.</div>
+              </div>
+              <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary-custom next-step">Next <i class="fas fa-arrow-right ms-2"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 2: Campus Hotspots (Location) -->
+            <div id="step2" class="form-step">
+              <h5 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Where can you meet?</h5>
+              <p class="small text-muted">Select one or more safe campus spots where you're comfortable meeting the buyer.</p>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Campus hotspots *</label>
+                <div id="hotspotsContainer" class="hotspot-checkboxes">
+                  <div class="text-muted">Loading safe meeting spots...</div>
+                </div>
+                <div class="helper-text mt-2">✅ Choose locations with CCTV, well-lit, and public – like library, cafeteria, faculty buildings.</div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-custom prev-step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
+                <button type="button" class="btn btn-primary-custom next-step">Next <i class="fas fa-arrow-right ms-2"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 3: Additional Options (Badge, etc.) -->
+            <div id="step3" class="form-step">
+              <h5 class="mb-3"><i class="fas fa-tag me-2"></i>Optional extras</h5>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Badge (optional)</label>
+                <select class="form-select" name="badge">
+                  <option value="">None</option>
+                  <option value="urgent">🔥 Urgent sale</option>
+                  <option value="featured">⭐ Featured</option>
+                  <option value="price_drop">💰 Price drop</option>
+                </select>
+                <div class="helper-text">Badges help your listing stand out.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Images (optional)</label>
+                <input type="file" class="form-control" name="images" multiple accept="image/*">
+                <div class="helper-text">You can upload up to 5 images. They will appear in your listing.</div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-custom prev-step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
+                <button type="button" class="btn btn-primary-custom next-step">Review <i class="fas fa-eye ms-2"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 4: Review & Submit -->
+            <div id="step4" class="form-step">
+              <h5 class="mb-3"><i class="fas fa-clipboard-list me-2"></i>Review your listing</h5>
+              <div class="bg-light p-3 rounded-4 mb-3">
+                <div id="reviewContent"></div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-custom prev-step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
+                <button type="button" class="btn btn-primary-custom" id="submitListingBtn">Post Listing <i class="fas fa-paper-plane ms-2"></i></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Mobile bottom navigation (same as main.html) -->
+<div class="dashboard-mobile-actions d-md-none">
+  <a href="main.html" class="action-link">
+    <i class="fas fa-home"></i>
+    <span>Dashboard</span>
+  </a>
+  <a href="create-listing.html" class="action-link active">
+    <i class="fas fa-plus-circle"></i>
+    <span>Post</span>
+  </a>
+  <a href="listings.html" class="action-link">
+    <i class="fas fa-list"></i>
+    <span>Listings</span>
+  </a>
+</div>
+
+<!-- Footer (same as main.html) -->
+<footer class="footer">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <a class="footer-brand" href="main.html">
+          <img src="../assets/img/icon.jpg" alt="CampusConnect UI">
+          <span>CampusConnect UI</span>
+        </a>
+        <p class="text-muted small mt-2">A student-led initiative to make campus commerce safe, affordable, and local.</p>
+      </div>
+      <div class="col-md-8">
+        <div class="footer-links d-flex flex-wrap justify-content-md-end">
+          <a href="#">About</a>
+          <a href="main.html#how-it-works">How it Works</a>
+          <a href="main.html#contact">Contact</a>
+          <a href="t/terms-and-conditions.html">Terms & Conditions</a>
+          <a href="t/privacy-and-policy.html">Privacy</a>
+          <a href="t/report-issue.html">Report Issue</a>
+        </div>
+      </div>
+      <div class="col-12 mt-4 text-center text-muted small">
+        &copy; <script>document.write(new Date().getFullYear())</script> CampusConnect UI - University of Ibadan. Only for verified students.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Modals -->
+<div id="formModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 id="formModalTitle">Form Title</h3>
+      <button class="modal-close" id="closeFormModalBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="formModalBody"></div>
+    <div class="modal-footer" id="formModalFooter"></div>
+  </div>
+</div>
+<div id="confirmModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container confirm-modal-container">
+    <div class="modal-header">
+      <h3 id="confirmModalTitle">Confirm Action</h3>
+      <button class="modal-close" id="closeConfirmModalBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="confirmModalBody">
+      <p id="confirmMessage"></p>
+    </div>
+    <div class="modal-footer" id="confirmModalFooter"></div>
+  </div>
+</div>
+
+<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+  // Dummy API endpoints simulation
+  const DUMMY_CATEGORIES = [
+    { id: 1, name: "Textbooks", slug: "textbooks" },
+    { id: 2, name: "Electronics", slug: "electronics" },
+    { id: 3, name: "Furniture", slug: "furniture" },
+    { id: 4, name: "Clothing", slug: "clothing" },
+    { id: 5, name: "Sports & Outdoors", slug: "sports" },
+    { id: 6, name: "Other", slug: "other" }
+  ];
+  const DUMMY_HOTSPOTS = [
+    { id: 1, name: "Kennedy Library", description: "Main library, CCTV cameras, busy" },
+    { id: 2, name: "Awo Hall Cafeteria", description: "Open area, many students" },
+    { id: 3, name: "Faculty of Science Building", description: "Inside the main hall" },
+    { id: 4, name: "Kenneth Dike Hall", description: "Common room" },
+    { id: 5, name: "New Lecture Theatre (NLT)", description: "Large entrance" },
+    { id: 6, name: "Sports Complex", description: "Near the gate" }
+  ];
+
+  // Simulate API call
+  function fetchCategories() {
+    return new Promise(resolve => {
+      setTimeout(() => resolve(DUMMY_CATEGORIES), 300);
+    });
+  }
+  function fetchHotspots() {
+    return new Promise(resolve => {
+      setTimeout(() => resolve(DUMMY_HOTSPOTS), 300);
+    });
+  }
+
+  // Populate category dropdown
+  async function loadCategories() {
+    const select = document.querySelector('select[name="category"]');
+    if (!select) return;
+    const categories = await fetchCategories();
+    select.innerHTML = '<option value="">Select a category</option>' + 
+      categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+  }
+
+  // Populate hotspots checkboxes
+  async function loadHotspots() {
+    const container = document.getElementById('hotspotsContainer');
+    if (!container) return;
+    const hotspots = await fetchHotspots();
+    container.innerHTML = hotspots.map(hs => `
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" name="hotspots" value="${hs.id}" id="hotspot_${hs.id}">
+        <label class="form-check-label" for="hotspot_${hs.id}">
+          <strong>${hs.name}</strong> – <span class="small text-muted">${hs.description}</span>
+        </label>
+      </div>
+    `).join('');
+  }
+
+  // Wizard step management
+  let currentStep = 1;
+  const totalSteps = 4;
+  const steps = document.querySelectorAll('.form-step');
+  const indicators = {
+    1: document.getElementById('step1Indicator'),
+    2: document.getElementById('step2Indicator'),
+    3: document.getElementById('step3Indicator'),
+    4: document.getElementById('step4Indicator')
+  };
+
+  function updateStepUI() {
+    steps.forEach((step, idx) => {
+      if (idx + 1 === currentStep) {
+        step.classList.add('active-step');
+      } else {
+        step.classList.remove('active-step');
+      }
+    });
+    for (let i = 1; i <= totalSteps; i++) {
+      const indicator = indicators[i];
+      if (i < currentStep) {
+        indicator.classList.add('completed');
+        indicator.classList.remove('active');
+      } else if (i === currentStep) {
+        indicator.classList.add('active');
+        indicator.classList.remove('completed');
+      } else {
+        indicator.classList.remove('active', 'completed');
+      }
+    }
+    // Scroll to top of form on step change
+    document.querySelector('.dashboard-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function validateStep(step) {
+    if (step === 1) {
+      const title = document.querySelector('input[name="title"]').value.trim();
+      const category = document.querySelector('select[name="category"]').value;
+      const description = document.querySelector('textarea[name="description"]').value.trim();
+      const price = document.querySelector('input[name="price"]').value.trim();
+      if (!title) { alert('Please enter a title'); return false; }
+      if (!category) { alert('Please select a category'); return false; }
+      if (!description) { alert('Please enter a description'); return false; }
+      if (!price || isNaN(parseFloat(price))) { alert('Please enter a valid price'); return false; }
+      return true;
+    }
+    if (step === 2) {
+      const selected = document.querySelectorAll('input[name="hotspots"]:checked');
+      if (selected.length === 0) {
+        alert('Please select at least one safe meeting spot');
+        return false;
+      }
+      return true;
+    }
+    return true; // step 3 is optional, step 4 review always valid
+  }
+
+  function populateReview() {
+    const title = document.querySelector('input[name="title"]').value;
+    const categorySelect = document.querySelector('select[name="category"]');
+    const categoryText = categorySelect.options[categorySelect.selectedIndex]?.text || '';
+    const description = document.querySelector('textarea[name="description"]').value;
+    const price = document.querySelector('input[name="price"]').value;
+    const listingType = document.querySelector('input[name="listing_type"]:checked').value;
+    const badgeSelect = document.querySelector('select[name="badge"]');
+    const badge = badgeSelect.value ? badgeSelect.options[badgeSelect.selectedIndex].text : 'None';
+    const hotspots = Array.from(document.querySelectorAll('input[name="hotspots"]:checked'))
+      .map(cb => cb.parentElement.querySelector('label').innerText.split('–')[0].trim());
+    const images = document.querySelector('input[name="images"]').files.length;
+    
+    document.getElementById('reviewContent').innerHTML = `
+      <div class="row g-2">
+        <div class="col-md-6"><strong>Title:</strong> ${escapeHtml(title)}</div>
+        <div class="col-md-6"><strong>Category:</strong> ${escapeHtml(categoryText)}</div>
+        <div class="col-12"><strong>Description:</strong> ${escapeHtml(description)}</div>
+        <div class="col-md-4"><strong>Price:</strong> ₦${escapeHtml(price)}</div>
+        <div class="col-md-4"><strong>Type:</strong> ${escapeHtml(listingType === 'sell' ? 'For Sale' : 'Wanted')}</div>
+        <div class="col-md-4"><strong>Badge:</strong> ${escapeHtml(badge)}</div>
+        <div class="col-12"><strong>Meeting spots:</strong> ${hotspots.join(', ') || 'None'}</div>
+        <div class="col-12"><strong>Images:</strong> ${images} file(s) selected</div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // Next / Previous buttons
+  document.querySelectorAll('.next-step').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (validateStep(currentStep)) {
+        if (currentStep < totalSteps) {
+          currentStep++;
+          updateStepUI();
+          if (currentStep === 4) populateReview();
+        }
+      }
+    });
+  });
+  document.querySelectorAll('.prev-step').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        updateStepUI();
+      }
+    });
+  });
+
+  // Submit handler
+  document.getElementById('submitListingBtn').addEventListener('click', async () => {
+    // Collect data (simulate API call)
+    const formData = new FormData(document.getElementById('listingForm'));
+    const listingData = {
+      title: formData.get('title'),
+      category_id: formData.get('category'),
+      description: formData.get('description'),
+      price: parseFloat(formData.get('price')),
+      listing_type: formData.get('listing_type'),
+      badge: formData.get('badge') || null,
+      hotspot_ids: Array.from(document.querySelectorAll('input[name="hotspots"]:checked')).map(cb => cb.value),
+      images: document.querySelector('input[name="images"]').files.length
+    };
+    // Simulate backend save
+    if (typeof confirmModal !== 'undefined' && confirmModal) {
+      confirmModal.open({
+        title: 'Listing Created! 🎉',
+        message: 'Your item has been posted successfully. It will appear in the marketplace within a few minutes.',
+        confirmText: 'View My Listings',
+        onConfirm: () => {
+          window.location.href = 'main.html';
+        }
+      });
+    } else {
+      alert('Listing submitted (demo). Redirecting...');
+      window.location.href = 'main.html';
+    }
+    console.log('Submitted data:', listingData);
+  });
+
+  // Initialize page
+  document.addEventListener('DOMContentLoaded', async () => {
+    AOS.init({ duration: 600, once: true });
+    await loadCategories();
+    await loadHotspots();
+    updateStepUI();
+
+    // Mobile menu toggle (fallback)
+    const menuButton = document.querySelector('.mobile-menu-button');
+    const menu = document.getElementById('navbarMain');
+    if (menuButton && menu) {
+      menuButton.addEventListener('click', function () {
+        const isOpen = menu.classList.toggle('show');
+        menuButton.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
+  });
+</script>
+</body>
+</html>
