@@ -11,7 +11,6 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
-  <link rel="stylesheet" href="../assets/css/listings.css">
   <style>
     /* Additional styles for listings page */
     .listing-card {
@@ -20,6 +19,7 @@
       overflow: hidden;
       background: white;
       border: 1px solid rgba(44,122,94,0.1);
+      height: 100%;
     }
     .listing-card:hover {
       transform: translateY(-5px);
@@ -27,12 +27,17 @@
     }
     .listing-image {
       background: #f1f3f2;
-      height: 180px;
+      height: 150px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #adb5bd;
       font-size: 2rem;
+    }
+    .section-heading {
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 1rem;
     }
     .search-filter-bar {
       background: white;
@@ -72,6 +77,12 @@
         background-color: var(--accent) !important;
         color: white !important;
       }
+    }
+    .no-results {
+      background: #fefcf8;
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
     }
   </style>
 </head>
@@ -126,26 +137,52 @@
             <option value="clothing">Clothing</option>
             <option value="other">Other</option>
           </select>
-          <select id="sortSelect" class="form-select w-auto">
-            <option value="date_desc">Newest first</option>
-            <option value="price_asc">Price: low to high</option>
-            <option value="price_desc">Price: high to low</option>
-          </select>
           <button id="searchBtn" class="btn btn-primary-custom"><i class="fas fa-filter me-1"></i>Filter</button>
         </div>
       </div>
     </div>
 
-    <!-- Listings grid -->
-    <div id="listingsGrid" class="row g-4" data-aos="fade-up">
-      <div class="col-12 text-center py-5">
-        <div class="spinner-border text-success" role="status"></div>
-        <p class="mt-2">Loading listings...</p>
-      </div>
+    <!-- Sections: Hot sales, Top sales, Departmental sales, For you -->
+    <div id="sectionsContainer">
+      <!-- Hot sales section -->
+      <section class="mb-5" data-section="hot">
+        <div class="section-heading">
+          <h3 class="fw-bold mb-0"><i class="fas fa-fire me-2" style="color: #e67e22;"></i>Hot sales 🔥</h3>
+          <p class="text-muted">Trending items with high demand</p>
+        </div>
+        <div class="row g-4 hot-grid"></div>
+      </section>
+
+      <!-- Top sales section -->
+      <section class="mb-5" data-section="top">
+        <div class="section-heading">
+          <h3 class="fw-bold mb-0"><i class="fas fa-trophy me-2" style="color: #f5b042;"></i>Top sales 🏆</h3>
+          <p class="text-muted">Best selling items this month</p>
+        </div>
+        <div class="row g-4 top-grid"></div>
+      </section>
+
+      <!-- Departmental sales -->
+      <section class="mb-5" data-section="dept">
+        <div class="section-heading">
+          <h3 class="fw-bold mb-0"><i class="fas fa-building me-2" style="color: var(--accent);"></i>Departmental sales 📚</h3>
+          <p class="text-muted">Popular in Computer Science, Economics, Engineering</p>
+        </div>
+        <div class="row g-4 dept-grid"></div>
+      </section>
+
+      <!-- For you sales -->
+      <section class="mb-5" data-section="foryou">
+        <div class="section-heading">
+          <h3 class="fw-bold mb-0"><i class="fas fa-user-check me-2" style="color: var(--accent-dark);"></i>For you 🎯</h3>
+          <p class="text-muted">Recommended based on your department (Computer Science)</p>
+        </div>
+        <div class="row g-4 foryou-grid"></div>
+      </section>
     </div>
 
-    <!-- No results -->
-    <div id="noResultsMsg" class="text-center py-5 d-none">
+    <!-- No results message for all sections -->
+    <div id="globalNoResults" class="no-results d-none">
       <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
       <h5>No listings match your search</h5>
       <p class="text-muted">Try different keywords or <a href="create-listing.html">post your own listing</a>.</p>
@@ -153,7 +190,7 @@
   </div>
 </main>
 
-<!-- Footer -->
+<!-- Footer (exactly as main.html) -->
 <footer class="footer">
   <div class="container">
     <div class="row align-items-center">
@@ -214,110 +251,38 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
-  // Dummy listings data
-  const dummyListings = [
-    {
-      id: 1,
-      title: "ECO 211 - Principles of Economics",
-      description: "Barely used, no highlights. Original price ₦8,000, selling for ₦3,500.",
-      price: 3500,
-      category: "textbooks",
-      location: "Mellanby Hall",
-      image: null,
-      seller: "Oluwatobi A.",
-      created_at: "2025-06-10T10:00:00"
-    },
-    {
-      id: 2,
-      title: "HP Laptop Core i5 / 8GB RAM",
-      description: "Perfect for programming, Microsoft office. Battery lasts 4hrs.",
-      price: 145000,
-      category: "electronics",
-      location: "Independence Hall",
-      image: null,
-      seller: "Daniel O.",
-      created_at: "2025-06-09T14:30:00"
-    },
-    {
-      id: 3,
-      title: "Desk + Office Chair",
-      description: "Wooden desk, sturdy chair. Moving out of Queen Elizabeth Hall.",
-      price: 12000,
-      category: "furniture",
-      location: "Queen Elizabeth Hall",
-      image: null,
-      seller: "Tolani S.",
-      created_at: "2025-06-08T09:15:00"
-    },
-    {
-      id: 4,
-      title: "PHY 115 Lab Manual + Practical Guide",
-      description: "Clean copy, solved exercises. Great for 100L practicals.",
-      price: 2200,
-      category: "textbooks",
-      location: "Sultan Bello Hall",
-      image: null,
-      seller: "Chiamaka U.",
-      created_at: "2025-06-11T08:00:00"
-    },
-    {
-      id: 5,
-      title: "Sony WH-CH510 Wireless Headphones",
-      description: "Original box, 6 months used. Great battery life.",
-      price: 27500,
-      category: "electronics",
-      location: "Idia Hall",
-      image: null,
-      seller: "Michael B.",
-      created_at: "2025-06-07T16:20:00"
-    },
-    {
-      id: 6,
-      title: "Complete ACC 201 & 202 Past Questions",
-      description: "Printed & spiral bound. Includes solutions.",
-      price: 3000,
-      category: "textbooks",
-      location: "Nnamdi Azikiwe Hall",
-      image: null,
-      seller: "Peace E.",
-      created_at: "2025-06-06T11:45:00"
-    },
-    {
-      id: 7,
-      title: "Men's Nike Air Max Sneakers (Size 42)",
-      description: "Worn twice, like new. Original box included.",
-      price: 25000,
-      category: "clothing",
-      location: "Kenneth Dike Hall",
-      image: null,
-      seller: "Segun A.",
-      created_at: "2025-06-05T13:10:00"
-    },
-    {
-      id: 8,
-      title: "IKEA Floor Lamp",
-      description: "White, works perfectly. Great for dorm room.",
-      price: 5500,
-      category: "furniture",
-      location: "Mellanby Hall",
-      image: null,
-      seller: "Esther K.",
-      created_at: "2025-06-04T19:30:00"
-    }
-  ];
-
-  let currentFilters = {
-    search: '',
-    category: '',
-    sort: 'date_desc'
+  // ---------- Dummy Data for each section ----------
+  const listingsData = {
+    hot: [
+      { id: 1, title: "ECO 211 - Principles of Economics", description: "Barely used, no highlights.", price: 3500, category: "textbooks", location: "Mellanby Hall", image: null, seller: "Oluwatobi A.", created_at: "2025-06-10T10:00:00" },
+      { id: 2, title: "HP Laptop Core i5 / 8GB RAM", description: "Perfect for programming, battery lasts 4hrs.", price: 145000, category: "electronics", location: "Independence Hall", image: null, seller: "Daniel O.", created_at: "2025-06-09T14:30:00" },
+      { id: 3, title: "Sony WH-CH510 Wireless Headphones", description: "Original box, 6 months used.", price: 27500, category: "electronics", location: "Idia Hall", image: null, seller: "Michael B.", created_at: "2025-06-07T16:20:00" },
+      { id: 4, title: "Men's Nike Air Max Sneakers (Size 42)", description: "Worn twice, like new.", price: 25000, category: "clothing", location: "Kenneth Dike Hall", image: null, seller: "Segun A.", created_at: "2025-06-05T13:10:00" }
+    ],
+    top: [
+      { id: 5, title: "Desk + Office Chair", description: "Wooden desk, sturdy chair.", price: 12000, category: "furniture", location: "Queen Elizabeth Hall", image: null, seller: "Tolani S.", created_at: "2025-06-08T09:15:00" },
+      { id: 6, title: "Complete ACC 201 & 202 Past Questions", description: "Printed & spiral bound. Includes solutions.", price: 3000, category: "textbooks", location: "Nnamdi Azikiwe Hall", image: null, seller: "Peace E.", created_at: "2025-06-06T11:45:00" },
+      { id: 7, title: "PHY 115 Lab Manual + Practical Guide", description: "Clean copy, solved exercises.", price: 2200, category: "textbooks", location: "Sultan Bello Hall", image: null, seller: "Chiamaka U.", created_at: "2025-06-11T08:00:00" },
+      { id: 8, title: "IKEA Floor Lamp", description: "White, works perfectly. Great for dorm room.", price: 5500, category: "furniture", location: "Mellanby Hall", image: null, seller: "Esther K.", created_at: "2025-06-04T19:30:00" }
+    ],
+    dept: [
+      { id: 9, title: "CSC 301 - Algorithms & Data Structures", description: "Latest edition, like new.", price: 4500, category: "textbooks", location: "Science Faculty", image: null, seller: "Emeka O.", created_at: "2025-06-09T12:00:00" },
+      { id: 10, title: "Python Programming for Beginners", description: "E-book (PDF) with exercises.", price: 1500, category: "textbooks", location: "Online", image: null, seller: "Adebayo T.", created_at: "2025-06-10T09:30:00" },
+      { id: 11, title: "Scientific Calculator (Casio fx-991ES)", description: "Perfect for engineering students.", price: 5500, category: "electronics", location: "Faculty of Technology", image: null, seller: "Femi K.", created_at: "2025-06-08T14:20:00" },
+      { id: 12, title: "Economics Past Questions (2015-2024)", description: "Compiled answers included.", price: 2500, category: "textbooks", location: "Economics Dept", image: null, seller: "Aminat B.", created_at: "2025-06-07T11:00:00" }
+    ],
+    foryou: [
+      { id: 13, title: "Intro to Machine Learning (CSC 401)", description: "Course notes + assignments.", price: 3000, category: "textbooks", location: "CS Dept", image: null, seller: "Dr. Akin", created_at: "2025-06-11T10:15:00" },
+      { id: 14, title: "Logitech Wireless Mouse", description: "Used for one semester, works perfectly.", price: 3500, category: "electronics", location: "Kenneth Dike", image: null, seller: "Tunde O.", created_at: "2025-06-09T16:00:00" },
+      { id: 15, title: "Java Programming Textbook (11th Ed)", description: "Clean, no writing.", price: 6000, category: "textbooks", location: "CS Department", image: null, seller: "Olamide S.", created_at: "2025-06-08T13:30:00" }
+    ]
   };
 
-  // Helper: format currency
+  // Helper functions
   function formatCurrency(amount) {
     return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
   }
 
-  // Helper: format relative date
   function timeAgo(dateStr) {
     const date = new Date(dateStr);
     const now = new Date();
@@ -330,113 +295,6 @@
     return `${diffDays} day ago`;
   }
 
-  // Render listings
-  function renderListings() {
-    const grid = document.getElementById('listingsGrid');
-    const noResults = document.getElementById('noResultsMsg');
-    
-    let filtered = [...dummyListings];
-    
-    // Search filter
-    if (currentFilters.search) {
-      const term = currentFilters.search.toLowerCase();
-      filtered = filtered.filter(item => 
-        item.title.toLowerCase().includes(term) || 
-        item.description.toLowerCase().includes(term)
-      );
-    }
-    // Category filter
-    if (currentFilters.category) {
-      filtered = filtered.filter(item => item.category === currentFilters.category);
-    }
-    // Sort
-    if (currentFilters.sort === 'price_asc') {
-      filtered.sort((a,b) => a.price - b.price);
-    } else if (currentFilters.sort === 'price_desc') {
-      filtered.sort((a,b) => b.price - a.price);
-    } else {
-      filtered.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-    }
-    
-    if (filtered.length === 0) {
-      grid.innerHTML = '';
-      noResults.classList.remove('d-none');
-      return;
-    }
-    noResults.classList.add('d-none');
-    
-    grid.innerHTML = filtered.map(item => `
-      <div class="col-md-6 col-lg-4">
-        <div class="listing-card h-100">
-          <div class="listing-image">
-            ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${item.title}">` : `<i class="fas fa-image"></i> No image`}
-          </div>
-          <div class="card-body p-3">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <h5 class="card-title fw-bold mb-0">${escapeHtml(item.title)}</h5>
-              <span class="badge bg-white text-dark border px-2 py-1 rounded-pill">${escapeHtml(item.category)}</span>
-            </div>
-            <p class="card-text text-muted small">${escapeHtml(item.description.substring(0, 100))}${item.description.length > 100 ? '...' : ''}</p>
-            <div class="mt-2 small text-muted">
-              <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
-              <i class="far fa-clock me-1"></i> ${timeAgo(item.created_at)} by ${escapeHtml(item.seller)}
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-              <span class="fw-bold text-success fs-5">${formatCurrency(item.price)}</span>
-              <button class="btn btn-sm btn-outline-custom contact-seller-btn" data-id="${item.id}" data-seller="${item.seller}">
-                <i class="fas fa-comment-dots me-1"></i>Contact
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `).join('');
-    
-    // Attach contact button events
-    document.querySelectorAll('.contact-seller-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const seller = btn.getAttribute('data-seller');
-        if (typeof formModal !== 'undefined' && formModal) {
-          formModal.open({
-            title: `Contact ${seller}`,
-            formHtml: `
-              <div class="mb-3">
-                <label class="form-label">Your name *</label>
-                <input type="text" name="buyer_name" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Your email *</label>
-                <input type="email" name="buyer_email" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Message *</label>
-                <textarea name="message" class="form-control" rows="4" placeholder="I'm interested in your listing..."></textarea>
-              </div>
-            `,
-            submitLabel: 'Send Message',
-            onSubmit: async (form) => {
-              // Simulate sending
-              await new Promise(r => setTimeout(r, 500));
-              if (typeof confirmModal !== 'undefined' && confirmModal) {
-                confirmModal.open({
-                  title: 'Message Sent ✅',
-                  message: `Your message has been sent to ${seller}. The seller will contact you via email.`,
-                  confirmText: 'OK',
-                  onConfirm: () => formModal.close()
-                });
-              } else {
-                alert('Message sent (demo)');
-                formModal.close();
-              }
-            }
-          });
-        } else {
-          alert('Contact feature coming soon');
-        }
-      });
-    });
-  }
-  
   function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -446,41 +304,131 @@
       return m;
     });
   }
-  
-  // Event listeners for filters
-  document.getElementById('searchBtn').addEventListener('click', () => {
-    currentFilters.search = document.getElementById('searchInput').value;
-    currentFilters.category = document.getElementById('categoryFilter').value;
-    currentFilters.sort = document.getElementById('sortSelect').value;
-    renderListings();
-  });
-  document.getElementById('searchInput').addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') {
-      currentFilters.search = e.target.value;
-      currentFilters.category = document.getElementById('categoryFilter').value;
-      currentFilters.sort = document.getElementById('sortSelect').value;
-      renderListings();
+
+  function renderCard(item) {
+    return `
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="listing-card h-100">
+          <div class="listing-image">
+            ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${item.title}">` : `<i class="fas fa-image"></i>`}
+          </div>
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title fw-bold fs-6 mb-0">${escapeHtml(item.title)}</h5>
+              <span class="badge bg-white text-dark border px-2 py-1 rounded-pill small">${escapeHtml(item.category)}</span>
+            </div>
+            <p class="card-text text-muted small">${escapeHtml(item.description.substring(0, 60))}${item.description.length > 60 ? '…' : ''}</p>
+            <div class="mt-2 small text-muted">
+              <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
+              <i class="far fa-clock me-1"></i> ${timeAgo(item.created_at)} by ${escapeHtml(item.seller)}
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
+              <button class="btn btn-sm btn-outline-custom contact-seller-btn" data-seller="${escapeHtml(item.seller)}" data-item="${escapeHtml(item.title)}">
+                <i class="fas fa-comment-dots me-1"></i>Contact
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Render all sections based on filters
+  function renderAllSections() {
+    const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    const category = document.getElementById('categoryFilter')?.value || '';
+    let anyVisible = false;
+
+    for (const [sectionKey, items] of Object.entries(listingsData)) {
+      const container = document.querySelector(`.${sectionKey}-grid`);
+      if (!container) continue;
+
+      let filtered = items;
+      if (searchTerm) {
+        filtered = filtered.filter(item => item.title.toLowerCase().includes(searchTerm) || item.description.toLowerCase().includes(searchTerm));
+      }
+      if (category) {
+        filtered = filtered.filter(item => item.category === category);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-12"><p class="text-muted text-center py-3">No items in this section match your filters.</p></div>`;
+      } else {
+        anyVisible = true;
+        container.innerHTML = filtered.map(item => renderCard(item)).join('');
+      }
     }
+
+    // Show/hide global no results message
+    const globalNoResults = document.getElementById('globalNoResults');
+    if (!anyVisible) {
+      globalNoResults.classList.remove('d-none');
+    } else {
+      globalNoResults.classList.add('d-none');
+    }
+
+    // Re-attach contact button events
+    document.querySelectorAll('.contact-seller-btn').forEach(btn => {
+      btn.removeEventListener('click', contactHandler);
+      btn.addEventListener('click', contactHandler);
+    });
+  }
+
+  async function contactHandler(e) {
+    const seller = e.currentTarget.getAttribute('data-seller');
+    const item = e.currentTarget.getAttribute('data-item');
+    if (typeof formModal !== 'undefined' && formModal) {
+      formModal.open({
+        title: `Contact ${seller} about "${item}"`,
+        formHtml: `
+          <div class="mb-3">
+            <label class="form-label">Your name *</label>
+            <input type="text" name="buyer_name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Your email *</label>
+            <input type="email" name="buyer_email" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Message *</label>
+            <textarea name="message" class="form-control" rows="4" placeholder="Hi, I'm interested in your item..."></textarea>
+          </div>
+        `,
+        submitLabel: 'Send Message',
+        onSubmit: async (form) => {
+          await new Promise(r => setTimeout(r, 500));
+          if (typeof confirmModal !== 'undefined' && confirmModal) {
+            confirmModal.open({
+              title: 'Message Sent ✅',
+              message: `Your message has been sent to ${seller}. They will reply via email.`,
+              confirmText: 'OK',
+              onConfirm: () => formModal.close()
+            });
+          } else {
+            alert('Message sent (demo)');
+            formModal.close();
+          }
+        }
+      });
+    } else {
+      alert('Contact feature coming soon');
+    }
+  }
+
+  // Event listeners for filters
+  document.getElementById('searchBtn')?.addEventListener('click', () => renderAllSections());
+  document.getElementById('searchInput')?.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') renderAllSections();
   });
-  document.getElementById('categoryFilter').addEventListener('change', () => {
-    currentFilters.search = document.getElementById('searchInput').value;
-    currentFilters.category = document.getElementById('categoryFilter').value;
-    currentFilters.sort = document.getElementById('sortSelect').value;
-    renderListings();
-  });
-  document.getElementById('sortSelect').addEventListener('change', () => {
-    currentFilters.search = document.getElementById('searchInput').value;
-    currentFilters.category = document.getElementById('categoryFilter').value;
-    currentFilters.sort = document.getElementById('sortSelect').value;
-    renderListings();
-  });
-  
-  // Initial load
+  document.getElementById('categoryFilter')?.addEventListener('change', () => renderAllSections());
+
+  // Initial render
   document.addEventListener('DOMContentLoaded', () => {
     AOS.init({ duration: 600, once: true });
-    renderListings();
-    
-    // Mobile menu toggle (same as main.js, but ensure it works)
+    renderAllSections();
+
+    // Mobile menu toggle (fallback if main.js doesn't handle)
     const menuButton = document.querySelector('.mobile-menu-button');
     const menu = document.getElementById('navbarMain');
     if (menuButton && menu) {
