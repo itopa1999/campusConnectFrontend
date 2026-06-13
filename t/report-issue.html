@@ -195,10 +195,9 @@
       max-width: 600px;
     }
 
-    .modal-body input,
-    .modal-body textarea,
-    .modal-body select {
-      border-radius: 16px;
+    /* Ensure floating labels inside modal work */
+    .modal-body .form-floating-label {
+      margin-bottom: 1.5rem;
     }
 
     @media (max-width: 767.98px) {
@@ -364,16 +363,50 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
+  // Helper to generate floating label HTML for text inputs
+  function floatingText(id, labelText, required = true, placeholderHint = "") {
+    return `
+      <div class="form-floating-label">
+        <input type="text" class="form-control" id="${id}" name="${id}" placeholder=" " ${required ? 'required' : ''}>
+        <label class="form-label ${required ? 'required' : ''}" for="${id}">${labelText}</label>
+      </div>
+    `;
+  }
+
+  function floatingEmail(id, labelText, required = true) {
+    return `
+      <div class="form-floating-label">
+        <input type="email" class="form-control" id="${id}" name="${id}" placeholder=" " ${required ? 'required' : ''}>
+        <label class="form-label ${required ? 'required' : ''}" for="${id}">${labelText}</label>
+      </div>
+    `;
+  }
+
+  function floatingSelect(id, labelText, optionsHtml, required = true) {
+    return `
+      <div class="form-floating-label">
+        <select class="form-select" id="${id}" name="${id}" ${required ? 'required' : ''}>
+          <option value="">Select an option</option>
+          ${optionsHtml}
+        </select>
+        <label class="form-label ${required ? 'required' : ''}" for="${id}">${labelText}</label>
+      </div>
+    `;
+  }
+
+  function floatingTextarea(id, labelText, rows = 5, required = true) {
+    return `
+      <div class="form-floating-label">
+        <textarea class="form-control" id="${id}" name="${id}" placeholder=" " rows="${rows}" ${required ? 'required' : ''}></textarea>
+        <label class="form-label ${required ? 'required' : ''}" for="${id}">${labelText}</label>
+      </div>
+    `;
+  }
+
   function getModalContent(issueType) {
     const commonFields = `
-      <div>
-        <label>Your full name</label>
-        <input type="text" name="reporter_name" placeholder="Full name" required>
-      </div>
-      <div>
-        <label>Your UI email</label>
-        <input type="email" name="reporter_email" placeholder="you@stu.ui.edu.ng" required>
-      </div>
+      ${floatingText('reporter_name', 'Your full name', true)}
+      ${floatingEmail('reporter_email', 'Your UI email', true)}
     `;
     const screenshotHint = `
       <div class="form-note">
@@ -382,34 +415,20 @@
       </div>
     `;
 
-    const messageField = (label, placeholder) => `
-      <div>
-        <label>${label}</label>
-        <textarea name="message" rows="5" placeholder="${placeholder}" required></textarea>
-      </div>
-    `;
-
     switch (issueType) {
       case 'report_listing':
         return {
           title: 'Report a listing',
           html: commonFields + `
-            <div>
-              <label>Listing title or URL</label>
-              <input type="text" name="listing_identifier" placeholder="e.g., HP Laptop Core i5 or listing link" required>
-            </div>
-            <div>
-              <label>Reason</label>
-              <select name="reason" required>
-                <option value="">Select a reason</option>
-                <option>Scam or fraud concern</option>
-                <option>Prohibited item</option>
-                <option>Misleading photos or description</option>
-                <option>Duplicate or spam listing</option>
-                <option>Other listing issue</option>
-              </select>
-            </div>
-            ${messageField('Details', 'Explain what is wrong with this listing.')}
+            ${floatingText('listing_identifier', 'Listing title or URL', true)}
+            ${floatingSelect('reason', 'Reason', `
+              <option value="Scam or fraud concern">Scam or fraud concern</option>
+              <option value="Prohibited item">Prohibited item</option>
+              <option value="Misleading photos or description">Misleading photos or description</option>
+              <option value="Duplicate or spam listing">Duplicate or spam listing</option>
+              <option value="Other listing issue">Other listing issue</option>
+            `, true)}
+            ${floatingTextarea('message', 'Details', 5, true)}
             ${screenshotHint}
           `
         };
@@ -417,22 +436,15 @@
         return {
           title: 'Report a user',
           html: commonFields + `
-            <div>
-              <label>User email or profile name</label>
-              <input type="text" name="reported_user_email" placeholder="offender@stu.ui.edu.ng or profile name" required>
-            </div>
-            <div>
-              <label>Reason</label>
-              <select name="reason" required>
-                <option value="">Select a reason</option>
-                <option>Harassment or threats</option>
-                <option>Fraud or scam attempt</option>
-                <option>Impersonation</option>
-                <option>Spam</option>
-                <option>Unsafe meetup behavior</option>
-              </select>
-            </div>
-            ${messageField('Details', 'Describe what happened and include dates or conversation context.')}
+            ${floatingText('reported_user_email', 'User email or profile name', true)}
+            ${floatingSelect('reason', 'Reason', `
+              <option value="Harassment or threats">Harassment or threats</option>
+              <option value="Fraud or scam attempt">Fraud or scam attempt</option>
+              <option value="Impersonation">Impersonation</option>
+              <option value="Spam">Spam</option>
+              <option value="Unsafe meetup behavior">Unsafe meetup behavior</option>
+            `, true)}
+            ${floatingTextarea('message', 'Details', 5, true)}
             ${screenshotHint}
           `
         };
@@ -440,11 +452,8 @@
         return {
           title: 'Report a technical bug',
           html: commonFields + `
-            <div>
-              <label>Where did it happen?</label>
-              <input type="text" name="page_or_feature" placeholder="e.g., dashboard, login, post item form" required>
-            </div>
-            ${messageField('Steps to reproduce', 'What did you click, what did you expect, and what happened instead?')}
+            ${floatingText('page_or_feature', 'Where did it happen?', true)}
+            ${floatingTextarea('message', 'Steps to reproduce', 5, true)}
             ${screenshotHint}
           `
         };
@@ -452,40 +461,30 @@
         return {
           title: 'Question or feature request',
           html: commonFields + `
-            <div>
-              <label>Topic</label>
-              <input type="text" name="topic" placeholder="e.g., boosted listings, chat, delivery" required>
-            </div>
-            ${messageField('Question or suggestion', 'Tell us what you want to know or what you would like improved.')}
+            ${floatingText('topic', 'Topic', true)}
+            ${floatingTextarea('message', 'Question or suggestion', 5, true)}
           `
         };
       case 'account':
         return {
           title: 'Account or verification help',
           html: commonFields + `
-            <div>
-              <label>Account issue</label>
-              <select name="reason" required>
-                <option value="">Select an issue</option>
-                <option>Email verification</option>
-                <option>Student ID verification</option>
-                <option>Password or login</option>
-                <option>Profile correction</option>
-                <option>Account safety</option>
-              </select>
-            </div>
-            ${messageField('Details', 'Explain the account issue and what you need help with.')}
+            ${floatingSelect('reason', 'Account issue', `
+              <option value="Email verification">Email verification</option>
+              <option value="Student ID verification">Student ID verification</option>
+              <option value="Password or login">Password or login</option>
+              <option value="Profile correction">Profile correction</option>
+              <option value="Account safety">Account safety</option>
+            `, true)}
+            ${floatingTextarea('message', 'Details', 5, true)}
           `
         };
       default:
         return {
           title: 'Other support request',
           html: commonFields + `
-            <div>
-              <label>Subject</label>
-              <input type="text" name="topic" placeholder="What is this about?" required>
-            </div>
-            ${messageField('Message', 'Tell us how we can help.')}
+            ${floatingText('topic', 'Subject', true)}
+            ${floatingTextarea('message', 'Message', 5, true)}
             ${screenshotHint}
           `
         };

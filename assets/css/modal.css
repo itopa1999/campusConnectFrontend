@@ -93,37 +93,6 @@
 .modal-body form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-}
-
-.modal-body label {
-  font-weight: 500;
-  font-size: 0.875rem;
-  color: var(--text-dark, #1e2a2c);
-  margin-bottom: 0.25rem;
-  display: block;
-}
-
-.modal-body input,
-.modal-body textarea,
-.modal-body select {
-  width: 100%;
-  padding: 1rem 1rem;
-  border-radius: 28px;
-    border: 1px solid var(--card-border, #eef2f0);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
-  background-color: white;
-  transition: all 0.2s;
-  color: var(--text-dark, #1e2a2c);
-}
-
-.modal-body input:focus,
-.modal-body textarea:focus,
-.modal-body select:focus {
-  outline: none;
-  border-color: var(--accent, #2c7a5e);
-  box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.15);
 }
 
 .modal-body input.error,

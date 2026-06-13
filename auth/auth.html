@@ -64,13 +64,13 @@
 
       <div id="login-form" class="auth-form active-form">
         <form id="loginFormElement">
-          <div class="mb-3">
-            <label class="form-label small" for="loginEmail">Email address</label>
-            <input type="email" class="form-control" id="loginEmail" placeholder="you@stu.ui.edu.ng" required>
+          <div class="form-floating-label">
+            <input type="email" class="form-control" id="loginEmail" placeholder=" " required>
+            <label class="form-label required" for="loginEmail">Email address</label>
           </div>
-          <div class="mb-3">
-            <label class="form-label small" for="loginPassword">Password</label>
-            <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+          <div class="form-floating-label">
+            <input type="password" class="form-control" id="loginPassword" placeholder=" " required>
+            <label class="form-label required" for="loginPassword">Password</label>
           </div>
           <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
             <div class="form-check">
@@ -90,25 +90,29 @@
         <form id="signupFormElement">
           <div class="row g-3">
             <div class="col-md-6">
-              <label class="form-label small" for="firstName">First name</label>
-              <input type="text" class="form-control" id="firstName" placeholder="Tolani" required>
+              <div class="form-floating-label">
+                <input type="text" class="form-control" id="firstName" placeholder=" " required>
+                <label class="form-label required" for="firstName">First name</label>
+              </div>
             </div>
             <div class="col-md-6">
-              <label class="form-label small" for="lastName">Last name</label>
-              <input type="text" class="form-control" id="lastName" placeholder="Adebayo" required>
+              <div class="form-floating-label">
+                <input type="text" class="form-control" id="lastName" placeholder=" " required>
+                <label class="form-label required" for="lastName">Last name</label>
+              </div>
             </div>
           </div>
-          <div class="mt-3">
-            <label class="form-label small" for="signupEmail">UI email address</label>
-            <input type="email" class="form-control" id="signupEmail" placeholder="you@stu.ui.edu.ng" required>
+          <div class="form-floating-label mt-3">
+            <input type="email" class="form-control" id="signupEmail" placeholder=" " required>
+            <label class="form-label required" for="signupEmail">UI email address</label>
           </div>
-          <div class="mt-3">
-            <label class="form-label small" for="phoneNumber">WhatsApp phone number</label>
-            <input type="tel" class="form-control" id="phoneNumber" placeholder="0803 123 4567" required>
+          <div class="form-floating-label mt-3">
+            <input type="tel" class="form-control" id="phoneNumber" placeholder=" " required>
+            <label class="form-label required" for="phoneNumber">WhatsApp phone number</label>
           </div>
-          <div class="mt-3">
-            <label class="form-label small" for="signupPassword">Password</label>
-            <input type="password" class="form-control" id="signupPassword" placeholder="Create a strong password" required>
+          <div class="form-floating-label mt-3">
+            <input type="password" class="form-control" id="signupPassword" placeholder=" " required>
+            <label class="form-label required" for="signupPassword">Password</label>
           </div>
           <div class="form-check mt-3 mb-4">
             <input class="form-check-input" type="checkbox" id="termsCheck" style="border-radius: 6px;">

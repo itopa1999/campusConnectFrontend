@@ -524,6 +524,441 @@ section,
     }
 }
 
+
+/* ......................
+    FORM-CONTROL
+''''''''''''''''''''''''''' */
+
+/* ......................
+    FORM LABEL STYLES
+''''''''''''''''''''''''''' */
+
+/* Base label styling */
+.form-label {
+    color: var(--text-dark, #1e2a2a);
+    font-weight: 800;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    display: block;
+    transition: all 0.2s ease;
+}
+
+/* Required field indicator */
+.form-label.required::after {
+    content: '*';
+    color: #dc3545;
+    margin-left: 4px;
+    font-weight: 700;
+}
+
+/* Optional field indicator */
+.form-label.optional::after {
+    content: '(optional)';
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #6c757d;
+    margin-left: 8px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+/* Label with tooltip/info icon */
+.form-label .label-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-label .info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(44, 122, 94, 0.15);
+    color: #2c7a5e;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: help;
+    transition: all 0.2s ease;
+}
+
+.form-label .info-icon:hover {
+    background: rgba(44, 122, 94, 0.25);
+    transform: scale(1.1);
+}
+
+/* Floating label style (moves up when input is focused/has value) */
+.form-floating-label {
+    position: relative;
+    margin-top: 1.5rem;
+}
+
+.form-floating-label .form-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(-50%);
+    background: white;
+    padding: 0 0.5rem;
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #2c7a5e;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+/* Inline label (label beside input) */
+.form-row-inline {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-row-inline .form-label {
+    margin-bottom: 0;
+    min-width: 100px;
+}
+
+/* Label states when input is focused */
+.form-control:focus ~ .form-label,
+.form-select:focus ~ .form-label {
+    color: #2c7a5e;
+}
+
+/* Error state for label */
+.form-label.error {
+    color: #dc3545;
+}
+
+.form-label.error::before {
+    content: '⚠️ ';
+    font-size: 0.8rem;
+}
+
+/* Success state for label */
+.form-label.success {
+    color: #28a745;
+}
+
+.form-label.success::before {
+    content: '✓ ';
+    font-size: 0.8rem;
+}
+
+/* Disabled state */
+.form-label.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Large label (for main headings in forms) */
+.form-label-lg {
+    font-size: 1rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+}
+
+/* Small label (for compact forms) */
+.form-label-sm {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Label with description text */
+.form-label + .form-text {
+    margin-top: 0.25rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+/* Animated underline label (modern style) */
+.form-group-underline {
+    position: relative;
+}
+
+.form-group-underline .form-label {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #6c757d;
+    text-transform: none;
+    letter-spacing: normal;
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+.form-group-underline .form-control:focus ~ .form-label,
+.form-group-underline .form-control:not(:placeholder-shown) ~ .form-label {
+    bottom: 100%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #2c7a5e;
+}
+.form-control {
+    min-height: 50px;
+    border-radius: 16px;
+    border: 1px solid rgba(44, 122, 94, 0.14);
+    background: #ffffff;
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: rgba(44, 122, 94, 0.45);
+    box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.12);
+    outline: none;
+}
+
+/* ......................
+    CUSTOM RADIO & CHECKBOX
+''''''''''''''''''''''''''' */
+
+/* Base wrapper for better spacing */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+}
+
+/* Hide default input but keep accessible */
+.form-check-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Custom radio */
+.form-check-input[type="radio"] + .form-check-label {
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-dark, #1e2a2a);
+    user-select: none;
+}
+
+.form-check-input[type="radio"] + .form-check-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(44, 122, 94, 0.3);
+    border-radius: 50%;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.form-check-input[type="radio"] + .form-check-label::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2c7a5e;
+    transition: transform 0.2s ease;
+}
+
+.form-check-input[type="radio"]:checked + .form-check-label::before {
+    border-color: #2c7a5e;
+    border-width: 2px;
+}
+
+.form-check-input[type="radio"]:checked + .form-check-label::after {
+    transform: translateY(-50%) scale(1);
+}
+
+.form-check-input[type="radio"]:focus + .form-check-label::before {
+    box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.12);
+}
+
+/* Custom checkbox */
+.form-check-input[type="checkbox"] + .form-check-label {
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-dark, #1e2a2a);
+    user-select: none;
+}
+
+.form-check-input[type="checkbox"] + .form-check-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(44, 122, 94, 0.3);
+    border-radius: 6px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.form-check-input[type="checkbox"] + .form-check-label::after {
+    content: '✓';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c7a5e;
+    transition: transform 0.2s ease;
+}
+
+.form-check-input[type="checkbox"]:checked + .form-check-label::before {
+    border-color: #2c7a5e;
+    background: rgba(44, 122, 94, 0.05);
+}
+
+.form-check-input[type="checkbox"]:checked + .form-check-label::after {
+    transform: translateY(-50%) scale(1);
+}
+
+.form-check-input[type="checkbox"]:focus + .form-check-label::before {
+    box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.12);
+}
+
+/* Disabled state */
+.form-check-input:disabled + .form-check-label {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ......................
+    CUSTOM SELECT
+''''''''''''''''''''''''''' */
+
+.form-select {
+    min-height: 50px;
+    border-radius: 16px;
+    border: 1px solid rgba(44, 122, 94, 0.14);
+    background: #ffffff;
+    padding: 0.9rem 2rem 0.9rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark, #1e2a2a);
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    
+    /* Custom dropdown arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232c7a5e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px;
+}
+
+.form-select:focus {
+    border-color: rgba(44, 122, 94, 0.45);
+    box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.12);
+    outline: none;
+}
+
+.form-select:hover {
+    border-color: rgba(44, 122, 94, 0.3);
+}
+
+/* Optional: Style for select options */
+.form-select option {
+    font-weight: normal;
+    padding: 0.5rem;
+}
+
+/* ......................
+    INLINE GROUP (Radio/Checkbox Group)
+''''''''''''''''''''''''''' */
+
+.form-check-group {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.form-check-group .form-check {
+    margin-bottom: 0;
+}
+
+/* Alternative: Horizontal radio/checkbox */
+.form-check-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.dashboard-mobile-actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1070;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.96);
+    border-top: 1px solid rgba(44, 122, 94, 0.12);
+    box-shadow: 0 -12px 26px rgba(31, 94, 72, 0.08);
+    backdrop-filter: blur(16px);
+}
+
+.dashboard-mobile-actions .action-link {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.78rem 0.5rem;
+    border-radius: 18px;
+    text-decoration: none;
+    color: var(--accent-dark);
+    background: #f6fbf7;
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.dashboard-mobile-actions .action-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(44, 122, 94, 0.12);
+    background: var(--accent-light);
+}
+
+.dashboard-mobile-actions .action-link i {
+    font-size: 1.25rem;
+}
+
+@media (max-width: 767.98px) {
+    .dashboard-mobile-actions {
+        padding: 0.78rem 0.85rem;
+    }
+}
+
+
 /* ------------------------------
    LOADER / SPINNER
 ------------------------------ */

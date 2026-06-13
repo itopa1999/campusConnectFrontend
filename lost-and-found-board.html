@@ -57,6 +57,23 @@
       outline: none;
       box-shadow: none;
     }
+    .search-filter-bar .form-select-custom {
+      border: none;
+      padding: 0.75rem 2rem 0.75rem 1rem;
+      border-radius: 40px;
+      background: transparent;
+      font-size: 0.95rem;
+      color: #1e2a2a;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232c7a5e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 14px;
+    }
+    .search-filter-bar .form-select-custom:focus {
+      outline: none;
+    }
     .search-filter-bar button {
       border-radius: 40px;
       padding: 0.5rem 1.5rem;
@@ -69,17 +86,81 @@
         border: none;
         gap: 0.75rem;
       }
-      .search-filter-bar input, .search-filter-bar button {
+      .search-filter-bar input, 
+      .search-filter-bar .form-select-custom, 
+      .search-filter-bar button {
         width: 100%;
         border: 1px solid #eef2f0;
         background: white;
       }
     }
+
+    /* Floating Label Styles for Modal */
+    .form-floating-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-floating-group .form-label {
+      position: absolute;
+      top: 0;
+      left: 1rem;
+      transform: translateY(-50%);
+      background: white;
+      padding: 0 0.5rem;
+      margin: 0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #2c7a5e;
+      pointer-events: none;
+      z-index: 2;
+      transition: all 0.2s ease;
+    }
+
+    .form-floating-group .form-control,
+    .form-floating-group textarea.form-control {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(44, 122, 94, 0.14);
+      border-radius: 16px;
+      background: white;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .form-floating-group .form-control:focus,
+    .form-floating-group textarea.form-control:focus {
+      border-color: rgba(44, 122, 94, 0.45);
+      box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.12);
+      outline: none;
+    }
+
+    /* Verification question box styling */
+    .verification-question-box {
+      background: #f8f9fa;
+      border-left: 3px solid #2c7a5e;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    .verification-question-box .question-text {
+      font-weight: 700;
+      color: #2c7a5e;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .verification-question-box .question-content {
+      font-weight: 500;
+      color: #1e2a2a;
+      margin-bottom: 0.75rem;
+    }
   </style>
 </head>
 <body>
 <div id="particles-js"></div>
-<!-- Navigation (same as index.html) -->
+<!-- Navigation -->
 <header class="site-header fixed-top">
   <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
     <div class="container header-inner">
@@ -113,16 +194,23 @@
       <h1 class="fw-bold">Help reunite belongings on campus</h1>
       <p class="text-muted col-lg-7 mx-auto">Browse reported lost items. If you recognise something, claim it by answering the owner's verification questions.</p>
       <div class="mt-3">
-        <button href="#" id="reportLostBtn" class="btn btn-outline-custom"><i class="fas fa-plus-circle me-2"></i>Report a lost item</button>
+        <button id="reportLostBtn" class="btn btn-outline-custom"><i class="fas fa-plus-circle me-2"></i>Report a lost item</button>
       </div>
     </div>
 
-    <!-- Search & filter bar -->
+    <!-- Search & filter bar with improved styling -->
     <div class="row justify-content-center mb-5">
       <div class="col-lg-8">
         <div class="search-filter-bar d-flex gap-2 align-items-center">
           <i class="fas fa-search text-muted ps-3"></i>
           <input type="text" id="searchInput" class="form-control" placeholder="Search by item name, location...">
+          <select id="categoryFilter" class="form-select-custom">
+            <option value="">All Categories</option>
+            <option value="electronics">Electronics</option>
+            <option value="id">ID Cards</option>
+            <option value="accessories">Accessories</option>
+            <option value="books">Books</option>
+          </select>
           <button id="searchBtn" class="btn btn-primary-custom"><i class="fas fa-filter me-1"></i>Filter</button>
         </div>
       </div>
@@ -130,7 +218,7 @@
 
     <!-- Items grid -->
     <div id="itemsGrid" class="row g-4" data-aos="fade-up">
-      <!-- Items will be injected here from dummy API -->
+      <!-- Items will be injected here -->
       <div class="col-12 text-center py-5">
         <div class="spinner-border text-success" role="status"></div>
         <p class="mt-2">Loading lost items...</p>
@@ -141,12 +229,12 @@
     <div id="noResultsMsg" class="text-center py-5 d-none">
       <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
       <h5>No lost items match your search</h5>
-      <p class="text-muted">Try different keywords or <a href="index.html#lost-found-section">report a lost item</a> if you found something.</p>
+      <p class="text-muted">Try different keywords or report a lost item if you found something.</p>
     </div>
   </div>
 </main>
 
-<!-- Footer (same as index.html) -->
+<!-- Footer -->
 <footer class="footer">
   <div class="container">
     <div class="row align-items-center">
@@ -174,7 +262,7 @@
   </div>
 </footer>
 
-<!-- Modals (same as index.html) -->
+<!-- Modals -->
 <div id="formModal" class="modal-overlay" style="display: none;">
   <div class="modal-container">
     <div class="modal-header">
@@ -227,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 });
+
 let dummyLostItems = [
   {
     id: 1,
@@ -307,7 +396,7 @@ function renderItems() {
   
   let filtered = [...dummyLostItems];
   
-  // Filter by search (item name or location)
+  // Filter by search
   if (currentFilter.search) {
     const term = currentFilter.search.toLowerCase();
     filtered = filtered.filter(item => 
@@ -379,7 +468,7 @@ function formatDate(dateStr) {
   return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// Open claim modal with verification questions
+// Open claim modal with verification questions using floating labels
 function openClaimModal(item) {
   if (typeof formModal === 'undefined' || !formModal) {
     alert('Modal system not ready. Please refresh.');
@@ -387,32 +476,46 @@ function openClaimModal(item) {
   }
   
   formModal.open({
-    title: `Claim Item: ${item.item_name}`,
+    title: `Claim Item: ${escapeHtml(item.item_name)}`,
     formHtml: `
-      <p class="text-muted small">The owner has set up verification questions to ensure you are the rightful owner. Answer correctly to reveal contact information.</p>
-      <div class="mb-3">
-        <label class="form-label fw-bold">Verification Question 1</label>
-        <div class="bg-light p-2 rounded">${escapeHtml(item.verify_q1)}</div>
-        <input type="text" name="answer1" class="form-control mt-2" placeholder="Your answer" required>
+      <p class="text-muted small mb-3">The owner has set up verification questions to ensure you are the rightful owner. Answer correctly to reveal contact information.</p>
+      
+      <div class="verification-question-box">
+        <div class="question-text"><i class="fas fa-question-circle me-2"></i>Verification Question 1</div>
+        <div class="question-content">${escapeHtml(item.verify_q1)}</div>
+        <div class="form-floating-group">
+          <input type="text" name="answer1" id="answer1" class="form-control" placeholder="Your answer" required>
+          <label class="form-label" for="answer1">Your answer *</label>
+        </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label fw-bold">Verification Question 2</label>
-        <div class="bg-light p-2 rounded">${escapeHtml(item.verify_q2)}</div>
-        <input type="text" name="answer2" class="form-control mt-2" placeholder="Your answer" required>
+      
+      <div class="verification-question-box">
+        <div class="question-text"><i class="fas fa-question-circle me-2"></i>Verification Question 2</div>
+        <div class="question-content">${escapeHtml(item.verify_q2)}</div>
+        <div class="form-floating-group">
+          <input type="text" name="answer2" id="answer2" class="form-control" placeholder="Your answer" required>
+          <label class="form-label" for="answer2">Your answer *</label>
+        </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Your name (claimant) *</label>
-        <input type="text" name="claimant_name" class="form-control" required>
+      
+      <div class="form-floating-group">
+        <input type="text" name="claimant_name" id="claimant_name" class="form-control" placeholder="Your full name" required>
+        <label class="form-label" for="claimant_name">Your full name *</label>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Your email *</label>
-        <input type="email" name="claimant_email" class="form-control" required>
+      
+      <div class="form-floating-group">
+        <input type="email" name="claimant_email" id="claimant_email" class="form-control" placeholder="Your email address" required>
+        <label class="form-label" for="claimant_email">Your email address *</label>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Your phone *</label>
-        <input type="tel" name="claimant_phone" class="form-control" required>
+      
+      <div class="form-floating-group">
+        <input type="tel" name="claimant_phone" id="claimant_phone" class="form-control" placeholder="Your phone number" required>
+        <label class="form-label" for="claimant_phone">Your phone number *</label>
       </div>
-      <div class="small text-muted">We will only share your details with the finder if your answers match.</div>
+      
+      <div class="small text-muted mt-3">
+        <i class="fas fa-shield-alt me-1"></i> We will only share your details with the finder if your answers match.
+      </div>
     `,
     submitLabel: 'Submit Claim',
     onSubmit: async (form) => {
@@ -427,7 +530,7 @@ function openClaimModal(item) {
         return;
       }
       
-      // Compare answers (case-insensitive, trimmed)
+      // Compare answers
       const correct1 = (answer1 === item.verify_a1.toLowerCase());
       const correct2 = (answer2 === item.verify_a2.toLowerCase());
       
@@ -444,11 +547,10 @@ function openClaimModal(item) {
           alert(`Verification passed! Finder contact: ${item.finder_name} (${item.finder_email}, ${item.finder_phone})`);
           formModal.close();
         }
-        // In a real app, you would also send an email to the finder etc.
       } else {
         confirmModal.open({
           title: '❌ Verification Failed',
-          message: 'Your answers did not match the owner’s questions. Please double-check the item details and try again. If you believe this is your item, contact support@campusconnect.ui for assistance.',
+          message: 'Your answers did not match the owner\'s questions. Please double-check the item details and try again. If you believe this is your item, contact support@campusconnect.ui for assistance.',
           confirmText: 'OK',
           onConfirm: () => {}
         });
@@ -459,7 +561,6 @@ function openClaimModal(item) {
 
 // Load dummy data and render
 function loadLostItems() {
-  // Simulate API call
   setTimeout(() => {
     renderItems();
   }, 300);
@@ -471,6 +572,7 @@ document.getElementById('searchBtn').addEventListener('click', () => {
   currentFilter.category = document.getElementById('categoryFilter').value;
   renderItems();
 });
+
 document.getElementById('searchInput').addEventListener('keyup', (e) => {
   if (e.key === 'Enter') {
     currentFilter.search = e.target.value;
@@ -484,7 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
   AOS.init({ duration: 600, once: true });
   loadLostItems();
   
-  // Mobile menu toggle (repeated from index)
+  // Mobile menu toggle
   const menuButton = document.querySelector('.mobile-menu-button');
   const menu = document.getElementById('navbarMain');
   if (menuButton && menu) {

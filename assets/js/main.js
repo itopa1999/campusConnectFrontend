@@ -240,72 +240,84 @@ function initReportLostFeature() {
     formModal.open({
       title: 'Report Lost Item',
       formHtml: `
-        <div class="mb-3">
-          <label class="form-label">Item name *</label>
-          <input type="text" name="item_name" class="form-control" placeholder="e.g., iPhone 13, Student ID, Blue Backpack" required>
+        <div class="form-floating-label">
+          <input type="text" name="item_name" id="item_name" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="item_name">Item name</label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Description *</label>
-          <textarea name="description" class="form-control" rows="3" placeholder="Colour, brand, distinguishing marks, etc." required></textarea>
+
+        <div class="form-floating-label">
+          <textarea name="description" id="description" class="form-control" placeholder=" " rows="3" required></textarea>
+          <label class="form-label required" for="description">Description</label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Where was it found? *</label>
-          <input type="text" name="location" class="form-control" placeholder="e.g., Kennedy Library, Faculty of Science, Awo Hall" required>
+
+        <div class="form-floating-label">
+          <input type="text" name="location" id="location" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="location">Where was it found?</label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Date found *</label>
-          <input type="date" name="date" class="form-control" required>
+
+        <div class="form-floating-label">
+          <input type="date" name="date" id="date" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="date">Date found</label>
         </div>
 
         <hr class="my-4">
         <h6 class="fw-bold">🔐 Owner verification questions (only the true owner will know these)</h6>
         <p class="small text-muted">When someone claims this item, we'll ask them the same questions. If answers match, we'll share your contact details with them.</p>
 
-        <div class="mb-3">
-          <label class="form-label">Verification question 1 *</label>
-          <input type="text" name="verify_q1" class="form-control" placeholder="e.g., What colour is the item?" required>
+        <div class="form-floating-label">
+          <input type="text" name="verify_q1" id="verify_q1" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="verify_q1">Verification question 1</label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Answer to question 1 *</label>
-          <input type="text" name="verify_a1" class="form-control" placeholder="e.g., Blue" required>
+
+        <div class="form-floating-label">
+          <input type="text" name="verify_a1" id="verify_a1" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="verify_a1">Answer to question 1</label>
+          <div class="form-text">⚠️ Keep this answer safe. Only the real owner will know it.</div>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Verification question 2 *</label>
-          <input type="text" name="verify_q2" class="form-control" placeholder="e.g., Any unique mark or serial number?" required>
+
+        <div class="form-floating-label">
+          <input type="text" name="verify_q2" id="verify_q2" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="verify_q2">Verification question 2</label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Answer to question 2 *</label>
-          <input type="text" name="verify_a2" class="form-control" placeholder="e.g., Small scratch on back" required>
+
+        <div class="form-floating-label">
+          <input type="text" name="verify_a2" id="verify_a2" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="verify_a2">Answer to question 2</label>
+          <div class="form-text">⚠️ Keep this answer safe. Only the real owner will know it.</div>
         </div>
 
         <hr class="my-4">
         <h6 class="fw-bold">📞 Your contact details (finder)</h6>
 
-        <div class="mb-3">
-          <label class="form-label">Your full name (finder) *</label>
-          <input type="text" name="finder_name" class="form-control" required>
+        <div class="form-floating-label">
+          <input type="text" name="finder_name" id="finder_name" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="finder_name">Your full name (finder)</label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Your email *</label>
-          <input type="email" name="finder_email" class="form-control" placeholder="@ui.edu.ng or personal" required>
+
+        <div class="form-floating-label">
+          <input type="email" name="finder_email" id="finder_email" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="finder_email">Your email</label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Your phone number *</label>
-          <input type="tel" name="finder_phone" class="form-control" required>
+
+        <div class="form-floating-label">
+          <input type="tel" name="finder_phone" id="finder_phone" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="finder_phone">Your phone number</label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Your department *</label>
-          <input type="text" name="finder_department" class="form-control" placeholder="e.g., Computer Science, Economics" required>
+
+        <div class="form-floating-label">
+          <input type="text" name="finder_department" id="finder_department" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="finder_department">Your department</label>
         </div>
+
         <div class="mb-3">
-          <label class="form-label">Upload image of the item (optional)</label>
-          <div class="drop-area" id="dropArea">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p>Drag & drop an image here or click to browse</p>
+          <label class="form-label optional">Upload image of the item</label>
+          <div class="drop-area" id="dropArea" style="border: 2px dashed rgba(44, 122, 94, 0.25); border-radius: 16px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s ease; background: #fafcfb;">
+            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #2c7a5e; margin-bottom: 0.5rem;"></i>
+            <p style="margin: 0; font-size: 0.85rem; color: #6c757d;">Drag & drop an image here or click to browse</p>
             <input type="file" id="fileInput" accept="image/*" hidden>
-            <div class="small text-muted">JPEG, PNG up to 5MB</div>
+            <div class="small text-muted mt-1">JPEG, PNG up to 2MB</div>
           </div>
-          <div class="image-preview" id="imagePreview"></div>
+          <div class="image-preview" id="imagePreview" style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
         </div>
       `,
       submitLabel: 'Report Item',

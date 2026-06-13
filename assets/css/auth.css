@@ -177,28 +177,6 @@ body {
     display: block;
 }
 
-.form-label {
-    color: var(--text-dark) !important;
-    font-weight: 800 !important;
-}
-
-.form-control {
-    min-height: 50px;
-    border-radius: 16px;
-    border: 1px solid rgba(44, 122, 94, 0.14);
-    background: #ffffff;
-    padding: 0.9rem 1rem;
-    font-size: 0.95rem;
-    font-weight: 600;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.form-control:focus {
-    border-color: rgba(44, 122, 94, 0.45);
-    box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.12);
-    outline: none;
-}
-
 .forgot-link,
 .remember-check {
     font-size: 0.86rem;
