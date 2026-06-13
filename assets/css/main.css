@@ -954,8 +954,9 @@ section,
 
 @media (max-width: 767.98px) {
     .dashboard-mobile-actions {
-        padding: 0.78rem 0.85rem;
+        padding-top: 1rem 0.85rem 0.78rem 0.85rem;
     }
+
 }
 
 

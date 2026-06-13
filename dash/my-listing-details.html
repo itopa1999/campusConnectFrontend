@@ -7,32 +7,101 @@
   <!-- Bootstrap 5 + Icons + Fonts + AOS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
     /* Additional styles for management page */
-    .info-badge {
-      background: #f8f9fa;
-      border-radius: 1rem;
-      padding: 0.5rem 1rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-    .restriction-note {
-      background: #fff3e0;
-      border-left: 3px solid #f5b042;
-      padding: 0.75rem 1rem;
-      border-radius: 0.75rem;
-      font-size: 0.8rem;
-    }
     .points-badge {
       background: var(--accent-light);
       color: var(--accent-dark);
       border-radius: 2rem;
-      padding: 0.5rem 1rem;
-      font-weight: 600;
+      padding: 0.5rem 1.2rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .listing-image {
+      border-radius: 1.25rem;
+      overflow: hidden;
+      background: #f1f3f2;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(44, 122, 94, 0.1);
+    }
+    .listing-image img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .image-upload-area {
+      border: 2px dashed rgba(44, 122, 94, 0.25);
+      border-radius: 1rem;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .image-upload-area:hover {
+      border-color: var(--accent);
+      background: rgba(44, 122, 94, 0.02);
+    }
+    /* Edit mode toggle switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 26px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.3s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    .restriction-warning {
+      background: #fff8e7;
+      border-left: 4px solid #f5b042;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+    }
+    .edit-mode-group {
+      transition: all 0.2s;
+    }
+    .edit-mode-group.disabled {
+      opacity: 0.5;
+      pointer-events: none;
     }
     .hotspot-checkboxes {
       max-height: 200px;
@@ -40,28 +109,49 @@
       border: 1px solid #eef2f0;
       border-radius: 1rem;
       padding: 0.75rem;
+      background: white;
     }
-    .edit-mode {
-      background: #fefcf8;
-      border-left: 3px solid var(--accent);
+    .form-floating-label {
+      margin-bottom: 1.5rem;
+    }
+    .badge-status {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .badge-active { background: #e3f5ec; color: #1e7b4a; }
+    .badge-sold { background: #f0f0f0; color: #5a6268; }
+    .badge-expired { background: #ffe6e5; color: #c23d2e; }
+    .hotspot-badge {
+      background: #f0f7f3;
+      padding: 0.3rem 0.8rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      color: var(--accent-dark);
+    }
+    .btn-outline-danger {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+    .btn-outline-danger:hover {
+      background: #dc3545;
+      color: white;
     }
   </style>
 </head>
 <body>
 <div id="particles-js"></div>
 
-<!-- Navigation -->
 <header class="site-header fixed-top">
-  <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
+  <nav class="navbar navbar-expand-lg">
     <div class="container header-inner">
-      <a class="site-brand" href="main.html" aria-label="CampusConnect UI home">
+      <a class="site-brand" href="main.html">
         <img src="../assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo">
-        <span class="site-brand-name">
-          <span class="brand-full">CampusConnect UI</span>
-          <span class="brand-short">CampusConnect</span>
-        </span>
+        <span class="site-brand-name">CampusConnect UI</span>
       </a>
-      <button class="mobile-menu-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="mobile-menu-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse site-menu" id="navbarMain">
@@ -77,122 +167,141 @@
 </header>
 
 <main class="pt-5 mt-4">
-  <div class="container py-4">
+  <div class="container py-4 mb-5">
     <div class="row justify-content-center">
       <div class="col-lg-10">
-        <!-- Loading state -->
+        <!-- Loading -->
         <div id="loadingState" class="text-center py-5">
-          <div class="spinner-border text-success" role="status"></div>
+          <div class="spinner-border text-success"></div>
           <p class="mt-3">Loading listing details...</p>
         </div>
 
-        <!-- Main content (hidden initially) -->
+        <!-- Main content -->
         <div id="listingContent" style="display: none;">
-          <!-- Points banner -->
-          <div class="d-flex justify-content-end mb-3">
-            <div class="points-badge"><i class="fas fa-coins me-1"></i> Your points: <span id="userPoints">0</span></div>
+          <!-- Points & Edit Toggle -->
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <div class="points-badge"><i class="fas fa-coins me-2"></i>Points: <span id="userPoints">0</span></div>
+            <div class="d-flex align-items-center gap-3">
+              <span class="fw-semibold">Edit mode</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="editModeToggle">
+                <span class="slider"></span>
+              </label>
+            </div>
           </div>
 
           <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 mb-4">
-            <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-              <h2 class="fw-bold mb-2">Manage listing</h2>
-              <span class="badge bg-white text-dark border px-3 py-2 rounded-pill" id="listingIdBadge">ID: --</span>
-            </div>
-
-            <!-- Basic info (view mode with edit) -->
-            <div class="row g-4">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label class="form-label fw-semibold">Title</label>
-                  <p id="titleView" class="mb-0 fw-bold"></p>
-                  <input type="text" id="titleEdit" class="form-control d-none" value="">
-                </div>
-                <div class="mb-3">
-                  <label class="form-label fw-semibold">Category</label>
-                  <p id="categoryView" class="mb-0"></p>
-                  <select id="categoryEdit" class="form-select d-none"></select>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label fw-semibold">Price (₦)</label>
-                  <p id="priceView" class="mb-0"></p>
-                  <input type="number" id="priceEdit" class="form-control d-none" step="0.01">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label class="form-label fw-semibold">Description</label>
-                  <p id="descView" class="mb-0 text-muted"></p>
-                  <textarea id="descEdit" class="form-control d-none" rows="3"></textarea>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label fw-semibold">Status</label>
-                  <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <span id="statusBadge" class="badge status-active px-3 py-2">Active</span>
-                    <button id="markSoldBtn" class="btn btn-sm btn-outline-custom">Mark as sold</button>
-                    <button id="reactivateBtn" class="btn btn-sm btn-outline-custom d-none">Reactivate (cost 1 point)</button>
+            <!-- Listing Image -->
+            <div class="row mb-4">
+              <div class="col-md-5">
+                <div class="listing-image" id="imageContainer">
+                  <img id="listingImage" src="" alt="Listing image" style="display: none;">
+                  <div id="imagePlaceholder" class="text-muted text-center p-4">
+                    <i class="fas fa-image fa-3x mb-2"></i>
+                    <p>No image uploaded</p>
                   </div>
-                  <div class="helper-text mt-1">Sold items are moved to completed. You can reactivate an expired listing using 1 point.</div>
+                </div>
+                <div id="imageUploadArea" class="image-upload-area mt-3 d-none">
+                  <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                  <p class="mb-0 small">Click to change image (JPEG, PNG)</p>
+                  <input type="file" id="imageInput" accept="image/*" hidden>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h2 class="fw-bold mb-2" id="listingTitleDisplay"></h2>
+                  <span class="badge-status" id="statusBadge">Active</span>
+                </div>
+                <div class="text-muted small mb-3">Listing ID: <span id="listingIdBadge">--</span> · Created: <span id="createdDate">--</span></div>
+                <div class="mt-3">
+                  <button id="markSoldBtn" class="btn btn-sm btn-outline-custom me-2">Mark as sold</button>
+                  <button id="reactivateBtn" class="btn btn-sm btn-outline-custom d-none">Reactivate (cost 1 point)</button>
+                  <button id="deleteListingBtn" class="btn btn-sm btn-outline-danger">Delete listing</button>
                 </div>
               </div>
             </div>
 
-            <hr class="my-4">
+            <hr>
 
-            <!-- Badge upgrade section -->
-            <div class="mb-4">
-              <h5 class="fw-semibold"><i class="fas fa-tag me-2"></i>Badge upgrade</h5>
-              <div class="row align-items-end">
-                <div class="col-md-8">
-                  <label class="form-label">Current badge: <strong id="currentBadge">None</strong></label>
-                  <select id="badgeSelect" class="form-select">
-                    <option value="">None (free)</option>
-                    <option value="hot">🔥 Hot Sales (cost 5 points)</option>
-                    <option value="featured">⭐ Featured (cost 10 points)</option>
-                    <option value="urgent">🚨 Urgent (cost 3 points)</option>
-                  </select>
-                  <div class="helper-text mt-1">Upgrade your listing to get more visibility. Points will be deducted immediately.</div>
+            <!-- Editable fields (wrapped with floating labels) -->
+            <div id="viewMode">
+              <!-- Static view content -->
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div><label class="form-label">Title</label><p id="titleView" class="fw-bold mb-3"></p></div>
+                  <div><label class="form-label">Category</label><p id="categoryView" class="mb-3"></p></div>
+                  <div><label class="form-label">Price (₦)</label><p id="priceView" class="fw-bold text-success mb-3"></p></div>
                 </div>
-                <div class="col-md-4 mt-2 mt-md-0">
-                  <button id="upgradeBadgeBtn" class="btn btn-primary-custom w-100">Upgrade badge</button>
+                <div class="col-md-6">
+                  <div><label class="form-label">Description</label><p id="descView" class="text-muted mb-3" style="white-space: pre-wrap;"></p></div>
                 </div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Current badge</label>
+                <p><span id="currentBadge" class="badge bg-secondary">None</span></p>
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Safe meeting spots</label>
+                <div id="hotspotsView" class="d-flex flex-wrap gap-2"></div>
               </div>
             </div>
 
-            <hr class="my-4">
-
-            <!-- Hotspots (location) with edit restriction -->
-            <div class="mb-4">
-              <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-                <h5 class="fw-semibold mb-0"><i class="fas fa-map-marker-alt me-2"></i>Safe meeting spots</h5>
-                <button id="editHotspotsBtn" class="btn btn-sm btn-outline-custom">Edit hotspots</button>
+            <div id="editMode" class="d-none">
+              <div class="restriction-warning" id="editRestrictionWarning" style="display: none;">
+                <i class="fas fa-clock me-2"></i>
+                <strong>10‑day restriction:</strong> You can only edit hotspots once every 10 days. Last edit: <span id="lastHotspotChangeText">Never</span>
               </div>
-              <div id="hotspotsView" class="d-flex flex-wrap gap-2"></div>
-              <div id="hotspotsEditArea" class="d-none">
-                <div class="hotspot-checkboxes" id="hotspotsCheckboxes"></div>
-                <div class="restriction-note mt-3">
-                  <i class="fas fa-info-circle me-2"></i>
-                  <strong>Restriction:</strong> You can only change meeting spots once every 10 days.
-                  <span id="lastHotspotChange">Last change: Never</span>
+
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="form-floating-label">
+                    <input type="text" class="form-control" id="titleEdit" placeholder=" ">
+                    <label class="form-label required" for="titleEdit">Title</label>
+                  </div>
+                  <div class="form-floating-label">
+                    <select class="form-select" id="categoryEdit">
+                      <option value="">Select category</option>
+                    </select>
+                    <label class="form-label required" for="categoryEdit">Category</label>
+                  </div>
+                  <div class="form-floating-label">
+                    <input type="number" class="form-control" id="priceEdit" step="0.01" placeholder=" ">
+                    <label class="form-label required" for="priceEdit">Price (₦)</label>
+                  </div>
                 </div>
-                <div class="d-flex gap-2 mt-3">
-                  <button id="saveHotspotsBtn" class="btn btn-primary-custom btn-sm">Save changes</button>
-                  <button id="cancelHotspotsBtn" class="btn btn-outline-custom btn-sm">Cancel</button>
+                <div class="col-md-6">
+                  <div class="form-floating-label">
+                    <textarea class="form-control" id="descEdit" rows="4" placeholder=" "></textarea>
+                    <label class="form-label required" for="descEdit">Description</label>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <hr class="my-4">
+              <div class="form-floating-label mt-3">
+                <select class="form-select" id="badgeSelect">
+                  <option value="">None (free)</option>
+                  <option value="hot">🔥 Hot Sales (cost 5 points)</option>
+                  <option value="featured">⭐ Featured (cost 10 points)</option>
+                  <option value="urgent">🚨 Urgent (cost 3 points)</option>
+                </select>
+                <label class="form-label" for="badgeSelect">Upgrade badge</label>
+                <button id="upgradeBadgeBtn" class="btn btn-sm btn-primary-custom mt-2 w-100">Apply badge upgrade</button>
+              </div>
 
-            <!-- Danger zone -->
-            <div class="mt-3">
-              <h5 class="fw-semibold text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Danger zone</h5>
-              <button id="deleteListingBtn" class="btn btn-outline-danger btn-sm">Delete listing</button>
-              <div class="helper-text mt-1">Deleting is permanent and cannot be undone. Points used will not be refunded.</div>
+              <div class="mt-4">
+                <label class="form-label fw-semibold">Safe meeting spots</label>
+                <div id="hotspotsEditArea">
+                  <div class="hotspot-checkboxes" id="hotspotsCheckboxes"></div>
+                  <div class="d-flex gap-2 mt-3">
+                    <button id="saveHotspotsBtn" class="btn btn-primary-custom btn-sm">Save spots</button>
+                    <button id="cancelHotspotsBtn" class="btn btn-outline-custom btn-sm">Cancel</button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="d-flex justify-content-end gap-3 mt-4">
-              <button id="cancelEditBtn" class="btn btn-outline-custom d-none">Cancel</button>
-              <button id="saveBasicBtn" class="btn btn-primary-custom">Save basic info</button>
+              <button id="saveBasicBtn" class="btn btn-primary-custom px-4">Save changes</button>
             </div>
           </div>
         </div>
@@ -201,82 +310,40 @@
   </div>
 </main>
 
-<!-- Mobile bottom navigation -->
-<div class="dashboard-mobile-actions d-md-none">
-  <a href="main.html" class="action-link">
-    <i class="fas fa-home"></i>
-    <span>Dashboard</span>
-  </a>
-  <a href="create-listing.html" class="action-link">
-    <i class="fas fa-plus-circle"></i>
-    <span>Post</span>
-  </a>
-  <a href="listings.html" class="action-link">
-    <i class="fas fa-list"></i>
-    <span>Listings</span>
-  </a>
+<div class="dashboard-mobile-actions d-md-none mt-5">
+  <a href="main.html" class="action-link"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="create-listing.html" class="action-link"><i class="fas fa-plus-circle"></i><span>Post</span></a>
+  <a href="listings.html" class="action-link"><i class="fas fa-list"></i><span>Listings</span></a>
 </div>
 
-
-<!-- Modals -->
-<div id="formModal" class="modal-overlay" style="display: none;">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h3 id="formModalTitle">Form Title</h3>
-      <button class="modal-close" id="closeFormModalBtn">&times;</button>
-    </div>
-    <div class="modal-body" id="formModalBody"></div>
-    <div class="modal-footer" id="formModalFooter"></div>
-  </div>
-</div>
-<div id="confirmModal" class="modal-overlay" style="display: none;">
-  <div class="modal-container confirm-modal-container">
-    <div class="modal-header">
-      <h3 id="confirmModalTitle">Confirm Action</h3>
-      <button class="modal-close" id="closeConfirmModalBtn">&times;</button>
-    </div>
-    <div class="modal-body" id="confirmModalBody">
-      <p id="confirmMessage"></p>
-    </div>
-    <div class="modal-footer" id="confirmModalFooter"></div>
-  </div>
-</div>
-
-<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
-  <i class="fas fa-arrow-up" aria-hidden="true"></i>
-</button>
+<!-- Modals (same as before) -->
+<div id="formModal" class="modal-overlay" style="display: none;"><div class="modal-container"><div class="modal-header"><h3 id="formModalTitle">Form</h3><button class="modal-close">&times;</button></div><div class="modal-body"></div><div class="modal-footer"></div></div></div>
+<div id="confirmModal" class="modal-overlay" style="display: none;"><div class="modal-container confirm-modal-container"><div class="modal-header"><h3 id="confirmModalTitle">Confirm</h3><button class="modal-close">&times;</button></div><div class="modal-body"><p id="confirmMessage"></p></div><div class="modal-footer"></div></div></div>
+<button class="scroll-top-btn" data-scroll-top><i class="fas fa-arrow-up"></i></button>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
-  // Dummy listing data (simulate fetched from API)
+  // --- Dummy data (same as before but extended) ---
   let listingData = {
     id: 101,
     title: "HP Laptop Core i5 / 8GB RAM",
     category: "Electronics",
     price: 145000,
     description: "Perfect for programming, battery lasts 4hrs. Slight scratch on bottom, otherwise excellent condition.",
-    status: "active",  // active, sold, expired
+    status: "active",
     badge: "",
-    hotspots: [1, 3], // IDs of selected hotspots
+    hotspots: [1, 3],
     expires_at: "2025-07-10",
-    created_at: "2025-06-01"
+    created_at: "2025-06-01",
+    image_url: null,   // dummy image URL or base64
+    last_hotspot_change: null
   };
-
   let userPoints = 12;
-  let lastHotspotChange = null; // timestamp
-  let hotspotEditMode = false;
+  let originalListing = { ...listingData }; // for cancel
 
-  // Dummy categories & hotspots
-  const categories = [
-    { id: 1, name: "Textbooks" },
-    { id: 2, name: "Electronics" },
-    { id: 3, name: "Furniture" },
-    { id: 4, name: "Clothing" },
-    { id: 5, name: "Other" }
-  ];
   const allHotspots = [
     { id: 1, name: "Kennedy Library", description: "Main library, CCTV" },
     { id: 2, name: "Awo Hall Cafeteria", description: "Busy area" },
@@ -284,332 +351,220 @@
     { id: 4, name: "Kenneth Dike Hall", description: "Common room" },
     { id: 5, name: "New Lecture Theatre (NLT)", description: "Large entrance" }
   ];
+  const categories = ["Textbooks", "Electronics", "Furniture", "Clothing", "Other"];
 
-  // Helper: format currency
-  function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
-  }
+  // Helper functions
+  function formatCurrency(amount) { return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount); }
+  function escapeHtml(str) { return str?.replace(/[&<>]/g, function(m) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]; }) || ''; }
+  function showToast(msg) { if(window.showToast) window.showToast(msg); else alert(msg); }
 
-  // Helper: escape HTML
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
-  }
-
-  // Render view mode for basic info
+  // Render view mode (static)
   function renderViewMode() {
     document.getElementById('titleView').innerText = listingData.title;
     document.getElementById('categoryView').innerText = listingData.category;
     document.getElementById('priceView').innerHTML = formatCurrency(listingData.price);
     document.getElementById('descView').innerText = listingData.description;
-    const statusElem = document.getElementById('statusBadge');
-    if (listingData.status === 'active') {
-      statusElem.textContent = 'Active';
-      statusElem.className = 'badge status-active px-3 py-2';
-      document.getElementById('markSoldBtn').classList.remove('d-none');
-      document.getElementById('reactivateBtn').classList.add('d-none');
-    } else if (listingData.status === 'sold') {
-      statusElem.textContent = 'Sold';
-      statusElem.className = 'badge status-sold px-3 py-2';
-      document.getElementById('markSoldBtn').classList.add('d-none');
-      document.getElementById('reactivateBtn').classList.add('d-none');
-    } else if (listingData.status === 'expired') {
-      statusElem.textContent = 'Expired';
-      statusElem.className = 'badge status-expired px-3 py-2';
-      document.getElementById('markSoldBtn').classList.add('d-none');
-      document.getElementById('reactivateBtn').classList.remove('d-none');
-    }
-    // Badge display
-    let badgeText = listingData.badge ? (listingData.badge === 'hot' ? '🔥 Hot Sales' : listingData.badge === 'featured' ? '⭐ Featured' : '🚨 Urgent') : 'None';
-    document.getElementById('currentBadge').innerText = badgeText;
-    document.getElementById('badgeSelect').value = listingData.badge || '';
-    // Hotspots view
-    const selectedHotspots = allHotspots.filter(h => listingData.hotspots.includes(h.id));
-    const hotspotsHtml = selectedHotspots.map(h => `<span class="hotspot-badge"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(h.name)}</span>`).join('');
-    document.getElementById('hotspotsView').innerHTML = hotspotsHtml || '<span class="text-muted">No meeting spots selected</span>';
-    // Last hotspot change display
-    const lastChangeSpan = document.getElementById('lastHotspotChange');
-    if (lastHotspotChange) {
-      lastChangeSpan.innerHTML = `Last change: ${new Date(lastHotspotChange).toLocaleDateString()}`;
+    document.getElementById('listingTitleDisplay').innerText = listingData.title;
+    document.getElementById('createdDate').innerText = new Date(listingData.created_at).toLocaleDateString();
+    // Status badge
+    const statusEl = document.getElementById('statusBadge');
+    statusEl.className = `badge-status badge-${listingData.status}`;
+    statusEl.innerText = listingData.status === 'active' ? 'Active' : (listingData.status === 'sold' ? 'Sold' : 'Expired');
+    document.getElementById('markSoldBtn').classList.toggle('d-none', listingData.status !== 'active');
+    document.getElementById('reactivateBtn').classList.toggle('d-none', listingData.status !== 'expired');
+    // Badge
+    let badgeText = { hot:'🔥 Hot Sales', featured:'⭐ Featured', urgent:'🚨 Urgent' }[listingData.badge] || 'None';
+    document.getElementById('currentBadge').innerHTML = `<span class="badge ${listingData.badge ? 'bg-primary' : 'bg-secondary'}">${badgeText}</span>`;
+    // Hotspots
+    const selected = allHotspots.filter(h => listingData.hotspots.includes(h.id));
+    document.getElementById('hotspotsView').innerHTML = selected.map(h => `<span class="hotspot-badge"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(h.name)}</span>`).join('') || '<span class="text-muted">No meeting spots</span>';
+    // Image
+    const imgEl = document.getElementById('listingImage');
+    const placeholder = document.getElementById('imagePlaceholder');
+    if (listingData.image_url) {
+      imgEl.src = listingData.image_url;
+      imgEl.style.display = 'block';
+      placeholder.style.display = 'none';
     } else {
-      lastChangeSpan.innerHTML = `Last change: Never`;
+      imgEl.style.display = 'none';
+      placeholder.style.display = 'block';
     }
-    // Show view, hide edit fields
-    document.querySelectorAll('[id$="View"]').forEach(el => el.classList.remove('d-none'));
-    document.querySelectorAll('[id$="Edit"]').forEach(el => el.classList.add('d-none'));
-    document.getElementById('saveBasicBtn').classList.remove('d-none');
-    document.getElementById('cancelEditBtn').classList.add('d-none');
-    document.getElementById('editHotspotsBtn').classList.remove('d-none');
-    document.getElementById('hotspotsEditArea').classList.add('d-none');
   }
 
-  // Enter edit mode for basic info
-  function enterEditMode() {
+  // Populate edit fields with current values
+  function populateEditFields() {
     document.getElementById('titleEdit').value = listingData.title;
-    // populate category dropdown
-    const catSelect = document.getElementById('categoryEdit');
-    catSelect.innerHTML = categories.map(c => `<option value="${c.name}" ${c.name === listingData.category ? 'selected' : ''}>${c.name}</option>`).join('');
+    document.getElementById('categoryEdit').innerHTML = categories.map(c => `<option value="${c}" ${c===listingData.category ? 'selected' : ''}>${c}</option>`).join('');
     document.getElementById('priceEdit').value = listingData.price;
     document.getElementById('descEdit').value = listingData.description;
-    document.querySelectorAll('[id$="View"]').forEach(el => el.classList.add('d-none'));
-    document.querySelectorAll('[id$="Edit"]').forEach(el => el.classList.remove('d-none'));
-    document.getElementById('saveBasicBtn').classList.add('d-none');
-    document.getElementById('cancelEditBtn').classList.remove('d-none');
+    document.getElementById('badgeSelect').value = listingData.badge;
+    // Hotspots checkboxes
+    const container = document.getElementById('hotspotsCheckboxes');
+    container.innerHTML = allHotspots.map(h => `
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="${h.id}" id="hs_${h.id}" ${listingData.hotspots.includes(h.id) ? 'checked' : ''}>
+        <label class="form-check-label" for="hs_${h.id}"><strong>${escapeHtml(h.name)}</strong> – ${escapeHtml(h.description)}</label>
+      </div>
+    `).join('');
+    // Restriction warning
+    const warningDiv = document.getElementById('editRestrictionWarning');
+    if (listingData.last_hotspot_change) {
+      const daysSince = (new Date() - new Date(listingData.last_hotspot_change)) / (1000*3600*24);
+      if (daysSince < 10) {
+        warningDiv.style.display = 'block';
+        document.getElementById('lastHotspotChangeText').innerText = new Date(listingData.last_hotspot_change).toLocaleDateString();
+        document.querySelectorAll('#hotspotsCheckboxes input').forEach(cb => cb.disabled = true);
+        document.getElementById('saveHotspotsBtn').disabled = true;
+      } else {
+        warningDiv.style.display = 'none';
+        document.querySelectorAll('#hotspotsCheckboxes input').forEach(cb => cb.disabled = false);
+        document.getElementById('saveHotspotsBtn').disabled = false;
+      }
+    } else {
+      warningDiv.style.display = 'none';
+    }
   }
 
-  // Save basic info
-  async function saveBasicInfo() {
+  // Save all edits (title, category, price, description, badge, hotspots)
+  async function saveAllChanges() {
+    // Basic fields
     const newTitle = document.getElementById('titleEdit').value.trim();
     const newCategory = document.getElementById('categoryEdit').value;
     const newPrice = parseFloat(document.getElementById('priceEdit').value);
     const newDesc = document.getElementById('descEdit').value.trim();
-    if (!newTitle || !newCategory || isNaN(newPrice)) {
-      alert('Please fill all required fields correctly.');
+    if (!newTitle || !newCategory || isNaN(newPrice) || !newDesc) {
+      alert('Please fill all required fields.');
       return;
     }
-    // Simulate API call
+    // Hotspots (only if not restricted)
+    let newHotspots = [...listingData.hotspots];
+    const checkboxes = document.querySelectorAll('#hotspotsCheckboxes input');
+    let hotspotsChanged = false;
+    if (checkboxes.length && !checkboxes[0].disabled) {
+      const selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => parseInt(cb.value));
+      if (JSON.stringify(selected) !== JSON.stringify(listingData.hotspots)) {
+        hotspotsChanged = true;
+        newHotspots = selected;
+      }
+    }
+    // Update listing
     listingData.title = newTitle;
     listingData.category = newCategory;
     listingData.price = newPrice;
     listingData.description = newDesc;
+    if (hotspotsChanged) {
+      listingData.hotspots = newHotspots;
+      listingData.last_hotspot_change = new Date().toISOString();
+    }
     renderViewMode();
-    showToast('Basic information updated successfully!');
-  }
-
-  // Mark as sold
-  function markAsSold() {
-    if (listingData.status !== 'active') {
-      alert('Only active listings can be marked as sold.');
-      return;
-    }
-    if (typeof confirmModal !== 'undefined') {
-      confirmModal.open({
-        title: 'Mark as sold',
-        message: 'Are you sure you want to mark this listing as sold? This action will archive it.',
-        confirmText: 'Yes, mark as sold',
-        onConfirm: () => {
-          listingData.status = 'sold';
-          renderViewMode();
-          showToast('Listing marked as sold.');
-        }
-      });
-    } else if (confirm('Mark as sold?')) {
-      listingData.status = 'sold';
-      renderViewMode();
-      alert('Listing marked as sold.');
+    showToast('Changes saved successfully!');
+    // If edit mode is still on, refresh edit fields
+    if (document.getElementById('editModeToggle').checked) {
+      populateEditFields();
     }
   }
 
-  // Reactivate expired listing (cost 1 point)
-  function reactivateListing() {
-    if (listingData.status !== 'expired') {
-      alert('Only expired listings can be reactivated.');
-      return;
-    }
-    if (userPoints < 1) {
-      alert('You need at least 1 point to reactivate a listing. Please top up points.');
-      return;
-    }
-    if (typeof confirmModal !== 'undefined') {
-      confirmModal.open({
-        title: 'Reactivate listing',
-        message: `This will cost 1 point. Your current balance: ${userPoints} points. Proceed?`,
-        confirmText: 'Yes, reactivate',
-        onConfirm: () => {
-          userPoints -= 1;
-          listingData.status = 'active';
-          document.getElementById('userPoints').innerText = userPoints;
-          renderViewMode();
-          showToast('Listing reactivated! 1 point deducted.');
-        }
-      });
-    } else {
-      userPoints -= 1;
-      listingData.status = 'active';
-      document.getElementById('userPoints').innerText = userPoints;
-      renderViewMode();
-      alert('Listing reactivated! 1 point deducted.');
-    }
-  }
-
-  // Upgrade badge using points
+  // Upgrade badge (points)
   async function upgradeBadge() {
-    const selectedBadge = document.getElementById('badgeSelect').value;
-    let cost = 0;
-    let badgeName = '';
-    if (selectedBadge === 'hot') { cost = 5; badgeName = '🔥 Hot Sales'; }
-    else if (selectedBadge === 'featured') { cost = 10; badgeName = '⭐ Featured'; }
-    else if (selectedBadge === 'urgent') { cost = 3; badgeName = '🚨 Urgent'; }
-    else { cost = 0; badgeName = 'None'; }
-    if (cost > userPoints) {
-      alert(`Insufficient points. You need ${cost} points. Current balance: ${userPoints}`);
-      return;
-    }
+    const selected = document.getElementById('badgeSelect').value;
+    let cost = 0, badgeName = '';
+    if (selected === 'hot') { cost = 5; badgeName = 'Hot Sales'; }
+    else if (selected === 'featured') { cost = 10; badgeName = 'Featured'; }
+    else if (selected === 'urgent') { cost = 3; badgeName = 'Urgent'; }
+    else { alert('Select a valid badge'); return; }
+    if (userPoints < cost) { alert(`You need ${cost} points. Current: ${userPoints}`); return; }
     if (typeof confirmModal !== 'undefined') {
       confirmModal.open({
         title: 'Upgrade badge',
-        message: `This will cost ${cost} points. Your current balance: ${userPoints} points. Proceed?`,
+        message: `Upgrade to ${badgeName} for ${cost} points?`,
         confirmText: 'Upgrade',
         onConfirm: () => {
           userPoints -= cost;
-          listingData.badge = selectedBadge || '';
+          listingData.badge = selected;
           document.getElementById('userPoints').innerText = userPoints;
           renderViewMode();
-          showToast(`Badge upgraded to ${badgeName}! ${cost} points deducted.`);
+          showToast(`Badge upgraded! ${cost} points deducted.`);
         }
       });
     } else {
       userPoints -= cost;
-      listingData.badge = selectedBadge || '';
+      listingData.badge = selected;
       document.getElementById('userPoints').innerText = userPoints;
       renderViewMode();
-      alert(`Badge upgraded! ${cost} points deducted.`);
     }
   }
 
-  // Edit hotspots
-  function enableHotspotEdit() {
-    if (hotspotEditMode) return;
-    // Check 10-day restriction
-    if (lastHotspotChange) {
-      const daysSinceLastChange = (new Date() - new Date(lastHotspotChange)) / (1000 * 60 * 60 * 24);
-      if (daysSinceLastChange < 10) {
-        alert(`You can only change meeting spots once every 10 days. Please wait ${Math.ceil(10 - daysSinceLastChange)} more days.`);
-        return;
-      }
-    }
-    // Populate checkboxes
-    const container = document.getElementById('hotspotsCheckboxes');
-    container.innerHTML = allHotspots.map(h => `
-      <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" name="hotspot" value="${h.id}" id="hotspot_${h.id}" ${listingData.hotspots.includes(h.id) ? 'checked' : ''}>
-        <label class="form-check-label" for="hotspot_${h.id}">
-          <strong>${escapeHtml(h.name)}</strong> – ${escapeHtml(h.description)}
-        </label>
-      </div>
-    `).join('');
-    document.getElementById('hotspotsView').classList.add('d-none');
-    document.getElementById('hotspotsEditArea').classList.remove('d-none');
-    document.getElementById('editHotspotsBtn').classList.add('d-none');
-    hotspotEditMode = true;
+  // Mark as sold / reactivate
+  function markAsSold() { if(listingData.status==='active') { listingData.status='sold'; renderViewMode(); showToast('Marked as sold'); } }
+  function reactivateListing() {
+    if(listingData.status!=='expired') return;
+    if(userPoints<1) { alert('Need 1 point'); return; }
+    if(confirm('Reactivate with 1 point?')) { userPoints--; listingData.status='active'; document.getElementById('userPoints').innerText = userPoints; renderViewMode(); showToast('Reactivated'); }
   }
-
-  function cancelHotspotEdit() {
-    document.getElementById('hotspotsView').classList.remove('d-none');
-    document.getElementById('hotspotsEditArea').classList.add('d-none');
-    document.getElementById('editHotspotsBtn').classList.remove('d-none');
-    hotspotEditMode = false;
-  }
-
-  async function saveHotspots() {
-    const selected = Array.from(document.querySelectorAll('input[name="hotspot"]:checked')).map(cb => parseInt(cb.value));
-    if (selected.length === 0) {
-      alert('Please select at least one meeting spot.');
-      return;
-    }
-    // Simulate API call
-    listingData.hotspots = selected;
-    lastHotspotChange = new Date().toISOString();
-    cancelHotspotEdit();
-    renderViewMode();
-    showToast('Meeting spots updated. You cannot change them again for 10 days.');
-  }
-
-  // Delete listing
   function deleteListing() {
-    if (typeof confirmModal !== 'undefined') {
-      confirmModal.open({
-        title: 'Delete listing',
-        message: 'Are you absolutely sure? This action is permanent and cannot be undone.',
-        confirmText: 'Yes, delete',
-        onConfirm: () => {
-          showToast('Listing deleted. Redirecting...');
-          setTimeout(() => { window.location.href = 'main.html'; }, 1500);
-        }
-      });
-    } else if (confirm('Delete this listing permanently?')) {
-      alert('Listing deleted (demo).');
-      window.location.href = 'main.html';
+    if(confirm('Permanently delete this listing? Cannot be undone.')) { showToast('Deleted. Redirecting...'); setTimeout(()=>window.location.href='main.html',1500); }
+  }
+
+  // Edit mode toggle
+  function toggleEditMode() {
+    const isEdit = document.getElementById('editModeToggle').checked;
+    document.getElementById('viewMode').classList.toggle('d-none', isEdit);
+    document.getElementById('editMode').classList.toggle('d-none', !isEdit);
+    if (isEdit) {
+      populateEditFields();
     }
   }
 
-  function showToast(msg) {
-    if (typeof showToast === 'function') window.showToast(msg);
-    else alert(msg);
+  // Image upload (dummy)
+  function setupImageUpload() {
+    const uploadArea = document.getElementById('imageUploadArea');
+    const fileInput = document.getElementById('imageInput');
+    uploadArea.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) {
+        const file = e.target.files[0];
+        if (file.size > 2*1024*1024) { alert('Max 2MB'); return; }
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          listingData.image_url = ev.target.result;
+          renderViewMode();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
   }
 
-  // Load listing from URL param or use dummy
+  // Load listing from URL
   function loadListing() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
-    if (id) {
-      // Simulate fetch for that ID
-      setTimeout(() => {
-        // For demo, we keep the same listingData but you could modify based on id
-        document.getElementById('listingIdBadge').innerHTML = `ID: ${id}`;
-        document.getElementById('userPoints').innerText = userPoints;
-        renderViewMode();
-        document.getElementById('loadingState').style.display = 'none';
-        document.getElementById('listingContent').style.display = 'block';
-      }, 300);
-    } else {
-      document.getElementById('listingIdBadge').innerHTML = `ID: ${listingData.id}`;
-      document.getElementById('userPoints').innerText = userPoints;
-      renderViewMode();
-      document.getElementById('loadingState').style.display = 'none';
-      document.getElementById('listingContent').style.display = 'block';
-    }
+    if (id) listingData.id = parseInt(id);
+    document.getElementById('listingIdBadge').innerText = listingData.id;
+    document.getElementById('userPoints').innerText = userPoints;
+    renderViewMode();
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('listingContent').style.display = 'block';
+    // Show image upload area only in edit mode (but we'll reveal when edit toggled)
+    document.getElementById('imageUploadArea').classList.remove('d-none');
   }
 
   // Event listeners
-  document.getElementById('saveBasicBtn').addEventListener('click', enterEditMode);
-  document.getElementById('cancelEditBtn').addEventListener('click', renderViewMode);
-  document.getElementById('saveBasicBtn')?.addEventListener('click', saveBasicInfo);
-  document.getElementById('cancelEditBtn')?.addEventListener('click', renderViewMode);
-  document.getElementById('markSoldBtn')?.addEventListener('click', markAsSold);
-  document.getElementById('reactivateBtn')?.addEventListener('click', reactivateListing);
-  document.getElementById('upgradeBadgeBtn')?.addEventListener('click', upgradeBadge);
-  document.getElementById('editHotspotsBtn')?.addEventListener('click', enableHotspotEdit);
-  document.getElementById('saveHotspotsBtn')?.addEventListener('click', saveHotspots);
-  document.getElementById('cancelHotspotsBtn')?.addEventListener('click', cancelHotspotEdit);
-  document.getElementById('deleteListingBtn')?.addEventListener('click', deleteListing);
-  // Also need a separate save basic after edit? Actually we have two saveBasicInfo triggers. Let's fix: rename saveBasicInfo to submitBasicEdit
-  // Refactor: 
-  const saveBasic = document.getElementById('saveBasicBtn');
-  const cancelBasic = document.getElementById('cancelEditBtn');
-  // We'll reassign: saveBasic should call saveBasicInfo when in edit mode.
-  // To avoid confusion, we'll remove old listeners and add proper ones.
-  const newSaveBtn = document.getElementById('saveBasicBtn');
-  const newCancelBtn = document.getElementById('cancelEditBtn');
-  newSaveBtn.removeEventListener('click', enterEditMode);
-  newSaveBtn.addEventListener('click', () => {
-    if (document.getElementById('titleEdit').classList.contains('d-none')) {
-      enterEditMode();
-    } else {
-      saveBasicInfo();
-    }
-  });
-  newCancelBtn.addEventListener('click', () => {
-    renderViewMode();
-  });
+  document.getElementById('editModeToggle').addEventListener('change', toggleEditMode);
+  document.getElementById('saveBasicBtn').addEventListener('click', saveAllChanges);
+  document.getElementById('markSoldBtn').addEventListener('click', markAsSold);
+  document.getElementById('reactivateBtn').addEventListener('click', reactivateListing);
+  document.getElementById('deleteListingBtn').addEventListener('click', deleteListing);
+  document.getElementById('upgradeBadgeBtn').addEventListener('click', upgradeBadge);
+  document.getElementById('saveHotspotsBtn').addEventListener('click', () => { /* already saved in saveAllChanges, but we can just call save */ saveAllChanges(); });
+  document.getElementById('cancelHotspotsBtn').addEventListener('click', () => { populateEditFields(); }); // reset
 
   document.addEventListener('DOMContentLoaded', () => {
     AOS.init({ duration: 600, once: true });
     loadListing();
-    // Mobile menu toggle
-    const menuButton = document.querySelector('.mobile-menu-button');
+    setupImageUpload();
+    const menuBtn = document.querySelector('.mobile-menu-button');
     const menu = document.getElementById('navbarMain');
-    if (menuButton && menu) {
-      menuButton.addEventListener('click', function () {
-        const isOpen = menu.classList.toggle('show');
-        menuButton.setAttribute('aria-expanded', String(isOpen));
-      });
-    }
+    if (menuBtn && menu) menuBtn.addEventListener('click', () => menu.classList.toggle('show'));
   });
 </script>
 </body>

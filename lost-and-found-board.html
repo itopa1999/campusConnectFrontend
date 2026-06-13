@@ -296,6 +296,7 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/modal.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   if (window.bootstrap) {
@@ -471,7 +472,12 @@ function formatDate(dateStr) {
 // Open claim modal with verification questions using floating labels
 function openClaimModal(item) {
   if (typeof formModal === 'undefined' || !formModal) {
-    alert('Modal system not ready. Please refresh.');
+    confirmModal.open({
+      title: '❌ An Error Occured',
+      message: 'Modal system not ready. Please refresh.',
+      confirmText: 'Ok',
+      onConfirm: () => {}
+    });
     return;
   }
   
@@ -526,7 +532,12 @@ function openClaimModal(item) {
       const claimantPhone = form.querySelector('[name="claimant_phone"]').value.trim();
       
       if (!answer1 || !answer2 || !claimantName || !claimantEmail || !claimantPhone) {
-        alert('Please fill all fields.');
+        confirmModal.open({
+          title: '❌ Form Error',
+          message: 'Please fill all fields',
+          confirmText: 'Okay',
+          onConfirm: () => {}
+        });
         return;
       }
       
