@@ -4,15 +4,163 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Page not found | CampusConnect UI</title>
-  <!-- Bootstrap 5 + Icons + Google Fonts + AOS -->
+  <!-- External libraries (CDN) – required for functionality -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="icon" type="image/jpeg" href="/assets/img/icon.jpg">
-  <link rel="stylesheet" href="/assets/css/main.css">
-  <link rel="stylesheet" href="/assets/css/index.css">
+  <!-- All custom CSS inlined -->
   <style>
+    /* ========== GLOBAL VARIABLES & RESET ========== */
+    :root {
+      --accent: #2c7a5e;
+      --accent-light: #e0f2e9;
+      --accent-dark: #1f5e4a;
+      --text-dark: #1a2e28;
+      --text-muted: #5a6e66;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at 7% 8%, rgba(244, 183, 64, 0.15), transparent 28rem),
+                  radial-gradient(circle at 92% 18%, rgba(56, 111, 164, 0.12), transparent 28rem),
+                  linear-gradient(180deg, #f7fbf8 0%, #ffffff 46%, #f8faf7 100%);
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+    /* ========== NAVBAR & HEADER (from main.css) ========== */
+    .site-header {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(44, 122, 94, 0.1);
+      padding: 0.7rem 0;
+      transition: all 0.2s ease;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+      font-weight: 700;
+      color: var(--accent-dark);
+    }
+    .site-brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 20px rgba(44, 122, 94, 0.15);
+    }
+    .site-brand-name {
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .brand-full {
+      display: inline;
+    }
+    .brand-short {
+      display: none;
+    }
+    @media (max-width: 576px) {
+      .brand-full { display: none; }
+      .brand-short { display: inline; }
+    }
+    .navbar-toggler {
+      border: none;
+      background: transparent;
+      padding: 0.5rem;
+    }
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(44, 122, 94, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    .site-nav-list {
+      gap: 0.5rem;
+    }
+    .site-nav-link {
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+    }
+    .site-nav-link:hover, .site-nav-link.active {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+    }
+    .site-nav-action .btn {
+      padding: 0.5rem 1.2rem;
+      font-weight: 700;
+    }
+    /* ========== BUTTONS ========== */
+    .btn-primary-custom {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      border: none;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+    .btn-primary-custom:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(44, 122, 94, 0.2);
+      color: white;
+    }
+    .btn-outline-custom {
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+    .btn-outline-custom:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      color: var(--accent-dark);
+    }
+    /* ========== 404 SPECIFIC STYLES (from index.css) ========== */
+    .hero-section {
+      position: relative;
+      padding: 128px 0 72px;
+      overflow: hidden;
+    }
+    .hero-section::before {
+      content: "";
+      position: absolute;
+      inset: 88px 2rem auto;
+      height: 72%;
+      max-height: 620px;
+      border-radius: 36px;
+      background: linear-gradient(135deg, rgba(234, 247, 240, 0.92), rgba(255, 255, 255, 0.52)),
+                  radial-gradient(circle at 80% 18%, rgba(244, 183, 64, 0.18), transparent 18rem);
+      border: 1px solid rgba(44, 122, 94, 0.09);
+      z-index: -1;
+    }
+    .badge-verify {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(44, 122, 94, 0.1);
+      color: var(--accent-dark);
+      padding: 0.5rem 0.85rem;
+      border: 1px solid rgba(44, 122, 94, 0.12);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
     .error-number {
       font-size: 8rem;
       font-weight: 800;
@@ -26,16 +174,111 @@
     @media (min-width: 768px) {
       .error-number { font-size: 12rem; }
     }
+    /* Suggested cards */
+    .bg-white {
+      background-color: white;
+    }
+    .rounded-4 {
+      border-radius: 1rem;
+    }
+    .shadow-sm {
+      box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    }
+    /* Footer */
+    .footer {
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid rgba(44, 122, 94, 0.1);
+      background: radial-gradient(circle at 10% 0%, rgba(44, 122, 94, 0.1), transparent 22rem), #ffffff;
+      padding: 2.5rem 0 1.5rem;
+    }
+    .footer-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: var(--accent-dark);
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .footer-brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 10px 24px rgba(44, 122, 94, 0.14);
+    }
+    .footer-links {
+      gap: 0.65rem;
+    }
+    .footer-links a {
+      margin-right: 0;
+      padding: 0.5rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(44, 122, 94, 0.06);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .footer-links a:hover {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+    }
+    /* Scroll to top button */
+    .scroll-top-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      z-index: 99;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .scroll-top-btn.is-visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .scroll-top-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+    /* Particles background */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+    /* Responsive touches */
+    @media (max-width: 768px) {
+      .hero-section { padding: 96px 0 48px; }
+      .hero-section .btn { width: 100%; justify-content: center; }
+      .footer-links { justify-content: flex-start !important; }
+    }
   </style>
 </head>
 <body>
 <div id="particles-js"></div>
-<!-- Navigation -->
+
+<!-- Navigation (same as index) -->
 <header class="site-header fixed-top">
   <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
     <div class="container header-inner">
-      <a class="site-brand" href="/index.html" aria-label="CampusConnect UI home">
-        <img src="/assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo">
+      <a class="site-brand" href="index.html" aria-label="CampusConnect UI home">
+        <img src="assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo">
         <span class="site-brand-name">
           <span class="brand-full">CampusConnect UI</span>
           <span class="brand-short">CampusConnect</span>
@@ -48,11 +291,11 @@
 
       <div class="collapse navbar-collapse site-menu" id="navbarMain">
         <ul class="navbar-nav site-nav-list ms-lg-auto">
-          <li class="nav-item"><a class="nav-link site-nav-link" href="/index.html#home">Home</a></li>
-          <li class="nav-item"><a class="nav-link site-nav-link" href="/index.html#how-it-works">How it works</a></li>
-          <li class="nav-item"><a class="nav-link site-nav-link" href="/index.html#benefits">Benefits</a></li>
-          <li class="nav-item"><a class="nav-link site-nav-link" href="/index.html#testimonials">Trust</a></li>
-          <li class="nav-item site-nav-action"><a class="btn btn-outline-custom btn-sm site-signup-button" href="/auth/auth.html"><i class="fas fa-user-plus me-1"></i>Sign up</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#how-it-works">How it works</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#benefits">Benefits</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#testimonials">Trust</a></li>
+          <li class="nav-item site-nav-action"><a class="btn btn-outline-custom btn-sm site-signup-button" href="auth/auth.html"><i class="fas fa-user-plus me-1"></i>Sign up</a></li>
         </ul>
       </div>
     </div>
@@ -69,11 +312,11 @@
         <h2 class="fw-semibold mt-3">Page not found</h2>
         <p class="lead text-muted mt-3">The page you are looking for might have been moved, deleted, or never existed. But don't worry – you can still find great deals and sell your items safely with other UI students.</p>
         <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
-          <a href="/index.html" class="btn btn-primary-custom"><i class="fas fa-home me-2"></i>Back to homepage</a>
-          <a href="/auth/auth.html" class="btn btn-outline-custom"><i class="fas fa-envelope me-2"></i>Sign in with UI email</a>
+          <a href="index.html" class="btn btn-primary-custom"><i class="fas fa-home me-2"></i>Back to homepage</a>
+          <a href="auth/auth.html" class="btn btn-outline-custom"><i class="fas fa-envelope me-2"></i>Sign in with UI email</a>
         </div>
         <div class="mt-5">
-          <span class="text-muted small"><i class="fas fa-shield-alt text-success me-1"></i> Still need help? <a href="/index.html#contact" class="text-decoration-none">Contact support</a></span>
+          <span class="text-muted small"><i class="fas fa-shield-alt text-success me-1"></i> Still need help? <a href="index.html#contact" class="text-decoration-none">Contact support</a></span>
         </div>
       </div>
     </div>
@@ -89,7 +332,7 @@
           <i class="fas fa-store fa-2x mb-2" style="color: #2c7a5e;"></i>
           <h5 class="fw-semibold">Browse listings</h5>
           <p class="small text-muted">Textbooks, electronics, furniture & more – all from verified UI students.</p>
-          <a href="/index.html#IndexListing" class="btn btn-sm btn-outline-custom">Explore →</a>
+          <a href="index.html#IndexListing" class="btn btn-sm btn-outline-custom">Explore →</a>
         </div>
       </div>
       <div class="col-md-4">
@@ -97,7 +340,7 @@
           <i class="fas fa-user-plus fa-2x mb-2" style="color: #2c7a5e;"></i>
           <h5 class="fw-semibold">Start selling</h5>
           <p class="small text-muted">Join 500+ students. Free to list, free to chat, meet on campus.</p>
-          <a href="/auth/auth.html" class="btn btn-sm btn-outline-custom">Sign up free →</a>
+          <a href="auth/auth.html" class="btn btn-sm btn-outline-custom">Sign up free →</a>
         </div>
       </div>
       <div class="col-md-4">
@@ -105,7 +348,7 @@
           <i class="fas fa-question-circle fa-2x mb-2" style="color: #2c7a5e;"></i>
           <h5 class="fw-semibold">FAQs & safety</h5>
           <p class="small text-muted">Learn how we verify UI emails and keep transactions secure.</p>
-          <a href="/index.html#IndexFAQ" class="btn btn-sm btn-outline-custom">Read more →</a>
+          <a href="index.html#IndexFAQ" class="btn btn-sm btn-outline-custom">Read more →</a>
         </div>
       </div>
     </div>
@@ -117,20 +360,20 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col-md-4 mb-3 mb-md-0">
-        <a class="footer-brand" href="/index.html">
-          <img src="/assets/img/icon.jpg" alt="CampusConnect UI">
+        <a class="footer-brand" href="index.html">
+          <img src="assets/img/icon.jpg" alt="CampusConnect UI">
           <span>CampusConnect UI</span>
         </a>
         <p class="text-muted small mt-2">A student-led initiative to make campus commerce safe, affordable, and local.</p>
       </div>
       <div class="col-md-8">
         <div class="footer-links d-flex flex-wrap justify-content-md-end">
-          <a href="/index.html#about">About</a>
-          <a href="/index.html#how-it-works">How it Works</a>
-          <a href="/index.html#contact">Contact</a>
-          <a href="/t/terms-and-conditions.html">Terms & Conditions</a>
-          <a href="/t/privacy-and-policy.html">Privacy</a>
-          <a href="/t/report-issue.html">Report Issue</a>
+          <a href="index.html#about">About</a>
+          <a href="index.html#how-it-works">How it Works</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="t/terms-and-conditions.html">Terms & Conditions</a>
+          <a href="t/privacy-and-policy.html">Privacy</a>
+          <a href="t/report-issue.html">Report Issue</a>
         </div>
       </div>
       <div class="col-12 mt-4 text-center text-muted small">
@@ -144,11 +387,72 @@
   <i class="fas fa-arrow-up" aria-hidden="true"></i>
 </button>
 
-<!-- Scripts (absolute paths) -->
+<!-- All JavaScript inlined (plus CDN libraries) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<script src="/assets/js/main.js"></script>
+<script>
+  // ========== AOS INIT ==========
+  if (typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true });
 
+  // ========== PARTICLES.JS ==========
+  if (typeof particlesJS !== 'undefined' && document.getElementById('particles-js')) {
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 60, density: { enable: true, value_area: 800 } },
+        color: { value: '#2c7a5e' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.4, random: true },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: '#2c7a5e', opacity: 0.2, width: 1 },
+        move: { enable: true, speed: 1, direction: 'none', random: false, straight: false, out_mode: 'out' }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: { enable: true, mode: 'repulse' },
+          onclick: { enable: true, mode: 'push' },
+          resize: true
+        }
+      },
+      retina_detect: true
+    });
+  }
+
+  // ========== SCROLL TO TOP ==========
+  (function initScrollToTop() {
+    const scrollTopBtn = document.querySelector('[data-scroll-top]');
+    if (!scrollTopBtn) return;
+    const toggleButton = () => scrollTopBtn.classList.toggle('is-visible', window.scrollY > 360);
+    scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    window.addEventListener('scroll', toggleButton, { passive: true });
+    toggleButton();
+  })();
+
+  // ========== MOBILE MENU FALLBACK (if Bootstrap fails) ==========
+  (function initMobileMenu() {
+    if (window.bootstrap) return; // Bootstrap handles it
+    const menuButton = document.querySelector('.mobile-menu-button');
+    const menu = document.getElementById('navbarMain');
+    if (!menuButton || !menu) return;
+    menuButton.addEventListener('click', function () {
+      const isOpen = menu.classList.toggle('show');
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+    });
+  })();
+
+  // ========== SMOOTH SCROLL FOR ANCHOR LINKS ==========
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#' || href === '') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
 </body>
 </html>
