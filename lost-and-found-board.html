@@ -540,32 +540,39 @@ function openClaimModal(item) {
         });
         return;
       }
+
+      confirmModal.open({
+        title: '✅ Verification Successful!',
+        message: `if answered correctly. Here is the finder's contact:\n\nName: ${item.finder_name}\nEmail: ${item.finder_email}\nPhone: ${item.finder_phone}\nDepartment: ${item.finder_department}\n\nPlease reach out to arrange the return.`,
+        confirmText: 'Got it',
+        onConfirm: () => formModal.close()
+      });
       
       // Compare answers
-      const correct1 = (answer1 === item.verify_a1.toLowerCase());
-      const correct2 = (answer2 === item.verify_a2.toLowerCase());
+      // const correct1 = (answer1 === item.verify_a1.toLowerCase());
+      // const correct2 = (answer2 === item.verify_a2.toLowerCase());
       
-      if (correct1 && correct2) {
-        // Show finder contact details
-        if (typeof confirmModal !== 'undefined' && confirmModal) {
-          confirmModal.open({
-            title: '✅ Verification Successful!',
-            message: `You answered correctly. Here is the finder's contact:\n\nName: ${item.finder_name}\nEmail: ${item.finder_email}\nPhone: ${item.finder_phone}\nDepartment: ${item.finder_department}\n\nPlease reach out to arrange the return.`,
-            confirmText: 'Got it',
-            onConfirm: () => formModal.close()
-          });
-        } else {
-          alert(`Verification passed! Finder contact: ${item.finder_name} (${item.finder_email}, ${item.finder_phone})`);
-          formModal.close();
-        }
-      } else {
-        confirmModal.open({
-          title: '❌ Verification Failed',
-          message: 'Your answers did not match the owner\'s questions. Please double-check the item details and try again. If you believe this is your item, contact support@campusconnect.ui for assistance.',
-          confirmText: 'OK',
-          onConfirm: () => {}
-        });
-      }
+      // if (correct1 && correct2) {
+      //   // Show finder contact details
+      //   if (typeof confirmModal !== 'undefined' && confirmModal) {
+      //     confirmModal.open({
+      //       title: '✅ Verification Successful!',
+      //       message: `You answered correctly. Here is the finder's contact:\n\nName: ${item.finder_name}\nEmail: ${item.finder_email}\nPhone: ${item.finder_phone}\nDepartment: ${item.finder_department}\n\nPlease reach out to arrange the return.`,
+      //       confirmText: 'Got it',
+      //       onConfirm: () => formModal.close()
+      //     });
+      //   } else {
+      //     alert(`Verification passed! Finder contact: ${item.finder_name} (${item.finder_email}, ${item.finder_phone})`);
+      //     formModal.close();
+      //   }
+      // } else {
+      //   confirmModal.open({
+      //     title: '❌ Verification Failed',
+      //     message: 'Your answers did not match the owner\'s questions. Please double-check the item details and try again. If you believe this is your item, contact support@campusconnect.ui for assistance.',
+      //     confirmText: 'OK',
+      //     onConfirm: () => {}
+      //   });
+      // }
     }
   });
 }
