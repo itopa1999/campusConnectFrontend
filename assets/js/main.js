@@ -59,7 +59,6 @@ function deleteAuthCookies() {
   });
 }
 
-
 function initOptionalFeatures() {
   // AOS
   if (typeof AOS !== 'undefined' && AOS.init) {
@@ -121,6 +120,22 @@ function initScrollToTop() {
   toggleScrollButton();
 }
 
+// ========== MOBILE MENU TOGGLE (fallback if Bootstrap is missing) ==========
+function initMobileMenu() {
+  // Only run if Bootstrap is not available
+  if (window.bootstrap) return;
+
+  const menuButton = document.querySelector('.mobile-menu-button');
+  const menu = document.getElementById('navbarMain');
+
+  if (!menuButton || !menu) return;
+
+  menuButton.addEventListener('click', function () {
+    const isOpen = menu.classList.toggle('show');
+    menuButton.setAttribute('aria-expanded', String(isOpen));
+  });
+}
+
 // ========== MODAL SYSTEM ==========
 class FormModal {
   constructor() {
@@ -131,19 +146,33 @@ class FormModal {
     this.footerEl = document.getElementById('formModalFooter');
     this.closeBtn = document.getElementById('closeFormModalBtn');
     this.isOpen = false;
-    this.modal.addEventListener('click', (e) => { if (e.target === this.modal) this.close(); });
-    this.closeBtn?.addEventListener('click', () => this.close());
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.isOpen) this.close(); });
+    this.onCloseCallback = null;
+
+    this.modal.addEventListener('click', (e) => {
+      if (e.target === this.modal) this.close();
+    });
+    if (this.closeBtn) {
+      this.closeBtn.addEventListener('click', () => this.close());
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isOpen) this.close();
+    });
   }
+
   open({ title, formHtml, onSubmit, submitLabel = 'Submit', cancelLabel = 'Cancel', onClose = null }) {
-    if (!this.modal) return;
+    if (!this.modal) {
+      console.warn('FormModal: modal container not found');
+      return;
+    }
     this.titleEl.textContent = title;
     this.bodyEl.innerHTML = `<form id="dynamicFormModalForm">${formHtml}</form>`;
+
     this.footerEl.innerHTML = '';
     const cancelBtn = document.createElement('button');
     cancelBtn.textContent = cancelLabel;
     cancelBtn.className = 'btn-secondary';
     cancelBtn.addEventListener('click', () => this.close());
+
     const submitBtn = document.createElement('button');
     submitBtn.textContent = submitLabel;
     submitBtn.className = 'btn-primary';
@@ -151,19 +180,23 @@ class FormModal {
       const form = document.getElementById('dynamicFormModalForm');
       if (onSubmit) await onSubmit(form);
     });
+
     this.footerEl.appendChild(cancelBtn);
     this.footerEl.appendChild(submitBtn);
+
     this.onCloseCallback = onClose;
     this.modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     this.isOpen = true;
   }
+
   close() {
     if (!this.modal) return;
     this.modal.style.display = 'none';
     document.body.style.overflow = '';
     this.isOpen = false;
     if (this.onCloseCallback) this.onCloseCallback();
+    this.onCloseCallback = null;
   }
 }
 
@@ -176,14 +209,26 @@ class ConfirmModal {
     this.footerEl = document.getElementById('confirmModalFooter');
     this.closeBtn = document.getElementById('closeConfirmModalBtn');
     this.isOpen = false;
-    this.modal.addEventListener('click', (e) => { if (e.target === this.modal) this.close(); });
-    this.closeBtn?.addEventListener('click', () => this.close());
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.isOpen) this.close(); });
+
+    this.modal.addEventListener('click', (e) => {
+      if (e.target === this.modal) this.close();
+    });
+    if (this.closeBtn) {
+      this.closeBtn.addEventListener('click', () => this.close());
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isOpen) this.close();
+    });
   }
+
   open({ title = 'Confirm Action', message, onConfirm, onCancel = null, confirmText = 'Confirm', cancelText = 'Cancel' }) {
-    if (!this.modal) return;
+    if (!this.modal) {
+      console.warn('ConfirmModal: modal container not found');
+      return;
+    }
     this.titleEl.textContent = title;
     this.messageEl.textContent = message;
+
     this.footerEl.innerHTML = '';
     const cancelBtn = document.createElement('button');
     cancelBtn.textContent = cancelText;
@@ -192,6 +237,7 @@ class ConfirmModal {
       if (onCancel) onCancel();
       this.close();
     });
+
     const confirmBtn = document.createElement('button');
     confirmBtn.textContent = confirmText;
     confirmBtn.className = 'btn-primary';
@@ -200,12 +246,15 @@ class ConfirmModal {
       if (onConfirm) await onConfirm();
       this.close();
     });
+
     this.footerEl.appendChild(cancelBtn);
     this.footerEl.appendChild(confirmBtn);
+
     this.modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     this.isOpen = true;
   }
+
   close() {
     if (!this.modal) return;
     this.modal.style.display = 'none';
@@ -214,7 +263,7 @@ class ConfirmModal {
   }
 }
 
-// Global modal instances (will be null if containers missing)
+// Global modal instances (may be null if containers missing)
 let formModal = null;
 let confirmModal = null;
 
@@ -222,17 +271,15 @@ let confirmModal = null;
 if (document.getElementById('formModal')) formModal = new FormModal();
 if (document.getElementById('confirmModal')) confirmModal = new ConfirmModal();
 
-
 // ========== REPORT LOST ITEM FEATURE (safe to call on any page) ==========
 function initReportLostFeature() {
   const reportBtn = document.getElementById('reportLostBtn');
-  if (!reportBtn) return; // No button on this page, exit silently
+  if (!reportBtn) return;
 
   reportBtn.addEventListener('click', (e) => {
     e.preventDefault();
 
-    // Safety: check if formModal exists
-    if (typeof formModal === 'undefined' || !formModal) {
+    if (!formModal || typeof formModal.open !== 'function') {
       alert('Modal system not ready. Please refresh the page.');
       return;
     }
@@ -322,29 +369,26 @@ function initReportLostFeature() {
       `,
       submitLabel: 'Report Item',
       onSubmit: async (form) => {
-        await new Promise(r => setTimeout(r, 10));
-        
         const formData = new FormData(form);
         const fileInput = document.getElementById('fileInput');
         if (fileInput && fileInput.files.length > 0) {
           formData.append('image', fileInput.files[0]);
         }
-        
+
         if (!formData.get('item_name') || !formData.get('description') || !formData.get('location') || !formData.get('finder_email')) {
           alert('Please fill all required fields');
           return;
         }
-        
+
         try {
-          // Replace with your actual backend endpoint
           const response = await fetch('/api/lost-and-found/report/', {
             method: 'POST',
             body: formData
           });
           if (!response.ok) throw new Error('Server error');
           const result = await response.json();
-          
-          if (typeof confirmModal !== 'undefined' && confirmModal) {
+
+          if (confirmModal && typeof confirmModal.open === 'function') {
             confirmModal.open({
               title: 'Item Reported ✅',
               message: 'Thank you for helping! If someone claims the item, we’ll match details and connect you with the owner.',
@@ -362,7 +406,6 @@ function initReportLostFeature() {
       }
     });
 
-    // Delay drag‑&‑drop initialisation until modal DOM is injected
     setTimeout(() => {
       const dropArea = document.getElementById('dropArea');
       const fileInput = document.getElementById('fileInput');
@@ -397,25 +440,15 @@ function initReportLostFeature() {
 }
 
 // ========== START EVERYTHING AFTER DOM READY ==========
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    initOptionalFeatures();
-    initScrollToTop();
-    initReportLostFeature();  // ✅ safe to call on any page
-  });
-} else {
+function initAll() {
   initOptionalFeatures();
   initScrollToTop();
-  initReportLostFeature();    // ✅ safe to call on any page
+  initMobileMenu();      // <-- added mobile menu toggle
+  initReportLostFeature();
 }
 
-// ========== START EVERYTHING AFTER DOM READY ==========
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    initOptionalFeatures();
-    initScrollToTop();
-  });
+  document.addEventListener('DOMContentLoaded', initAll);
 } else {
-  initOptionalFeatures();
-  initScrollToTop();
+  initAll();
 }

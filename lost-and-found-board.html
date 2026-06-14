@@ -177,9 +177,9 @@
       <div class="collapse navbar-collapse site-menu" id="navbarMain">
         <ul class="navbar-nav site-nav-list ms-lg-auto">
           <li class="nav-item"><a class="nav-link site-nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#how-it-works">How it works</a></li>
+          <!-- <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#how-it-works">How it works</a></li>
           <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#benefits">Benefits</a></li>
-          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#testimonials">Trust</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="index.html#testimonials">Trust</a></li> -->
           <li class="nav-item site-nav-action"><a class="btn btn-outline-custom btn-sm site-signup-button" href="auth/auth.html"><i class="fas fa-user-plus me-1"></i>Sign up</a></li>
         </ul>
       </div>
@@ -296,27 +296,7 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="assets/js/main.js"></script>
-<script src="assets/js/modal.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  if (window.bootstrap) {
-    return;
-  }
-
-  const menuButton = document.querySelector('.mobile-menu-button');
-  const menu = document.getElementById('navbarMain');
-
-  if (!menuButton || !menu) {
-    return;
-  }
-
-  menuButton.addEventListener('click', function () {
-    const isOpen = menu.classList.toggle('show');
-    menuButton.setAttribute('aria-expanded', String(isOpen));
-  });
-
-});
-
 let dummyLostItems = [
   {
     id: 1,
@@ -601,18 +581,7 @@ document.getElementById('searchInput').addEventListener('keyup', (e) => {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  AOS.init({ duration: 600, once: true });
   loadLostItems();
-  
-  // Mobile menu toggle
-  const menuButton = document.querySelector('.mobile-menu-button');
-  const menu = document.getElementById('navbarMain');
-  if (menuButton && menu) {
-    menuButton.addEventListener('click', function () {
-      const isOpen = menu.classList.toggle('show');
-      menuButton.setAttribute('aria-expanded', String(isOpen));
-    });
-  }
 });
 </script>
 </body>

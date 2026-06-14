@@ -559,12 +559,8 @@
   document.getElementById('cancelHotspotsBtn').addEventListener('click', () => { populateEditFields(); }); // reset
 
   document.addEventListener('DOMContentLoaded', () => {
-    AOS.init({ duration: 600, once: true });
     loadListing();
     setupImageUpload();
-    const menuBtn = document.querySelector('.mobile-menu-button');
-    const menu = document.getElementById('navbarMain');
-    if (menuBtn && menu) menuBtn.addEventListener('click', () => menu.classList.toggle('show'));
   });
 </script>
 </body>

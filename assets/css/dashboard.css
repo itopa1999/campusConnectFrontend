@@ -7,7 +7,6 @@
     overflow: hidden;
     margin-top: 3.4rem;
     padding: 2.2rem 0 1.3rem;
-    border-radius: 32px;
     background:
         radial-gradient(circle at 7% 12%, rgba(244, 183, 64, 0.11), transparent 22rem),
         radial-gradient(circle at 92% 12%, rgba(56, 111, 164, 0.1), transparent 24rem),
@@ -195,7 +194,6 @@
 
     .dashboard-hero {
         margin-top: 3rem;
-        border-radius: 24px;
     }
 
     .dashboard-pills {

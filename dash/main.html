@@ -524,17 +524,6 @@
     if (loadMoreReviewsBtn) loadMoreReviewsBtn.addEventListener('click', loadMoreReviews);
     initReviews();
 
-    // Mobile menu toggle fallback
-    const menuButton = document.querySelector('.mobile-menu-button');
-    const menu = document.getElementById('navbarMain');
-    if (menuButton && menu) {
-      menuButton.addEventListener('click', function () {
-        const isOpen = menu.classList.toggle('show');
-        menuButton.setAttribute('aria-expanded', String(isOpen));
-      });
-    }
-
-    AOS.init({ duration: 600, once: true });
   });
 </script>
 </body>

@@ -631,20 +631,9 @@
 
   // Initialize page
   document.addEventListener('DOMContentLoaded', async () => {
-    AOS.init({ duration: 600, once: true });
     await loadCategories();
     await loadHotspots();
     updateStepUI();
-
-    // Mobile menu toggle
-    const menuButton = document.querySelector('.mobile-menu-button');
-    const menu = document.getElementById('navbarMain');
-    if (menuButton && menu) {
-      menuButton.addEventListener('click', function () {
-        const isOpen = menu.classList.toggle('show');
-        menuButton.setAttribute('aria-expanded', String(isOpen));
-      });
-    }
   });
 </script>
 </body>

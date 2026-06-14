@@ -440,17 +440,6 @@
   const imgContainer = document.getElementById('listingImage');
   imgContainer.innerHTML = `<i class="fas fa-image fa-3x"></i><div class="mt-2 small text-muted">No image provided</div>`;
 
-  // AOS & other initializations
-  AOS.init({ duration: 600, once: true });
-  // Mobile menu toggle fallback
-  const menuButton = document.querySelector('.mobile-menu-button');
-  const menu = document.getElementById('navbarMain');
-  if (menuButton && menu) {
-    menuButton.addEventListener('click', function () {
-      const isOpen = menu.classList.toggle('show');
-      menuButton.setAttribute('aria-expanded', String(isOpen));
-    });
-  }
 </script>
 </body>
 </html>
