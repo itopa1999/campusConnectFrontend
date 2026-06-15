@@ -53,10 +53,33 @@ function getAuthHeaders() {
   return { Authorization: `Bearer ${token}` };
 }
 
+const authCookies = [
+    'access_token', 
+    'refresh_token', 
+    'user_id', 
+    'is_email_verified', 
+    'is_hall_verified',
+    'first_name',
+    'last_name',
+    'user_email',
+    'profile_pic',
+    'point_bal',
+    'trusting_score'
+  ];
+
 function deleteAuthCookies() {
-  ['access_token', 'refresh_token', 'user_id', 'is_email_verified'].forEach(name => {
+  authCookies.forEach(name => {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
   });
+}
+
+function isAuthenticated() {
+  const accessToken = getCookie('access_token');
+  const refreshToken = getCookie('refresh_token');
+  if (!accessToken || !refreshToken) {
+    deleteAuthCookies()
+    window.location.href = '../index.html';
+  }
 }
 
 function initOptionalFeatures() {
@@ -439,11 +462,98 @@ function initReportLostFeature() {
   });
 }
 
+function logout() {
+    if (typeof deleteAuthCookies === 'function') {
+      deleteAuthCookies();
+    } else {
+      ['access_token', 'refresh_token', 'user_id', 'is_email_verified'].forEach(name => {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+      });
+    }
+    window.location.href = '../index.html';
+  }
+
+
+// Close mobile menu when clicking outside with smooth animation
+function initMobileMenuOutsideClick() {
+  const menuButton = document.querySelector('.navbar-toggler');
+  const menu = document.getElementById('navbarMain');
+  if (!menuButton || !menu) return;
+  
+  // Get Bootstrap Collapse instance
+  let bsCollapse = null;
+  try {
+    bsCollapse = new bootstrap.Collapse(menu, { toggle: false });
+  } catch(e) {
+    // Fallback if Bootstrap not available
+    bsCollapse = null;
+  }
+  
+  document.addEventListener('click', function(event) {
+    const isMenuOpen = menu.classList.contains('show');
+    if (!isMenuOpen) return;
+    
+    const isClickInside = menu.contains(event.target) || menuButton.contains(event.target);
+    if (!isClickInside) {
+      if (bsCollapse) {
+        bsCollapse.hide(); // this triggers smooth CSS transition
+      } else {
+        menu.classList.remove('show');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }
+    }
+  });
+}
+
+
+function populateUserProfile() {
+  // Read cookies
+  const firstName = getCookie('first_name') || '';
+  const lastName = getCookie('last_name') || '';
+  const userEmailRaw = getCookie('user_email') || '';
+  const userEmail = decodeURIComponent(userEmailRaw);
+  const pointBal = getCookie('point_bal') || '0';
+  const trustScore = getCookie('trusting_score') || '0';
+
+  // Determine display name
+  let fullName = '';
+  if (firstName || lastName) {
+    fullName = `${firstName} ${lastName}`.trim();
+  }
+  const displayName = fullName || userEmail.split('@')[0] || 'Student';
+
+  // Update desktop user name (dropdown toggle)
+  const desktopUserNameSpan = document.getElementById('desktopUserName');
+  if (desktopUserNameSpan) {
+    desktopUserNameSpan.textContent = displayName;
+  }
+
+  // Update mobile profile card
+  const mobileFullName = document.getElementById('mobileFullName');
+  if (mobileFullName) {
+    mobileFullName.textContent = fullName || displayName;
+  }
+  const mobileUserEmailSpan = document.getElementById('mobileUserEmail');
+  if (mobileUserEmailSpan && userEmail) {
+    mobileUserEmailSpan.textContent = userEmail;
+  }
+  const mobilePointsBalance = document.getElementById('mobilePointsBalance');
+  if (mobilePointsBalance) {
+    mobilePointsBalance.textContent = pointBal;
+  }
+  const mobileTrustScore = document.getElementById('mobileTrustScore');
+  if (mobileTrustScore) {
+    mobileTrustScore.textContent = `${trustScore}%`;
+  }
+}
+
 // ========== START EVERYTHING AFTER DOM READY ==========
 function initAll() {
+  populateUserProfile();
   initOptionalFeatures();
   initScrollToTop();
-  initMobileMenu();      // <-- added mobile menu toggle
+  initMobileMenu();      
+  initMobileMenuOutsideClick();
   initReportLostFeature();
 }
 

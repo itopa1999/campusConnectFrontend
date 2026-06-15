@@ -1041,3 +1041,100 @@ section,
     height: 200px;
     border-radius: 12px;
 }
+
+/* Dropdown menu styling - matches mobile profile card */
+  .dropdown-menu {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 0.5rem 0;
+    min-width: 220px;
+  }
+  .dropdown-menu .dropdown-item {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .dropdown-menu .dropdown-item i {
+    width: 1.75rem;
+    font-size: 1rem;
+    color: #2c7a5e;
+    transition: transform 0.2s ease;
+  }
+  .dropdown-menu .dropdown-item:hover {
+    background-color: #f8f9fa;
+    padding-left: 1.5rem;
+  }
+  .dropdown-menu .dropdown-item:hover i {
+    transform: translateX(2px);
+  }
+  .dropdown-menu .dropdown-item.text-danger i {
+    color: #dc3545;
+  }
+  .dropdown-menu .dropdown-divider {
+    margin: 0.3rem 0;
+    border-top: 1px solid rgba(44,122,94,0.1);
+  }
+  .nav-link.dropdown-toggle i {
+    font-size: 1.2rem;
+  }
+  .mobile-profile-card .nav-link i {
+    width: 1.75rem;
+    color: #2c7a5e;
+  }
+  .mobile-profile-card .nav-link.text-danger i {
+    color: #dc3545;
+  }
+  .mobile-profile-card .nav-link:hover {
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+  }
+
+
+/* Mobile profile card link styles */
+.mobile-profile-card .nav-link {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  color: #2c3e2f;
+}
+
+.mobile-profile-card .nav-link i {
+  width: 1.75rem;
+  font-size: 1rem;
+  color: #2c7a5e;
+  transition: transform 0.2s ease;
+}
+
+.mobile-profile-card .nav-link:hover {
+  background-color: #f8f9fa;
+  padding-left: 1.25rem;
+}
+
+.mobile-profile-card .nav-link:hover i {
+  transform: translateX(2px);
+}
+
+.mobile-profile-card .nav-link.text-danger {
+  color: #dc3545;
+}
+
+.mobile-profile-card .nav-link.text-danger i {
+  color: #dc3545;
+}
+
+.mobile-profile-card .nav-link.text-danger:hover {
+  background-color: #fff5f5;
+}
+
+/* Mobile stats cards (points & trust) */
+.mobile-profile-card .bg-light {
+  background-color: #f8f9fa !important;
+  transition: transform 0.2s ease;
+}
+
+.mobile-profile-card .bg-light:hover {
+  transform: translateY(-2px);
+}

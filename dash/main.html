@@ -72,27 +72,64 @@
           <span class="brand-short">CampusConnect</span>
         </span>
       </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarMain">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-user-circle fa-lg me-1"></i> Tolani
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 mt-2" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-id-card me-2"></i>My Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="auth.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-</header>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <!-- Desktop dropdown (visible on md and up) -->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center d-none d-md-flex">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user-circle fa-lg me-1"></i> <span id="desktopUserName">Null</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 mt-2" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="profile.html"><i class="fas fa-id-card me-2"></i>My Profile</a></li>
+              <li><a class="dropdown-item" href="create-listing.html"><i class="fas fa-plus-circle me-2"></i>Post a Listing</a></li>
+              <li><a class="dropdown-item" href="listings.html"><i class="fas fa-list me-2"></i>Browse Listings</a></li>
+              <li><a class="dropdown-item" href="../t/report-issue.html"><i class="fas fa-flag me-2"></i>Report Issue</a></li>              
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+
+        <!-- Mobile: profile card + same links (visible only on small screens) -->
+        <div class="mobile-profile-card d-md-none p-3">
+          <div class="text-center mb-3">
+            <i class="fas fa-user-circle fa-4x text-success"></i>
+            <h5 class="mt-2 mb-0" id="mobileFullName">Null</h5>
+            <div class="small text-muted" id="mobileUserEmail">Null</div>
+          </div>
+          <div class="row text-center g-2 mb-3">
+            <div class="col-6">
+              <div class="bg-light rounded-3 p-2">
+                <div class="small text-muted">Points</div>
+                <strong id="mobilePointsBalance">0</strong>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="bg-light rounded-3 p-2">
+                <div class="small text-muted">Trust Score</div>
+                <strong id="mobileTrustScore">0%</strong>
+              </div>
+            </div>
+          </div>
+          <hr class="my-2">
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link py-2" href="profile.html"><i class="fas fa-id-card me-2"></i> My Profile</a></li>
+            <li class="nav-item"><a class="nav-link py-2" href="create-listing.html"><i class="fas fa-plus-circle me-2"></i> Post a Listing</a></li>
+            <li class="nav-item"><a class="nav-link py-2" href="listings.html"><i class="fas fa-list me-2"></i> Browse Listings</a></li>
+            <li class="nav-item"><a class="nav-link py-2" href="../t/report-issue.html"><i class="fas fa-flag me-2"></i> Report Issue</a></li>
+            <li><hr class="my-2"></li>
+            <li class="nav-item"><a class="nav-link text-danger py-2" href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
 <!-- Main dashboard content -->
 <div class="dashboard-page">
   <!-- Hero section -->
@@ -274,6 +311,8 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
+  {% comment %} isAuthenticated() {% endcomment %}
+  
   document.addEventListener('DOMContentLoaded', () => {
     // ------------- DUMMY API DATA -------------
     const dummyPayload = {

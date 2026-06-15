@@ -48,6 +48,14 @@ loginForm.addEventListener('submit', async (e) => {
       setCookie('refresh_token', result.data.refresh_token, expiryDays);    
       setCookie('user_id', result.data.user_id, expiryDays);           
       setCookie('is_email_verified', result.data.is_email_verified, expiryDays);
+      setCookie('is_hall_verified', result.data.is_hall_verified, expiryDays);
+
+      setCookie('first_name', result.data.first_name, expiryDays);
+      setCookie('last_name', result.data.last_name, expiryDays);
+      setCookie('user_email', result.data.email, expiryDays);
+      setCookie('profile_pic', result.data.profile_pic, expiryDays);
+      setCookie('point_bal', result.data.point_bal, expiryDays);
+      setCookie('trusting_score', result.data.trusting_score, expiryDays);
 
       sessionStorage.setItem('rememberMe', rememberMe ? 'true' : 'false');
 
