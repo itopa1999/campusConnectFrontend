@@ -2,7 +2,34 @@
 const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
 const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
 const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
-const DASHBOARD_URL = `${CAMPUS_URL}dashboard`;
+
+
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+function getConditionDisplay(badge) {
+    const mapping = {
+      'new': { text: 'New', icon: '<i class="fas fa-star-of-life me-1"></i>' },
+      'almost_new': { text: 'Almost New', icon: '<i class="fas fa-check-circle me-1"></i>' },
+      'fair': { text: 'Fair', icon: '<i class="fas fa-exchange-alt me-1"></i>' },
+      'bundle': { text: 'Bundle', icon: '<i class="fas fa-layer-group me-1"></i>' },
+      'other': { text: 'Misc', icon: '<i class="fas fa-ellipsis-h me-1"></i>' }
+    };
+    return mapping[badge] || { text: 'Good', icon: '<i class="fas fa-check-circle me-1"></i>' };
+}
+
+
 
 function showToast(message, type = 'success', duration = 4000) {
   const container = document.getElementById('toast-container');
