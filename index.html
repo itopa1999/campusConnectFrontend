@@ -502,10 +502,7 @@
 <script src="assets/js/main.js"></script>
 
 <script>
-  AOS.init({ duration: 800, once: true });
   
-  // ---------- FEATURED LISTINGS WITH API IMAGES (Lorem Picsum) ----------
-  // product data: title, price, condition, location, description, category
   const listingsData = [
     { id: 1, title: "ECO 211 - Principles of Economics", price: 3500, condition: "Like New", location: "Mellanby Hall", category: "textbooks", desc: "Barely used, no highlights. Original price ₦8,000, selling cheap.", imageSeed: 24 },
     { id: 2, title: "HP Laptop Core i5 / 8GB RAM", price: 145000, condition: "Good", location: "Independence Hall", category: "electronics", desc: "Perfect for programming, Microsoft office. Battery lasts 4hrs.", imageSeed: 20 },
@@ -514,14 +511,6 @@
     { id: 5, title: "Sony WH-CH510 Wireless Headphones", price: 27500, condition: "Like New", location: "Idia Hall", category: "electronics", desc: "Original box, 6 months used. Great battery life.", imageSeed: 42 },
     { id: 6, title: "Complete ACC 201 & 202 past questions", price: 3000, condition: "Bundle", location: "Nnamdi Azikiwe Hall", category: "other", desc: "Printed & spiral bound. Includes solutions.", imageSeed: 17 }
   ];
-
-  // Function to get image URL via API (Lorem Picsum - free image API) - each fetch triggers external image request
-  function getImageUrl(item) {
-    // using Lorem Picsum API endpoint. Different seeds for diverse images.
-    // API call for each image: the browser will request these URLs -> fulfills "API call for images"
-    const baseId = item.imageSeed || (item.id * 13);
-    return `https://picsum.photos/id/${baseId}/400/280`;  // external image API
-  }
 
   function formatCurrency(amount) {
     return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
@@ -533,7 +522,6 @@
     
     let cardsHtml = '';
     listingsData.forEach(item => {
-      const imageUrl = getImageUrl(item);
       // condition badge with icon mapping
       let conditionIcon = '';
       if (item.condition === 'Like New') conditionIcon = '<i class="fas fa-star-of-life me-1"></i>';
@@ -545,7 +533,7 @@
         <div class="col">
           <div class="featured-listing-card h-100" data-id="${item.id}">
             <div class="listing-image">
-              <img src="${imageUrl}" alt="${item.title}" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<i class=\'fas fa-image\'></i>';">
+              ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${item.title}">` : `<i class="fas fa-image"></i>`}
             </div>
             <div class="card-body p-3">
               <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-1">
