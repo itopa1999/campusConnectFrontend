@@ -133,7 +133,7 @@
     return null;
   }
 
-  const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
+  const AUTHENTICATE_URL = 'http://127.0.0.1:8000/user/api/auth/';
   const refreshToken = getCookie('refresh_token');
 
   if (refreshToken) {
@@ -141,7 +141,7 @@
     const preloader = document.getElementById('authPreloader');
     if (preloader) preloader.style.display = 'flex';
 
-    fetch(`${AUTH_URL}refresh-token`, {
+    fetch(`${AUTHENTICATE_URL}refresh-token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refreshToken })
