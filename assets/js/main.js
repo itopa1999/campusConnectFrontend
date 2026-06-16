@@ -18,6 +18,16 @@ function escapeHtml(str) {
   });
 }
 
+function renderStars(rating) {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
+    let html = '';
+    for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
+    if (half) html += '<i class="fas fa-star-half-alt"></i>';
+    for (let i = full + (half ? 1 : 0); i < 5; i++) html += '<i class="far fa-star"></i>';
+    return html;
+  }
+
 function getConditionDisplay(badge) {
     const mapping = {
       'new': { text: 'New', icon: '<i class="fas fa-star-of-life me-1"></i>' },

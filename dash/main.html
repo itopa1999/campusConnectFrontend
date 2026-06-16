@@ -56,12 +56,58 @@
     @media (max-width: 768px) {
       .listing-image { height: 120px; }
     }
+
+    /* ========== SKELETON LOADER STYLES ========== */
+    
+    .skeleton-stat {
+      height: 70px;
+      border-radius: 1rem;
+    }
+    .skeleton-heading {
+      height: 28px;
+      width: 60%;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .skeleton-card-img {
+      height: 140px;
+      border-radius: 1rem 1rem 0 0;
+    }
+    .skeleton-card-body {
+      padding: 1rem;
+    }
+    .skeleton-card-title {
+      height: 20px;
+      width: 80%;
+      margin-bottom: 0.5rem;
+    }
+    .skeleton-card-text {
+      height: 14px;
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    .skeleton-card-price {
+      height: 24px;
+      width: 40%;
+      margin-top: 0.5rem;
+    }
+    .skeleton-review {
+      height: 80px;
+      margin-bottom: 1rem;
+    }
+    /* Hide real content initially, show skeleton */
+    .dashboard-content {
+      display: none;
+    }
+    .skeleton-container {
+      display: block;
+    }
   </style>
 </head>
 <body>
 <div id="particles-js"></div>
 
-<!-- Navigation -->
+<!-- Navigation (unchanged) -->
 <header class="site-header fixed-top">
   <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
     <div class="container header-inner">
@@ -130,160 +176,199 @@
     </div>
   </nav>
 </header>
-<!-- Main dashboard content -->
+
+<!-- Main dashboard content with skeleton loader -->
 <div class="dashboard-page">
-  <!-- Hero section -->
-  <section id="dashboardHome" class="dashboard-hero py-5">
-    <div class="container" data-aos="fade-up" data-aos-duration="900">
+  <!-- SKELETON LOADER (visible initially) -->
+  <div id="skeletonLoader">
+    <div class="container py-4">
+      <!-- Hero skeleton -->
       <div class="row align-items-end">
         <div class="col-lg-7">
-          <span class="badge-verify mb-3"><i class="fas fa-chart-line me-1"></i> student dashboard</span>
-          <h1 class="display-6 fw-semibold">Welcome back, <span id="dashboardUserName">Tolani</span></h1>
-          <p class="text-muted mb-4">Track your campus listings, messages, sales and trust score in one place with exceptional clarity and style.</p>
+          <div class="skeleton" style="width: 120px; height: 24px; border-radius: 40px; margin-bottom: 1rem;"></div>
+          <div class="skeleton skeleton-heading"></div>
+          <div class="skeleton skeleton-text" style="width: 90%;"></div>
+          <div class="skeleton skeleton-text" style="width: 70%;"></div>
         </div>
-        <div class="col-lg-5 text-lg-end" data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
-          <a href="create-listing.html" class="btn btn-primary-custom me-2 mb-2"><i class="fas fa-plus-circle me-1"></i>Post a listing</a>
-          <a href="listings.html" class="btn btn-outline-custom mb-2"><i class="fas fa-search me-1"></i>Browse listings</a>
+        <div class="col-lg-5 text-lg-end">
+          <div class="skeleton" style="width: 150px; height: 48px; border-radius: 40px; display: inline-block;"></div>
+          <div class="skeleton" style="width: 130px; height: 48px; border-radius: 40px; display: inline-block; margin-left: 0.5rem;"></div>
         </div>
       </div>
-
-      <!-- Stats row -->
-      <div class="row g-3 stats-row mt-4" data-aos="fade-up" data-aos-duration="700">
-        <div class="col-6 col-md-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
-            <div class="stat-label"><i class="fas fa-tag me-1"></i> Active listings</div>
-            <div class="stat-value" id="activeListingsCount">0</div>
-            <small class="text-muted">Live offers on campus</small>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
-            <div class="stat-label"><i class="fas fa-clock me-1"></i> Expired listings</div>
-            <div class="stat-value" id="expiredListingsCount">0</div>
-            <small class="text-muted">Past opportunities</small>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
-            <div class="stat-label"><i class="fas fa-check-circle me-1"></i> Sold listings</div>
-            <div class="stat-value" id="soldListingsCount">0</div>
-            <small class="text-muted">Completed transactions</small>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
-            <div class="stat-label"><i class="fas fa-shield-alt me-1"></i> Trust score</div>
-            <div class="stat-value" id="trustScoreValue">0%</div>
-            <small class="text-muted">Verified student badge</small>
-          </div>
-        </div>
-        <div class="col-12 col-md-3 col-lg-3">
-          <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
-            <div class="stat-label"><i class="fas fa-coins me-1"></i> Points Balance</div>
-            <div class="stat-value" id="pointsBalanceValue">0</div>
-            <small class="text-muted">Available for posting</small>
-          </div>
+      <!-- Stats skeletons -->
+      <div class="row g-3 mt-4">
+        <div class="col-6 col-md-3"><div class="skeleton skeleton-stat"></div></div>
+        <div class="col-6 col-md-3"><div class="skeleton skeleton-stat"></div></div>
+        <div class="col-6 col-md-3"><div class="skeleton skeleton-stat"></div></div>
+        <div class="col-6 col-md-3"><div class="skeleton skeleton-stat"></div></div>
+        <div class="col-12 col-md-3 col-lg-3"><div class="skeleton skeleton-stat"></div></div>
+      </div>
+      <!-- Tabs skeletons -->
+      <div class="mt-5">
+        <div class="skeleton" style="width: 200px; height: 40px; border-radius: 30px;"></div>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-7"><div class="skeleton" style="height: 300px; border-radius: 1rem;"></div></div>
+          <div class="col-lg-5"><div class="skeleton" style="height: 300px; border-radius: 1rem;"></div></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Tabs section (Overview, My listings, Reviews) -->
-  <section class="dashboard-tabs-section py-4">
-    <div class="container">
-      <ul class="nav nav-pills dashboard-pills mb-4" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true"><i class="fas fa-home me-1"></i> Overview</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="listings-tab" data-bs-toggle="pill" data-bs-target="#listings" type="button" role="tab" aria-controls="listings" aria-selected="false"><i class="fas fa-list-ul me-1"></i> My listings</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="reviews-tab" data-bs-toggle="pill" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false"><i class="fas fa-star me-1"></i> Reviews</button>
-        </li>
-      </ul>
+  <!-- REAL CONTENT (hidden initially) -->
+  <div id="realContent" style="display: none;">
+    <!-- Hero section -->
+    <section id="dashboardHome" class="dashboard-hero py-5">
+      <div class="container" data-aos="fade-up" data-aos-duration="900">
+        <div class="row align-items-end">
+          <div class="col-lg-7">
+            <span class="badge-verify mb-3"><i class="fas fa-chart-line me-1"></i> student dashboard</span>
+            <h1 class="display-6 fw-semibold">Welcome back, <span id="dashboardUserName">Null</span></h1>
+            <p class="text-muted mb-4">Track your campus listings, messages, sales and trust score in one place with exceptional clarity and style.</p>
+          </div>
+          <div class="col-lg-5 text-lg-end" data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
+            <a href="create-listing.html" class="btn btn-primary-custom me-2 mb-2"><i class="fas fa-plus-circle me-1"></i>Post a listing</a>
+            <a href="listings.html" class="btn btn-outline-custom mb-2"><i class="fas fa-search me-1"></i>Browse listings</a>
+          </div>
+        </div>
 
-      <div class="tab-content">
-        <!-- Overview tab -->
-        <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-          <div class="row g-4">
-            <div class="col-lg-7">
-              <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                  <h5 class="mb-0"><i class="fas fa-chart-simple me-2"></i> Quick summary</h5>
-                  <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Live</span>
-                </div>
-                <p class="text-muted">Your CampusConnect profile is active. Keep posting relevant items for better trust.</p>
-                <div class="row g-3 mt-2">
-                  <div class="col-6">
-                    <div class="summary-tile p-3 rounded-4">
-                      <div class="small text-muted mb-1">Profile completion</div>
-                      <strong class="fs-3" id="profileCompletionValue">0%</strong>
-                      <div class="progress-bar-custom mt-2">
-                        <div class="progress-fill" id="profileMeterFill" style="width:0%"></div>
+        <!-- Stats row -->
+        <div class="row g-3 stats-row mt-4" data-aos="fade-up" data-aos-duration="700">
+          <div class="col-6 col-md-3">
+            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+              <div class="stat-label"><i class="fas fa-tag me-1"></i> Active listings</div>
+              <div class="stat-value" id="activeListingsCount">0</div>
+              <small class="text-muted">Live offers on campus</small>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+              <div class="stat-label"><i class="fas fa-clock me-1"></i> Expired listings</div>
+              <div class="stat-value" id="expiredListingsCount">0</div>
+              <small class="text-muted">Past opportunities</small>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+              <div class="stat-label"><i class="fas fa-check-circle me-1"></i> Sold listings</div>
+              <div class="stat-value" id="soldListingsCount">0</div>
+              <small class="text-muted">Completed transactions</small>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+              <div class="stat-label"><i class="fas fa-shield-alt me-1"></i> Trust score</div>
+              <div class="stat-value" id="trustScoreValue">0%</div>
+              <small class="text-muted">Verified student badge</small>
+            </div>
+          </div>
+          <div class="col-12 col-md-3 col-lg-3">
+            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+              <div class="stat-label"><i class="fas fa-coins me-1"></i> Points Balance</div>
+              <div class="stat-value" id="pointsBalanceValue">0</div>
+              <small class="text-muted">Available for posting</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs section (Overview, My listings, Reviews) -->
+    <section class="dashboard-tabs-section py-4">
+      <div class="container">
+        <ul class="nav nav-pills dashboard-pills mb-4" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true"><i class="fas fa-home me-1"></i> Overview</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="listings-tab" data-bs-toggle="pill" data-bs-target="#listings" type="button" role="tab" aria-controls="listings" aria-selected="false"><i class="fas fa-list-ul me-1"></i> My listings</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="reviews-tab" data-bs-toggle="pill" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false"><i class="fas fa-star me-1"></i> Reviews</button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- Overview tab -->
+          <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+            <div class="row g-4">
+              <div class="col-lg-7">
+                <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="mb-0"><i class="fas fa-chart-simple me-2"></i> Quick summary</h5>
+                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Live</span>
+                  </div>
+                  <p class="text-muted">Your CampusConnect profile is active. Keep posting relevant items for better trust.</p>
+                  <div class="row g-3 mt-2">
+                    <div class="col-6">
+                      <div class="summary-tile p-3 rounded-4">
+                        <div class="small text-muted mb-1">Profile completion</div>
+                        <strong class="fs-3" id="profileCompletionValue">0%</strong>
+                        <div class="progress-bar-custom mt-2">
+                          <div class="progress-fill" id="profileMeterFill" style="width:0%"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="summary-tile p-3 rounded-4">
+                        <div class="small text-muted mb-1">Points balance</div>
+                        <strong class="fs-3" id="summaryPointsBalance">0</strong>
+                        <div class="small text-muted mt-1">Posting an item costs 1 point.</div>
                       </div>
                     </div>
                   </div>
-                  <div class="col-6">
-                    <div class="summary-tile p-3 rounded-4">
-                      <div class="small text-muted mb-1">Points balance</div>
-                      <strong class="fs-3" id="summaryPointsBalance">3</strong>
-                      <div class="small text-muted mt-1">Posting an item costs 1 point.</div>
-                    </div>
-                  </div>
+                  <a href="payment.html" class="btn btn-primary-custom btn-sm mt-3"><i class="fas fa-bolt me-1"></i>Add more points</a>
                 </div>
-                <a href="payment.html" class="btn btn-primary-custom btn-sm mt-3"><i class="fas fa-bolt me-1"></i>Add more points</a>
               </div>
-            </div>
-            <div class="col-lg-5">
-              <div class="dashboard-card shadow-sm rounded-4 p-4 h-100" data-aos="fade-left" data-aos-duration="700">
-                <h5 class="mb-3"><i class="fas fa-hourglass-half me-2"></i>Upcoming Expirations</h5>
-                <div id="upcomingExpirationsList"></div>
+              <div class="col-lg-5">
+                <div class="dashboard-card shadow-sm rounded-4 p-4 h-100" data-aos="fade-left" data-aos-duration="700">
+                  <h5 class="mb-3"><i class="fas fa-hourglass-half me-2"></i>Upcoming Expirations</h5>
+                  <div id="upcomingExpirationsList"></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- My Listings tab (with Load More) -->
-        <div class="tab-pane fade" id="listings" role="tabpanel" aria-labelledby="listings-tab">
-          <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
-            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
-              <div>
-                <h5 class="mb-1"><i class="fas fa-store me-2"></i>My listings</h5>
-                <p class="text-muted mb-0">Manage your current offers and update prices.</p>
+          <!-- My Listings tab -->
+          <div class="tab-pane fade" id="listings" role="tabpanel" aria-labelledby="listings-tab">
+            <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
+              <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
+                <div>
+                  <h5 class="mb-1"><i class="fas fa-store me-2"></i>My listings</h5>
+                  <p class="text-muted mb-0">Manage your current offers and update prices.</p>
+                </div>
+                <a href="create-listing.html" class="btn btn-outline-custom mt-3 mt-md-0"><i class="fas fa-plus me-1"></i>Add new listing</a>
               </div>
-              <a href="create-listing.html" class="btn btn-outline-custom mt-3 mt-md-0"><i class="fas fa-plus me-1"></i>Add new listing</a>
-            </div>
-            <div class="row g-4" id="latestListingsContainer"></div>
-            <div class="text-center mt-4" id="listingsLoadMoreContainer" style="display: none;">
-              <button id="loadMoreListingsBtn" class="btn btn-outline-custom">Load more <i class="fas fa-arrow-down ms-1"></i></button>
+              <div class="row g-4" id="latestListingsContainer"></div>
+              <div class="text-center mt-4" id="listingsLoadMoreContainer" style="display: none;">
+                <button id="loadMoreListingsBtn" class="btn btn-outline-custom">Load more <i class="fas fa-arrow-down ms-1"></i></button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Reviews Tab (with Load More) -->
-        <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-          <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-              <div>
-                <h5 class="mb-1"><i class="fas fa-star me-2" style="color: #f5b042;"></i>Reviews from buyers</h5>
-                <p class="text-muted mb-0">What students say about their experience with you</p>
+          <!-- Reviews Tab -->
+          <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+            <div class="dashboard-card shadow-sm rounded-4 p-4" data-aos="fade-up" data-aos-duration="700">
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                  <h5 class="mb-1"><i class="fas fa-star me-2" style="color: #f5b042;"></i>Reviews from buyers</h5>
+                  <p class="text-muted mb-0">What students say about their experience with you</p>
+                </div>
+                <div class="text-end">
+                  <div class="display-6 fw-bold" id="avgRatingDisplay">0.0</div>
+                  <div class="rating-stars" id="avgStars"></div>
+                  <small class="text-muted" id="totalReviewsCount">0 reviews</small>
+                </div>
               </div>
-              <div class="text-end">
-                <div class="display-6 fw-bold" id="avgRatingDisplay">0.0</div>
-                <div class="rating-stars" id="avgStars"></div>
-                <small class="text-muted" id="totalReviewsCount">0 reviews</small>
+              <div id="reviewsListContainer"></div>
+              <div class="text-center mt-4" id="reviewsLoadMoreContainer" style="display: none;">
+                <button id="loadMoreReviewsBtn" class="btn btn-outline-custom">Load more <i class="fas fa-arrow-down ms-1"></i></button>
               </div>
-            </div>
-            <div id="reviewsListContainer"></div>
-            <div class="text-center mt-4" id="reviewsLoadMoreContainer" style="display: none;">
-              <button id="loadMoreReviewsBtn" class="btn btn-outline-custom">Load more <i class="fas fa-arrow-down ms-1"></i></button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </div>
 
 <!-- Mobile bottom navigation -->
@@ -311,259 +396,228 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
-  isAuthenticated()
-  
-  document.addEventListener('DOMContentLoaded', () => {
-    // ------------- DUMMY API DATA -------------
-    const dummyPayload = {
-      user: "Tolani",
-      first_name: "Tolani",
-      total_active: 3,
-      total_expired: 1,
-      total_sold: 2,
-      trust_score: 88,
-      profile_completion: 75,
-      points_balance: 4,
-      upcoming_expiring_listings: [
-        { title: "HP Laptop Core i5", description: "Great condition, 8GB RAM", expires_at_humanized: "Expires in 2 days", hostpost_names: ["Kennedy Library"] },
-        { title: "ECO 211 Textbook", description: "Like new, no highlights", expires_at_humanized: "Expires in 5 days", hostpost_names: ["Faculty of Social Sciences"] }
-      ],
-      // All listings (9 items)
-      all_listings: [
-        { id: 1, title: "HP Laptop Core i5 / 8GB RAM", description: "Perfect for programming, battery lasts 4hrs.", price: 145000, category: "Electronics", location: "Independence Hall", status: "active", image: null, created_at_humanized: "2 days ago" },
-        { id: 2, title: "ECO 211 - Principles of Economics", description: "Barely used, no highlights.", price: 3500, category: "Textbooks", location: "Mellanby Hall", status: "active", image: null, created_at_humanized: "5 days ago" },
-        { id: 3, title: "Desk + Office Chair", description: "Wooden desk, sturdy chair.", price: 12000, category: "Furniture", location: "Queen Elizabeth Hall", status: "active", image: null, created_at_humanized: "1 week ago" },
-        { id: 4, title: "Sony Headphones", description: "Wireless, great sound.", price: 27500, category: "Electronics", location: "Idia Hall", status: "sold", image: null, created_at_humanized: "2 weeks ago" },
-        { id: 5, title: "PHY 115 Lab Manual", description: "Clean copy, solved exercises.", price: 2200, category: "Textbooks", location: "Sultan Bello Hall", status: "expired", image: null, created_at_humanized: "1 month ago" },
-        { id: 6, title: "Men's Nike Sneakers", description: "Size 42, like new.", price: 25000, category: "Clothing", location: "Kenneth Dike Hall", status: "active", image: null, created_at_humanized: "3 days ago" },
-        { id: 7, title: "IKEA Floor Lamp", description: "White, works perfectly.", price: 5500, category: "Furniture", location: "Mellanby Hall", status: "active", image: null, created_at_humanized: "4 days ago" },
-        { id: 8, title: "Calculus Textbook", description: "Thomas' Calculus, 14th ed.", price: 8000, category: "Textbooks", location: "Science Faculty", status: "active", image: null, created_at_humanized: "6 days ago" },
-        { id: 9, title: "Wireless Mouse", description: "Logitech, barely used.", price: 3500, category: "Electronics", location: "Idia Hall", status: "sold", image: null, created_at_humanized: "2 weeks ago" }
-      ],
-      // All reviews (8 items)
-      all_reviews: [
-        { from: "Aisha K.", rating: 5, comment: "Great seller, item exactly as described. Fast meetup at the library.", date: "2025-06-01" },
-        { from: "Daniel O.", rating: 4, comment: "Good communication, product was in good condition.", date: "2025-05-25" },
-        { from: "Peace E.", rating: 5, comment: "Trustworthy and friendly. Would buy again.", date: "2025-05-18" },
-        { from: "Emeka O.", rating: 4, comment: "Smooth transaction, item as promised.", date: "2025-05-10" },
-        { from: "Tolani S.", rating: 5, comment: "Very responsive and helpful seller.", date: "2025-05-05" },
-        { from: "Bola F.", rating: 3, comment: "Item was okay, but delivery was a bit delayed.", date: "2025-04-28" },
-        { from: "Chiamaka U.", rating: 5, comment: "Excellent experience. Highly recommend.", date: "2025-04-20" },
-        { from: "Michael B.", rating: 4, comment: "Good product, fair price.", date: "2025-04-15" }
-      ]
-    };
+  isAuthenticated();  // from main.js
 
-    // Helper functions
-    function formatCurrency(amount) {
-      return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+  async function loadDashboardData() {
+    const skeleton = document.getElementById('skeletonLoader');
+    const realContent = document.getElementById('realContent');
+    if (!skeleton || !realContent) return;
+
+    skeleton.style.display = 'block';
+    realContent.style.display = 'none';
+
+    const token = getCookie('access_token');  // from main.js
+    if (!token) {
+      window.location.href = '../index.html';
+      return;
     }
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
+
+    try {
+      const response = await fetch(CAMPUS_URL + 'dashboard', {  // CAMPUS_URL from main.js
+        headers: {
+          'Accept': 'application/json',
+          ...getAuthHeaders()  // includes Bearer token
+        }
       });
-    }
-    function renderStars(rating) {
-      const full = Math.floor(rating);
-      const half = rating % 1 >= 0.5;
-      let html = '';
-      for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
-      if (half) html += '<i class="fas fa-star-half-alt"></i>';
-      for (let i = full + (half ? 1 : 0); i < 5; i++) html += '<i class="far fa-star"></i>';
-      return html;
-    }
 
-    // Populate stats and overview
-    document.getElementById('dashboardUserName').innerText = dummyPayload.user;
-    document.getElementById('activeListingsCount').innerText = dummyPayload.total_active;
-    document.getElementById('expiredListingsCount').innerText = dummyPayload.total_expired;
-    document.getElementById('soldListingsCount').innerText = dummyPayload.total_sold;
-    document.getElementById('trustScoreValue').innerText = `${dummyPayload.trust_score}%`;
-    document.getElementById('profileCompletionValue').innerText = `${dummyPayload.profile_completion}%`;
-    document.getElementById('profileMeterFill').style.width = `${dummyPayload.profile_completion}%`;
-    document.getElementById('pointsBalanceValue').innerText = dummyPayload.points_balance;
-    document.getElementById('summaryPointsBalance').innerText = dummyPayload.points_balance;
+      if (response.status === 401 || response.status === 403) {
+        deleteAuthCookies();
+        window.location.href = '../index.html';
+        return;
+      }
 
-    // Render upcoming expirations
-    const upcomingContainer = document.getElementById('upcomingExpirationsList');
-    if (dummyPayload.upcoming_expiring_listings.length === 0) {
-      upcomingContainer.innerHTML = `
-        <div class="dashboard-empty-state">
-          <span class="empty-icon"><i class="fas fa-hourglass-half"></i></span>
-          <div>
-            <h6>No upcoming expirations</h6>
-            <p>Your active listings are in good shape right now. Expiring items will appear here automatically.</p>
-          </div>
-        </div>
-      `;
-    } else {
-      upcomingContainer.innerHTML = dummyPayload.upcoming_expiring_listings.map(item => `
-        <div class="list-group-item px-0 py-3 border-0 border-bottom">
-          <div class="d-flex justify-content-between mb-2">
-            <strong>${escapeHtml(item.title)}</strong>
-            <span class="text-muted small"><i class="far fa-clock me-1"></i>${item.expires_at_humanized}</span>
-          </div>
-          <p class="mb-0 text-muted small">${escapeHtml(item.description)}</p>
-          ${item.hostpost_names?.length ? `<div class="small text-muted mt-2"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.hostpost_names.join(' | '))}</div>` : ''}
-        </div>
-      `).join('');
-    }
+      if (!response.ok) throw new Error('Failed to fetch dashboard');
 
-    // ---------- LOAD MORE FOR LISTINGS ----------
-    let listingsCurrentPage = 0;
-    const listingsPerPage = 3;
-    const allListings = dummyPayload.all_listings;
-    const listingsContainer = document.getElementById('latestListingsContainer');
-    const listingsLoadMoreContainer = document.getElementById('listingsLoadMoreContainer');
-    const loadMoreListingsBtn = document.getElementById('loadMoreListingsBtn');
+      const result = await response.json();
+      if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
 
-    function renderListingCard(item) {
-      let statusClass = '';
-      let statusText = '';
-      if (item.status === 'active') { statusClass = 'status-active'; statusText = 'Active'; }
-      else if (item.status === 'expired') { statusClass = 'status-expired'; statusText = 'Expired'; }
-      else if (item.status === 'sold') { statusClass = 'status-sold'; statusText = 'Sold'; }
-      return `
-        <div class="col-md-6 col-lg-4">
-          <div class="listing-card h-100">
-            <div class="listing-image">
-              ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${item.title}">` : `<i class="fas fa-image"></i>`}
+      const data = result.data;
+
+      // --- Stats & overview ---
+      document.getElementById('dashboardUserName').innerText = data.first_name || data.user || 'Student';
+      document.getElementById('activeListingsCount').innerText = data.total_active;
+      document.getElementById('expiredListingsCount').innerText = data.total_expired;
+      document.getElementById('soldListingsCount').innerText = data.total_sold;
+      document.getElementById('trustScoreValue').innerText = `${data.trust_score}%`;
+      document.getElementById('profileCompletionValue').innerText = `${data.profile_completion}%`;
+      document.getElementById('profileMeterFill').style.width = `${data.profile_completion}%`;
+      document.getElementById('pointsBalanceValue').innerText = data.points_balance;
+      document.getElementById('summaryPointsBalance').innerText = data.points_balance;
+
+      // --- Upcoming expirations ---
+      const upcomingContainer = document.getElementById('upcomingExpirationsList');
+      if (!data.upcoming_expiring_listings?.length) {
+        upcomingContainer.innerHTML = `<div class="dashboard-empty-state"><span class="empty-icon"><i class="fas fa-hourglass-half"></i></span><div><h6>No upcoming expirations</h6><p>Your active listings are in good shape right now.</p></div></div>`;
+      } else {
+        upcomingContainer.innerHTML = data.upcoming_expiring_listings.map(item => `
+          <div class="list-group-item px-0 py-3 border-0 border-bottom">
+            <div class="d-flex justify-content-between mb-2">
+              <strong>${escapeHtml(item.title)}</strong>
+              <span class="text-muted small"><i class="far fa-clock me-1"></i>${escapeHtml(item.expires_at_humanized)}</span>
             </div>
-            <div class="card-body p-3">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <h5 class="card-title fw-bold fs-6 mb-0">${escapeHtml(item.title)}</h5>
-                <span class="status-badge ${statusClass}">${statusText}</span>
+            <p class="mb-0 text-muted small">${escapeHtml(item.description)}</p>
+            ${item.hostpost_names?.length ? `<div class="small text-muted mt-2"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.hostpost_names.join(' | '))}</div>` : ''}
+          </div>
+        `).join('');
+      }
+
+      // --- My listings (load more) ---
+      const allListings = data.all_listings || [];
+      const listingsContainer = document.getElementById('latestListingsContainer');
+      const listingsLoadMoreContainer = document.getElementById('listingsLoadMoreContainer');
+      const loadMoreListingsBtn = document.getElementById('loadMoreListingsBtn');
+      let listingsCurrentPage = 1;
+      const listingsPerPage = 3;
+
+      function renderListingCard(item) {
+        let statusClass = '', statusText = '';
+        if (item.status === 'active') { statusClass = 'status-active'; statusText = 'Active'; }
+        else if (item.status === 'expired') { statusClass = 'status-expired'; statusText = 'Expired'; }
+        else if (item.status === 'sold') { statusClass = 'status-sold'; statusText = 'Sold'; }
+        return `
+          <div class="col-md-6 col-lg-4">
+            <div class="listing-card h-100">
+              <div class="listing-image">
+                ${item.image ? `<img src="${escapeHtml(item.image)}" class="w-100 h-100 object-fit-cover" alt="${escapeHtml(item.title)}">` : `<i class="fas fa-image"></i>`}
               </div>
-              <p class="card-text text-muted small">${escapeHtml(item.description.substring(0, 80))}${item.description.length > 80 ? '…' : ''}</p>
-              <div class="mt-2 small text-muted">
-                <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
-                <i class="far fa-calendar-alt me-1"></i> ${item.created_at_humanized}
-              </div>
-              <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
-                <span class="badge bg-white text-dark border px-2 py-1 rounded-pill">${escapeHtml(item.category)}</span>
-              </div>
-              <div class="d-grid gap-2 mt-3">
-                <a href="listing-detail.html?id=${item.id}" class="btn btn-sm btn-outline-custom">Manage <i class="fas fa-arrow-right ms-1"></i></a>
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="card-title fw-bold fs-6 mb-0">${escapeHtml(item.title)}</h5>
+                  <span class="status-badge ${statusClass}">${statusText}</span>
+                </div>
+                <p class="card-text text-muted small">${escapeHtml(item.description.substring(0, 80))}${item.description.length > 80 ? '…' : ''}</p>
+                <div class="mt-2 small text-muted">
+                  <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
+                  <i class="far fa-calendar-alt me-1"></i> ${escapeHtml(item.created_at_humanized)}
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
+                  <span class="badge bg-white text-dark border px-2 py-1 rounded-pill">${escapeHtml(item.category)}</span>
+                </div>
+                <div class="d-grid gap-2 mt-3">
+                  <a href="listing-detail.html?id=${item.id}" class="btn btn-sm btn-outline-custom">Manage <i class="fas fa-arrow-right ms-1"></i></a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      `;
-    }
-
-    function loadMoreListings() {
-      const start = listingsCurrentPage * listingsPerPage;
-      const end = start + listingsPerPage;
-      const newItems = allListings.slice(start, end);
-      if (newItems.length === 0) {
-        loadMoreListingsBtn.disabled = true;
-        loadMoreListingsBtn.textContent = "No more listings";
-        return;
+        `;
       }
-      const cardsHtml = newItems.map(renderListingCard).join('');
-      listingsContainer.insertAdjacentHTML('beforeend', cardsHtml);
-      listingsCurrentPage++;
-      if (end >= allListings.length) {
-        loadMoreListingsBtn.disabled = true;
-        loadMoreListingsBtn.textContent = "No more listings";
-      }
-    }
 
-    function initListings() {
-      listingsCurrentPage = 0;
-      listingsContainer.innerHTML = '';
-      // Show button only if total > listingsPerPage
-      if (allListings.length > listingsPerPage) {
-        listingsLoadMoreContainer.style.display = 'block';
-        loadMoreListingsBtn.disabled = false;
-        loadMoreListingsBtn.textContent = "Load more";
-      } else {
-        listingsLoadMoreContainer.style.display = 'none';
+      function loadMoreListings() {
+        const start = listingsCurrentPage * listingsPerPage;
+        const end = start + listingsPerPage;
+        const newItems = allListings.slice(start, end);
+        if (!newItems.length) {
+          loadMoreListingsBtn.disabled = true;
+          loadMoreListingsBtn.textContent = "No more listings";
+          return;
+        }
+        listingsContainer.insertAdjacentHTML('beforeend', newItems.map(renderListingCard).join(''));
+        listingsCurrentPage++;
+        if (end >= allListings.length) {
+          loadMoreListingsBtn.disabled = true;
+          loadMoreListingsBtn.textContent = "No more listings";
+        }
       }
-      // Load first page
-      const firstPageItems = allListings.slice(0, listingsPerPage);
-      listingsContainer.innerHTML = firstPageItems.map(renderListingCard).join('');
-      listingsCurrentPage = 1;
-      if (allListings.length <= listingsPerPage && loadMoreListingsBtn) {
-        loadMoreListingsBtn.disabled = true;
-        loadMoreListingsBtn.textContent = "No more listings";
+
+      function initListings() {
+        listingsContainer.innerHTML = '';
+        listingsCurrentPage = 1;
+        if (allListings.length > listingsPerPage) {
+          listingsLoadMoreContainer.style.display = 'block';
+          loadMoreListingsBtn.disabled = false;
+          loadMoreListingsBtn.textContent = "Load more";
+        } else {
+          listingsLoadMoreContainer.style.display = 'none';
+        }
+        listingsContainer.innerHTML = allListings.slice(0, listingsPerPage).map(renderListingCard).join('');
+        if (allListings.length <= listingsPerPage && loadMoreListingsBtn) {
+          loadMoreListingsBtn.disabled = true;
+          loadMoreListingsBtn.textContent = "No more listings";
+        }
       }
-    }
-    if (loadMoreListingsBtn) loadMoreListingsBtn.addEventListener('click', loadMoreListings);
-    initListings();
+      if (loadMoreListingsBtn) {
+        loadMoreListingsBtn.removeEventListener('click', loadMoreListings);
+        loadMoreListingsBtn.addEventListener('click', loadMoreListings);
+      }
+      initListings();
 
-    // ---------- LOAD MORE FOR REVIEWS ----------
-    let reviewsCurrentPage = 0;
-    const reviewsPerPage = 3;
-    const allReviews = dummyPayload.all_reviews;
-    const reviewsContainer = document.getElementById('reviewsListContainer');
-    const reviewsLoadMoreContainer = document.getElementById('reviewsLoadMoreContainer');
-    const loadMoreReviewsBtn = document.getElementById('loadMoreReviewsBtn');
+      // --- Reviews (load more) ---
+      const allReviews = data.all_reviews || [];
+      const reviewsContainer = document.getElementById('reviewsListContainer');
+      const reviewsLoadMoreContainer = document.getElementById('reviewsLoadMoreContainer');
+      const loadMoreReviewsBtn = document.getElementById('loadMoreReviewsBtn');
+      let reviewsCurrentPage = 1;
+      const reviewsPerPage = 3;
 
-    function renderReviewCard(review) {
-      return `
-        <div class="review-item p-3 mb-3 rounded-3 border">
-          <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
-            <strong>${escapeHtml(review.from)}</strong>
-            <div class="rating-stars small">${renderStars(review.rating)}</div>
-            <small class="text-muted">${new Date(review.date).toLocaleDateString('en-GB')}</small>
+      function renderReviewCard(review) {
+        return `
+          <div class="review-item p-3 mb-3 rounded-3 border">
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
+              <strong>${escapeHtml(review.from)}</strong>
+              <div class="rating-stars small">${renderStars(review.rating)}</div>
+              <small class="text-muted">${new Date(review.date).toLocaleDateString('en-GB')}</small>
+            </div>
+            <p class="small text-muted mb-0">${escapeHtml(review.comment)}</p>
           </div>
-          <p class="small text-muted mb-0">${escapeHtml(review.comment)}</p>
-        </div>
-      `;
+        `;
+      }
+
+      function loadMoreReviews() {
+        const start = reviewsCurrentPage * reviewsPerPage;
+        const end = start + reviewsPerPage;
+        const newReviews = allReviews.slice(start, end);
+        if (!newReviews.length) {
+          loadMoreReviewsBtn.disabled = true;
+          loadMoreReviewsBtn.textContent = "No more reviews";
+          return;
+        }
+        reviewsContainer.insertAdjacentHTML('beforeend', newReviews.map(renderReviewCard).join(''));
+        reviewsCurrentPage++;
+        if (end >= allReviews.length) {
+          loadMoreReviewsBtn.disabled = true;
+          loadMoreReviewsBtn.textContent = "No more reviews";
+        }
+      }
+
+      function initReviews() {
+        const avgRating = allReviews.length ? allReviews.reduce((s, r) => s + r.rating, 0) / allReviews.length : 0;
+        document.getElementById('avgRatingDisplay').innerText = avgRating.toFixed(1);
+        document.getElementById('avgStars').innerHTML = renderStars(avgRating);
+        document.getElementById('totalReviewsCount').innerText = `${allReviews.length} reviews`;
+        reviewsContainer.innerHTML = '';
+        reviewsCurrentPage = 1;
+        if (allReviews.length > reviewsPerPage) {
+          reviewsLoadMoreContainer.style.display = 'block';
+          loadMoreReviewsBtn.disabled = false;
+          loadMoreReviewsBtn.textContent = "Load more";
+        } else {
+          reviewsLoadMoreContainer.style.display = 'none';
+        }
+        reviewsContainer.innerHTML = allReviews.slice(0, reviewsPerPage).map(renderReviewCard).join('');
+        if (allReviews.length <= reviewsPerPage && loadMoreReviewsBtn) {
+          loadMoreReviewsBtn.disabled = true;
+          loadMoreReviewsBtn.textContent = "No more reviews";
+        }
+      }
+      if (loadMoreReviewsBtn) {
+        loadMoreReviewsBtn.removeEventListener('click', loadMoreReviews);
+        loadMoreReviewsBtn.addEventListener('click', loadMoreReviews);
+      }
+      initReviews();
+
+      // All done – hide skeleton, show real content
+      skeleton.style.display = 'none';
+      realContent.style.display = 'block';
+    } catch (err) {
+      console.error('Dashboard load error:', err);
+      skeleton.style.display = 'none';
+      realContent.style.display = 'block';
+      showToast('Unable to load dashboard data', 'error');
     }
+  }
 
-    function loadMoreReviews() {
-      const start = reviewsCurrentPage * reviewsPerPage;
-      const end = start + reviewsPerPage;
-      const newReviews = allReviews.slice(start, end);
-      if (newReviews.length === 0) {
-        loadMoreReviewsBtn.disabled = true;
-        loadMoreReviewsBtn.textContent = "No more reviews";
-        return;
-      }
-      const reviewsHtml = newReviews.map(renderReviewCard).join('');
-      reviewsContainer.insertAdjacentHTML('beforeend', reviewsHtml);
-      reviewsCurrentPage++;
-      if (end >= allReviews.length) {
-        loadMoreReviewsBtn.disabled = true;
-        loadMoreReviewsBtn.textContent = "No more reviews";
-      }
-    }
-
-    function initReviews() {
-      // Calculate average rating from all reviews
-      const avgRating = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
-      document.getElementById('avgRatingDisplay').innerText = avgRating.toFixed(1);
-      document.getElementById('avgStars').innerHTML = renderStars(avgRating);
-      document.getElementById('totalReviewsCount').innerText = `${allReviews.length} reviews`;
-
-      reviewsCurrentPage = 0;
-      reviewsContainer.innerHTML = '';
-      if (allReviews.length > reviewsPerPage) {
-        reviewsLoadMoreContainer.style.display = 'block';
-        loadMoreReviewsBtn.disabled = false;
-        loadMoreReviewsBtn.textContent = "Load more";
-      } else {
-        reviewsLoadMoreContainer.style.display = 'none';
-      }
-      // Load first page
-      const firstPageReviews = allReviews.slice(0, reviewsPerPage);
-      reviewsContainer.innerHTML = firstPageReviews.map(renderReviewCard).join('');
-      reviewsCurrentPage = 1;
-      if (allReviews.length <= reviewsPerPage && loadMoreReviewsBtn) {
-        loadMoreReviewsBtn.disabled = true;
-        loadMoreReviewsBtn.textContent = "No more reviews";
-      }
-    }
-    if (loadMoreReviewsBtn) loadMoreReviewsBtn.addEventListener('click', loadMoreReviews);
-    initReviews();
-
-  });
+  loadDashboardData();
 </script>
 </body>
 </html>
