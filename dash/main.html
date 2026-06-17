@@ -58,7 +58,6 @@
     }
 
     /* ========== SKELETON LOADER STYLES ========== */
-    
     .skeleton-stat {
       height: 70px;
       border-radius: 1rem;
@@ -456,7 +455,7 @@
               <span class="text-muted small"><i class="far fa-clock me-1"></i>${escapeHtml(item.expires_at_humanized)}</span>
             </div>
             <p class="mb-0 text-muted small">${escapeHtml(item.description)}</p>
-            ${item.hostpost_names?.length ? `<div class="small text-muted mt-2"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.hostpost_names.join(' | '))}</div>` : ''}
+            ${item.hostpost_names?.length ? `<div class="small text-muted mt-2"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.hostpost_names.join(' • '))}</div>` : ''}
           </div>
         `).join('');
       }
@@ -469,11 +468,33 @@
       let listingsCurrentPage = 1;
       const listingsPerPage = 3;
 
+      // Helper to render a single listing card
       function renderListingCard(item) {
         let statusClass = '', statusText = '';
         if (item.status === 'active') { statusClass = 'status-active'; statusText = 'Active'; }
         else if (item.status === 'expired') { statusClass = 'status-expired'; statusText = 'Expired'; }
         else if (item.status === 'sold') { statusClass = 'status-sold'; statusText = 'Sold'; }
+
+        // Get badge display using the function from main.js
+        const badgeInfo = typeof getConditionDisplay === 'function' 
+          ? getConditionDisplay(item.badge) 
+          : { text: item.badge || 'Good', icon: '<i class="fas fa-check-circle me-1"></i>' };
+        const badgeIcon = badgeInfo.icon || '';
+        const badgeText = badgeInfo.text || item.badge || 'Good';
+
+        // Location: array -> bullet-separated string
+        const locationList = item.location && Array.isArray(item.location) ? item.location : [item.location || 'Campus'];
+        const locationDisplay = locationList.map(loc => escapeHtml(loc)).join(' • ');
+
+        // Listing type label
+        const typeLabels = {
+          'sell': 'Sell',
+          'wanted': 'Wanted',
+          'freebie': 'Freebie',
+          'service': 'Service'
+        };
+        const typeLabel = typeLabels[item.lisiting_type] || item.lisiting_type || 'Listing';
+
         return `
           <div class="col-md-6 col-lg-4">
             <div class="listing-card h-100">
@@ -487,15 +508,19 @@
                 </div>
                 <p class="card-text text-muted small">${escapeHtml(item.description.substring(0, 80))}${item.description.length > 80 ? '…' : ''}</p>
                 <div class="mt-2 small text-muted">
-                  <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
+                  <i class="fas fa-map-marker-alt me-1"></i> ${locationDisplay}<br>
                   <i class="far fa-calendar-alt me-1"></i> ${escapeHtml(item.created_at_humanized)}
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-3">
                   <span class="fw-bold text-success">${formatCurrency(item.price)}</span>
                   <span class="badge bg-white text-dark border px-2 py-1 rounded-pill">${escapeHtml(item.category)}</span>
                 </div>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <span class="small text-muted"><i class="fas fa-tag me-1"></i>${escapeHtml(typeLabel)}</span>
+                  <span class="small text-muted"><span class="badge bg-light text-dark">${badgeIcon} ${escapeHtml(badgeText)}</span></span>
+                </div>
                 <div class="d-grid gap-2 mt-3">
-                  <a href="listing-detail.html?id=${item.id}" class="btn btn-sm btn-outline-custom">Manage <i class="fas fa-arrow-right ms-1"></i></a>
+                  <a href="my-listing-details.html?id=${item.id}" class="btn btn-sm btn-outline-custom">Manage <i class="fas fa-arrow-right ms-1"></i></a>
                 </div>
               </div>
             </div>

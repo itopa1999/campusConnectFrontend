@@ -12,7 +12,7 @@
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
-    /* Additional styles for management page */
+    /* (all existing styles – points-badge, listing-image, toggle-switch, skeleton, etc.) */
     .points-badge {
       background: var(--accent-light);
       color: var(--accent-dark);
@@ -48,7 +48,6 @@
       border-color: var(--accent);
       background: rgba(44, 122, 94, 0.02);
     }
-    /* Edit mode toggle switch */
     .toggle-switch {
       position: relative;
       display: inline-block;
@@ -139,6 +138,66 @@
       background: #dc3545;
       color: white;
     }
+    .last-modified {
+      font-size: 0.85rem;
+      color: #6c757d;
+    }
+
+    /* Skeleton Loader Styles */
+    .skeleton-stat {
+      height: 70px;
+      border-radius: 1rem;
+    }
+    .skeleton-heading {
+      height: 28px;
+      width: 60%;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .skeleton-text {
+      height: 16px;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .skeleton-text.short {
+      width: 60%;
+    }
+    .skeleton-text.medium {
+      width: 80%;
+    }
+    .skeleton {
+      background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .skeleton-btn {
+      height: 48px;
+      width: 120px;
+      border-radius: 40px;
+      display: inline-block;
+    }
+    .skeleton-step {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .skeleton-checkbox {
+      height: 20px;
+      width: 20px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    /* Error state */
+    .error-icon {
+      font-size: 4rem;
+      color: #f5b042;
+    }
   </style>
 </head>
 <body>
@@ -160,7 +219,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarMain">
-        <!-- Desktop dropdown (visible on md and up) -->
+        <!-- Desktop dropdown -->
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center d-none d-md-flex">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -177,7 +236,7 @@
           </li>
         </ul>
 
-        <!-- Mobile: profile card + same links (visible only on small screens) -->
+        <!-- Mobile -->
         <div class="mobile-profile-card d-md-none p-3">
           <div class="text-center mb-3">
             <i class="fas fa-user-circle fa-4x text-success"></i>
@@ -217,13 +276,71 @@
   <div class="container py-4 mb-5">
     <div class="row justify-content-center">
       <div class="col-lg-10">
-        <!-- Loading -->
-        <div id="loadingState" class="text-center py-5">
-          <div class="spinner-border text-success"></div>
-          <p class="mt-3">Loading listing details...</p>
+
+        <!-- SKELETON LOADER -->
+        <div id="skeletonLoader">
+          <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+              <div class="skeleton" style="width:140px; height:48px; border-radius:40px;"></div>
+              <div class="d-flex align-items-center gap-3">
+                <div class="skeleton" style="width:80px; height:24px;"></div>
+                <div class="skeleton" style="width:52px; height:26px; border-radius:34px;"></div>
+              </div>
+            </div>
+            <div class="skeleton skeleton-text" style="width:40%;"></div>
+            <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 mb-4">
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="skeleton" style="height:220px; border-radius:1.25rem;"></div>
+                  <div class="skeleton" style="height:60px; border-radius:1rem; margin-top:1rem;"></div>
+                </div>
+                <div class="col-md-7">
+                  <div class="skeleton skeleton-heading" style="width:70%;"></div>
+                  <div class="skeleton skeleton-text" style="width:50%;"></div>
+                  <div class="skeleton skeleton-text" style="width:40%;"></div>
+                  <div class="mt-3 d-flex gap-2">
+                    <div class="skeleton skeleton-btn"></div>
+                    <div class="skeleton skeleton-btn"></div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="skeleton skeleton-heading"></div>
+                  <div class="skeleton skeleton-text"></div>
+                  <div class="skeleton skeleton-text"></div>
+                </div>
+                <div class="col-md-6">
+                  <div class="skeleton skeleton-heading"></div>
+                  <div class="skeleton skeleton-text"></div>
+                  <div class="skeleton skeleton-text"></div>
+                </div>
+              </div>
+              <div class="skeleton skeleton-text" style="width:30%;"></div>
+              <div class="d-flex gap-2">
+                <div class="skeleton" style="height:36px; width:120px; border-radius:40px;"></div>
+                <div class="skeleton" style="height:36px; width:120px; border-radius:40px;"></div>
+                <div class="skeleton" style="height:36px; width:120px; border-radius:40px;"></div>
+              </div>
+              <div class="d-flex justify-content-end mt-4">
+                <div class="skeleton skeleton-btn"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Main content -->
+        <!-- ERROR STATE (hidden initially) -->
+        <div id="errorState" class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 text-center" style="display: none;">
+          <div class="py-5">
+            <i class="fas fa-exclamation-triangle error-icon mb-4"></i>
+            <h3>Listing not found</h3>
+            <p class="text-muted" id="errorMessage">The listing you are looking for does not exist or you don't have permission to view it.</p>
+            <a href="main.html" class="btn btn-primary-custom mt-3"><i class="fas fa-arrow-left me-2"></i>Go to Dashboard</a>
+          </div>
+        </div>
+
+        <!-- MAIN CONTENT (hidden initially) -->
         <div id="listingContent" style="display: none;">
           <!-- Points & Edit Toggle -->
           <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
@@ -231,10 +348,15 @@
             <div class="d-flex align-items-center gap-3">
               <span class="fw-semibold">Edit mode</span>
               <label class="toggle-switch">
-                <input type="checkbox" id="editModeToggle">
+                <input type="checkbox" id="editModeToggle" disabled>
                 <span class="slider"></span>
               </label>
             </div>
+          </div>
+
+          <!-- Last modified info -->
+          <div class="last-modified mb-3">
+            <i class="far fa-clock me-1"></i> Last modified: <span id="lastModifiedDisplay">--</span>
           </div>
 
           <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 mb-4">
@@ -261,8 +383,7 @@
                 </div>
                 <div class="text-muted small mb-3">Listing ID: <span id="listingIdBadge">--</span> · Created: <span id="createdDate">--</span></div>
                 <div class="mt-3">
-                  <button id="markSoldBtn" class="btn btn-sm btn-outline-custom me-2">Mark as sold</button>
-                  <button id="reactivateBtn" class="btn btn-sm btn-outline-custom d-none">Reactivate (cost 1 point)</button>
+                  <button id="statusActionBtn" class="btn btn-sm btn-outline-custom me-2">Mark as sold</button>
                   <button id="deleteListingBtn" class="btn btn-sm btn-outline-danger">Delete listing</button>
                 </div>
               </div>
@@ -270,14 +391,14 @@
 
             <hr>
 
-            <!-- Editable fields (wrapped with floating labels) -->
+            <!-- View Mode -->
             <div id="viewMode">
-              <!-- Static view content -->
               <div class="row g-4">
                 <div class="col-md-6">
                   <div><label class="form-label">Title</label><p id="titleView" class="fw-bold mb-3"></p></div>
                   <div><label class="form-label">Category</label><p id="categoryView" class="mb-3"></p></div>
                   <div><label class="form-label">Price (₦)</label><p id="priceView" class="fw-bold text-success mb-3"></p></div>
+                  <div><label class="form-label">Type</label><p id="listingTypeView" class="mb-3"></p></div>
                 </div>
                 <div class="col-md-6">
                   <div><label class="form-label">Description</label><p id="descView" class="text-muted mb-3" style="white-space: pre-wrap;"></p></div>
@@ -293,10 +414,11 @@
               </div>
             </div>
 
+            <!-- Edit Mode -->
             <div id="editMode" class="d-none">
               <div class="restriction-warning" id="editRestrictionWarning" style="display: none;">
                 <i class="fas fa-clock me-2"></i>
-                <strong>10‑day restriction:</strong> You can only edit hotspots once every 10 days. Last edit: <span id="lastHotspotChangeText">Never</span>
+                <strong>7‑day restriction:</strong> You can only edit this listing once every 7 days. Last edit was <span id="lastEditDate">Never</span>.
               </div>
 
               <div class="row g-4">
@@ -347,8 +469,9 @@
               </div>
             </div>
 
+            <!-- Save changes button -->
             <div class="d-flex justify-content-end gap-3 mt-4">
-              <button id="saveBasicBtn" class="btn btn-primary-custom px-4">Save changes</button>
+              <button id="saveBasicBtn" class="btn btn-primary-custom px-4 d-none">Save changes</button>
             </div>
           </div>
         </div>
@@ -357,13 +480,13 @@
   </div>
 </main>
 
+<!-- Mobile actions and modals (unchanged) -->
 <div class="dashboard-mobile-actions d-md-none mt-5">
   <a href="main.html" class="action-link"><i class="fas fa-home"></i><span>Home</span></a>
   <a href="create-listing.html" class="action-link"><i class="fas fa-plus-circle"></i><span>Post</span></a>
   <a href="listings.html" class="action-link"><i class="fas fa-list"></i><span>Listings</span></a>
 </div>
 
-<!-- Modals (same as before) -->
 <div id="formModal" class="modal-overlay" style="display: none;"><div class="modal-container"><div class="modal-header"><h3 id="formModalTitle">Form</h3><button class="modal-close">&times;</button></div><div class="modal-body"></div><div class="modal-footer"></div></div></div>
 <div id="confirmModal" class="modal-overlay" style="display: none;"><div class="modal-container confirm-modal-container"><div class="modal-header"><h3 id="confirmModalTitle">Confirm</h3><button class="modal-close">&times;</button></div><div class="modal-body"><p id="confirmMessage"></p></div><div class="modal-footer"></div></div></div>
 <button class="scroll-top-btn" data-scroll-top><i class="fas fa-arrow-up"></i></button>
@@ -373,198 +496,453 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
-  isAuthenticated()
+  isAuthenticated();
 
-  // --- Dummy data (same as before but extended) ---
-  let listingData = {
-    id: 101,
-    title: "HP Laptop Core i5 / 8GB RAM",
-    category: "Electronics",
-    price: 145000,
-    description: "Perfect for programming, battery lasts 4hrs. Slight scratch on bottom, otherwise excellent condition.",
-    status: "active",
-    badge: "",
-    hotspots: [1, 3],
-    expires_at: "2025-07-10",
-    created_at: "2025-06-01",
-    image_url: null,   // dummy image URL or base64
-    last_hotspot_change: null
-  };
-  let userPoints = 12;
-  let originalListing = { ...listingData }; // for cancel
+  const LOOKUP_URL = CAMPUS_URL + 'get_lookup';
+  const LISTING_DETAIL_URL = CAMPUS_URL + 'listing';
 
-  const allHotspots = [
-    { id: 1, name: "Kennedy Library", description: "Main library, CCTV" },
-    { id: 2, name: "Awo Hall Cafeteria", description: "Busy area" },
-    { id: 3, name: "Faculty of Science Building", description: "Inside main hall" },
-    { id: 4, name: "Kenneth Dike Hall", description: "Common room" },
-    { id: 5, name: "New Lecture Theatre (NLT)", description: "Large entrance" }
-  ];
-  const categories = ["Textbooks", "Electronics", "Furniture", "Clothing", "Other"];
+  let listingData = {};
+  let userPoints = 0;
+  let allCategories = [];
+  let allHotspots = [];
 
-  // Helper functions
-  function formatCurrency(amount) { return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount); }
-  function escapeHtml(str) { return str?.replace(/[&<>]/g, function(m) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]; }) || ''; }
-  function showToast(msg) { if(window.showToast) window.showToast(msg); else alert(msg); }
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]; });
+  }
 
-  // Render view mode (static)
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+  }
+
+  // Render view mode
   function renderViewMode() {
-    document.getElementById('titleView').innerText = listingData.title;
-    document.getElementById('categoryView').innerText = listingData.category;
-    document.getElementById('priceView').innerHTML = formatCurrency(listingData.price);
-    document.getElementById('descView').innerText = listingData.description;
-    document.getElementById('listingTitleDisplay').innerText = listingData.title;
-    document.getElementById('createdDate').innerText = new Date(listingData.created_at).toLocaleDateString();
+    document.getElementById('titleView').innerText = listingData.title || '';
+    const cat = listingData.category || 'Uncategorized';
+    const icon = listingData.category_icon || '';
+    const iconHtml = icon ? `<i class="${icon} me-1"></i>` : '';
+    document.getElementById('categoryView').innerHTML = `${iconHtml}${escapeHtml(cat)}`;
+    document.getElementById('priceView').innerHTML = formatCurrency(listingData.price || 0);
+    document.getElementById('descView').innerText = listingData.description || '';
+    document.getElementById('listingTitleDisplay').innerText = listingData.title || '';
+    document.getElementById('listingIdBadge').innerText = listingData.id || '--';
+    document.getElementById('createdDate').innerText = listingData.created_at ? new Date(listingData.created_at).toLocaleDateString() : '--';
+
     // Status badge
     const statusEl = document.getElementById('statusBadge');
-    statusEl.className = `badge-status badge-${listingData.status}`;
-    statusEl.innerText = listingData.status === 'active' ? 'Active' : (listingData.status === 'sold' ? 'Sold' : 'Expired');
-    document.getElementById('markSoldBtn').classList.toggle('d-none', listingData.status !== 'active');
-    document.getElementById('reactivateBtn').classList.toggle('d-none', listingData.status !== 'expired');
+    const status = listingData.status || 'expired';
+    statusEl.className = `badge-status badge-${status}`;
+    const statusMap = { active:'Active', sold:'Sold', expired:'Expired' };
+    statusEl.innerText = statusMap[status] || status;
+
+    // Status action button
+    const actionBtn = document.getElementById('statusActionBtn');
+    if (status === 'active') {
+      actionBtn.innerText = 'Mark as sold';
+      actionBtn.className = 'btn btn-sm btn-outline-custom me-2';
+      actionBtn.onclick = markAsSold;
+    } else if (status === 'sold') {
+      actionBtn.innerText = 'Reactivate (cost 1 point)';
+      actionBtn.className = 'btn btn-sm btn-outline-warning me-2';
+      actionBtn.onclick = reactivateListing;
+    } else {
+      actionBtn.style.display = 'none';
+    }
+
     // Badge
-    let badgeText = { hot:'🔥 Hot Sales', featured:'⭐ Featured', urgent:'🚨 Urgent' }[listingData.badge] || 'None';
-    document.getElementById('currentBadge').innerHTML = `<span class="badge ${listingData.badge ? 'bg-primary' : 'bg-secondary'}">${badgeText}</span>`;
+    const badgeMap = { hot:'🔥 Hot Sales', featured:'⭐ Featured', urgent:'🚨 Urgent' };
+    const badgeText = badgeMap[listingData.badge] || 'None';
+    const badgeClass = listingData.badge ? 'bg-primary' : 'bg-secondary';
+    document.getElementById('currentBadge').innerHTML = `<span class="badge ${badgeClass}">${badgeText}</span>`;
+
+    // Listing type
+    const typeMap = { sell:'Sell', wanted:'Wanted', freebie:'Freebie', service:'Service' };
+    document.getElementById('listingTypeView').innerText = typeMap[listingData.lisiting_type] || listingData.lisiting_type || '--';
+
     // Hotspots
-    const selected = allHotspots.filter(h => listingData.hotspots.includes(h.id));
-    document.getElementById('hotspotsView').innerHTML = selected.map(h => `<span class="hotspot-badge"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(h.name)}</span>`).join('') || '<span class="text-muted">No meeting spots</span>';
+    const selected = allHotspots.filter(h => (listingData.hotspots || []).includes(h.id));
+    document.getElementById('hotspotsView').innerHTML = selected.map(h =>
+      `<span class="hotspot-badge"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(h.name)}</span>`
+    ).join('') || '<span class="text-muted">No meeting spots</span>';
+
     // Image
     const imgEl = document.getElementById('listingImage');
     const placeholder = document.getElementById('imagePlaceholder');
-    if (listingData.image_url) {
-      imgEl.src = listingData.image_url;
+    if (listingData.image) {
+      imgEl.src = listingData.image;
       imgEl.style.display = 'block';
       placeholder.style.display = 'none';
     } else {
       imgEl.style.display = 'none';
       placeholder.style.display = 'block';
     }
+
+    // Last modified
+    const lastMod = listingData.modified_at || listingData.last_hotspot_change;
+    if (lastMod) {
+      document.getElementById('lastModifiedDisplay').innerText = new Date(lastMod).toLocaleString();
+    } else {
+      document.getElementById('lastModifiedDisplay').innerText = 'Never';
+    }
+
+    // Points
+    userPoints = parseInt(getCookie('point_bal') || '0', 10);
+    document.getElementById('userPoints').innerText = userPoints;
+
+    updateEditToggleState();
   }
 
-  // Populate edit fields with current values
-  function populateEditFields() {
-    document.getElementById('titleEdit').value = listingData.title;
-    document.getElementById('categoryEdit').innerHTML = categories.map(c => `<option value="${c}" ${c===listingData.category ? 'selected' : ''}>${c}</option>`).join('');
-    document.getElementById('priceEdit').value = listingData.price;
-    document.getElementById('descEdit').value = listingData.description;
-    document.getElementById('badgeSelect').value = listingData.badge;
-    // Hotspots checkboxes
-    const container = document.getElementById('hotspotsCheckboxes');
-    container.innerHTML = allHotspots.map(h => `
-      <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="${h.id}" id="hs_${h.id}" ${listingData.hotspots.includes(h.id) ? 'checked' : ''}>
-        <label class="form-check-label" for="hs_${h.id}"><strong>${escapeHtml(h.name)}</strong> – ${escapeHtml(h.description)}</label>
-      </div>
-    `).join('');
-    // Restriction warning
+  function isEditAllowed() {
+    const lastMod = listingData.modified_at || listingData.last_hotspot_change;
+    if (!lastMod) return true;
+    const daysSince = (new Date() - new Date(lastMod)) / (1000 * 3600 * 24);
+    return daysSince >= 7;
+  }
+
+  function updateEditToggleState() {
+    const toggle = document.getElementById('editModeToggle');
     const warningDiv = document.getElementById('editRestrictionWarning');
-    if (listingData.last_hotspot_change) {
-      const daysSince = (new Date() - new Date(listingData.last_hotspot_change)) / (1000*3600*24);
-      if (daysSince < 10) {
+    const lastMod = listingData.modified_at || listingData.last_hotspot_change;
+
+    if (!isEditAllowed()) {
+      toggle.disabled = true;
+      toggle.checked = false;
+      if (lastMod) {
         warningDiv.style.display = 'block';
-        document.getElementById('lastHotspotChangeText').innerText = new Date(listingData.last_hotspot_change).toLocaleDateString();
-        document.querySelectorAll('#hotspotsCheckboxes input').forEach(cb => cb.disabled = true);
-        document.getElementById('saveHotspotsBtn').disabled = true;
+        document.getElementById('lastEditDate').innerText = new Date(lastMod).toLocaleDateString();
       } else {
         warningDiv.style.display = 'none';
-        document.querySelectorAll('#hotspotsCheckboxes input').forEach(cb => cb.disabled = false);
-        document.getElementById('saveHotspotsBtn').disabled = false;
       }
+      document.getElementById('viewMode').classList.remove('d-none');
+      document.getElementById('editMode').classList.add('d-none');
+      document.getElementById('saveBasicBtn').classList.add('d-none');
     } else {
+      toggle.disabled = false;
       warningDiv.style.display = 'none';
     }
   }
 
-  // Save all edits (title, category, price, description, badge, hotspots)
-  async function saveAllChanges() {
-    // Basic fields
-    const newTitle = document.getElementById('titleEdit').value.trim();
-    const newCategory = document.getElementById('categoryEdit').value;
-    const newPrice = parseFloat(document.getElementById('priceEdit').value);
-    const newDesc = document.getElementById('descEdit').value.trim();
-    if (!newTitle || !newCategory || isNaN(newPrice) || !newDesc) {
-      alert('Please fill all required fields.');
-      return;
-    }
-    // Hotspots (only if not restricted)
-    let newHotspots = [...listingData.hotspots];
-    const checkboxes = document.querySelectorAll('#hotspotsCheckboxes input');
-    let hotspotsChanged = false;
-    if (checkboxes.length && !checkboxes[0].disabled) {
-      const selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => parseInt(cb.value));
-      if (JSON.stringify(selected) !== JSON.stringify(listingData.hotspots)) {
-        hotspotsChanged = true;
-        newHotspots = selected;
-      }
-    }
-    // Update listing
-    listingData.title = newTitle;
-    listingData.category = newCategory;
-    listingData.price = newPrice;
-    listingData.description = newDesc;
-    if (hotspotsChanged) {
-      listingData.hotspots = newHotspots;
-      listingData.last_hotspot_change = new Date().toISOString();
-    }
-    renderViewMode();
-    showToast('Changes saved successfully!');
-    // If edit mode is still on, refresh edit fields
-    if (document.getElementById('editModeToggle').checked) {
-      populateEditFields();
-    }
+  function populateEditFields() {
+    document.getElementById('titleEdit').value = listingData.title || '';
+    const catSelect = document.getElementById('categoryEdit');
+    catSelect.innerHTML = allCategories.map(c =>
+      `<option value="${c.id}" ${c.name === listingData.category ? 'selected' : ''}>${c.name}</option>`
+    ).join('');
+    document.getElementById('priceEdit').value = listingData.price || '';
+    document.getElementById('descEdit').value = listingData.description || '';
+    document.getElementById('badgeSelect').value = listingData.badge || '';
+
+    const container = document.getElementById('hotspotsCheckboxes');
+    container.innerHTML = allHotspots.map(h => `
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="${h.id}" id="hs_${h.id}" ${(listingData.hotspots || []).includes(h.id) ? 'checked' : ''}>
+        <label class="form-check-label" for="hs_${h.id}"><strong>${escapeHtml(h.name)}</strong> – ${escapeHtml(h.description)}</label>
+      </div>
+    `).join('');
   }
 
-  // Upgrade badge (points)
-  async function upgradeBadge() {
-    const selected = document.getElementById('badgeSelect').value;
-    let cost = 0, badgeName = '';
-    if (selected === 'hot') { cost = 5; badgeName = 'Hot Sales'; }
-    else if (selected === 'featured') { cost = 10; badgeName = 'Featured'; }
-    else if (selected === 'urgent') { cost = 3; badgeName = 'Urgent'; }
-    else { alert('Select a valid badge'); return; }
-    if (userPoints < cost) { alert(`You need ${cost} points. Current: ${userPoints}`); return; }
-    if (typeof confirmModal !== 'undefined') {
-      confirmModal.open({
-        title: 'Upgrade badge',
-        message: `Upgrade to ${badgeName} for ${cost} points?`,
-        confirmText: 'Upgrade',
-        onConfirm: () => {
-          userPoints -= cost;
-          listingData.badge = selected;
-          document.getElementById('userPoints').innerText = userPoints;
-          renderViewMode();
-          showToast(`Badge upgraded! ${cost} points deducted.`);
-        }
-      });
-    } else {
-      userPoints -= cost;
-      listingData.badge = selected;
-      document.getElementById('userPoints').innerText = userPoints;
-      renderViewMode();
-    }
-  }
-
-  // Mark as sold / reactivate
-  function markAsSold() { if(listingData.status==='active') { listingData.status='sold'; renderViewMode(); showToast('Marked as sold'); } }
-  function reactivateListing() {
-    if(listingData.status!=='expired') return;
-    if(userPoints<1) { alert('Need 1 point'); return; }
-    if(confirm('Reactivate with 1 point?')) { userPoints--; listingData.status='active'; document.getElementById('userPoints').innerText = userPoints; renderViewMode(); showToast('Reactivated'); }
-  }
-  function deleteListing() {
-    if(confirm('Permanently delete this listing? Cannot be undone.')) { showToast('Deleted. Redirecting...'); setTimeout(()=>window.location.href='main.html',1500); }
-  }
-
-  // Edit mode toggle
   function toggleEditMode() {
     const isEdit = document.getElementById('editModeToggle').checked;
+    if (isEdit && !isEditAllowed()) {
+      alert('You can only edit this listing once every 7 days.');
+      document.getElementById('editModeToggle').checked = false;
+      return;
+    }
     document.getElementById('viewMode').classList.toggle('d-none', isEdit);
     document.getElementById('editMode').classList.toggle('d-none', !isEdit);
+    document.getElementById('saveBasicBtn').classList.toggle('d-none', !isEdit);
     if (isEdit) {
       populateEditFields();
     }
   }
 
-  // Image upload (dummy)
+  // ---- API calls ----
+  async function saveAllChanges() {
+    const newTitle = document.getElementById('titleEdit').value.trim();
+    const newCategoryId = document.getElementById('categoryEdit').value;
+    const newPrice = parseFloat(document.getElementById('priceEdit').value);
+    const newDesc = document.getElementById('descEdit').value.trim();
+    if (!newTitle || !newCategoryId || isNaN(newPrice) || !newDesc) {
+      alert('Please fill all required fields.');
+      return;
+    }
+
+    const checkboxes = document.querySelectorAll('#hotspotsCheckboxes input');
+    const selectedHotspots = Array.from(checkboxes).filter(cb => cb.checked).map(cb => parseInt(cb.value));
+
+    const payload = {
+      title: newTitle,
+      category_id: parseInt(newCategoryId),
+      price: newPrice,
+      description: newDesc,
+      hotspots: selectedHotspots,
+    };
+
+    try {
+      const token = getCookie('access_token');
+      const response = await fetch(LISTING_DETAIL_URL + '/' + listingData.id, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || 'Update failed');
+      }
+
+      const result = await response.json();
+      if (result.is_success) {
+        showToast('Listing updated successfully!');
+        await loadListingData(listingData.id);
+        renderViewMode();
+        if (document.getElementById('editModeToggle').checked) {
+          populateEditFields();
+        }
+      } else {
+        throw new Error(result.message || 'Update failed');
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      alert('Failed to update: ' + err.message);
+    }
+  }
+
+  async function upgradeBadge() {
+    const selected = document.getElementById('badgeSelect').value;
+    const costMap = { hot: 5, featured: 10, urgent: 3 };
+    const nameMap = { hot: 'Hot Sales', featured: 'Featured', urgent: 'Urgent' };
+    if (!selected || !costMap[selected]) { alert('Select a valid badge'); return; }
+    const cost = costMap[selected];
+    if (userPoints < cost) { alert(`You need ${cost} points. Current: ${userPoints}`); return; }
+
+    if (typeof confirmModal !== 'undefined') {
+      confirmModal.open({
+        title: 'Upgrade badge',
+        message: `Upgrade to ${nameMap[selected]} for ${cost} points?`,
+        confirmText: 'Upgrade',
+        onConfirm: async () => {
+          try {
+            const token = getCookie('access_token');
+            const response = await fetch(CAMPUS_URL + 'upgrade_badge/', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ listing_id: listingData.id, badge: selected }),
+            });
+            const result = await response.json();
+            if (result.is_success) {
+              const newPoints = userPoints - cost;
+              document.cookie = `point_bal=${newPoints}; path=/`;
+              userPoints = newPoints;
+              document.getElementById('userPoints').innerText = userPoints;
+              listingData.badge = selected;
+              renderViewMode();
+              showToast(`Badge upgraded! ${cost} points deducted.`);
+            } else {
+              throw new Error(result.message || 'Upgrade failed');
+            }
+          } catch (err) {
+            console.error('Badge upgrade error:', err);
+            alert('Failed to upgrade badge: ' + err.message);
+          }
+        }
+      });
+    }
+  }
+
+  async function markAsSold() {
+    if (listingData.status !== 'active') return;
+    try {
+      const token = getCookie('access_token');
+      const response = await fetch(LISTING_DETAIL_URL + '/' + listingData.id, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'sold' }),
+      });
+      const result = await response.json();
+      if (result.is_success) {
+        showToast('Listing marked as sold.');
+        await loadListingData(listingData.id);
+        renderViewMode();
+      } else {
+        throw new Error(result.message || 'Update failed');
+      }
+    } catch (err) {
+      console.error('Mark sold error:', err);
+      alert('Failed to mark as sold: ' + err.message);
+    }
+  }
+
+  async function reactivateListing() {
+    if (listingData.status !== 'sold') return;
+    if (userPoints < 1) { alert('You need 1 point to reactivate.'); return; }
+    if (!confirm('Reactivate this listing for 1 point?')) return;
+
+    try {
+      const token = getCookie('access_token');
+      const response = await fetch(CAMPUS_URL + 'reactivate_listing/', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ listing_id: listingData.id }),
+      });
+      const result = await response.json();
+      if (result.is_success) {
+        const newPoints = userPoints - 1;
+        document.cookie = `point_bal=${newPoints}; path=/`;
+        userPoints = newPoints;
+        document.getElementById('userPoints').innerText = userPoints;
+        showToast('Listing reactivated!');
+        await loadListingData(listingData.id);
+        renderViewMode();
+      } else {
+        throw new Error(result.message || 'Reactivate failed');
+      }
+    } catch (err) {
+      console.error('Reactivate error:', err);
+      alert('Failed to reactivate: ' + err.message);
+    }
+  }
+
+  async function deleteListing() {
+    if (!confirm('Permanently delete this listing? Cannot be undone.')) return;
+    try {
+      const token = getCookie('access_token');
+      const response = await fetch(LISTING_DETAIL_URL + '/' + listingData.id, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const result = await response.json();
+      if (result.is_success) {
+        showToast('Listing deleted. Redirecting...');
+        setTimeout(() => window.location.href = 'main.html', 1500);
+      } else {
+        throw new Error(result.message || 'Delete failed');
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('Failed to delete: ' + err.message);
+    }
+  }
+
+  async function loadListingData(id) {
+    const token = getCookie('access_token');
+    if (!token) throw new Error('Not authenticated');
+
+    const response = await fetch(LISTING_DETAIL_URL + '/' + id, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+    });
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('Listing not found');
+      } else if (response.status === 401 || response.status === 403) {
+        deleteAuthCookies();
+        window.location.href = '../index.html';
+        return;
+      }
+      throw new Error('Failed to fetch listing');
+    }
+    const result = await response.json();
+    if (!result.is_success) throw new Error(result.message || 'Invalid response');
+    listingData = result.data;
+    if (!listingData.hotspots) listingData.hotspots = [];
+    userPoints = parseInt(getCookie('point_bal') || '0', 10);
+  }
+
+  // Main load function
+  async function loadListing() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    if (!id) {
+      showErrorState('No listing ID provided.');
+      return;
+    }
+
+    const skeleton = document.getElementById('skeletonLoader');
+    const content = document.getElementById('listingContent');
+    const errorState = document.getElementById('errorState');
+
+    // Hide error, show skeleton
+    errorState.style.display = 'none';
+    skeleton.style.display = 'block';
+    content.style.display = 'none';
+
+    try {
+      const token = getCookie('access_token');
+      if (!token) { window.location.href = '../index.html'; return; }
+
+      // Fetch lookup data
+      const lookupRes = await fetch(LOOKUP_URL, {
+        headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` }
+      });
+      if (!lookupRes.ok) throw new Error('Failed to fetch lookup');
+      const lookupData = await lookupRes.json();
+      if (lookupData.is_success) {
+        allCategories = lookupData.data.categories || [];
+        allHotspots = lookupData.data.hotspots || [];
+      }
+
+      // Fetch listing detail
+      await loadListingData(id);
+
+      // Render everything
+      document.getElementById('listingIdBadge').innerText = listingData.id;
+      renderViewMode();
+      document.getElementById('imageUploadArea').classList.remove('d-none');
+
+      skeleton.style.display = 'none';
+      content.style.display = 'block';
+
+      // Bind events
+      document.getElementById('editModeToggle').addEventListener('change', toggleEditMode);
+      document.getElementById('saveBasicBtn').addEventListener('click', saveAllChanges);
+      document.getElementById('upgradeBadgeBtn').addEventListener('click', upgradeBadge);
+      document.getElementById('deleteListingBtn').addEventListener('click', deleteListing);
+      document.getElementById('saveHotspotsBtn').addEventListener('click', saveAllChanges);
+      document.getElementById('cancelHotspotsBtn').addEventListener('click', populateEditFields);
+
+      setupImageUpload();
+
+    } catch (err) {
+      console.error('Load error:', err);
+      skeleton.style.display = 'none';
+      showErrorState(err.message || 'An error occurred while loading the listing.');
+    }
+  }
+
+  function showErrorState(message) {
+    const errorState = document.getElementById('errorState');
+    if (errorState) {
+      errorState.style.display = 'block';
+      const msgEl = document.getElementById('errorMessage');
+      if (msgEl) msgEl.innerText = message;
+    } else {
+      alert(message);
+    }
+  }
+
+  // Image upload
   function setupImageUpload() {
     const uploadArea = document.getElementById('imageUploadArea');
     const fileInput = document.getElementById('imageInput');
@@ -575,42 +953,16 @@
         if (file.size > 2*1024*1024) { alert('Max 2MB'); return; }
         const reader = new FileReader();
         reader.onload = (ev) => {
-          listingData.image_url = ev.target.result;
+          listingData.image = ev.target.result;
           renderViewMode();
+          // TODO: upload to backend
         };
         reader.readAsDataURL(file);
       }
     });
   }
 
-  // Load listing from URL
-  function loadListing() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    if (id) listingData.id = parseInt(id);
-    document.getElementById('listingIdBadge').innerText = listingData.id;
-    document.getElementById('userPoints').innerText = userPoints;
-    renderViewMode();
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('listingContent').style.display = 'block';
-    // Show image upload area only in edit mode (but we'll reveal when edit toggled)
-    document.getElementById('imageUploadArea').classList.remove('d-none');
-  }
-
-  // Event listeners
-  document.getElementById('editModeToggle').addEventListener('change', toggleEditMode);
-  document.getElementById('saveBasicBtn').addEventListener('click', saveAllChanges);
-  document.getElementById('markSoldBtn').addEventListener('click', markAsSold);
-  document.getElementById('reactivateBtn').addEventListener('click', reactivateListing);
-  document.getElementById('deleteListingBtn').addEventListener('click', deleteListing);
-  document.getElementById('upgradeBadgeBtn').addEventListener('click', upgradeBadge);
-  document.getElementById('saveHotspotsBtn').addEventListener('click', () => { /* already saved in saveAllChanges, but we can just call save */ saveAllChanges(); });
-  document.getElementById('cancelHotspotsBtn').addEventListener('click', () => { populateEditFields(); }); // reset
-
-  document.addEventListener('DOMContentLoaded', () => {
-    loadListing();
-    setupImageUpload();
-  });
+  document.addEventListener('DOMContentLoaded', loadListing);
 </script>
 </body>
 </html>
