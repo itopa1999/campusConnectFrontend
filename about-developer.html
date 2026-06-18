@@ -11,14 +11,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
-  <!-- Custom styles -->
+  <!-- CampusConnect styles -->
   <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/index.css" />
   <link rel="stylesheet" href="assets/css/modal.css" />
+
   <style>
     /* Additional page-specific styles */
     .developer-avatar {
-      width: 200px;
-      height: 200px;
+      width: 240px;
+      height: 240px;
       border-radius: 50%;
       object-fit: cover;
       border: 6px solid var(--accent, #2c7a5e);
@@ -28,44 +30,66 @@
     .developer-avatar:hover {
       transform: scale(1.03);
     }
-    .skill-tag {
-      display: inline-block;
-      background: var(--accent-light, #eaf7f0);
-      color: var(--accent-dark, #1f5e48);
-      padding: 0.4rem 1rem;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      margin: 0.25rem;
+
+    /* Ensure step cards match the "How it works" style */
+    .step-card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(44, 122, 94, 0.12);
       transition: all 0.2s ease;
-      border: 1px solid transparent;
+      height: 100%;
+      text-align: center;
     }
-    .skill-tag:hover {
-      background: var(--accent, #2c7a5e);
-      color: #fff;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(44, 122, 94, 0.2);
-      border-color: var(--accent);
-      cursor: default;
+    .step-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.05);
     }
+    .step-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--accent-light, #eaf7f0);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.6rem;
+      color: var(--accent, #2c7a5e);
+    }
+    .step-card h5 {
+      color: var(--text-dark, #1e2a2c);
+    }
+    .step-card p {
+      color: var(--text-muted, #5a6e6f);
+    }
+
+    /* Counter box */
     .counter-box {
       background: white;
       border-radius: 1.5rem;
-      padding: 1.5rem 1rem;
+      padding: 1.75rem 1rem;
       text-align: center;
       border: 1px solid rgba(44, 122, 94, 0.12);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.02);
     }
     .counter-box:hover {
       transform: translateY(-5px);
       box-shadow: 0 16px 32px rgba(0, 0, 0, 0.06);
     }
     .counter-number {
-      font-size: 2.5rem;
+      font-size: 2.6rem;
       font-weight: 800;
       color: var(--accent, #2c7a5e);
       line-height: 1.2;
     }
+    .counter-box .text-muted {
+      color: var(--text-muted, #5a6e6f) !important;
+      font-weight: 500;
+    }
+
+    /* Fun fact cards */
     .fun-fact-card {
       background: #fafaf8;
       border-radius: 1.25rem;
@@ -77,9 +101,12 @@
       background: white;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
     }
+    .fun-fact-card i {
+      color: var(--accent, #2c7a5e);
+    }
     .read-more-content {
       display: none;
-      margin-top: 1rem;
+      margin-top: 0.75rem;
     }
     .read-more-content.show {
       display: block;
@@ -104,10 +131,22 @@
       border-left: 4px solid var(--accent, #2c7a5e);
       padding-left: 1.5rem;
     }
+
+    /* Ensure all text uses the correct dark green/black mix */
+    .text-muted {
+      color: var(--text-muted, #5a6e6f) !important;
+    }
+    h1, h2, h3, h4, h5, .fw-bold, .fw-semibold {
+      color: var(--text-dark, #1e2a2c);
+    }
+    .lead {
+      color: var(--text-muted, #5a6e6f);
+    }
+
     @media (max-width: 767px) {
       .developer-avatar {
-        width: 150px;
-        height: 150px;
+        width: 180px;
+        height: 180px;
       }
       .counter-number {
         font-size: 2rem;
@@ -117,16 +156,10 @@
 </head>
 <body>
 
-  <!-- Preloader (optional – same as index) -->
-  <div id="authPreloader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.96);backdrop-filter:blur(4px);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem;">
-    <div class="spinner-border text-success" style="width:3rem;height:3rem;" role="status"></div>
-    <div style="font-size:1.2rem;font-weight:500;color:#2c7a5e;">Loading...</div>
-  </div>
-
   <!-- Particles background -->
   <div id="particles-js"></div>
 
-  <!-- ==================== HEADER (same as index) ==================== -->
+  <!-- ==================== HEADER (matches index) ==================== -->
   <header class="site-header fixed-top">
     <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
       <div class="container header-inner">
@@ -160,7 +193,7 @@
     <div class="container">
       <div class="row align-items-center g-5">
         <div class="col-lg-4 text-center" data-aos="fade-right" data-aos-duration="800">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" alt="Developer Avatar" class="developer-avatar" />
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80" alt="Developer Avatar" class="developer-avatar" />
           <h2 class="fw-bold mt-3" style="color: var(--accent-dark);">John Doe</h2>
           <p class="text-muted">Full‑Stack Developer &amp; UI/UX Enthusiast</p>
           <div class="d-flex justify-content-center gap-2 mt-2">
@@ -172,7 +205,7 @@
         <div class="col-lg-8" data-aos="fade-left" data-aos-duration="800" data-aos-delay="100">
           <div class="badge-verify mb-3"><i class="fas fa-code me-1"></i> Built with ❤️ for the UI community</div>
           <h1 class="display-5 fw-bold">Hi, I'm the developer behind CampusConnect</h1>
-          <p class="lead text-muted mt-3">
+          <p class="lead mt-3">
             I'm a student at the University of Ibadan who believes that campus commerce should be safe, affordable, and hassle‑free. 
             That's why I built this platform – to connect students like you.
           </p>
@@ -201,25 +234,17 @@
             That's how CampusConnect was born – a weekend project that grew into a community of over 
             500 verified students. Today, it's helping students save money and connect with each other.
           </p>
-          <div class="mt-4">
-            <div class="d-flex gap-3 flex-wrap">
-              <span class="skill-tag"><i class="fas fa-code me-1"></i> Python / Django</span>
-              <span class="skill-tag"><i class="fas fa-laptop-code me-1"></i> JavaScript</span>
-              <span class="skill-tag"><i class="fas fa-paint-brush me-1"></i> UI Design</span>
-              <span class="skill-tag"><i class="fas fa-database me-1"></i> PostgreSQL</span>
-            </div>
-          </div>
         </div>
         <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-          <div class="bg-white p-4 rounded-4 shadow-sm">
+          <div class="bg-white p-4 rounded-4 shadow-sm border">
             <div class="testimonial-quote">
               “I built CampusConnect because I believe that students can solve their own problems – 
               given the right tools and a trusted community.”
             </div>
             <div class="d-flex align-items-center mt-3">
-              <i class="fas fa-user-circle fs-2 me-3 text-secondary"></i>
+              <i class="fas fa-user-circle fs-2 me-3" style="color: var(--accent);"></i>
               <div>
-                <strong>John Doe</strong><br />
+                <strong style="color: var(--text-dark);">John Doe</strong><br />
                 <span class="text-muted small">Computer Science, UI</span>
               </div>
             </div>
@@ -229,7 +254,7 @@
     </div>
   </section>
 
-  <!-- ==================== WHY CAMPUSCONNECT (VISION) ==================== -->
+  <!-- ==================== MY VISION (styled like "How it works") ==================== -->
   <section id="vision" class="py-5">
     <div class="container">
       <div class="text-center mb-5" data-aos="fade-up">
@@ -273,25 +298,25 @@
       <div class="row g-4 justify-content-center">
         <div class="col-6 col-md-3" data-aos="zoom-in" data-aos-delay="0">
           <div class="counter-box">
-            <div class="counter-number" id="counterStudents">500+</div>
+            <div class="counter-number" data-count="530">0</div>
             <div class="text-muted small">Verified Students</div>
           </div>
         </div>
         <div class="col-6 col-md-3" data-aos="zoom-in" data-aos-delay="100">
           <div class="counter-box">
-            <div class="counter-number" id="counterListings">150+</div>
+            <div class="counter-number" data-count="185">0</div>
             <div class="text-muted small">Items Listed</div>
           </div>
         </div>
         <div class="col-6 col-md-3" data-aos="zoom-in" data-aos-delay="200">
           <div class="counter-box">
-            <div class="counter-number" id="counterSavings">₦2.4M</div>
+            <div class="counter-number" data-count="2400000">₦0</div>
             <div class="text-muted small">Student Savings</div>
           </div>
         </div>
         <div class="col-6 col-md-3" data-aos="zoom-in" data-aos-delay="300">
           <div class="counter-box">
-            <div class="counter-number" id="counterTrust">98%</div>
+            <div class="counter-number" data-count="98">0%</div>
             <div class="text-muted small">Satisfaction Rate</div>
           </div>
         </div>
@@ -309,23 +334,23 @@
       <div class="row g-4">
         <div class="col-md-6" data-aos="fade-right" data-aos-delay="0">
           <div class="fun-fact-card">
-            <i class="fas fa-mug-hot fa-2x mb-2" style="color: var(--accent);"></i>
+            <i class="fas fa-mug-hot fa-2x mb-2"></i>
             <h6 class="fw-bold">Coffee addict ☕</h6>
-            <p>I drink 4 cups of coffee while coding. It's a problem, but I embrace it.</p>
+            <p class="text-muted">I drink 4 cups of coffee while coding. It's a problem, but I embrace it.</p>
           </div>
         </div>
         <div class="col-md-6" data-aos="fade-left" data-aos-delay="100">
           <div class="fun-fact-card">
-            <i class="fas fa-guitar fa-2x mb-2" style="color: var(--accent);"></i>
+            <i class="fas fa-guitar fa-2x mb-2"></i>
             <h6 class="fw-bold">Hidden talent 🎸</h6>
-            <p>I play the acoustic guitar during study breaks. It helps me reset.</p>
+            <p class="text-muted">I play the acoustic guitar during study breaks. It helps me reset.</p>
           </div>
         </div>
         <div class="col-md-12" data-aos="fade-up" data-aos-delay="200">
           <div class="fun-fact-card" style="border-left-color: #e67e22;">
             <i class="fas fa-rocket fa-2x mb-2" style="color: #e67e22;"></i>
             <h6 class="fw-bold">My biggest inspiration</h6>
-            <p>
+            <p class="text-muted">
               I was once scammed trying to buy a laptop on a classifieds site. That experience 
               lit a fire in me to build a safe alternative for students.
               <span class="read-more-content" id="extraFact">
@@ -360,35 +385,35 @@
     </div>
   </section>
 
-  <!-- ==================== FOOTER (same as index) ==================== -->
+  <!-- ==================== FOOTER (EXACT COPY from index.html) ==================== -->
   <footer class="footer">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-4 mb-3 mb-md-0">
-          <a class="footer-brand" href="index.html">
-            <img src="assets/img/icon.jpg" alt="CampusConnect UI" />
+          <a class="footer-brand" href="#home">
+            <img src="assets/img/icon.jpg" alt="CampusConnect UI">
             <span>CampusConnect UI</span>
           </a>
           <p class="text-muted small mt-2">A student-led initiative to make campus commerce safe, affordable, and local.</p>
         </div>
         <div class="col-md-8">
           <div class="footer-links d-flex flex-wrap justify-content-md-end">
-            <a href="about-developer.html">About Dev</a>
-            <a href="index.html#how-it-works">How it Works</a>
-            <a href="index.html#contact">Contact</a>
+            <a href="#">About</a>
+            <a href="#how-it-works">How it Works</a>
+            <a href="#contact">Contact</a>
             <a href="t/terms-and-conditions.html">Terms &amp; Conditions</a>
             <a href="t/privacy-and-policy.html">Privacy</a>
             <a href="t/report-issue.html">Report Issue</a>
           </div>
         </div>
         <div class="col-12 mt-4 text-center text-muted small">
-          &copy; <script>document.write(new Date().getFullYear())</script> CampusConnect UI – University of Ibadan.
+          &copy; <script>document.write(new Date().getFullYear())</script> CampusConnect UI - University of Ibadan.
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- ==================== MODALS (same as index) ==================== -->
+  <!-- ==================== MODALS (required for consistency) ==================== -->
   <div id="formModal" class="modal-overlay" style="display:none;">
     <div class="modal-container">
       <div class="modal-header">
@@ -422,14 +447,14 @@
   <script src="assets/js/main.js"></script>
 
   <script>
-    // AOS init
+    // Init AOS
     AOS.init({
       duration: 800,
       once: true,
       offset: 80,
     });
 
-    // Particles config (same as index)
+    // Particles config
     if (document.getElementById('particles-js')) {
       particlesJS('particles-js', {
         particles: {
@@ -452,7 +477,7 @@
       });
     }
 
-    // Interactive: Read more toggle for fun fact
+    // Toggle read more
     function toggleFact() {
       const extra = document.getElementById('extraFact');
       const btn = document.getElementById('toggleFactBtn');
@@ -465,10 +490,46 @@
       }
     }
 
-    // (Optional) Animated counters – we keep static for simplicity, but you can add JS to animate.
-    // For a real effect, you'd use IntersectionObserver and increment from 0 to target.
-    // Here I'll just keep the displayed numbers as they are.
-    console.log('About Developer page loaded.');
+    // Animated counters (Intersection Observer)
+    document.addEventListener('DOMContentLoaded', function() {
+      const counters = document.querySelectorAll('.counter-number');
+      let countersAnimated = false;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !countersAnimated) {
+            countersAnimated = true;
+            counters.forEach(counter => {
+              const target = parseInt(counter.getAttribute('data-count'));
+              const isCurrency = counter.innerText.includes('₦');
+              const isPercent = counter.innerText.includes('%');
+              let current = 0;
+              const increment = Math.ceil(target / 60);
+              const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                  current = target;
+                  clearInterval(timer);
+                }
+                if (isCurrency) {
+                  if (target >= 1000000) {
+                    counter.innerText = '₦' + (current / 1000000).toFixed(1) + 'M';
+                  } else {
+                    counter.innerText = '₦' + current.toLocaleString();
+                  }
+                } else if (isPercent) {
+                  counter.innerText = current + '%';
+                } else {
+                  counter.innerText = current;
+                }
+              }, 20);
+            });
+          }
+        });
+      }, { threshold: 0.4 });
+
+      counters.forEach(counter => observer.observe(counter));
+    });
   </script>
 </body>
 </html>
