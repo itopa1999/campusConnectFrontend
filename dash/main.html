@@ -13,6 +13,18 @@
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/dashboard.css">
   <style>
+    .btn-refresh-points {
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        opacity: 0.7;
+      }
+      .btn-refresh-points:hover {
+        transform: rotate(45deg) scale(1.2);
+        opacity: 1;
+      }
+      .btn-refresh-points:active {
+        transform: rotate(90deg) scale(0.9);
+      }
     /* Additional styling for My Listings cards and reviews */
     .listing-card {
       transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -261,10 +273,16 @@
             </div>
           </div>
           <div class="col-12 col-md-3 col-lg-3">
-            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4 position-relative">
               <div class="stat-label"><i class="fas fa-coins me-1"></i> Points Balance</div>
               <div class="stat-value" id="pointsBalanceValue">0</div>
               <small class="text-muted">Available for posting</small>
+              <!-- Refresh icon – bottom‑right, larger -->
+              <button class="btn-refresh-points position-absolute bottom-0 end-0 m-2 p-2 border-0 bg-transparent" 
+                      id="refreshPointsBtn" 
+                      title="Refresh points balance">
+                <i class="fas fa-sync-alt fs-5 text-success"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -308,12 +326,17 @@
                       </div>
                     </div>
                     <div class="col-6">
-                      <div class="summary-tile p-3 rounded-4">
-                        <div class="small text-muted mb-1">Points balance</div>
-                        <strong class="fs-3" id="summaryPointsBalance">0</strong>
-                        <div class="small text-muted mt-1">Posting an item costs 1 point.</div>
-                      </div>
+                    <div class="summary-tile p-3 rounded-4 position-relative">
+                      <div class="small text-muted mb-1">Points balance</div>
+                      <strong class="fs-3" id="summaryPointsBalance">0</strong>
+                      <div class="small text-muted mt-1">Posting an item costs 1 point.</div>
+                      <button class="btn-refresh-points position-absolute bottom-0 end-0 m-1 p-1 border-0 bg-transparent" 
+                              id="refreshSummaryPointsBtn" 
+                              title="Refresh points balance">
+                        <i class="fas fa-sync-alt fs-6 text-success"></i>
+                      </button>
                     </div>
+                  </div>
                   </div>
                   <a href="payment.html" class="btn btn-primary-custom btn-sm mt-3"><i class="fas fa-bolt me-1"></i>Add more points</a>
                 </div>
@@ -385,7 +408,7 @@
     <span>Listings</span>
   </a>
 </div>
-
+<div id="toast-container" class="toast-container"></div>
 <button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
   <i class="fas fa-arrow-up" aria-hidden="true"></i>
 </button>
@@ -474,6 +497,14 @@
         if (item.status === 'active') { statusClass = 'status-active'; statusText = 'Active'; }
         else if (item.status === 'expired') { statusClass = 'status-expired'; statusText = 'Expired'; }
         else if (item.status === 'sold') { statusClass = 'status-sold'; statusText = 'Sold'; }
+        
+        let promotionBadges = '';
+        if (item.is_hot_sale) {
+          promotionBadges += '<span class="badge bg-danger me-1"><i class="fas fa-fire"></i> Hot Sale</span>';
+        }
+        if (item.is_ads_banner) {
+          promotionBadges += '<span class="badge bg-primary me-1"><i class="fas fa-bullhorn"></i> Banner</span>';
+        }
 
         // Get badge display using the function from main.js
         const badgeInfo = typeof getConditionDisplay === 'function' 
@@ -519,8 +550,9 @@
                   <span class="small text-muted"><i class="fas fa-tag me-1"></i>${escapeHtml(typeLabel)}</span>
                   <span class="small text-muted"><span class="badge bg-light text-dark">${badgeIcon} ${escapeHtml(badgeText)}</span></span>
                 </div>
+                ${promotionBadges ? `<div class="mt-2">${promotionBadges}</div>` : ''}
                 <div class="d-grid gap-2 mt-3">
-                  <a href="my-listing-details.html?id=${item.id}" class="btn btn-sm btn-outline-custom">Manage <i class="fas fa-arrow-right ms-1"></i></a>
+                  <a href="my-listing-details.html?id=${item.id}&title=${item.title}" class="btn btn-sm btn-outline-custom">Manage <i class="fas fa-arrow-right ms-1"></i></a>
                 </div>
               </div>
             </div>
@@ -637,10 +669,44 @@
     } catch (err) {
       console.error('Dashboard load error:', err);
       skeleton.style.display = 'none';
-      realContent.style.display = 'block';
-      showToast('Unable to load dashboard data', 'error');
+      if (err.message.includes('Failed to fetch') || 
+          err.name === 'TypeError' || 
+          err.message.includes('NetworkError') ||
+          err.message.includes('network')) {
+        showNetworkError();
+      } else {
+        // For other errors (e.g., 500), show empty content + toast
+        realContent.style.display = 'block';
+        showToast('Unable to load dashboard data', 'error');
+      }
     }
   }
+
+  async function refreshPointBalance() {
+    try {
+      const response = await fetch(REFRESH_URL, {
+        headers: { 'Accept': 'application/json', ...getAuthHeaders() }
+      });
+      if (!response.ok) throw new Error('Failed to refresh dashboard');
+      const result = await response.json();
+      if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
+      document.getElementById('pointsBalanceValue').innerText = result.data.points_balance;
+      document.getElementById('summaryPointsBalance').innerText = result.data.points_balance;
+      setCookie('point_bal', result.data.points_balance, 10);
+      const mainmobilePointsBalance = document.getElementById('mobilePointsBalance');
+      if (mainmobilePointsBalance) {
+        mainmobilePointsBalance.textContent = result.data.points_balance;
+      }
+      showToast('Point balance updated', 'success');
+    } catch (err) {
+      console.error('Refresh error:', err);
+      showToast('Failed to refresh Point balance', 'error');
+    }
+  }
+
+  document.getElementById('refreshPointsBtn')?.addEventListener('click', refreshPointBalance);
+  document.getElementById('refreshSummaryPointsBtn')?.addEventListener('click', refreshPointBalance);
+  document.getElementById('refreshTrustBtn')?.addEventListener('click', refreshPointBalance);
 
   loadDashboardData();
 </script>

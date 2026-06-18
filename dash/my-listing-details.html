@@ -11,6 +11,7 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/modal.css">
   <style>
     /* (all existing styles – points-badge, listing-image, toggle-switch, skeleton, etc.) */
     .points-badge {
@@ -359,6 +360,10 @@
             <i class="far fa-clock me-1"></i> Last modified: <span id="lastModifiedDisplay">--</span>
           </div>
 
+          <div class="last-modified mb-3">
+            <i class="far fa-calendar-plus me-1"></i> Next edit allowed: <span id="nextEditDateDisplay">--</span>
+          </div>
+
           <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 mb-4">
             <!-- Listing Image -->
             <div class="row mb-4">
@@ -377,8 +382,11 @@
                 </div>
               </div>
               <div class="col-md-7">
-                <div class="d-flex justify-content-between align-items-start">
-                  <h2 class="fw-bold mb-2" id="listingTitleDisplay"></h2>
+                <div class="d-flex justify-content-between align-items-start flex-wrap">
+                  <div class="d-flex align-items-center flex-wrap gap-2">
+                    <h2 class="fw-bold mb-0" id="listingTitleDisplay"></h2>
+                    <div id="promotionBadges" class="d-flex gap-1"></div>
+                  </div>
                   <span class="badge-status" id="statusBadge">Active</span>
                 </div>
                 <div class="text-muted small mb-3">Listing ID: <span id="listingIdBadge">--</span> · Created: <span id="createdDate">--</span></div>
@@ -391,6 +399,7 @@
 
             <hr>
 
+            <!-- View Mode -->
             <!-- View Mode -->
             <div id="viewMode">
               <div class="row g-4">
@@ -416,10 +425,7 @@
 
             <!-- Edit Mode -->
             <div id="editMode" class="d-none">
-              <div class="restriction-warning" id="editRestrictionWarning" style="display: none;">
-                <i class="fas fa-clock me-2"></i>
-                <strong>7‑day restriction:</strong> You can only edit this listing once every 7 days. Last edit was <span id="lastEditDate">Never</span>.
-              </div>
+              <div class="restriction-warning" id="editRestrictionWarning" style="display: none;"></div>
 
               <div class="row g-4">
                 <div class="col-md-6">
@@ -446,17 +452,23 @@
                 </div>
               </div>
 
+              <!-- Badge dropdown (from lookup) -->
               <div class="form-floating-label mt-3">
                 <select class="form-select" id="badgeSelect">
-                  <option value="">None (free)</option>
-                  <option value="hot">🔥 Hot Sales (cost 5 points)</option>
-                  <option value="featured">⭐ Featured (cost 10 points)</option>
-                  <option value="urgent">🚨 Urgent (cost 3 points)</option>
+                  <option value="">None</option>
                 </select>
-                <label class="form-label" for="badgeSelect">Upgrade badge</label>
-                <button id="upgradeBadgeBtn" class="btn btn-sm btn-primary-custom mt-2 w-100">Apply badge upgrade</button>
+                <label class="form-label" for="badgeSelect">Badge</label>
               </div>
 
+              <!-- Promotion checkboxes (Banner / Hot Sale) -->
+              <div class="mt-4">
+                <label class="form-label fw-semibold">Promote your listing (optional)</label>
+                <div id="advertTypeContainer"></div>
+                <div class="helper-text">Select one or both to increase visibility. Points will be deducted from your balance.</div>
+                <div id="advertPointsInfo" class="mt-2 mb-5 small text-muted"></div>
+              </div>
+
+              <!-- Save hotspots -->
               <div class="mt-4">
                 <label class="form-label fw-semibold">Safe meeting spots</label>
                 <div id="hotspotsEditArea">
@@ -488,8 +500,22 @@
 </div>
 
 <div id="formModal" class="modal-overlay" style="display: none;"><div class="modal-container"><div class="modal-header"><h3 id="formModalTitle">Form</h3><button class="modal-close">&times;</button></div><div class="modal-body"></div><div class="modal-footer"></div></div></div>
-<div id="confirmModal" class="modal-overlay" style="display: none;"><div class="modal-container confirm-modal-container"><div class="modal-header"><h3 id="confirmModalTitle">Confirm</h3><button class="modal-close">&times;</button></div><div class="modal-body"><p id="confirmMessage"></p></div><div class="modal-footer"></div></div></div>
+<div id="confirmModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container confirm-modal-container">
+    <div class="modal-header">
+      <h3 id="confirmModalTitle">Confirm Action</h3>
+      <button class="modal-close" id="closeConfirmModalBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="confirmModalBody">
+      <p id="confirmMessage"></p>
+    </div>
+    <div class="modal-footer" id="confirmModalFooter"></div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
 <button class="scroll-top-btn" data-scroll-top><i class="fas fa-arrow-up"></i></button>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -505,35 +531,104 @@
   let userPoints = 0;
   let allCategories = [];
   let allHotspots = [];
+  let allBadgeChoices = [];
+  let allAdvertTypes = [];
 
+  // ─── Helpers ────────────────────────────────────────────────
   function escapeHtml(str) {
     if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]; });
+    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
   }
 
   function formatCurrency(amount) {
     return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
   }
 
-  // Render view mode
+  function showErrorState(message) {
+    const el = document.getElementById('errorState');
+    if (el) {
+      el.style.display = 'block';
+      document.getElementById('errorMessage').innerText = message;
+    } else {
+      alert(message);
+    }
+  }
+
+  // ─── Advert (promotion) helpers ────────────────────────────
+  function populateAdvertTypes(advertTypes, currentFlags) {
+    const container = document.getElementById('advertTypeContainer');
+    if (!container) return;
+    if (!advertTypes || !advertTypes.length) {
+      container.innerHTML = '<p class="text-muted">No promotion options available.</p>';
+      return;
+    }
+    let html = '';
+    advertTypes.forEach(advert => {
+      const value = advert.value;
+      const checked = (value === 'banner' && currentFlags.is_ads_banner) ||
+                      (value === 'hot_sale' && currentFlags.is_hot_sales) ? 'checked' : '';
+      html += `
+        <div class="form-check form-check-custom">
+          <input class="form-check-input" type="checkbox" id="advert_${value}" value="${value}" data-points="${advert.points}" ${checked}>
+          <label class="form-check-label" for="advert_${value}">
+            ${advert.label} (costs ${advert.points} points)
+          </label>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', updateAdvertPointsInfo);
+    });
+    updateAdvertPointsInfo();
+  }
+
+  function updateAdvertPointsInfo() {
+    const container = document.getElementById('advertTypeContainer');
+    const info = document.getElementById('advertPointsInfo');
+    if (!container || !info) return;
+    const selected = container.querySelectorAll('input[type="checkbox"]:checked');
+    let total = 0;
+    selected.forEach(cb => total += parseInt(cb.dataset.points, 10));
+    const points = parseInt(getCookie('point_bal') || '0', 10);
+    if (total > 0) {
+      info.textContent = `Selected promotions will deduct ${total} point(s) from your balance. You have ${points} points.`;
+      info.style.color = total > points ? '#dc3545' : '#2c7a5e';
+    } else {
+      info.textContent = '';
+    }
+  }
+
+  // ─── Render view mode ──────────────────────────────────────
   function renderViewMode() {
     document.getElementById('titleView').innerText = listingData.title || '';
     const cat = listingData.category || 'Uncategorized';
     const icon = listingData.category_icon || '';
-    const iconHtml = icon ? `<i class="${icon} me-1"></i>` : '';
-    document.getElementById('categoryView').innerHTML = `${iconHtml}${escapeHtml(cat)}`;
+    document.getElementById('categoryView').innerHTML = (icon ? `<i class="${icon} me-1"></i>` : '') + escapeHtml(cat);
     document.getElementById('priceView').innerHTML = formatCurrency(listingData.price || 0);
     document.getElementById('descView').innerText = listingData.description || '';
     document.getElementById('listingTitleDisplay').innerText = listingData.title || '';
+
+    // Promotion badges
+    const badgesContainer = document.getElementById('promotionBadges');
+    let badgesHtml = '';
+    if (listingData.is_hot_sale) {
+      badgesHtml += '<span class="badge bg-danger"><i class="fas fa-fire me-1"></i>Hot Sale</span> ';
+    }
+    if (listingData.is_ads_banner) {
+      badgesHtml += '<span class="badge bg-primary"><i class="fas fa-bullhorn me-1"></i>Banner</span>';
+    }
+    badgesContainer.innerHTML = badgesHtml;
+
     document.getElementById('listingIdBadge').innerText = listingData.id || '--';
     document.getElementById('createdDate').innerText = listingData.created_at ? new Date(listingData.created_at).toLocaleDateString() : '--';
 
-    // Status badge
-    const statusEl = document.getElementById('statusBadge');
+    // Status
     const status = listingData.status || 'expired';
+    const statusEl = document.getElementById('statusBadge');
     statusEl.className = `badge-status badge-${status}`;
-    const statusMap = { active:'Active', sold:'Sold', expired:'Expired' };
-    statusEl.innerText = statusMap[status] || status;
+    statusEl.innerText = { active:'Active', sold:'Sold', expired:'Expired' }[status] || status;
 
     // Status action button
     const actionBtn = document.getElementById('statusActionBtn');
@@ -541,7 +636,7 @@
       actionBtn.innerText = 'Mark as sold';
       actionBtn.className = 'btn btn-sm btn-outline-custom me-2';
       actionBtn.onclick = markAsSold;
-    } else if (status === 'sold') {
+    } else if (status === 'sold' || status === 'expired') {
       actionBtn.innerText = 'Reactivate (cost 1 point)';
       actionBtn.className = 'btn btn-sm btn-outline-warning me-2';
       actionBtn.onclick = reactivateListing;
@@ -549,11 +644,11 @@
       actionBtn.style.display = 'none';
     }
 
-    // Badge
-    const badgeMap = { hot:'🔥 Hot Sales', featured:'⭐ Featured', urgent:'🚨 Urgent' };
-    const badgeText = badgeMap[listingData.badge] || 'None';
-    const badgeClass = listingData.badge ? 'bg-primary' : 'bg-secondary';
-    document.getElementById('currentBadge').innerHTML = `<span class="badge ${badgeClass}">${badgeText}</span>`;
+    // Badge display
+    const badgeInfo = typeof getConditionDisplay === 'function' 
+      ? getConditionDisplay(listingData.badge) 
+      : { text: listingData.badge || 'None', icon: '<i class="fas fa-tag me-1"></i>' };
+    document.getElementById('currentBadge').innerHTML = `${badgeInfo.icon} ${badgeInfo.text}`;
 
     // Listing type
     const typeMap = { sell:'Sell', wanted:'Wanted', freebie:'Freebie', service:'Service' };
@@ -577,12 +672,15 @@
       placeholder.style.display = 'block';
     }
 
-    // Last modified
-    const lastMod = listingData.modified_at || listingData.last_hotspot_change;
+    // Last modified & next edit
+    const lastMod = listingData.modified_at;
+    const period = listingData.editing_period_day || 7;
+    document.getElementById('lastModifiedDisplay').innerText = lastMod ? new Date(lastMod).toLocaleString() : 'Never';
     if (lastMod) {
-      document.getElementById('lastModifiedDisplay').innerText = new Date(lastMod).toLocaleString();
+      const nextDate = new Date(new Date(lastMod).getTime() + (period * 24 * 60 * 60 * 1000));
+      document.getElementById('nextEditDateDisplay').innerText = nextDate.toLocaleString();
     } else {
-      document.getElementById('lastModifiedDisplay').innerText = 'Never';
+      document.getElementById('nextEditDateDisplay').innerText = 'Now (never edited)';
     }
 
     // Points
@@ -592,24 +690,31 @@
     updateEditToggleState();
   }
 
+  // ─── Edit mode logic ────────────────────────────────────────
   function isEditAllowed() {
-    const lastMod = listingData.modified_at || listingData.last_hotspot_change;
+    const lastMod = listingData.modified_at;
+    const period = listingData.editing_period_day || 7;
     if (!lastMod) return true;
-    const daysSince = (new Date() - new Date(lastMod)) / (1000 * 3600 * 24);
-    return daysSince >= 7;
+    const nextEdit = new Date(new Date(lastMod).getTime() + (period * 24 * 60 * 60 * 1000));
+    return new Date() >= nextEdit;
   }
 
   function updateEditToggleState() {
     const toggle = document.getElementById('editModeToggle');
     const warningDiv = document.getElementById('editRestrictionWarning');
-    const lastMod = listingData.modified_at || listingData.last_hotspot_change;
+    const lastMod = listingData.modified_at;
+    const period = listingData.editing_period_day || 7;
 
-    if (!isEditAllowed()) {
+    if (isEditAllowed()) {
       toggle.disabled = true;
       toggle.checked = false;
       if (lastMod) {
+        const nextDate = new Date(new Date(lastMod).getTime() + (period * 24 * 60 * 60 * 1000));
         warningDiv.style.display = 'block';
-        document.getElementById('lastEditDate').innerText = new Date(lastMod).toLocaleDateString();
+        warningDiv.innerHTML = `
+          <i class="fas fa-clock me-2"></i>
+          <strong>${period}‑day restriction:</strong> You can only edit this listing once every ${period} days. Last edit was ${new Date(lastMod).toLocaleDateString()}. Next edit allowed: ${nextDate.toLocaleDateString()}.
+        `;
       } else {
         warningDiv.style.display = 'none';
       }
@@ -630,8 +735,20 @@
     ).join('');
     document.getElementById('priceEdit').value = listingData.price || '';
     document.getElementById('descEdit').value = listingData.description || '';
-    document.getElementById('badgeSelect').value = listingData.badge || '';
 
+    // Badge dropdown
+    const badgeSelect = document.getElementById('badgeSelect');
+    badgeSelect.innerHTML = '<option value="">None</option>' +
+      allBadgeChoices.map(b => `<option value="${b.value}" ${b.value === listingData.badge ? 'selected' : ''}>${b.label}</option>`).join('');
+
+    // Advert checkboxes
+    const currentFlags = {
+      is_ads_banner: listingData.is_ads_banner || false,
+      is_hot_sales: listingData.is_hot_sale || false
+    };
+    populateAdvertTypes(allAdvertTypes, currentFlags);
+
+    // Hotspots
     const container = document.getElementById('hotspotsCheckboxes');
     container.innerHTML = allHotspots.map(h => `
       <div class="form-check mb-2">
@@ -643,8 +760,9 @@
 
   function toggleEditMode() {
     const isEdit = document.getElementById('editModeToggle').checked;
-    if (isEdit && !isEditAllowed()) {
-      alert('You can only edit this listing once every 7 days.');
+    if (isEdit && isEditAllowed()) {
+      const period = listingData.editing_period_day || 7;
+      showToast(`You can only edit this listing once every ${period} days.`, 'error');
       document.getElementById('editModeToggle').checked = false;
       return;
     }
@@ -656,7 +774,9 @@
     }
   }
 
-  // ---- API calls ----
+  // ─── API Calls ──────────────────────────────────────────────
+
+  // Save all changes (including badge and promotions)
   async function saveAllChanges() {
     const newTitle = document.getElementById('titleEdit').value.trim();
     const newCategoryId = document.getElementById('categoryEdit').value;
@@ -667,8 +787,16 @@
       return;
     }
 
+    // Hotspots
     const checkboxes = document.querySelectorAll('#hotspotsCheckboxes input');
     const selectedHotspots = Array.from(checkboxes).filter(cb => cb.checked).map(cb => parseInt(cb.value));
+
+    // Badge
+    const badge = document.getElementById('badgeSelect').value;
+
+    // Adverts
+    const isBanner = document.querySelector('#advertTypeContainer input[value="banner"]:checked') ? true : false;
+    const isHotSale = document.querySelector('#advertTypeContainer input[value="hot_sale"]:checked') ? true : false;
 
     const payload = {
       title: newTitle,
@@ -676,6 +804,9 @@
       price: newPrice,
       description: newDesc,
       hotspots: selectedHotspots,
+      badge: badge,
+      is_ads_banner: isBanner,
+      is_hot_sales: isHotSale
     };
 
     try {
@@ -698,7 +829,7 @@
       const result = await response.json();
       if (result.is_success) {
         showToast('Listing updated successfully!');
-        await loadListingData(listingData.id);
+        await fetchListingData(listingData.id);
         renderViewMode();
         if (document.getElementById('editModeToggle').checked) {
           populateEditFields();
@@ -712,54 +843,53 @@
     }
   }
 
-  async function upgradeBadge() {
-    const selected = document.getElementById('badgeSelect').value;
-    const costMap = { hot: 5, featured: 10, urgent: 3 };
-    const nameMap = { hot: 'Hot Sales', featured: 'Featured', urgent: 'Urgent' };
-    if (!selected || !costMap[selected]) { alert('Select a valid badge'); return; }
-    const cost = costMap[selected];
-    if (userPoints < cost) { alert(`You need ${cost} points. Current: ${userPoints}`); return; }
-
-    if (typeof confirmModal !== 'undefined') {
-      confirmModal.open({
-        title: 'Upgrade badge',
-        message: `Upgrade to ${nameMap[selected]} for ${cost} points?`,
-        confirmText: 'Upgrade',
-        onConfirm: async () => {
-          try {
-            const token = getCookie('access_token');
-            const response = await fetch(CAMPUS_URL + 'upgrade_badge/', {
-              method: 'POST',
-              headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ listing_id: listingData.id, badge: selected }),
-            });
-            const result = await response.json();
-            if (result.is_success) {
-              const newPoints = userPoints - cost;
-              document.cookie = `point_bal=${newPoints}; path=/`;
-              userPoints = newPoints;
-              document.getElementById('userPoints').innerText = userPoints;
-              listingData.badge = selected;
-              renderViewMode();
-              showToast(`Badge upgraded! ${cost} points deducted.`);
-            } else {
-              throw new Error(result.message || 'Upgrade failed');
-            }
-          } catch (err) {
-            console.error('Badge upgrade error:', err);
-            alert('Failed to upgrade badge: ' + err.message);
-          }
-        }
+  // Mark as sold / reactivate / delete (unchanged logic, only minor fixes)
+  async function performMarkAsSold() {
+    try {
+      const token = getCookie('access_token');
+      const response = await fetch(CAMPUS_URL + 'mark-sold' + '/' + listingData.id, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
+      const result = await response.json();
+      if (result.is_success) {
+        showToast('Listing marked as sold.');
+        await fetchListingData(listingData.id);
+        renderViewMode();
+      } else {
+        throw new Error(result.message || 'Update failed');
+      }
+    } catch (err) {
+      console.error('Mark sold error:', err);
+      showToast('Failed to mark as sold: ' + err.message, 'error');
     }
   }
 
   async function markAsSold() {
-    if (listingData.status !== 'active') return;
+    if (listingData.status !== 'active') {
+      showToast('Only active listings can be marked as sold.', 'error');
+      return;
+    }
+    if (typeof confirmModal !== 'undefined' && confirmModal) {
+      confirmModal.open({
+        title: 'Mark ' + listingData.title + ' as Sold',
+        message: 'Mark this listing as sold? This action can be undone by reactivating.',
+        confirmText: 'Yes, Mark as Sold',
+        cancelText: 'Cancel',
+        onConfirm: performMarkAsSold
+      });
+    } else {
+      if (confirm('Mark this listing as sold?')) {
+        await performMarkAsSold();
+      }
+    }
+  }
+
+  async function performReactivate() {
     try {
       const token = getCookie('access_token');
       const response = await fetch(LISTING_DETAIL_URL + '/' + listingData.id, {
@@ -769,37 +899,7 @@
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status: 'sold' }),
-      });
-      const result = await response.json();
-      if (result.is_success) {
-        showToast('Listing marked as sold.');
-        await loadListingData(listingData.id);
-        renderViewMode();
-      } else {
-        throw new Error(result.message || 'Update failed');
-      }
-    } catch (err) {
-      console.error('Mark sold error:', err);
-      alert('Failed to mark as sold: ' + err.message);
-    }
-  }
-
-  async function reactivateListing() {
-    if (listingData.status !== 'sold') return;
-    if (userPoints < 1) { alert('You need 1 point to reactivate.'); return; }
-    if (!confirm('Reactivate this listing for 1 point?')) return;
-
-    try {
-      const token = getCookie('access_token');
-      const response = await fetch(CAMPUS_URL + 'reactivate_listing/', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ listing_id: listingData.id }),
+        body: JSON.stringify({ status: 'active' })
       });
       const result = await response.json();
       if (result.is_success) {
@@ -808,19 +908,42 @@
         userPoints = newPoints;
         document.getElementById('userPoints').innerText = userPoints;
         showToast('Listing reactivated!');
-        await loadListingData(listingData.id);
+        await fetchListingData(listingData.id);
         renderViewMode();
       } else {
         throw new Error(result.message || 'Reactivate failed');
       }
     } catch (err) {
       console.error('Reactivate error:', err);
-      alert('Failed to reactivate: ' + err.message);
+      showToast('Failed to reactivate: ' + err.message, 'error');
     }
   }
 
-  async function deleteListing() {
-    if (!confirm('Permanently delete this listing? Cannot be undone.')) return;
+  async function reactivateListing() {
+    if (listingData.status !== 'sold' && listingData.status !== 'expired') {
+      showToast('Only sold or expired listings can be reactivated.', 'error');
+      return;
+    }
+    if (userPoints < 1) {
+      showToast('You need 1 point to reactivate.', 'error');
+      return;
+    }
+    if (typeof confirmModal !== 'undefined' && confirmModal) {
+      confirmModal.open({
+        title: 'Reactivate ' + listingData.title,
+        message: 'Reactivate this listing for 1 point?',
+        confirmText: 'Yes, Reactivate',
+        cancelText: 'Cancel',
+        onConfirm: performReactivate
+      });
+    } else {
+      if (confirm('Reactivate this listing for 1 point?')) {
+        await performReactivate();
+      }
+    }
+  }
+
+  async function performdeleteListing() {
     try {
       const token = getCookie('access_token');
       const response = await fetch(LISTING_DETAIL_URL + '/' + listingData.id, {
@@ -843,7 +966,24 @@
     }
   }
 
-  async function loadListingData(id) {
+  async function deleteListing() {
+    if (typeof confirmModal !== 'undefined' && confirmModal) {
+      confirmModal.open({
+        title: 'Delete ' + listingData.title,
+        message: 'Delete this listing permanently.',
+        confirmText: 'Yes, Delete',
+        cancelText: 'Cancel',
+        onConfirm: performdeleteListing
+      });
+    } else {
+      if (confirm('Delete this listing?')) {
+        await performdeleteListing();
+      }
+    }
+  }
+
+  // ─── Fetch listing data ─────────────────────────────────────
+  async function fetchListingData(id) {
     const token = getCookie('access_token');
     if (!token) throw new Error('Not authenticated');
 
@@ -853,6 +993,7 @@
         'Authorization': `Bearer ${token}`,
       }
     });
+
     if (!response.ok) {
       if (response.status === 404) {
         throw new Error('Listing not found');
@@ -863,36 +1004,51 @@
       }
       throw new Error('Failed to fetch listing');
     }
+
     const result = await response.json();
     if (!result.is_success) throw new Error(result.message || 'Invalid response');
+
     listingData = result.data;
     if (!listingData.hotspots) listingData.hotspots = [];
+    // Normalize field names (API returns is_hot_sale, is_ads_banner)
+    listingData.is_hot_sales = listingData.is_hot_sale || false;
+    listingData.is_ads_banner = listingData.is_ads_banner || false;
     userPoints = parseInt(getCookie('point_bal') || '0', 10);
   }
 
-  // Main load function
+  // ─── Main load ──────────────────────────────────────────────
   async function loadListing() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
-    if (!id) {
-      showErrorState('No listing ID provided.');
-      return;
-    }
 
     const skeleton = document.getElementById('skeletonLoader');
     const content = document.getElementById('listingContent');
     const errorState = document.getElementById('errorState');
 
-    // Hide error, show skeleton
+    if (!skeleton || !content || !errorState) {
+      alert('Page elements missing. Please refresh.');
+      return;
+    }
+
+    if (!id || id.trim() === '' || id === 'null' || id === 'undefined') {
+      skeleton.style.display = 'none';
+      content.style.display = 'none';
+      showErrorState('No listing ID provided.');
+      return;
+    }
+
     errorState.style.display = 'none';
     skeleton.style.display = 'block';
     content.style.display = 'none';
 
     try {
       const token = getCookie('access_token');
-      if (!token) { window.location.href = '../index.html'; return; }
+      if (!token) {
+        window.location.href = '../index.html';
+        return;
+      }
 
-      // Fetch lookup data
+      // Fetch lookup data (categories, hotspots, badges, adverts)
       const lookupRes = await fetch(LOOKUP_URL, {
         headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` }
       });
@@ -901,12 +1057,14 @@
       if (lookupData.is_success) {
         allCategories = lookupData.data.categories || [];
         allHotspots = lookupData.data.hotspots || [];
+        allBadgeChoices = lookupData.data.badge_choices || [];
+        allAdvertTypes = lookupData.data.advert_type || [];
       }
 
       // Fetch listing detail
-      await loadListingData(id);
+      await fetchListingData(id);
 
-      // Render everything
+      // Render
       document.getElementById('listingIdBadge').innerText = listingData.id;
       renderViewMode();
       document.getElementById('imageUploadArea').classList.remove('d-none');
@@ -917,7 +1075,6 @@
       // Bind events
       document.getElementById('editModeToggle').addEventListener('change', toggleEditMode);
       document.getElementById('saveBasicBtn').addEventListener('click', saveAllChanges);
-      document.getElementById('upgradeBadgeBtn').addEventListener('click', upgradeBadge);
       document.getElementById('deleteListingBtn').addEventListener('click', deleteListing);
       document.getElementById('saveHotspotsBtn').addEventListener('click', saveAllChanges);
       document.getElementById('cancelHotspotsBtn').addEventListener('click', populateEditFields);
@@ -927,22 +1084,18 @@
     } catch (err) {
       console.error('Load error:', err);
       skeleton.style.display = 'none';
-      showErrorState(err.message || 'An error occurred while loading the listing.');
+      const errorMsg = err.message || 'An unexpected error occurred.';
+      if (errorMsg === 'Listing not found' || errorMsg.includes('404')) {
+        showErrorState(errorMsg);
+      } else if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
+        showNetworkError(); // from main.js
+      } else {
+        showErrorState('An unexpected error occurred. Please try again.');
+      }
     }
   }
 
-  function showErrorState(message) {
-    const errorState = document.getElementById('errorState');
-    if (errorState) {
-      errorState.style.display = 'block';
-      const msgEl = document.getElementById('errorMessage');
-      if (msgEl) msgEl.innerText = message;
-    } else {
-      alert(message);
-    }
-  }
-
-  // Image upload
+  // ─── Image upload (frontend only) ──────────────────────────
   function setupImageUpload() {
     const uploadArea = document.getElementById('imageUploadArea');
     const fileInput = document.getElementById('imageInput');
@@ -950,7 +1103,7 @@
     fileInput.addEventListener('change', (e) => {
       if (e.target.files.length) {
         const file = e.target.files[0];
-        if (file.size > 2*1024*1024) { alert('Max 2MB'); return; }
+        if (file.size > 2 * 1024 * 1024) { alert('Max 2MB'); return; }
         const reader = new FileReader();
         reader.onload = (ev) => {
           listingData.image = ev.target.result;
@@ -962,6 +1115,7 @@
     });
   }
 
+  // ─── Bootstrap ──────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', loadListing);
 </script>
 </body>

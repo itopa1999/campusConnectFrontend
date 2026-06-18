@@ -546,7 +546,15 @@
                             </select>
                             <label class="form-label" for="badge">Badge (Optional)</label>
                             <div class="helper-text">Badges help your listing stand out.</div>
-                        </div>
+                        </div> <br>
+
+                        <!-- Promotion checkboxes -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Promote your listing (optional)</label>
+                            <div id="advertTypeContainer"></div>
+                            <div class="helper-text">Select one or both to increase visibility. Points will be deducted from your balance.</div>
+                            <div id="advertPointsInfo" class="mt-2 small text-muted"></div>
+                        </div> <br>
 
                         <div class="form-floating-group">
                             <input type="file" class="form-control" name="images" id="images" multiple accept="image/*" />
@@ -663,6 +671,55 @@
                 if (helper) helper.textContent = 'Enter amount in Naira. Be fair – students love good deals.';
             }
         }
+    }
+
+    // ---- Populate advert types (Banner / Hot Sale) ----
+    function populateAdvertTypes(advertTypes) {
+    const container = document.getElementById('advertTypeContainer');
+    if (!container) return;
+    if (!advertTypes || !advertTypes.length) {
+        container.innerHTML = '<p class="text-muted">No promotion options available.</p>';
+        return;
+    }
+    let html = '';
+    advertTypes.forEach(advert => {
+        html += `
+        <div class="form-check form-check-custom">
+            <input class="form-check-input" type="checkbox" id="advert_${advert.value}" value="${advert.value}" data-points="${advert.points}">
+            <label class="form-check-label" for="advert_${advert.value}">
+            ${advert.label} (costs ${advert.points} points)
+            </label>
+        </div>
+        `;
+    });
+    container.innerHTML = html;
+
+    // Update points info on change
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', updateAdvertPointsInfo);
+    });
+    updateAdvertPointsInfo();
+    }
+
+    function updateAdvertPointsInfo() {
+    const container = document.getElementById('advertTypeContainer');
+    const info = document.getElementById('advertPointsInfo');
+    if (!container || !info) return;
+    const selected = container.querySelectorAll('input[type="checkbox"]:checked');
+    let total = 0;
+    selected.forEach(cb => total += parseInt(cb.dataset.points, 10));
+    const points = parseInt(getCookie('point_bal') || '0', 10);
+    if (total > 0) {
+        info.textContent = `Selected promotions will deduct ${total} point(s) from your balance. You have ${points} points.`;
+        if (total > points) {
+        info.style.color = '#dc3545';
+        info.textContent += ' (Insufficient points!)';
+        } else {
+        info.style.color = '#2c7a5e';
+        }
+    } else {
+        info.textContent = '';
+    }
     }
 
     // ---- Populate listing type radios ----
@@ -849,6 +906,11 @@
 
     // ---- Submit ----
     async function onSubmitListing() {
+        const submitBtn = document.getElementById('submitListingBtn');
+        const originalHTML = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Posting...';
+        
         const form = document.getElementById('listingForm');
         const formData = new FormData(form);
 
@@ -871,6 +933,11 @@
             });
         }
         formData.set('hotspot_ids', JSON.stringify(hotspotIds));
+
+        const isBanner = document.querySelector('#advertTypeContainer input[value="banner"]:checked') ? true : false;
+        const isHotSale = document.querySelector('#advertTypeContainer input[value="hot_sale"]:checked') ? true : false;
+        formData.append('is_ads_banner', isBanner ? 'true' : 'false');
+        formData.append('is_hot_sales', isHotSale ? 'true' : 'false');
 
         try {
             const token = getCookie('access_token');
@@ -902,6 +969,9 @@
         } catch (err) {
             console.error('Error creating listing:', err);
             showToast('An unexpected error occurred. Please try again.', 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalHTML;
         }
     }
 
@@ -976,6 +1046,10 @@
             // Listing types
             populateListingTypes(data.type_choices);
 
+            if (data.advert_type) {
+                populateAdvertTypes(data.advert_type);
+            }
+
             updatePointsDisplay();
 
             skeleton.style.display = 'none';
@@ -986,11 +1060,19 @@
         } catch (err) {
             console.error('Error loading page data:', err);
             skeleton.style.display = 'none';
-            realContent.style.display = 'block';
-            const errDiv = document.createElement('div');
-            errDiv.className = 'alert alert-danger m-4';
-            errDiv.textContent = 'Unable to load categories and hotspots. Please refresh the page.';
-            document.querySelector('.dashboard-card')?.prepend(errDiv);
+            if (err.message.includes('Failed to fetch') || 
+                err.name === 'TypeError' || 
+                err.message.includes('NetworkError') ||
+                err.message.includes('network')) {
+                showNetworkError();
+            }
+            else{
+                realContent.style.display = 'block';
+                const errDiv = document.createElement('div');
+                errDiv.className = 'alert alert-danger m-4';
+                errDiv.textContent = 'Unable to load categories and hotspots. Please refresh the page.';
+                document.querySelector('.dashboard-card')?.prepend(errDiv);
+            }
         }
     }
 
@@ -1027,12 +1109,15 @@ function resetForm() {
     // 7. Clear review content
     document.getElementById('reviewContent').innerHTML = '';
 
+    document.querySelectorAll('#advertTypeContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+    updateAdvertPointsInfo();
+
     // 8. Refresh points display (in case backend updated points)
     updatePointsDisplay();
 
     // 9. Scroll to top of form
     document.querySelector('.dashboard-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+}   
 
     // ---- Bootstrap ----
     document.addEventListener('DOMContentLoaded', () => {

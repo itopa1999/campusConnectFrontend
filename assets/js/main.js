@@ -2,7 +2,7 @@
 const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
 const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
 const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
-
+const REFRESH_URL = 'http://127.0.0.1:8000/user/api/';
 
 function formatCurrency(amount) {
   return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
@@ -36,7 +36,7 @@ function getConditionDisplay(badge) {
       'bundle': { text: 'Bundle', icon: '<i class="fas fa-layer-group me-1"></i>' },
       'other': { text: 'Misc', icon: '<i class="fas fa-ellipsis-h me-1"></i>' }
     };
-    return mapping[badge] || { text: 'Good', icon: '<i class="fas fa-check-circle me-1"></i>' };
+    return mapping[badge] || { text: 'None', icon: '<i class="fas fa-cancel me-1"></i>' };
 }
 
 
@@ -583,6 +583,161 @@ function populateUserProfile() {
     mobileTrustScore.textContent = `${trustScore}%`;
   }
 }
+
+
+// ========== NETWORK ERROR OVERLAY (injected globally) ==========
+(function() {
+  // Avoid duplicate injection
+  if (document.getElementById('networkErrorOverlay')) return;
+
+  // Build overlay HTML
+  const overlayHTML = `
+    <div id="networkErrorOverlay" style="display: none;">
+      <div class="network-error-card">
+        <div class="network-error-icon">
+          <i class="fas fa-wifi"></i>
+        </div>
+        <h2>Connection Lost</h2>
+        <p class="network-error-message">
+          We're having trouble reaching the server. Please check your internet connection and try again.
+        </p>
+        <button class="btn btn-primary-custom" id="retryNetworkBtn">
+          <i class="fas fa-sync-alt me-2"></i>Retry
+        </button>
+        <button class="btn btn-outline-custom mt-2" id="reloadPageBtn">
+          <i class="fas fa-redo me-2"></i>Reload Page
+        </button>
+      </div>
+    </div>
+  `;
+
+  // Inject styles (only once)
+  const styleID = 'network-error-styles';
+  if (!document.getElementById(styleID)) {
+    const style = document.createElement('style');
+    style.id = styleID;
+    style.textContent = `
+      #networkErrorOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9999;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        animation: fadeInOverlay 0.3s ease;
+      }
+      @keyframes fadeInOverlay {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .network-error-card {
+        max-width: 480px;
+        width: 100%;
+        background: white;
+        border-radius: 2rem;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        box-shadow: 0 24px 48px rgba(31, 94, 72, 0.12);
+        border: 1px solid rgba(44, 122, 94, 0.08);
+        animation: slideUp 0.4s ease;
+      }
+      @keyframes slideUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .network-error-icon {
+        font-size: 3.5rem;
+        color: var(--accent, #2c7a5e);
+        background: var(--accent-light, #eaf7f0);
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .network-error-icon i {
+        font-size: 2.8rem;
+        color: var(--accent-dark, #1f5e48);
+      }
+      .network-error-card h2 {
+        font-weight: 700;
+        font-size: 1.6rem;
+        color: var(--text-dark, #1e2a2c);
+        margin-bottom: 0.75rem;
+      }
+      .network-error-message {
+        color: var(--text-muted, #5a6e6f);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+      #networkErrorOverlay .btn {
+        min-width: 140px;
+        padding: 0.8rem 1.8rem;
+        font-weight: 600;
+        border-radius: 40px;
+      }
+      #networkErrorOverlay .btn + .btn {
+        margin-left: 0.75rem;
+      }
+      @media (max-width: 576px) {
+        #networkErrorOverlay .btn {
+          display: block;
+          width: 100%;
+          margin-bottom: 0.75rem;
+        }
+        #networkErrorOverlay .btn + .btn {
+          margin-left: 0;
+        }
+        .network-error-card {
+          padding: 2rem 1.5rem;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Append overlay to body
+  document.body.insertAdjacentHTML('beforeend', overlayHTML);
+
+  // Expose global show/hide functions
+  window.showNetworkError = function() {
+    const overlay = document.getElementById('networkErrorOverlay');
+    if (overlay) overlay.style.display = 'flex';
+  };
+
+  window.hideNetworkError = function() {
+    const overlay = document.getElementById('networkErrorOverlay');
+    if (overlay) overlay.style.display = 'none';
+  };
+
+  // Attach button events after DOM ready
+  document.addEventListener('DOMContentLoaded', function() {
+    const retryBtn = document.getElementById('retryNetworkBtn');
+    const reloadBtn = document.getElementById('reloadPageBtn');
+
+    if (retryBtn) {
+      retryBtn.addEventListener('click', function() {
+        window.hideNetworkError();
+        location.reload();
+      });
+    }
+    if (reloadBtn) {
+      reloadBtn.addEventListener('click', function() {
+        location.reload();
+      });
+    }
+  });
+})();
 
 // ========== START EVERYTHING AFTER DOM READY ==========
 function initAll() {
