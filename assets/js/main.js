@@ -340,7 +340,7 @@ function initReportLostFeature() {
     e.preventDefault();
 
     if (!formModal || typeof formModal.open !== 'function') {
-      alert('Modal system not ready. Please refresh the page.');
+      showToast('Modal system not ready. Please refresh the page.', 'error');
       return;
     }
 
@@ -363,8 +363,8 @@ function initReportLostFeature() {
         </div>
 
         <div class="form-floating-label">
-          <input type="date" name="date" id="date" class="form-control" placeholder=" " required>
-          <label class="form-label required" for="date">Date found</label>
+          <input type="date" name="date_found" id="date_found" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="date_found">Date found</label>
         </div>
 
         <hr class="my-4">
@@ -372,24 +372,24 @@ function initReportLostFeature() {
         <p class="small text-muted">When someone claims this item, we'll ask them the same questions. If answers match, we'll share your contact details with them.</p>
 
         <div class="form-floating-label">
-          <input type="text" name="verify_q1" id="verify_q1" class="form-control" placeholder=" " required>
-          <label class="form-label required" for="verify_q1">Verification question 1</label>
+          <input type="text" name="verification1" id="verification1" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="verification1">Verification question 1</label>
         </div>
 
         <div class="form-floating-label">
-          <input type="text" name="verify_a1" id="verify_a1" class="form-control" placeholder=" " required>
-          <label class="form-label required" for="verify_a1">Answer to question 1</label>
+          <input type="text" name="answer1" id="answer1" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="answer1">Answer to question 1</label>
           <div class="form-text">⚠️ Keep this answer safe. Only the real owner will know it.</div>
         </div>
 
         <div class="form-floating-label">
-          <input type="text" name="verify_q2" id="verify_q2" class="form-control" placeholder=" " required>
-          <label class="form-label required" for="verify_q2">Verification question 2</label>
+          <input type="text" name="verification2" id="verification2" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="verification2">Verification question 2</label>
         </div>
 
         <div class="form-floating-label">
-          <input type="text" name="verify_a2" id="verify_a2" class="form-control" placeholder=" " required>
-          <label class="form-label required" for="verify_a2">Answer to question 2</label>
+          <input type="text" name="answer2" id="answer2" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="answer2">Answer to question 2</label>
           <div class="form-text">⚠️ Keep this answer safe. Only the real owner will know it.</div>
         </div>
 
@@ -397,23 +397,24 @@ function initReportLostFeature() {
         <h6 class="fw-bold">📞 Your contact details (finder)</h6>
 
         <div class="form-floating-label">
-          <input type="text" name="finder_name" id="finder_name" class="form-control" placeholder=" " required>
-          <label class="form-label required" for="finder_name">Your full name (finder)</label>
+          <input type="text" name="full_name" id="full_name" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="full_name">Your full name (finder)</label>
         </div>
 
         <div class="form-floating-label">
-          <input type="email" name="finder_email" id="finder_email" class="form-control" placeholder=" " required>
-          <label class="form-label required" for="finder_email">Your email</label>
+          <input type="email" name="email" id="email" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="email">Your email</label>
         </div>
 
         <div class="form-floating-label">
-          <input type="tel" name="finder_phone" id="finder_phone" class="form-control" placeholder=" " required>
-          <label class="form-label required" for="finder_phone">Your phone number</label>
+          <input type="tel" name="phone" id="phone" class="form-control" placeholder=" " required>
+          <label class="form-label" for="phone">Your phone number (optional)</label>
+          <div class="form-text">We'll use this to contact you if the owner is found.</div>
         </div>
 
         <div class="form-floating-label">
-          <input type="text" name="finder_department" id="finder_department" class="form-control" placeholder=" " required>
-          <label class="form-label required" for="finder_department">Your department</label>
+          <input type="text" name="department" id="department" class="form-control" placeholder=" " required>
+          <label class="form-label required" for="department">Your department</label>
         </div>
 
         <div class="mb-3">
@@ -435,13 +436,18 @@ function initReportLostFeature() {
           formData.append('image', fileInput.files[0]);
         }
 
-        if (!formData.get('item_name') || !formData.get('description') || !formData.get('location') || !formData.get('finder_email')) {
-          alert('Please fill all required fields');
-          return;
+        const required = ['item_name', 'description', 'location', 'date_found', 
+                          'verification1', 'answer1', 'verification2', 'answer2',
+                          'full_name', 'phone', 'email', 'department'];
+        for (let field of required) {
+          if (!formData.get(field)) {
+            showToast(`Please fill in the "${field.replace('_', ' ')}" field.`, 'error');
+            return;
+          }
         }
 
         try {
-          const response = await fetch('/api/lost-and-found/report/', {
+          const response = await fetch(CAMPUS_URL + 'report_lost_item', {
             method: 'POST',
             body: formData
           });
@@ -456,11 +462,11 @@ function initReportLostFeature() {
               onConfirm: () => formModal.close()
             });
           } else {
-            alert('Reported successfully!');
+            showToast('Reported successfully!', 'error');
             formModal.close();
           }
         } catch (err) {
-          alert('Failed to report. Please try again later.');
+          showToast('Failed to report. Please try again later.', 'error');
           console.error(err);
         }
       }
@@ -489,7 +495,7 @@ function initReportLostFeature() {
           fileInput.files = e.dataTransfer.files;
           previewImage(file);
         } else {
-          alert('Please drop an image file.');
+          showToast('Please drop an image file.', 'error');
         }
       });
       fileInput.addEventListener('change', () => {
