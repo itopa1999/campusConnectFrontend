@@ -636,7 +636,7 @@
 
     isAuthenticated();
 
-    const LOOKUP_URL = CAMPUS_URL + 'get_lookup';
+    const LOOKUP_URL = CAMPUS_URL + 'get-lookup';
 
     // ---- helpers ----
     function updateTypeDescription(value) {
@@ -941,7 +941,7 @@
 
         try {
             const token = getCookie('access_token');
-            const response = await fetch(CAMPUS_URL + 'create_listing', {
+            const response = await fetch(CAMPUS_URL + 'create-listing', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

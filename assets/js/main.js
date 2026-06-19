@@ -238,7 +238,7 @@ class FormModal {
     submitBtn.className = 'btn-primary';
     submitBtn.addEventListener('click', async () => {
       const form = document.getElementById('dynamicFormModalForm');
-      if (onSubmit) await onSubmit(form);
+      if (onSubmit) await onSubmit(form, submitBtn);
     });
 
     this.footerEl.appendChild(cancelBtn);
@@ -429,9 +429,15 @@ function initReportLostFeature() {
         </div>
       `,
       submitLabel: 'Report Item',
-      onSubmit: async (form) => {
+      onSubmit: async (form, submitBtn) => {
         const formData = new FormData(form);
         const fileInput = document.getElementById('fileInput');
+
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="btn-spinner"></span> Submitting...`;
+
+
         if (fileInput && fileInput.files.length > 0) {
           formData.append('image', fileInput.files[0]);
         }
@@ -447,12 +453,16 @@ function initReportLostFeature() {
         }
 
         try {
-          const response = await fetch(CAMPUS_URL + 'report_lost_item', {
+          const response = await fetch(CAMPUS_URL + 'report-lost-item', {
             method: 'POST',
             body: formData
           });
           if (!response.ok) throw new Error('Server error');
           const result = await response.json();
+
+          if (typeof fetchItems === 'function') {
+            fetchItems();
+          }
 
           if (confirmModal && typeof confirmModal.open === 'function') {
             confirmModal.open({
@@ -468,6 +478,9 @@ function initReportLostFeature() {
         } catch (err) {
           showToast('Failed to report. Please try again later.', 'error');
           console.error(err);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
         }
       }
     });

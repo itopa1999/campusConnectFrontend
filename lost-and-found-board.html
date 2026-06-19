@@ -340,6 +340,7 @@
     <div class="modal-footer" id="confirmModalFooter"></div>
   </div>
 </div>
+<div id="toast-container" class="toast-container"></div>
 
 <button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
   <i class="fas fa-arrow-up" aria-hidden="true"></i>
@@ -353,7 +354,7 @@
 <script>
   // ----- CONFIG -----
   const LOST_AND_FOUND_URL = CAMPUS_URL + 'lost-and-found/reports';
-  const CLAIM_URL = CAMPUS_URL + 'lost-and-found/claim/';
+  const CLAIM_URL = CAMPUS_URL + 'lost-and-found/claim';
 
   let allItems = [];
   let filteredItems = [];
@@ -470,24 +471,31 @@
     isLoading = true;
 
     const loadMoreBtn = document.getElementById('loadMoreBtn');
-    loadMoreBtn.disabled = true;
-    loadMoreBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Loading…';
+    const grid = document.getElementById('itemsGrid');
+    const noResults = document.getElementById('noResultsMsg');
+    const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+    // Disable load more button and show spinner (if not reset)
+    if (!reset) {
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Loading…';
+    }
 
     try {
-      // If reset, clear existing items
       if (reset) {
         allItems = [];
         currentPage = 1;
-        renderSkeleton();
+        renderSkeleton(); // shows skeleton while fetching
       }
 
       const url = `${LOST_AND_FOUND_URL}?page=${page}&page_size=${pageSize}`;
       const response = await fetch(url, {
         headers: { 'Accept': 'application/json' }
       });
-      if (!response.ok) throw new Error('Failed to fetch lost items');
-      const result = await response.json();
 
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const result = await response.json();
       if (!result.is_success) throw new Error(result.message || 'Unknown error');
 
       const data = result.data || {};
@@ -496,17 +504,38 @@
       totalPages = pagination.total_pages || 1;
       currentPage = pagination.current_page || 1;
 
-      // Append items
+      // Append new items
       allItems = [...allItems, ...items];
-      renderItems();
+      renderItems();  // this will handle empty state if no items
 
     } catch (err) {
-      console.error('Error fetching lost items:', err);
-      showToast('Failed to load lost items. Please try again.', 'error');
+      console.error('Fetch error:', err);
+
+      if (reset) {
+        // On initial load or search: clear skeleton and show empty state
+        grid.innerHTML = '';
+        noResults.classList.remove('d-none');
+        loadMoreContainer.classList.add('d-none');
+      } else {
+        // On "Load more" failure: keep existing items, re‑enable the button
+        if (currentPage < totalPages) {
+          loadMoreContainer.classList.remove('d-none');
+          loadMoreBtn.disabled = false;
+          loadMoreBtn.innerHTML = '<i class="fas fa-arrow-down me-2"></i>Load more';
+        } else {
+          loadMoreContainer.classList.add('d-none');
+        }
+      }
+
+      showToast('Failed to load lost items. Please check your connection.', 'error');
+
     } finally {
       isLoading = false;
-      loadMoreBtn.disabled = false;
-      loadMoreBtn.innerHTML = '<i class="fas fa-arrow-down me-2"></i>Load more';
+      // Ensure button is restored if it wasn't already (e.g. reset case)
+      if (!reset) {
+        loadMoreBtn.disabled = false;
+        loadMoreBtn.innerHTML = '<i class="fas fa-arrow-down me-2"></i>Load more';
+      }
     }
   }
 
@@ -577,16 +606,30 @@
       `,
       submitLabel: 'Submit Claim',
       onSubmit: async (form) => {
+        submitBtn = document.querySelector('#formModal .modal-footer .btn-primary');
+
         const answer1 = form.querySelector('[name="answer1"]').value.trim();
         const answer2 = form.querySelector('[name="answer2"]').value.trim();
         const claimantName = form.querySelector('[name="claimant_name"]').value.trim();
         const claimantEmail = form.querySelector('[name="claimant_email"]').value.trim();
         const claimantPhone = form.querySelector('[name="claimant_phone"]').value.trim();
 
+        const originalText = submitBtn.textContent;
+
+        // Helper to restore button state
+        function restoreButton() {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+
         if (!answer1 || !answer2 || !claimantName || !claimantEmail || !claimantPhone) {
           showToast('Please fill all fields', 'error');
+          restoreButton();
           return;
         }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Submitting...';
 
         try {
           const payload = {
@@ -619,6 +662,9 @@
         } catch (err) {
           console.error('Claim error:', err);
           showToast('Failed to submit claim: ' + err.message, 'error');
+        } finally {
+          // Re-enable button and restore text
+          restoreButton();
         }
       }
     });
