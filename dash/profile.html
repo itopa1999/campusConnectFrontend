@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>CampusConnect UI · My Profile</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
-  <link rel="stylesheet" href="../assets/css/main.css">
+  <!-- Bootstrap, Icons, Fonts, AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
+  <!-- CampusConnect styles -->
+  <link rel="stylesheet" href="../assets/css/main.css" />
+
   <style>
     :root {
       --primary: #2c7a5e;
@@ -19,7 +22,8 @@
       font-family: 'Inter', sans-serif;
       background: #f9fbf8;
     }
-    /* Edit mode toggle */
+
+    /* Toggle switch (same as before) */
     .toggle-switch {
       position: relative;
       display: inline-block;
@@ -59,6 +63,7 @@
     input:checked + .slider:before {
       transform: translateX(26px);
     }
+
     /* Profile avatar */
     .profile-avatar-large {
       width: 120px;
@@ -68,6 +73,7 @@
       border: 3px solid white;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
+
     .stat-badge {
       background: white;
       border-radius: 1rem;
@@ -76,6 +82,7 @@
       transition: transform 0.2s;
     }
     .stat-badge:hover { transform: translateY(-3px); }
+
     .verification-icon {
       width: 40px;
       height: 40px;
@@ -86,6 +93,7 @@
       justify-content: center;
       color: var(--primary);
     }
+
     .badge-custom {
       background: #e9ecef;
       padding: 0.5rem 1rem;
@@ -94,7 +102,9 @@
       font-weight: 500;
     }
     .badge-custom i { margin-right: 6px; }
+
     .rating-stars i { color: #f5b042; }
+
     .progress-bar-custom {
       height: 8px;
       border-radius: 10px;
@@ -106,6 +116,7 @@
       height: 100%;
       border-radius: 10px;
     }
+
     .info-row {
       display: flex;
       justify-content: space-between;
@@ -114,15 +125,18 @@
     }
     .info-label { color: #6c757d; font-weight: 500; }
     .info-value { font-weight: 600; color: #212529; }
+
     @media (max-width: 768px) {
       .info-row { flex-direction: column; gap: 5px; }
     }
+
     .section-card {
       border-radius: 1.5rem;
       border: none;
       transition: all 0.2s;
       background: white;
     }
+
     .btn-outline-custom {
       border: 1px solid var(--primary);
       color: var(--primary);
@@ -140,39 +154,76 @@
     .btn-primary-custom:hover {
       background: var(--primary-dark);
     }
-    /* Floating labels – will be inherited from main.css, but ensure spacing */
-    .form-floating-label {
-      margin-bottom: 1.5rem;
+
+    /* Skeleton loading styles */
+    .skeleton-loader {
+      background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
     }
-    .edit-mode-group {
-      transition: all 0.2s;
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
-    .edit-mode-group.disabled {
-      opacity: 0.5;
-      pointer-events: none;
+    .skeleton-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+    }
+    .skeleton-text {
+      height: 16px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+    .skeleton-text.short { width: 60%; }
+    .skeleton-text.medium { width: 80%; }
+    .skeleton-heading {
+      height: 28px;
+      width: 40%;
+      margin-bottom: 16px;
+      border-radius: 8px;
+    }
+
+    /* Hide content initially, show after loading */
+    .profile-content {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .profile-content.visible {
+      display: block;
+      opacity: 1;
+    }
+    .skeleton-wrapper {
+      display: block;
+    }
+    .skeleton-wrapper.hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-<!-- Navigation -->
+<!-- Navigation (same as before) -->
 <header class="site-header fixed-top">
   <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
     <div class="container header-inner">
       <a class="site-brand" href="main.html" aria-label="CampusConnect UI home">
-        <img src="../assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo">
+        <img src="../assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo" />
         <span class="site-brand-name">
           <span class="brand-full">CampusConnect UI</span>
           <span class="brand-short">CampusConnect</span>
         </span>
       </a>
-      
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarMain">
-        <!-- Desktop dropdown (visible on md and up) -->
+        <!-- Desktop dropdown -->
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center d-none d-md-flex">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -182,14 +233,14 @@
               <li><a class="dropdown-item" href="profile.html"><i class="fas fa-id-card me-2"></i>My Profile</a></li>
               <li><a class="dropdown-item" href="create-listing.html"><i class="fas fa-plus-circle me-2"></i>Post a Listing</a></li>
               <li><a class="dropdown-item" href="listings.html"><i class="fas fa-list me-2"></i>Browse Listings</a></li>
-              <li><a class="dropdown-item" href="../t/report-issue.html"><i class="fas fa-flag me-2"></i>Report Issue</a></li>              
-              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="../t/report-issue.html"><i class="fas fa-flag me-2"></i>Report Issue</a></li>
+              <li><hr class="dropdown-divider" /></li>
               <li><a class="dropdown-item text-danger" href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
           </li>
         </ul>
 
-        <!-- Mobile: profile card + same links (visible only on small screens) -->
+        <!-- Mobile profile card -->
         <div class="mobile-profile-card d-md-none p-3">
           <div class="text-center mb-3">
             <i class="fas fa-user-circle fa-4x text-success"></i>
@@ -210,13 +261,13 @@
               </div>
             </div>
           </div>
-          <hr class="my-2">
+          <hr class="my-2" />
           <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link py-2" href="profile.html"><i class="fas fa-id-card me-2"></i> My Profile</a></li>
             <li class="nav-item"><a class="nav-link py-2" href="create-listing.html"><i class="fas fa-plus-circle me-2"></i> Post a Listing</a></li>
             <li class="nav-item"><a class="nav-link py-2" href="listings.html"><i class="fas fa-list me-2"></i> Browse Listings</a></li>
             <li class="nav-item"><a class="nav-link py-2" href="../t/report-issue.html"><i class="fas fa-flag me-2"></i> Report Issue</a></li>
-            <li><hr class="my-2"></li>
+            <li><hr class="my-2" /></li>
             <li class="nav-item"><a class="nav-link text-danger py-2" href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
           </ul>
         </div>
@@ -225,385 +276,442 @@
   </nav>
 </header>
 
-
 <main class="pt-5 mt-4">
   <div class="container py-4">
+
     <!-- Edit mode toggle row -->
     <div class="d-flex justify-content-end align-items-center gap-3 mb-4">
       <span class="fw-semibold">Edit mode</span>
       <label class="toggle-switch">
-        <input type="checkbox" id="editModeToggle">
+        <input type="checkbox" id="editModeToggle" />
         <span class="slider"></span>
       </label>
     </div>
 
-    <div class="row g-4">
-      <!-- LEFT COLUMN: Avatar, stats, verification summary, badges (always view mode) -->
+    <!-- SKELETON LOADER (visible initially) -->
+    <div id="skeletonWrapper" class="row g-4 skeleton-wrapper">
       <div class="col-lg-4">
-        <div class="section-card shadow-sm p-4 text-center mb-4" data-aos="fade-right">
-          <div class="position-relative d-inline-block mb-3">
-            <img src="https://ui-avatars.com/api/?background=2c7a5e&color=fff&name=Salawu+Lucky" alt="Profile" class="profile-avatar-large">
-            <label for="profilePicUpload" class="position-absolute bottom-0 end-0 bg-white rounded-circle p-1 shadow-sm" style="cursor: pointer;">
-              <i class="fas fa-camera fa-sm text-primary"></i>
-            </label>
-            <input type="file" id="profilePicUpload" hidden accept="image/*">
-          </div>
-          <div id="nameDisplayView"><h3 class="fw-bold mb-1">Salawu Lucky</h3></div>
-          <div id="emailDisplayView"><p class="text-muted small">salawu.lucky@stu.ui.edu.ng</p></div>
-          
+        <div class="section-card shadow-sm p-4 text-center">
+          <div class="skeleton-avatar skeleton-loader"></div>
+          <div class="skeleton-text skeleton-loader" style="height:24px; width:70%; margin:0 auto;"></div>
+          <div class="skeleton-text skeleton-loader" style="width:50%; margin:0 auto;"></div>
           <div class="row g-2 mt-3">
-            <div class="col-6">
-              <div class="stat-badge">
-                <i class="fas fa-coins fs-5" style="color: var(--primary);"></i>
-                <div class="small text-muted">Points</div>
-                <strong class="fs-5" id="pointsDisplay">3</strong>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="stat-badge">
-                <i class="fas fa-star fs-5" style="color: var(--primary);"></i>
-                <div class="small text-muted">Trust score</div>
-                <strong class="fs-5" id="trustScore">46%</strong>
-              </div>
-            </div>
+            <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:60px;"></div></div>
+            <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:60px;"></div></div>
           </div>
-
-          <hr class="my-3">
-          <div class="text-start">
-            <h6 class="mb-3"><i class="fas fa-shield-alt me-2"></i>Verification summary</h6>
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <span class="verification-icon"><i class="fas fa-envelope"></i></span>
-              <div><strong>Email</strong><br><span class="small text-success">Verified @stu.ui.edu.ng</span></div>
-            </div>
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <span class="verification-icon"><i class="fas fa-id-card"></i></span>
-              <div><strong>Student ID</strong><br><span class="small" id="studentIdStatus">Pending verification</span></div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-              <span class="verification-icon"><i class="fas fa-building"></i></span>
-              <div><strong>Hall residence</strong><br><span class="small text-success">Idia Hall (verified)</span></div>
-            </div>
-          </div>
-
-          <div class="mt-4">
-            <a href="payment.html" class="btn btn-primary-custom w-100 mb-2"><i class="fas fa-plus-circle me-1"></i>Add points</a>
-            <a href="listings.html" class="btn btn-outline-custom w-100"><i class="fas fa-list-ul me-1"></i>My listings</a>
-          </div>
-        </div>
-
-        <!-- Badges earned -->
-        <div class="section-card shadow-sm p-4" data-aos="fade-right" data-aos-delay="100">
-          <h6 class="mb-3"><i class="fas fa-medal me-2"></i>Badges earned</h6>
-          <div class="d-flex flex-wrap gap-2">
-            <span class="badge-custom"><i class="fas fa-check-circle text-success"></i> Email verified</span>
-            <span class="badge-custom"><i class="fas fa-home text-primary"></i> Hall verified</span>
-            <span class="badge-custom"><i class="fas fa-handshake text-warning"></i> Trusted seller</span>
-            <span class="badge-custom"><i class="fas fa-rocket"></i> Early adopter</span>
-          </div>
-          <div class="mt-3 small text-muted">Complete your student ID verification to unlock the “ID verified” badge.</div>
+          <div class="skeleton-text skeleton-loader mt-3" style="height:100px;"></div>
+          <div class="skeleton-text skeleton-loader" style="height:80px;"></div>
         </div>
       </div>
-
-      <!-- RIGHT COLUMN: Editable sections -->
       <div class="col-lg-8">
-        <!-- Personal Information (editable) -->
-        <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left">
-          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-            <h5 class="mb-0"><i class="fas fa-user me-2" style="color: var(--primary);"></i>Personal Information</h5>
-          </div>
-          <!-- View mode -->
-          <div id="personalView">
-            <div class="row g-3">
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Full name</span><span class="info-value" id="viewFullName">Salawu Lucky</span></div></div>
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Email</span><span class="info-value" id="viewEmail">salawu.lucky@stu.ui.edu.ng</span></div></div>
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Phone number</span><span class="info-value" id="viewPhone">+234 801 234 5678</span></div></div>
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Member since</span><span class="info-value">2024</span></div></div>
-            </div>
-          </div>
-          <!-- Edit mode -->
-          <div id="personalEdit" class="d-none">
-            <div class="form-floating-label">
-              <input type="text" class="form-control" id="editFullName" placeholder=" " value="Salawu Lucky">
-              <label class="form-label" for="editFullName">Full name</label>
-            </div>
-            <div class="form-floating-label">
-              <input type="email" class="form-control" id="editEmail" placeholder=" " value="salawu.lucky@stu.ui.edu.ng">
-              <label class="form-label" for="editEmail">Email address</label>
-            </div>
-            <div class="form-floating-label">
-              <input type="tel" class="form-control" id="editPhone" placeholder=" " value="+234 801 234 5678">
-              <label class="form-label" for="editPhone">Phone number</label>
-            </div>
-          </div>
-        </div>
+        <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+        <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+        <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+        <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+        <div class="section-card shadow-sm p-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+      </div>
+    </div>
 
-        <!-- Academic Details (editable) -->
-        <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="50">
-          <h5 class="mb-3"><i class="fas fa-graduation-cap me-2" style="color: var(--primary);"></i>Academic Information</h5>
-          <div id="academicView">
-            <div class="row g-3">
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Matric number</span><span class="info-value" id="viewMatric">UI/2022/12345</span></div></div>
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Department</span><span class="info-value" id="viewDept">Computer Science</span></div></div>
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Faculty</span><span class="info-value" id="viewFaculty">Science</span></div></div>
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Level</span><span class="info-value" id="viewLevel">300 Level</span></div></div>
+    <!-- ACTUAL PROFILE CONTENT (hidden until loaded) -->
+    <div id="profileContent" class="profile-content">
+      <div class="row g-4">
+        <!-- LEFT COLUMN -->
+        <div class="col-lg-4">
+          <div class="section-card shadow-sm p-4 text-center mb-4" data-aos="fade-right">
+            <div class="position-relative d-inline-block mb-3">
+              <img src="https://ui-avatars.com/api/?background=2c7a5e&color=fff&name=Salawu+Lucky" alt="Profile" class="profile-avatar-large" />
+              <label for="profilePicUpload" class="position-absolute bottom-0 end-0 bg-white rounded-circle p-1 shadow-sm" style="cursor: pointer;">
+                <i class="fas fa-camera fa-sm text-primary"></i>
+              </label>
+              <input type="file" id="profilePicUpload" hidden accept="image/*" />
             </div>
-          </div>
-          <div id="academicEdit" class="d-none">
-            <div class="form-floating-label">
-              <input type="text" class="form-control" id="editMatric" placeholder=" " value="UI/2022/12345">
-              <label class="form-label" for="editMatric">Matric number</label>
-            </div>
-            <div class="form-floating-label">
-              <input type="text" class="form-control" id="editDept" placeholder=" " value="Computer Science">
-              <label class="form-label" for="editDept">Department</label>
-            </div>
-            <div class="form-floating-label">
-              <input type="text" class="form-control" id="editFaculty" placeholder=" " value="Science">
-              <label class="form-label" for="editFaculty">Faculty</label>
-            </div>
-            <div class="form-floating-label">
-              <input type="text" class="form-control" id="editLevel" placeholder=" " value="300 Level">
-              <label class="form-label" for="editLevel">Level</label>
-            </div>
-          </div>
-        </div>
+            <div id="nameDisplayView"><h3 class="fw-bold mb-1">Salawu Lucky</h3></div>
+            <div id="emailDisplayView"><p class="text-muted small">salawu.lucky@stu.ui.edu.ng</p></div>
 
-        <!-- Points Management (non-editable, but add points button) -->
-        <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="100">
-          <h5 class="mb-3"><i class="fas fa-coins me-2" style="color: var(--primary);"></i>Points & Credits</h5>
-          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-            <div>
-              <span class="text-muted">Available points</span>
-              <div class="display-6 fw-bold" id="pointsBalance">3</div>
-              <small class="text-muted">Each new listing costs 1 point</small>
-            </div>
-            <a href="payment.html" class="btn btn-primary-custom"><i class="fas fa-bolt me-1"></i>Top up points</a>
-          </div>
-          <hr>
-          <div class="small text-muted">📜 Transaction history</div>
-          <ul class="list-unstyled mt-2 small">
-            <li><i class="fas fa-plus-circle text-success me-2"></i> +3 points · Signup bonus (Jan 10, 2025)</li>
-            <li><i class="fas fa-minus-circle text-danger me-2"></i> -1 point · Listing “ECO 211 textbook” (Feb 1, 2025)</li>
-            <li><i class="fas fa-gift text-info me-2"></i> +5 points · Referral reward (Feb 10, 2025)</li>
-          </ul>
-        </div>
-
-        <!-- Trust & Reviews (read-only) -->
-        <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="150">
-          <h5 class="mb-3"><i class="fas fa-star me-2" style="color: var(--primary);"></i>Trust & Reviews</h5>
-          <div class="d-flex align-items-center gap-4 flex-wrap mb-4">
-            <div>
-              <span class="display-6 fw-bold">4.6</span>
-              <span class="text-muted">/5</span>
-              <div class="rating-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
-            </div>
-            <div style="flex:1">
-              <div class="d-flex justify-content-between small"><span>Overall trust score</span><span>46%</span></div>
-              <div class="progress-bar-custom mt-1"><div class="progress-fill" style="width:46%"></div></div>
-              <div class="small text-muted mt-1">Based on 12 reviews</div>
-            </div>
-          </div>
-          <div>
-            <div class="review-item p-3 rounded-3 border mb-2">
-              <div class="d-flex justify-content-between align-items-start flex-wrap">
-                <div><strong>Aisha K.</strong> <span class="rating-stars small"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span></div>
-                <small class="text-muted">2 weeks ago · COS102 textbook</small>
+            <div class="row g-2 mt-3">
+              <div class="col-6">
+                <div class="stat-badge">
+                  <i class="fas fa-coins fs-5" style="color: var(--primary);"></i>
+                  <div class="small text-muted">Points</div>
+                  <strong class="fs-5" id="pointsDisplay">3</strong>
+                </div>
               </div>
-              <p class="small text-muted mt-1 mb-0">“Prompt meetup and item as described. Thank you!”</p>
-            </div>
-            <div class="review-item p-3 rounded-3 border mb-2">
-              <div class="d-flex justify-content-between align-items-start flex-wrap">
-                <div><strong>Daniel O.</strong> <span class="rating-stars small"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
-                <small class="text-muted">1 month ago · PHY 115 manual</small>
+              <div class="col-6">
+                <div class="stat-badge">
+                  <i class="fas fa-star fs-5" style="color: var(--primary);"></i>
+                  <div class="small text-muted">Trust score</div>
+                  <strong class="fs-5" id="trustScore">46%</strong>
+                </div>
               </div>
-              <p class="small text-muted mt-1 mb-0">“Great seller — honest pricing and quick communication.”</p>
             </div>
+
+            <hr class="my-3" />
+            <div class="text-start">
+              <h6 class="mb-3"><i class="fas fa-shield-alt me-2"></i>Verification summary</h6>
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="verification-icon"><i class="fas fa-envelope"></i></span>
+                <div><strong>Email</strong><br /><span class="small text-success">Verified @stu.ui.edu.ng</span></div>
+              </div>
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="verification-icon"><i class="fas fa-id-card"></i></span>
+                <div><strong>Student ID</strong><br /><span class="small" id="studentIdStatus">Pending verification</span></div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="verification-icon"><i class="fas fa-building"></i></span>
+                <div><strong>Hall residence</strong><br /><span class="small text-success">Idia Hall (verified)</span></div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <a href="payment.html" class="btn btn-primary-custom w-100 mb-2"><i class="fas fa-plus-circle me-1"></i>Add points</a>
+              <a href="listings.html" class="btn btn-outline-custom w-100"><i class="fas fa-list-ul me-1"></i>My listings</a>
+            </div>
+          </div>
+
+          <!-- Badges -->
+          <div class="section-card shadow-sm p-4" data-aos="fade-right" data-aos-delay="100">
+            <h6 class="mb-3"><i class="fas fa-medal me-2"></i>Badges earned</h6>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge-custom"><i class="fas fa-check-circle text-success"></i> Email verified</span>
+              <span class="badge-custom"><i class="fas fa-home text-primary"></i> Hall verified</span>
+              <span class="badge-custom"><i class="fas fa-handshake text-warning"></i> Trusted seller</span>
+              <span class="badge-custom"><i class="fas fa-rocket"></i> Early adopter</span>
+            </div>
+            <div class="mt-3 small text-muted">Complete your student ID verification to unlock the “ID verified” badge.</div>
           </div>
         </div>
 
-        <!-- Settings & Preferences (editable) -->
-        <div class="section-card shadow-sm p-4" data-aos="fade-left" data-aos-delay="200">
-          <h5 class="mb-3"><i class="fas fa-sliders-h me-2" style="color: var(--primary);"></i>Settings & Preferences</h5>
-          <div id="settingsView">
-            <div class="row g-3 mb-3">
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Email notifications</span><span class="info-value" id="viewNotifications">Enabled</span></div></div>
-              <div class="col-md-6"><div class="info-row"><span class="info-label">Profile visibility</span><span class="info-value" id="viewVisibility">Public (UI students)</span></div></div>
+        <!-- RIGHT COLUMN -->
+        <div class="col-lg-8">
+          <!-- Personal Information -->
+          <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+              <h5 class="mb-0"><i class="fas fa-user me-2" style="color: var(--primary);"></i>Personal Information</h5>
+            </div>
+            <!-- View mode -->
+            <div id="personalView">
+              <div class="row g-3">
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Full name</span><span class="info-value" id="viewFullName">Salawu Lucky</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Email</span><span class="info-value" id="viewEmail">salawu.lucky@stu.ui.edu.ng</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Phone number</span><span class="info-value" id="viewPhone">+234 801 234 5678</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Member since</span><span class="info-value">2024</span></div></div>
+              </div>
+            </div>
+            <!-- Edit mode -->
+            <div id="personalEdit" class="d-none">
+              <div class="form-floating-label">
+                <input type="text" class="form-control" id="editFullName" placeholder=" " value="Salawu Lucky" />
+                <label class="form-label" for="editFullName">Full name</label>
+              </div>
+              <div class="form-floating-label">
+                <input type="email" class="form-control" id="editEmail" placeholder=" " value="salawu.lucky@stu.ui.edu.ng" />
+                <label class="form-label" for="editEmail">Email address</label>
+              </div>
+              <div class="form-floating-label">
+                <input type="tel" class="form-control" id="editPhone" placeholder=" " value="+234 801 234 5678" />
+                <label class="form-label" for="editPhone">Phone number</label>
+              </div>
             </div>
           </div>
-          <div id="settingsEdit" class="d-none">
-            <div class="form-floating-label">
-              <select class="form-select" id="editNotifications">
-                <option value="Enabled" selected>Enabled</option>
-                <option value="Disabled">Disabled</option>
-              </select>
-              <label class="form-label" for="editNotifications">Email notifications</label>
-            </div>
-            <div class="form-floating-label">
-              <select class="form-select" id="editVisibility">
-                <option value="Public (UI students)" selected>Public (UI students)</option>
-                <option value="Private">Private</option>
-              </select>
-              <label class="form-label" for="editVisibility">Profile visibility</label>
-            </div>
-          </div>
-          <div class="d-flex flex-wrap gap-2 mt-3" id="settingsActions">
-            <button type="button" class="btn btn-outline-secondary btn-sm" id="changePasswordBtn"><i class="fas fa-key me-1"></i>Change password</button>
-            <button type="button" class="btn btn-outline-danger btn-sm" id="uploadStudentIdBtn"><i class="fas fa-id-card me-1"></i>Upload student ID</button>
-          </div>
-        </div>
 
-        <!-- Save button (appears only in edit mode) -->
-        <div id="saveProfileBtnContainer" class="mt-4 text-end d-none">
-          <button id="saveProfileChanges" class="btn btn-primary-custom px-4"><i class="fas fa-save me-2"></i>Save all changes</button>
+          <!-- Academic -->
+          <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="50">
+            <h5 class="mb-3"><i class="fas fa-graduation-cap me-2" style="color: var(--primary);"></i>Academic Information</h5>
+            <div id="academicView">
+              <div class="row g-3">
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Matric number</span><span class="info-value" id="viewMatric">UI/2022/12345</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Department</span><span class="info-value" id="viewDept">Computer Science</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Faculty</span><span class="info-value" id="viewFaculty">Science</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Level</span><span class="info-value" id="viewLevel">300 Level</span></div></div>
+              </div>
+            </div>
+            <div id="academicEdit" class="d-none">
+              <div class="form-floating-label">
+                <input type="text" class="form-control" id="editMatric" placeholder=" " value="UI/2022/12345" />
+                <label class="form-label" for="editMatric">Matric number</label>
+              </div>
+              <div class="form-floating-label">
+                <input type="text" class="form-control" id="editDept" placeholder=" " value="Computer Science" />
+                <label class="form-label" for="editDept">Department</label>
+              </div>
+              <div class="form-floating-label">
+                <input type="text" class="form-control" id="editFaculty" placeholder=" " value="Science" />
+                <label class="form-label" for="editFaculty">Faculty</label>
+              </div>
+              <div class="form-floating-label">
+                <input type="text" class="form-control" id="editLevel" placeholder=" " value="300 Level" />
+                <label class="form-label" for="editLevel">Level</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Points -->
+          <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="100">
+            <h5 class="mb-3"><i class="fas fa-coins me-2" style="color: var(--primary);"></i>Points & Credits</h5>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+              <div>
+                <span class="text-muted">Available points</span>
+                <div class="display-6 fw-bold" id="pointsBalance">3</div>
+                <small class="text-muted">Each new listing costs 1 point</small>
+              </div>
+              <a href="payment.html" class="btn btn-primary-custom"><i class="fas fa-bolt me-1"></i>Top up points</a>
+            </div>
+            <hr />
+            <div class="small text-muted">📜 Transaction history</div>
+            <ul class="list-unstyled mt-2 small">
+              <li><i class="fas fa-plus-circle text-success me-2"></i> +3 points · Signup bonus (Jan 10, 2025)</li>
+              <li><i class="fas fa-minus-circle text-danger me-2"></i> -1 point · Listing “ECO 211 textbook” (Feb 1, 2025)</li>
+              <li><i class="fas fa-gift text-info me-2"></i> +5 points · Referral reward (Feb 10, 2025)</li>
+            </ul>
+          </div>
+
+          <!-- Trust & Reviews -->
+          <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="150">
+            <h5 class="mb-3"><i class="fas fa-star me-2" style="color: var(--primary);"></i>Trust & Reviews</h5>
+            <div class="d-flex align-items-center gap-4 flex-wrap mb-4">
+              <div>
+                <span class="display-6 fw-bold">4.6</span>
+                <span class="text-muted">/5</span>
+                <div class="rating-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+              </div>
+              <div style="flex:1">
+                <div class="d-flex justify-content-between small"><span>Overall trust score</span><span>46%</span></div>
+                <div class="progress-bar-custom mt-1"><div class="progress-fill" style="width:46%"></div></div>
+                <div class="small text-muted mt-1">Based on 12 reviews</div>
+              </div>
+            </div>
+            <div>
+              <div class="review-item p-3 rounded-3 border mb-2">
+                <div class="d-flex justify-content-between align-items-start flex-wrap">
+                  <div><strong>Aisha K.</strong> <span class="rating-stars small"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+                  <small class="text-muted">2 weeks ago · COS102 textbook</small>
+                </div>
+                <p class="small text-muted mt-1 mb-0">“Prompt meetup and item as described. Thank you!”</p>
+              </div>
+              <div class="review-item p-3 rounded-3 border mb-2">
+                <div class="d-flex justify-content-between align-items-start flex-wrap">
+                  <div><strong>Daniel O.</strong> <span class="rating-stars small"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+                  <small class="text-muted">1 month ago · PHY 115 manual</small>
+                </div>
+                <p class="small text-muted mt-1 mb-0">“Great seller — honest pricing and quick communication.”</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings -->
+          <div class="section-card shadow-sm p-4" data-aos="fade-left" data-aos-delay="200">
+            <h5 class="mb-3"><i class="fas fa-sliders-h me-2" style="color: var(--primary);"></i>Settings & Preferences</h5>
+            <div id="settingsView">
+              <div class="row g-3 mb-3">
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Email notifications</span><span class="info-value" id="viewNotifications">Enabled</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Profile visibility</span><span class="info-value" id="viewVisibility">Public (UI students)</span></div></div>
+              </div>
+            </div>
+            <div id="settingsEdit" class="d-none">
+              <div class="form-floating-label">
+                <select class="form-select" id="editNotifications">
+                  <option value="Enabled" selected>Enabled</option>
+                  <option value="Disabled">Disabled</option>
+                </select>
+                <label class="form-label" for="editNotifications">Email notifications</label>
+              </div>
+              <div class="form-floating-label">
+                <select class="form-select" id="editVisibility">
+                  <option value="Public (UI students)" selected>Public (UI students)</option>
+                  <option value="Private">Private</option>
+                </select>
+                <label class="form-label" for="editVisibility">Profile visibility</label>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-3" id="settingsActions">
+              <button type="button" class="btn btn-outline-secondary btn-sm" id="changePasswordBtn"><i class="fas fa-key me-1"></i>Change password</button>
+              <button type="button" class="btn btn-outline-danger btn-sm" id="uploadStudentIdBtn"><i class="fas fa-id-card me-1"></i>Upload student ID</button>
+            </div>
+          </div>
+
+          <!-- Save button (appears only in edit mode) -->
+          <div id="saveProfileBtnContainer" class="mt-4 text-end d-none">
+            <button id="saveProfileChanges" class="btn btn-primary-custom px-4"><i class="fas fa-save me-2"></i>Save all changes</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </main>
 
-<footer>
-  <div class="container text-center">
-    <p class="text-muted small mb-0">&copy; 2025 CampusConnect UI — University of Ibadan. Only verified students.</p>
-  </div>
+<footer class="text-center py-3 text-muted small border-top mt-5">
+  <div class="container">&copy; 2025 CampusConnect UI — University of Ibadan. Only verified students.</div>
 </footer>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- Load main.js for auth and utilities -->
+<script src="../assets/js/main.js"></script>
+
 <script>
-  isAuthenticated()
-
-  // Data storage (simulate)
-  let profileData = {
-    fullName: "Salawu Lucky",
-    email: "salawu.lucky@stu.ui.edu.ng",
-    phone: "+234 801 234 5678",
-    matric: "UI/2022/12345",
-    department: "Computer Science",
-    faculty: "Science",
-    level: "300 Level",
-    notifications: "Enabled",
-    visibility: "Public (UI students)"
-  };
-
-  // DOM elements (view)
-  const viewFullName = document.getElementById('viewFullName');
-  const viewEmail = document.getElementById('viewEmail');
-  const viewPhone = document.getElementById('viewPhone');
-  const viewMatric = document.getElementById('viewMatric');
-  const viewDept = document.getElementById('viewDept');
-  const viewFaculty = document.getElementById('viewFaculty');
-  const viewLevel = document.getElementById('viewLevel');
-  const viewNotifications = document.getElementById('viewNotifications');
-  const viewVisibility = document.getElementById('viewVisibility');
-  const nameDisplayView = document.getElementById('nameDisplayView');
-  const emailDisplayView = document.getElementById('emailDisplayView');
-
-  // Edit inputs
-  const editFullName = document.getElementById('editFullName');
-  const editEmail = document.getElementById('editEmail');
-  const editPhone = document.getElementById('editPhone');
-  const editMatric = document.getElementById('editMatric');
-  const editDept = document.getElementById('editDept');
-  const editFaculty = document.getElementById('editFaculty');
-  const editLevel = document.getElementById('editLevel');
-  const editNotifications = document.getElementById('editNotifications');
-  const editVisibility = document.getElementById('editVisibility');
-
-  // Sections
-  const personalView = document.getElementById('personalView');
-  const personalEdit = document.getElementById('personalEdit');
-  const academicView = document.getElementById('academicView');
-  const academicEdit = document.getElementById('academicEdit');
-  const settingsView = document.getElementById('settingsView');
-  const settingsEdit = document.getElementById('settingsEdit');
-  const saveBtnContainer = document.getElementById('saveProfileBtnContainer');
-
-  // Toggle edit mode
-  const editModeToggle = document.getElementById('editModeToggle');
-  function refreshViewMode() {
-    // Update all view fields from profileData
-    viewFullName.innerText = profileData.fullName;
-    viewEmail.innerText = profileData.email;
-    viewPhone.innerText = profileData.phone;
-    viewMatric.innerText = profileData.matric;
-    viewDept.innerText = profileData.department;
-    viewFaculty.innerText = profileData.faculty;
-    viewLevel.innerText = profileData.level;
-    viewNotifications.innerText = profileData.notifications;
-    viewVisibility.innerText = profileData.visibility;
-    // Update left column name and email display
-    nameDisplayView.innerHTML = `<h3 class="fw-bold mb-1">${escapeHtml(profileData.fullName)}</h3>`;
-    emailDisplayView.innerHTML = `<p class="text-muted small">${escapeHtml(profileData.email)}</p>`;
-  }
-
-  function toggleEditMode() {
-    const isEdit = editModeToggle.checked;
-    personalView.classList.toggle('d-none', isEdit);
-    personalEdit.classList.toggle('d-none', !isEdit);
-    academicView.classList.toggle('d-none', isEdit);
-    academicEdit.classList.toggle('d-none', !isEdit);
-    settingsView.classList.toggle('d-none', isEdit);
-    settingsEdit.classList.toggle('d-none', !isEdit);
-    saveBtnContainer.classList.toggle('d-none', !isEdit);
-
-    if (isEdit) {
-      // populate edit fields with current data
-      editFullName.value = profileData.fullName;
-      editEmail.value = profileData.email;
-      editPhone.value = profileData.phone;
-      editMatric.value = profileData.matric;
-      editDept.value = profileData.department;
-      editFaculty.value = profileData.faculty;
-      editLevel.value = profileData.level;
-      editNotifications.value = profileData.notifications;
-      editVisibility.value = profileData.visibility;
+  (function() {
+    // === 1. AUTH ===
+    if (typeof isAuthenticated === 'function') {
+     console.log('oooooo') // isAuthenticated();
+    } else {
+      console.warn('isAuthenticated not defined – make sure main.js is loaded.');
     }
-  }
 
-  // Save all changes
-  function saveProfile() {
-    profileData.fullName = editFullName.value.trim();
-    profileData.email = editEmail.value.trim();
-    profileData.phone = editPhone.value.trim();
-    profileData.matric = editMatric.value.trim();
-    profileData.department = editDept.value.trim();
-    profileData.faculty = editFaculty.value.trim();
-    profileData.level = editLevel.value.trim();
-    profileData.notifications = editNotifications.value;
-    profileData.visibility = editVisibility.value;
+    // === 2. DUMMY PROFILE DATA ===
+    let profileData = {
+      fullName: "Salawu Lucky",
+      email: "salawu.lucky@stu.ui.edu.ng",
+      phone: "+234 801 234 5678",
+      matric: "UI/2022/12345",
+      department: "Computer Science",
+      faculty: "Science",
+      level: "300 Level",
+      notifications: "Enabled",
+      visibility: "Public (UI students)"
+    };
 
-    refreshViewMode();
-    // Exit edit mode
-    editModeToggle.checked = false;
-    toggleEditMode();
-    alert('Profile updated successfully!');
-  }
+    // DOM references
+    const viewFullName = document.getElementById('viewFullName');
+    const viewEmail = document.getElementById('viewEmail');
+    const viewPhone = document.getElementById('viewPhone');
+    const viewMatric = document.getElementById('viewMatric');
+    const viewDept = document.getElementById('viewDept');
+    const viewFaculty = document.getElementById('viewFaculty');
+    const viewLevel = document.getElementById('viewLevel');
+    const viewNotifications = document.getElementById('viewNotifications');
+    const viewVisibility = document.getElementById('viewVisibility');
+    const nameDisplayView = document.getElementById('nameDisplayView');
+    const emailDisplayView = document.getElementById('emailDisplayView');
 
-  // Helper escape
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
+    const editFullName = document.getElementById('editFullName');
+    const editEmail = document.getElementById('editEmail');
+    const editPhone = document.getElementById('editPhone');
+    const editMatric = document.getElementById('editMatric');
+    const editDept = document.getElementById('editDept');
+    const editFaculty = document.getElementById('editFaculty');
+    const editLevel = document.getElementById('editLevel');
+    const editNotifications = document.getElementById('editNotifications');
+    const editVisibility = document.getElementById('editVisibility');
+
+    const personalView = document.getElementById('personalView');
+    const personalEdit = document.getElementById('personalEdit');
+    const academicView = document.getElementById('academicView');
+    const academicEdit = document.getElementById('academicEdit');
+    const settingsView = document.getElementById('settingsView');
+    const settingsEdit = document.getElementById('settingsEdit');
+    const saveBtnContainer = document.getElementById('saveProfileBtnContainer');
+    const editModeToggle = document.getElementById('editModeToggle');
+
+    // === 3. FUNCTIONS ===
+    function refreshViewMode() {
+      viewFullName.innerText = profileData.fullName;
+      viewEmail.innerText = profileData.email;
+      viewPhone.innerText = profileData.phone;
+      viewMatric.innerText = profileData.matric;
+      viewDept.innerText = profileData.department;
+      viewFaculty.innerText = profileData.faculty;
+      viewLevel.innerText = profileData.level;
+      viewNotifications.innerText = profileData.notifications;
+      viewVisibility.innerText = profileData.visibility;
+      nameDisplayView.innerHTML = `<h3 class="fw-bold mb-1">${escapeHtml(profileData.fullName)}</h3>`;
+      emailDisplayView.innerHTML = `<p class="text-muted small">${escapeHtml(profileData.email)}</p>`;
+    }
+
+    function toggleEditMode() {
+      const isEdit = editModeToggle.checked;
+      personalView.classList.toggle('d-none', isEdit);
+      personalEdit.classList.toggle('d-none', !isEdit);
+      academicView.classList.toggle('d-none', isEdit);
+      academicEdit.classList.toggle('d-none', !isEdit);
+      settingsView.classList.toggle('d-none', isEdit);
+      settingsEdit.classList.toggle('d-none', !isEdit);
+      saveBtnContainer.classList.toggle('d-none', !isEdit);
+
+      if (isEdit) {
+        editFullName.value = profileData.fullName;
+        editEmail.value = profileData.email;
+        editPhone.value = profileData.phone;
+        editMatric.value = profileData.matric;
+        editDept.value = profileData.department;
+        editFaculty.value = profileData.faculty;
+        editLevel.value = profileData.level;
+        editNotifications.value = profileData.notifications;
+        editVisibility.value = profileData.visibility;
+      }
+    }
+
+    function saveProfile() {
+      profileData.fullName = editFullName.value.trim();
+      profileData.email = editEmail.value.trim();
+      profileData.phone = editPhone.value.trim();
+      profileData.matric = editMatric.value.trim();
+      profileData.department = editDept.value.trim();
+      profileData.faculty = editFaculty.value.trim();
+      profileData.level = editLevel.value.trim();
+      profileData.notifications = editNotifications.value;
+      profileData.visibility = editVisibility.value;
+
+      refreshViewMode();
+      editModeToggle.checked = false;
+      toggleEditMode();
+      alert('Profile updated successfully!');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    // === 4. SKELETON LOADING ===
+    function showProfile() {
+      const skeleton = document.getElementById('skeletonWrapper');
+      const content = document.getElementById('profileContent');
+      skeleton.classList.add('hidden');
+      content.classList.add('visible');
+      // init AOS after content visible
+      if (typeof AOS !== 'undefined') AOS.refresh();
+    }
+
+    // Simulate loading delay (1s)
+    setTimeout(showProfile, 1000);
+
+    // === 5. EVENT LISTENERS ===
+    editModeToggle.addEventListener('change', toggleEditMode);
+    document.getElementById('saveProfileChanges')?.addEventListener('click', saveProfile);
+    document.getElementById('changePasswordBtn')?.addEventListener('click', () => alert('Password change flow (OTP to email)'));
+    document.getElementById('uploadStudentIdBtn')?.addEventListener('click', () => alert('Upload student ID for verification.'));
+    document.getElementById('profilePicUpload')?.addEventListener('change', (e) => {
+      if (e.target.files.length) alert('Profile picture uploaded (simulated)');
     });
-  }
 
-  // Event listeners
-  editModeToggle.addEventListener('change', toggleEditMode);
-  document.getElementById('saveProfileChanges')?.addEventListener('click', saveProfile);
-  document.getElementById('changePasswordBtn')?.addEventListener('click', () => alert('Password change flow (OTP to email)'));
-  document.getElementById('uploadStudentIdBtn')?.addEventListener('click', () => alert('Upload student ID for verification.'));
-  document.getElementById('profilePicUpload')?.addEventListener('change', (e) => {
-    if(e.target.files.length) alert('Profile picture uploaded (simulated)');
-  });
+    // Load points from localStorage or use default
+    let points = localStorage.getItem('userPoints') || 3;
+    document.getElementById('pointsDisplay') && (document.getElementById('pointsDisplay').innerText = points);
+    document.getElementById('pointsBalance') && (document.getElementById('pointsBalance').innerText = points);
 
-  // Load points from localStorage
-  let points = localStorage.getItem('userPoints') || 3;
-  document.getElementById('pointsDisplay') && (document.getElementById('pointsDisplay').innerText = points);
-  document.getElementById('pointsBalance') && (document.getElementById('pointsBalance').innerText = points);
+    // Populate mobile user info (from main.js if available)
+    if (typeof populateUserProfile === 'function') {
+      populateUserProfile();
+    }
+
+    // Ensure logout works (defined in main.js)
+    window.logout = function() {
+      if (typeof deleteAuthCookies === 'function') deleteAuthCookies();
+      else {
+        ['access_token','refresh_token','user_id','is_email_verified'].forEach(name => {
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+        });
+      }
+      window.location.href = '../index.html';
+    };
+
+  })();
 </script>
 </body>
 </html>
