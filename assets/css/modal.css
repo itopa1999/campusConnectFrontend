@@ -1,4 +1,3 @@
-
 /* ========== MODAL OVERLAY & CONTAINER ========== */
 .modal-overlay {
   position: fixed;
@@ -9,9 +8,11 @@
   background-color: rgba(30, 42, 44, 0.6);
   backdrop-filter: blur(3px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;        /* changed from center */
   justify-content: center;
   z-index: 1000;
+  padding-top: 80px;              /* space for fixed header */
+  overflow-y: auto;               /* allow scrolling if modal tall */
 }
 
 .modal-container {
@@ -23,7 +24,8 @@
   border: 1px solid var(--card-border, #eef2f0);
   overflow: hidden;
   animation: modalFadeIn 0.2s ease-out;
-  max-height: 90vh;
+  max-height: 80vh;               /* limit height */
+  margin-bottom: 2rem;            /* space at bottom */
 }
 
 .confirm-modal-container {
@@ -33,11 +35,11 @@
 @keyframes modalFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    transform: scale(0.96) translateY(-10px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
@@ -83,7 +85,7 @@
 .modal-body {
   flex: 1 1 auto;
   overflow-y: auto;
-  max-height: 60vh;
+  max-height: 55vh;
   padding: 1.5rem;
   color: var(--text-dark, #1e2a2c);
   line-height: 1.5;
@@ -170,8 +172,12 @@
 
 /* Responsive */
 @media (max-width: 640px) {
+  .modal-overlay {
+    padding-top: 70px;            /* slightly less on mobile */
+  }
   .modal-container {
     width: 95%;
+    max-height: 85vh;
   }
   .modal-header, .modal-body, .modal-footer {
     padding-left: 1rem;
