@@ -847,11 +847,34 @@ function injectNavigation() {
   populateUserProfile();
 }
 
+
+  async function refreshPointBalance() {
+    try {
+      const response = await fetch(REFRESH_URL, {
+        headers: { 'Accept': 'application/json', ...getAuthHeaders() }
+      });
+      if (!response.ok) throw new Error('Failed to refresh dashboard');
+      const result = await response.json();
+      if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
+      document.getElementById('pointsBalanceValue').innerText = result.data.points_balance;
+      document.getElementById('summaryPointsBalance').innerText = result.data.points_balance;
+      setCookie('point_bal', result.data.points_balance, 10);
+      const mainmobilePointsBalance = document.getElementById('mobilePointsBalance');
+      if (mainmobilePointsBalance) {
+        mainmobilePointsBalance.textContent = result.data.points_balance;
+      }
+      showToast('Point balance updated', 'success');
+    } catch (err) {
+      console.error('Refresh error:', err);
+      showToast('Failed to refresh Point balance', 'error');
+    }
+  }
+
+
+
 // ========== START EVERYTHING AFTER DOM READY ==========
 function initAll() {
-  // Inject navigation first
   injectNavigation();
-
   initOptionalFeatures();
   initScrollToTop();
   initMobileMenu();

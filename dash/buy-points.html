@@ -634,19 +634,17 @@ function onPackageClick(e) {
 
         // 5. Handle success – e.g., redirect to payment page or open modal
         if (result.is_success && result.data.checkout_url) {
-          // Redirect to payment gateway
-          window.location.href = result.data.checkout_url;
-        } else {
-          // If you want to show a confirmation and close the modal
           confirmModal.open({
             title: '✅ Payment Initiated',
             message: result.message || 'Your payment has been initiated. Please complete the payment on the gateway.',
-            confirmText: 'OK',
+            confirmText: 'OK, Procced',
             onConfirm: () => {
-              formModal.close();
+              window.open(result.data.checkout_url, '_blank');
             }
           });
-        }
+        } else {
+          showToast(result.message || 'Something went wrong.', 'error');
+        } 
       } catch (err) {
         console.error('Payment error:', err);
         showToast(err.message || 'Payment failed. Please try again.', 'error');
