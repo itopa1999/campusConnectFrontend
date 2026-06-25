@@ -696,19 +696,40 @@ function onPackageClick(e) {
       container.innerHTML = `<div class="text-center text-muted py-3"><i class="fas fa-inbox me-2"></i>No purchases match your filters.</div>`;
       countEl.textContent = '0 purchases';
     } else {
-      container.innerHTML = filtered.map(p => `
+      container.innerHTML = filtered.map(p => {
+      // Show gateway if available
+      const gatewayHtml = p.gateway ? `<div class="small text-muted"><i class="fas fa-credit-card me-1"></i>${p.gateway}</div>` : '';
+      // Retry button for failed/pending
+      let retryButton = '';
+      if (p.status === 'failed' || p.status === 'pending') {
+        retryButton = `<button class="btn btn-sm btn-outline-danger retry-purchase mt-1" data-id="${p.id}" data-status="${p.status}"><i class="fas fa-redo"></i> Retry</button>`;
+      }
+      return `
         <div class="history-item d-flex flex-wrap justify-content-between align-items-center">
           <div>
             <strong>${p.package.description || p.package.points + ' pts'}</strong>
             <span class="badge bg-light text-dark ms-2">${p.points_awarded} pts</span>
             <div class="small text-muted">${formatDate(p.created_at)}</div>
+            ${gatewayHtml}
           </div>
           <div class="text-end">
             <span class="fw-bold text-success">₦${p.amount_paid.toLocaleString()}</span>
             <span class="badge-status ${statusBadgeClass(p.status)} d-block mt-1">${p.status}</span>
+            ${retryButton}
           </div>
         </div>
-      `).join('');
+      `;
+    }).join('');
+
+    document.querySelectorAll('.retry-purchase').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const purchaseId = this.getAttribute('data-id');
+        const status = this.getAttribute('data-status');
+        retryPurchase(purchaseId, status);
+      });
+    });
+
       countEl.textContent = `${filtered.length} purchases (filtered from ${purchaseState.items.length})`;
     }
     updatePaginationButtons('purchase');
@@ -744,6 +765,41 @@ function onPackageClick(e) {
     }
     updatePaginationButtons('transaction');
   }
+
+  async function retryPurchase(purchaseId, currentStatus) {
+  if (typeof confirmModal !== 'undefined' && confirmModal) {
+    confirmModal.open({
+      title: '🔄 Retry Payment',
+      message: `You are about to retry this ${currentStatus} purchase. Do you want to proceed?`,
+      confirmText: 'Yes, Retry',
+      onConfirm: async () => {
+        try {
+          const response = await fetch(AUTH_URL + 'retry-purchase', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...getAuthHeaders()
+            },
+            body: JSON.stringify({ purchase_id: purchaseId })
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.message || 'Retry failed.');
+          if (result.is_success) {
+            showToast(result.message || 'Retry initiated. Please complete the payment.', 'success');
+            // Reload purchases to show updated status
+            loadTab('purchase', purchaseState.page);
+          } else {
+            throw new Error(result.message || 'Retry request failed.');
+          }
+        } catch (err) {
+          showToast(err.message || 'Failed to retry purchase.', 'error');
+        }
+      }
+    });
+  } else {
+    showToast('Modal not available. Please refresh the page.', 'error');
+  }
+}
 
   function updatePaginationButtons(type) {
     const state = type === 'purchase' ? purchaseState : transactionState;
