@@ -327,9 +327,14 @@
               <div class="small text-white-50"><i class="fas fa-coins me-1"></i> Your balance</div>
               <div class="balance-number" id="pointsBalanceDisplay">0</div>
             </div>
-            <div class="d-flex gap-2 mt-2 mt-sm-0">
+            <!-- <div class="d-flex gap-2 mt-2 mt-sm-0">
               <button class="share-btn" id="sharePointsBtn"><i class="fas fa-share-alt me-2"></i>Share points</button>
-            </div>
+            </div> -->
+            <button class="points-balance-card d-flex flex-wrap align-items-center justify-content-between position-relative"
+                    id="refreshPointsBtn"
+                    title="Refresh points balance">
+              <i class="fas fa-sync-alt fs-5 text-white" style="opacity:0.7;"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -767,39 +772,69 @@ function onPackageClick(e) {
   }
 
   async function retryPurchase(purchaseId, currentStatus) {
-  if (typeof confirmModal !== 'undefined' && confirmModal) {
-    confirmModal.open({
-      title: '🔄 Retry Payment',
-      message: `You are about to retry this ${currentStatus} purchase. Do you want to proceed?`,
-      confirmText: 'Yes, Retry',
-      onConfirm: async () => {
-        try {
-          const response = await fetch(AUTH_URL + 'retry-purchase', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              ...getAuthHeaders()
-            },
-            body: JSON.stringify({ purchase_id: purchaseId })
-          });
-          const result = await response.json();
-          if (!response.ok) throw new Error(result.message || 'Retry failed.');
-          if (result.is_success) {
-            showToast(result.message || 'Retry initiated. Please complete the payment.', 'success');
-            // Reload purchases to show updated status
-            loadTab('purchase', purchaseState.page);
-          } else {
-            throw new Error(result.message || 'Retry request failed.');
-          }
-        } catch (err) {
-          showToast(err.message || 'Failed to retry purchase.', 'error');
+  if (!confirmModal) {
+    showToast('Modal not available. Please refresh the page.', 'error');
+    return;
+  }
+
+  confirmModal.open({
+    title: '🔄 Retry Payment',
+    message: `You are about to retry this ${currentStatus} purchase. Do you want to proceed?`,
+    confirmText: 'Yes, Retry',
+    onConfirm: async () => {
+      // 1. Locate the confirm button inside the modal
+      const modalElement = document.getElementById('confirmModal');
+      let confirmBtn = modalElement?.querySelector('.modal-footer .btn-primary');
+      // Fallback: if .btn-primary isn't used, pick the last button (usually confirm)
+      if (!confirmBtn) {
+        const allBtns = modalElement?.querySelectorAll('.modal-footer button');
+        if (allBtns && allBtns.length > 1) {
+          confirmBtn = allBtns[allBtns.length - 1];
         }
       }
-    });
-  } else {
-    showToast('Modal not available. Please refresh the page.', 'error');
-  }
+
+      // 2. Save original text and show spinner
+      const originalText = confirmBtn ? confirmBtn.innerHTML : 'Yes, Retry';
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
+      }
+
+      try {
+        const response = await fetch(AUTH_URL + 'retry-purchase', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders()
+          },
+          body: JSON.stringify({ purchase_id: purchaseId })
+        });
+        const result = await response.json();
+
+        if (!response.ok) throw new Error(result.message || 'Retry failed.');
+
+        if (result.is_success) {
+          showToast(result.message || 'Retry initiated. Please complete the payment.', 'success');
+          // Close modal and reload purchases
+          if (confirmModal.close) confirmModal.close();
+          loadTab('purchase', purchaseState.page);
+        } else {
+          throw new Error(result.message || 'Retry request failed.');
+        }
+      } catch (err) {
+        showToast(err.message || 'Failed to retry purchase.', 'error');
+      } finally {
+        // 3. Restore button state
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = originalText;
+        }
+      }
+    }
+  });
 }
+
+
 
   function updatePaginationButtons(type) {
     const state = type === 'purchase' ? purchaseState : transactionState;
@@ -869,25 +904,25 @@ function onPackageClick(e) {
   }
 
   // ─── Share points ──────────────────────────────────────────
-  function sharePoints() {
-    const points = document.getElementById('pointsBalanceDisplay').textContent;
-    if (typeof confirmModal !== 'undefined' && confirmModal) {
-      confirmModal.open({
-        title: 'Share your points balance',
-        message: `You have ${points} points. Share this with your friends!`,
-        confirmText: 'Copy to clipboard',
-        onConfirm: () => {
-          navigator.clipboard.writeText(`I have ${points} points on CampusConnect! 🎉`).then(() => {
-            showToast('Copied to clipboard!', 'success');
-          }).catch(() => {
-            showToast('Share: ' + `I have ${points} points on CampusConnect! 🎉`, 'info');
-          });
-        }
-      });
-    } else {
-      alert(`You have ${points} points.`);
-    }
-  }
+  // function sharePoints() {
+  //   const points = document.getElementById('pointsBalanceDisplay').textContent;
+  //   if (typeof confirmModal !== 'undefined' && confirmModal) {
+  //     confirmModal.open({
+  //       title: 'Share your points balance',
+  //       message: `You have ${points} points. Share this with your friends!`,
+  //       confirmText: 'Copy to clipboard',
+  //       onConfirm: () => {
+  //         navigator.clipboard.writeText(`I have ${points} points on CampusConnect! 🎉`).then(() => {
+  //           showToast('Copied to clipboard!', 'success');
+  //         }).catch(() => {
+  //           showToast('Share: ' + `I have ${points} points on CampusConnect! 🎉`, 'info');
+  //         });
+  //       }
+  //     });
+  //   } else {
+  //     alert(`You have ${points} points.`);
+  //   }
+  // }
 
   // ─── Load page ──────────────────────────────────────────────
   async function loadPage() {
@@ -924,7 +959,7 @@ function onPackageClick(e) {
       realContent.style.display = 'block';
 
       // ─── Bind events ──────────────────────────────────────────
-      document.getElementById('sharePointsBtn').addEventListener('click', sharePoints);
+      // document.getElementById('sharePointsBtn').addEventListener('click', sharePoints);
 
       document.getElementById('purchasePrevBtn').addEventListener('click', () => changePage('purchase', -1));
       document.getElementById('purchaseNextBtn').addEventListener('click', () => changePage('purchase', 1));
@@ -954,6 +989,8 @@ function onPackageClick(e) {
       showNetworkError();
     }
   }
+
+  document.getElementById('refreshPointsBtn')?.addEventListener('click', refreshPointBalance);
 
   document.addEventListener('DOMContentLoaded', loadPage);
 </script>

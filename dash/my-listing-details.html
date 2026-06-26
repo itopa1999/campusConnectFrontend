@@ -199,6 +199,61 @@
       font-size: 4rem;
       color: #f5b042;
     }
+
+    /* ─── Promotion toggles ─── */
+.promotion-toggle-group {
+  background: #f8faf9;
+  border-radius: 1rem;
+  padding: 0.75rem 1.25rem;
+  transition: all 0.2s;
+}
+.promotion-toggle-group .toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.promotion-toggle-group .toggle-item .label-text {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.promotion-toggle-group .toggle-item .points-cost {
+  font-size: 0.75rem;
+  color: #6c757d;
+  min-width: 50px;
+}
+.promotion-toggle-group .toggle-item .toggle-switch .slider {
+  background-color: #d1d5db;
+  transition: 0.3s;
+}
+.promotion-toggle-group .toggle-item .toggle-switch input:checked + .slider {
+  background-color: var(--accent);
+}
+.promotion-toggle-group .toggle-item .toggle-switch input:disabled + .slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.promotion-toggle-group .toggle-item .toggle-switch input:checked + .slider::before {
+  background-color: white;
+}
+.promotion-toggle-group .toggle-item .toggle-switch input:checked + .slider {
+  box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.3);
+}
+.promotion-info-text {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+.active-promotion-badge {
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: 2rem;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent-dark);
+  display: inline-block;
+  margin-left: 0.3rem;
+}
   </style>
 </head>
 <body>
@@ -354,7 +409,36 @@
                 <label class="form-label">Safe meeting spots</label>
                 <div id="hotspotsView" class="d-flex flex-wrap gap-2"></div>
               </div>
-              <!-- Reviews -->
+              <!-- Promotion toggles -->
+              <!-- Promotion toggles -->
+              <div class="mt-4 pt-3 border-top">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+                  <h5 class="mb-0"><i class="fas fa-bullhorn me-2 text-primary"></i>Promotions</h5>
+                  <div class="promotion-toggle-group d-flex gap-4">
+                    <!-- Banner toggle -->
+                    <div class="toggle-item">
+                      <span class="label-text">Banner</span>
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="bannerToggle" disabled>
+                        <span class="slider"></span>
+                      </label>
+                      <span class="points-cost" id="bannerCost"></span>
+                      <span class="active-promotion-badge" id="bannerActiveBadge" style="display:none;">Active</span>
+                    </div>
+                    <!-- Hot Sale toggle -->
+                    <div class="toggle-item">
+                      <span class="label-text">Hot Sale</span>
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="hotSaleToggle" disabled>
+                        <span class="slider"></span>
+                      </label>
+                      <span class="points-cost" id="hotSaleCost"></span>
+                      <span class="active-promotion-badge" id="hotSaleActiveBadge" style="display:none;">Active</span>
+                    </div>
+                  </div>
+                </div>
+                <div id="promotionInfo" class="promotion-info-text"></div>
+              </div>              <!-- Reviews -->
               <div class="mt-4 pt-3 border-top">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                   <h5 class="mb-0"><i class="fas fa-star me-2" style="color: #f5b042;"></i>Reviews</h5>
@@ -403,14 +487,6 @@
                   <option value="">None</option>
                 </select>
                 <label class="form-label" for="badgeSelect">Badge</label>
-              </div>
-
-              <!-- Promotion checkboxes (Banner / Hot Sale) -->
-              <div class="mt-4">
-                <label class="form-label fw-semibold">Promote your listing (optional)</label>
-                <div id="advertTypeContainer"></div>
-                <div class="helper-text">Select one or both to increase visibility. Points will be deducted from your balance.</div>
-                <div id="advertPointsInfo" class="mt-2 mb-5 small text-muted"></div>
               </div>
 
               <!-- Save hotspots -->
@@ -654,6 +730,8 @@
     userPoints = parseInt(getCookie('point_bal') || '0', 10);
     document.getElementById('userPoints').innerText = userPoints;
 
+    setupPromotionToggles();
+
     updateEditToggleState();
   }
 
@@ -745,6 +823,12 @@
 
   // Save all changes (including badge and promotions)
   async function saveAllChanges() {
+    const saveBtn = document.getElementById('saveBasicBtn');
+    if (saveBtn.disabled) return;
+
+    const originalText = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...';
     const newTitle = document.getElementById('titleEdit').value.trim();
     const newCategoryId = document.getElementById('categoryEdit').value;
     const newPrice = parseFloat(document.getElementById('priceEdit').value);
@@ -807,6 +891,9 @@
     } catch (err) {
       console.error('Update error:', err);
       showToast('Failed to update: ' + err.message, 'error');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = originalText;
     }
   }
 
@@ -1062,23 +1149,217 @@
 
   // ─── Image upload (frontend only) ──────────────────────────
   function setupImageUpload() {
-    const uploadArea = document.getElementById('imageUploadArea');
-    const fileInput = document.getElementById('imageInput');
-    uploadArea.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', (e) => {
-      if (e.target.files.length) {
-        const file = e.target.files[0];
-        if (file.size > 2 * 1024 * 1024) { showToast('Max 2MB', 'error'); return; }
+  const uploadArea = document.getElementById('imageUploadArea');
+  const fileInput = document.getElementById('imageInput');
+  const imgEl = document.getElementById('listingImage');
+  const placeholder = document.getElementById('imagePlaceholder');
+
+  uploadArea.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', async (e) => {
+    if (!e.target.files.length) return;
+    const file = e.target.files[0];
+
+    // 1. Validate size & type
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Image must be less than 2MB.', 'error');
+      fileInput.value = '';
+      return;
+    }
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+      showToast('Only JPG, PNG, and WEBP images are allowed.', 'error');
+      fileInput.value = '';
+      return;
+    }
+
+    // 2. Show spinner on the upload area
+    const originalHtml = uploadArea.innerHTML;
+    uploadArea.innerHTML = `
+      <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Uploading...</span>
+      </div>
+      <p class="mt-2 small">Uploading…</p>
+    `;
+    uploadArea.style.pointerEvents = 'none';
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const token = getCookie('access_token');
+      // ─── Endpoint ──────────────────────────────────────────
+      const uploadUrl = CAMPUS_URL + 'listing-upload-image/' + listingData.id;
+      const response = await fetch(uploadUrl, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Upload failed');
+      }
+
+      if (result.is_success) {
+        // 3. Update image preview locally
         const reader = new FileReader();
         reader.onload = (ev) => {
-          listingData.image = ev.target.result;
-          renderViewMode();
-          // TODO: upload to backend
+          imgEl.src = ev.target.result;
+          imgEl.style.display = 'block';
+          placeholder.style.display = 'none';
         };
         reader.readAsDataURL(file);
+
+        showToast('Image uploaded successfully!', 'success');
+
+        // 4. Refresh listing data to get the permanent image URL
+        await fetchListingData(listingData.id);
+        renderViewMode(); // re-render with updated image from server
+      } else {
+        throw new Error(result.message || 'Upload failed');
       }
-    });
+    } catch (err) {
+      console.error('Image upload error:', err);
+      showToast('Failed to upload image: ' + err.message, 'error');
+    } finally {
+      // 5. Restore upload area
+      uploadArea.innerHTML = originalHtml;
+      uploadArea.style.pointerEvents = 'auto';
+      fileInput.value = '';
+    }
+  });
+}
+
+
+// ─── Promotion toggles ──────────────────────────────────────
+function setupPromotionToggles() {
+  const bannerToggle = document.getElementById('bannerToggle');
+  const hotToggle = document.getElementById('hotSaleToggle');
+  const bannerCost = document.getElementById('bannerCost');
+  const hotCost = document.getElementById('hotSaleCost');
+  const bannerBadge = document.getElementById('bannerActiveBadge');
+  const hotBadge = document.getElementById('hotSaleActiveBadge');
+
+  // Show costs from lookup
+  const bannerPoints = allAdvertTypes.find(a => a.value === 'banner')?.points || 0;
+  const hotPoints = allAdvertTypes.find(a => a.value === 'hot_sale')?.points || 0;
+  bannerCost.textContent = bannerPoints > 0 ? `(${bannerPoints} pts)` : '';
+  hotCost.textContent = hotPoints > 0 ? `(${hotPoints} pts)` : '';
+
+  // Set initial state from listingData
+  bannerToggle.checked = listingData.is_ads_banner || false;
+  hotToggle.checked = listingData.is_hot_sale || false;
+
+  // Show "Active" badge if enabled
+  bannerBadge.style.display = bannerToggle.checked ? 'inline-block' : 'none';
+  hotBadge.style.display = hotToggle.checked ? 'inline-block' : 'none';
+
+  // Enable only if listing is active
+  const isActive = listingData.status === 'active';
+  bannerToggle.disabled = !isActive;
+  hotToggle.disabled = !isActive;
+
+  // Remove old listeners and add new ones
+  bannerToggle.removeEventListener('change', handleBannerToggle);
+  hotToggle.removeEventListener('change', handleHotToggle);
+  bannerToggle.addEventListener('change', handleBannerToggle);
+  hotToggle.addEventListener('change', handleHotToggle);
+
+  // Update info text
+  const info = document.getElementById('promotionInfo');
+  if (!isActive) {
+    info.textContent = 'Promotions can only be changed when the listing is active.';
+  } else if (bannerToggle.checked || hotToggle.checked) {
+    info.textContent = 'Toggle off to disable a promotion (no points refunded).';
+  } else {
+    info.textContent = 'Toggle on to promote your listing (points will be deducted).';
   }
+}
+
+async function handleBannerToggle(e) {
+  await handlePromotionToggle('banner', e.target.checked);
+}
+
+async function handleHotToggle(e) {
+  await handlePromotionToggle('hot_sale', e.target.checked);
+}
+
+async function handlePromotionToggle(type, enable) {
+  const toggleId = type === 'banner' ? 'bannerToggle' : 'hotSaleToggle';
+  const toggle = document.getElementById(toggleId);
+  const badgeId = type === 'banner' ? 'bannerActiveBadge' : 'hotSaleActiveBadge';
+  const badge = document.getElementById(badgeId);
+  const originalChecked = toggle.checked;
+
+  // Prevent double click
+  toggle.disabled = true;
+
+  try {
+    const advert = allAdvertTypes.find(a => a.value === type);
+    const cost = advert ? advert.points : 0;
+
+    // If enabling, check points
+    if (enable) {
+      const points = parseInt(getCookie('point_bal') || '0', 10);
+      if (points < cost) {
+        showToast(`Not enough points. You need ${cost} points for ${type}.`, 'error');
+        toggle.checked = false;
+        return;
+      }
+    }
+
+    // Build payload
+    const payload = {};
+    if (type === 'banner') payload.is_ads_banner = enable;
+    else if (type === 'hot_sale') payload.is_hot_sales = enable;
+
+    const token = getCookie('access_token');
+    const response = await fetch(LISTING_DETAIL_URL + '/' + listingData.id, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || 'Update failed');
+    }
+
+    const result = await response.json();
+    if (result.is_success) {
+      showToast(`${type} ${enable ? 'enabled' : 'disabled'} successfully!`, 'success');
+
+      // Update listing data and re-render
+      await fetchListingData(listingData.id);
+      renderViewMode(); // this will call setupPromotionToggles again
+
+      // Update points cookie if enabled
+      if (enable) {
+        const newPoints = parseInt(getCookie('point_bal') || '0', 10) - cost;
+        setCookie('point_bal', newPoints, 10);
+        document.getElementById('userPoints').innerText = newPoints;
+        userPoints = newPoints;
+      }
+
+      // Update badge visibility immediately (optional, but renderViewMode will handle it)
+    } else {
+      throw new Error(result.message || 'Update failed');
+    }
+  } catch (err) {
+    console.error('Toggle promotion error:', err);
+    showToast('Failed to toggle: ' + err.message, 'error');
+    // Revert toggle state
+    toggle.checked = !enable;
+  } finally {
+    toggle.disabled = false;
+  }
+}
 
   // ─── Bootstrap ──────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', loadListing);

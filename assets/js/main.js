@@ -4,6 +4,51 @@ const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
 const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
 const REFRESH_URL = 'http://127.0.0.1:8000/user/api/';
 
+
+// ─── Global Refresh Spinner (injected dynamically) ──────────────
+function createRefreshOverlay() {
+  if (document.getElementById('refreshGlobalOverlay')) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'refreshGlobalOverlay';
+  overlay.style.cssText = `
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  `;
+
+  overlay.innerHTML = `
+    <div class="spinner-border text-success" style="width: 3.5rem; height: 3.5rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted fw-semibold" style="font-size: 1rem;">Updating balance…</p>
+  `;
+
+  document.body.appendChild(overlay);
+}
+
+function showRefreshSpinner() {
+  createRefreshOverlay();
+  const overlay = document.getElementById('refreshGlobalOverlay');
+  if (overlay) overlay.style.display = 'flex';
+}
+
+function hideRefreshSpinner() {
+  const overlay = document.getElementById('refreshGlobalOverlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+
 function formatCurrency(amount) {
   return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
 }
@@ -848,29 +893,43 @@ function injectNavigation() {
 }
 
 
-  async function refreshPointBalance() {
-    try {
-      const response = await fetch(REFRESH_URL, {
-        headers: { 'Accept': 'application/json', ...getAuthHeaders() }
-      });
-      if (!response.ok) throw new Error('Failed to refresh dashboard');
-      const result = await response.json();
-      if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
-      document.getElementById('pointsBalanceValue').innerText = result.data.points_balance;
-      document.getElementById('summaryPointsBalance').innerText = result.data.points_balance;
-      setCookie('point_bal', result.data.points_balance, 10);
-      const mainmobilePointsBalance = document.getElementById('mobilePointsBalance');
-      if (mainmobilePointsBalance) {
-        mainmobilePointsBalance.textContent = result.data.points_balance;
-      }
-      showToast('Point balance updated', 'success');
-    } catch (err) {
-      console.error('Refresh error:', err);
-      showToast('Failed to refresh Point balance', 'error');
-    }
+async function refreshPointBalance() {
+  // ─── Show spinner + blur ───
+  showRefreshSpinner();
+
+  try {
+    const response = await fetch(REFRESH_URL, {
+      headers: { 'Accept': 'application/json', ...getAuthHeaders() }
+    });
+    if (!response.ok) throw new Error('Failed to refresh dashboard');
+    const result = await response.json();
+    if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
+
+    const newBalance = result.data.points_balance;
+
+    // Update all displays
+    const pointsBalanceValue = document.getElementById('pointsBalanceValue');
+    const summaryPointsBalance = document.getElementById('summaryPointsBalance');
+    const pointsBalanceDisplay = document.getElementById('pointsBalanceDisplay');
+
+    if (pointsBalanceDisplay) pointsBalanceDisplay.innerText = newBalance;
+    if (pointsBalanceValue) pointsBalanceValue.innerText = newBalance;
+    if (summaryPointsBalance) summaryPointsBalance.innerText = newBalance;
+
+    setCookie('point_bal', newBalance, 10);
+
+    const mainmobilePointsBalance = document.getElementById('mobilePointsBalance');
+    if (mainmobilePointsBalance) mainmobilePointsBalance.textContent = newBalance;
+
+    showToast('Point balance updated', 'success');
+  } catch (err) {
+    console.error('Refresh error:', err);
+    showToast('Failed to refresh Point balance', 'error');
+  } finally {
+    // ─── Hide spinner + blur ───
+    hideRefreshSpinner();
   }
-
-
+}
 
 // ========== START EVERYTHING AFTER DOM READY ==========
 function initAll() {
