@@ -318,6 +318,46 @@
             font-weight: 600;
             display: inline-block;
         }
+
+        /* Points summary bar */
+        .points-summary {
+            background: #f8faf9;
+            border-radius: 1rem;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid rgba(44, 122, 94, 0.12);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+        .points-summary .label {
+            font-weight: 600;
+            color: #1e2a2a;
+        }
+        .points-summary .total-cost {
+            font-weight: 700;
+            color: var(--accent-dark);
+        }
+        .points-summary .total-cost.insufficient {
+            color: #dc3545;
+        }
+        .points-summary .balance {
+            font-weight: 600;
+        }
+        .points-summary .balance.insufficient {
+            color: #dc3545;
+        }
+
+        /* Price input formatting: hide spinners */
+        #price::-webkit-outer-spin-button,
+        #price::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        #price {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 <body>
@@ -325,736 +365,971 @@
     <div id="particles-js"></div>
 
     <!-- Navigation -->
-<div id="nav-placeholder"></div>
+    <div id="nav-placeholder"></div>
 
-<main class="pt-5 mt-4">
-    <div class="container py-4 mb-3">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
+    <main class="pt-5 mt-4">
+        <div class="container py-4 mb-3">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
 
-                <!-- ===== SKELETON LOADER ===== -->
-                <div id="skeletonLoader">
-                    <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5">
-                        <div class="text-center mb-4">
-                            <div class="skeleton" style="width:120px; height:24px; border-radius:40px; margin:0 auto 0.5rem;"></div>
-                            <div class="skeleton skeleton-heading" style="width:60%; margin:0 auto;"></div>
-                            <div class="skeleton skeleton-text" style="width:80%; margin:0.5rem auto;"></div>
-                        </div>
-                        <div class="step-indicator">
-                            <div class="skeleton skeleton-step"></div>
-                            <div class="skeleton skeleton-step"></div>
-                            <div class="skeleton skeleton-step"></div>
-                            <div class="skeleton skeleton-step"></div>
-                        </div>
-                        <div class="mt-4">
-                            <div class="skeleton skeleton-heading" style="width:30%;"></div>
-                            <div class="skeleton" style="height:50px; border-radius:16px; margin-bottom:1rem;"></div>
-                            <div class="skeleton" style="height:50px; border-radius:16px; margin-bottom:1rem;"></div>
-                            <div class="skeleton" style="height:120px; border-radius:16px; margin-bottom:1rem;"></div>
-                            <div class="skeleton" style="height:50px; border-radius:16px; margin-bottom:1rem;"></div>
-                            <div class="d-flex gap-3 mb-3">
-                                <div class="skeleton" style="height:40px; width:100px; border-radius:30px;"></div>
-                                <div class="skeleton" style="height:40px; width:100px; border-radius:30px;"></div>
+                    <!-- ===== SKELETON LOADER ===== -->
+                    <div id="skeletonLoader">
+                        <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5">
+                            <div class="text-center mb-4">
+                                <div class="skeleton" style="width:120px; height:24px; border-radius:40px; margin:0 auto 0.5rem;"></div>
+                                <div class="skeleton skeleton-heading" style="width:60%; margin:0 auto;"></div>
+                                <div class="skeleton skeleton-text" style="width:80%; margin:0.5rem auto;"></div>
                             </div>
-                            <div class="d-flex justify-content-end">
-                                <div class="skeleton skeleton-btn"></div>
+                            <div class="step-indicator">
+                                <div class="skeleton skeleton-step"></div>
+                                <div class="skeleton skeleton-step"></div>
+                                <div class="skeleton skeleton-step"></div>
+                                <div class="skeleton skeleton-step"></div>
                             </div>
+                            <div class="mt-4">
+                                <div class="skeleton skeleton-heading" style="width:30%;"></div>
+                                <div class="skeleton" style="height:50px; border-radius:16px; margin-bottom:1rem;"></div>
+                                <div class="skeleton" style="height:50px; border-radius:16px; margin-bottom:1rem;"></div>
+                                <div class="skeleton" style="height:120px; border-radius:16px; margin-bottom:1rem;"></div>
+                                <div class="skeleton" style="height:50px; border-radius:16px; margin-bottom:1rem;"></div>
+                                <div class="d-flex gap-3 mb-3">
+                                    <div class="skeleton" style="height:40px; width:100px; border-radius:30px;"></div>
+                                    <div class="skeleton" style="height:40px; width:100px; border-radius:30px;"></div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div class="skeleton skeleton-btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== REAL CONTENT ===== -->
+                    <div id="realContent" style="display:none;">
+                        <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5" data-aos="fade-up">
+                            <div class="text-center mb-4">
+                                <span class="badge-verify mb-2"><i class="fas fa-plus-circle me-1"></i> Sell or Request</span>
+                                <h1 class="fw-bold">Create a new listing</h1>
+                                <p class="text-muted">Fill in the details about your item. We'll help you connect with buyers safely on campus.</p>
+                            </div>
+
+                            <div class="row justify-content-center mb-3">
+                                <div class="col-12 col-sm-8 col-md-6">
+                                    <div class="d-flex align-items-center justify-content-between bg-light rounded-4 px-4 py-3 border"
+                                        style="border-color:rgba(44,122,94,0.15) !important;">
+                                        <div>
+                                            <span class="small text-muted"><i class="fas fa-coins me-1"></i> Your Points</span>
+                                            <div class="fw-bold fs-4" id="pointsBalanceDisplay" style="color:var(--accent);">0</div>
+                                        </div>
+                                        <div class="small text-muted">
+                                            <span id="pointsMessage">Each listing costs 1 point</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step Indicator -->
+                            <div class="step-indicator">
+                                <div class="step active" id="step1Indicator">1<span class="step-label">Basic info</span></div>
+                                <div class="step" id="step2Indicator">2<span class="step-label">Location</span></div>
+                                <div class="step" id="step3Indicator">3<span class="step-label">Options</span></div>
+                                <div class="step" id="step4Indicator">4<span class="step-label">Review</span></div>
+                            </div>
+
+                            <!-- Form Steps -->
+                            <form id="listingForm" class="mt-4 mb-5">
+
+                                <!-- STEP 1 -->
+                                <div id="step1" class="form-step active-step">
+                                    <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Basic information</h5>
+
+                                    <div class="form-floating-group">
+                                        <input type="text" class="form-control" name="title" id="title"
+                                            placeholder="e.g., HP Laptop, ECO 211 Textbook" required />
+                                        <label class="form-label" for="title">Title *</label>
+                                        <div class="helper-text">Be specific and clear. Include brand, model, or key feature.</div>
+                                    </div>
+
+                                    <div class="form-floating-group">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span id="categoryIconDisplay" style="font-size:1.2rem; width:24px; text-align:center;"></span>
+                                            <select class="form-select" name="category" id="category" required>
+                                                <option value="">Loading categories…</option>
+                                            </select>
+                                        </div>
+                                        <label class="form-label" for="category">Category *</label>
+                                        <div class="helper-text">Choose the most relevant category.</div>
+                                    </div>
+
+                                    <div class="form-floating-group">
+                                        <textarea class="form-control" name="description" id="description"
+                                            rows="4" placeholder="Describe condition, reason for selling, any defects, etc." required></textarea>
+                                        <label class="form-label" for="description">Description *</label>
+                                        <div class="helper-text">Detailed descriptions help buyers trust you.</div>
+                                    </div>
+
+                                    <!-- PRICE INPUT – now with Naira formatting -->
+                                    <div class="form-floating-group">
+                                        <input type="text" class="form-control" name="price" id="price"
+                                            placeholder="e.g., ₦3,500" required inputmode="decimal" />
+                                        <label class="form-label" for="price">Price (₦) *</label>
+                                        <div class="helper-text" id="priceHelper">Enter amount in Naira. Be fair – students love good deals.</div>
+                                    </div>
+
+                                    <!-- Listing Type -->
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold mb-2">Listing type *</label>
+                                        <div id="listingTypeGroup" class="listing-type-group"></div>
+                                        <div id="listingTypeDescription" class="helper-text mt-1" style="font-weight:500; color:var(--accent-dark);">
+                                            Selling an item you own.
+                                        </div>
+                                        <div class="helper-text mt-1">Select the type that best describes your listing.</div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-primary-custom next-step">Next <i class="fas fa-arrow-right ms-2"></i></button>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 2 -->
+                                <div id="step2" class="form-step">
+                                    <h5 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Where can you meet?</h5>
+                                    <p class="small text-muted">Select one or more safe campus spots where you're comfortable meeting the buyer.</p>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold mb-2">Campus hotspots *</label>
+                                        <div id="hotspotsContainer" class="hotspot-checkboxes">
+                                            <div class="text-muted">Loading safe meeting spots…</div>
+                                        </div>
+                                        <div class="helper-text mt-2">✅ Choose locations with CCTV, well-lit, and public – like library, cafeteria, faculty buildings.</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-custom prev-step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
+                                        <button type="button" class="btn btn-primary-custom next-step">Next <i class="fas fa-arrow-right ms-2"></i></button>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 3 -->
+                                <div id="step3" class="form-step">
+                                    <h5 class="mb-3"><i class="fas fa-tag me-2"></i>Optional extras</h5>
+
+                                    <div class="form-floating-group">
+                                        <select class="form-select" name="badge" id="badge">
+                                            <option value=""></option>
+                                        </select>
+                                        <label class="form-label" for="badge">Badge (Optional)</label>
+                                        <div class="helper-text">Badges help your listing stand out.</div>
+                                    </div> <br>
+
+                                    <!-- Promotion checkboxes -->
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Promote your listing (optional)</label>
+                                        <div id="advertTypeContainer"></div>
+                                        <div class="helper-text">Select one or both to increase visibility. Points will be deducted from your balance.</div>
+                                        <div id="advertPointsInfo" class="mt-2 small text-muted"></div>
+
+                                        <!-- Points summary bar (real-time) -->
+                                        <div id="pointsSummaryBar" class="points-summary mt-3" style="display:none;">
+                                            <span class="label"><i class="fas fa-coins me-1"></i> Total cost:</span>
+                                            <span>
+                                                <span class="total-cost" id="totalPointsCost">0</span> point(s)
+                                                <span class="text-muted small">(base 1 + promotions)</span>
+                                            </span>
+                                            <span>
+                                                Balance: <span class="balance" id="pointsBalanceSummary">0</span>
+                                            </span>
+                                        </div>
+                                    </div> <br>
+
+                                    <div class="form-floating-group">
+                                        <input type="file" class="form-control" name="images" id="images" multiple accept="image/*" />
+                                        <label class="form-label" for="images">Images (Optional)</label>
+                                        <div class="helper-text">Upload up to 5 images of your item.</div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-custom prev-step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
+                                        <button type="button" class="btn btn-primary-custom next-step">Review <i class="fas fa-eye ms-2"></i></button>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 4 -->
+                                <div id="step4" class="form-step">
+                                    <h5 class="mb-3"><i class="fas fa-clipboard-list me-2"></i>Review your listing</h5>
+                                    <div class="bg-light p-3 rounded-4 mb-3" id="reviewContent"></div>
+
+                                    <!-- Show points summary in review step too -->
+                                    <div id="reviewPointsSummary" class="points-summary mb-3" style="display:none;">
+                                        <span class="label"><i class="fas fa-coins me-1"></i> Total cost:</span>
+                                        <span>
+                                            <span class="total-cost" id="reviewTotalPointsCost">0</span> point(s)
+                                            <span class="text-muted small">(base 1 + promotions)</span>
+                                        </span>
+                                        <span>
+                                            Balance: <span class="balance" id="reviewPointsBalance">0</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-custom prev-step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
+                                        <button type="button" class="btn btn-primary-custom" id="submitListingBtn">Post Listing <i class="fas fa-paper-plane ms-2"></i></button>
+                                    </div>
+                                </div>
+
+                            </form>
                         </div>
                     </div>
                 </div>
-
-                <!-- ===== REAL CONTENT ===== -->
-                <div id="realContent" style="display:none;">
-                    <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5" data-aos="fade-up">
-                        <div class="text-center mb-4">
-                            <span class="badge-verify mb-2"><i class="fas fa-plus-circle me-1"></i> Sell or Request</span>
-                            <h1 class="fw-bold">Create a new listing</h1>
-                            <p class="text-muted">Fill in the details about your item. We'll help you connect with buyers safely on campus.</p>
-                        </div>
-
-                        <div class="row justify-content-center mb-3">
-                            <div class="col-12 col-sm-8 col-md-6">
-                                <div class="d-flex align-items-center justify-content-between bg-light rounded-4 px-4 py-3 border"
-                                style="border-color:rgba(44,122,94,0.15) !important;">
-                                <div>
-                                    <span class="small text-muted"><i class="fas fa-coins me-1"></i> Your Points</span>
-                                    <div class="fw-bold fs-4" id="pointsBalanceDisplay" style="color:var(--accent);">0</div>
-                                </div>
-                                <div class="small text-muted">
-                                    <span id="pointsMessage">Each listing costs 1 point</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step Indicator -->
-                    <div class="step-indicator">
-                        <div class="step active" id="step1Indicator">1<span class="step-label">Basic info</span></div>
-                        <div class="step" id="step2Indicator">2<span class="step-label">Location</span></div>
-                        <div class="step" id="step3Indicator">3<span class="step-label">Options</span></div>
-                        <div class="step" id="step4Indicator">4<span class="step-label">Review</span></div>
-                    </div>
-
-                    <!-- Form Steps -->
-                    <form id="listingForm" class="mt-4 mb-5">
-
-                        <!-- STEP 1 -->
-                        <div id="step1" class="form-step active-step">
-                            <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Basic information</h5>
-
-                            <div class="form-floating-group">
-                                <input type="text" class="form-control" name="title" id="title"
-                                placeholder="e.g., HP Laptop, ECO 211 Textbook" required />
-                                <label class="form-label" for="title">Title *</label>
-                                <div class="helper-text">Be specific and clear. Include brand, model, or key feature.</div>
-                            </div>
-
-                            <div class="form-floating-group">
-                                <div class="d-flex align-items-center gap-2">
-                                    <span id="categoryIconDisplay" style="font-size:1.2rem; width:24px; text-align:center;"></span>
-                                    <select class="form-select" name="category" id="category" required>
-                                        <option value="">Loading categories…</option>
-                                    </select>
-                                </div>
-                                <label class="form-label" for="category">Category *</label>
-                                <div class="helper-text">Choose the most relevant category.</div>
-                            </div>
-
-                            <div class="form-floating-group">
-                                <textarea class="form-control" name="description" id="description"
-                            rows="4" placeholder="Describe condition, reason for selling, any defects, etc." required></textarea>
-                            <label class="form-label" for="description">Description *</label>
-                            <div class="helper-text">Detailed descriptions help buyers trust you.</div>
-                        </div>
-
-                        <div class="form-floating-group">
-                            <input type="number" class="form-control" name="price" id="price"
-                            step="0.01" placeholder="e.g., 3500" required />
-                            <label class="form-label" for="price">Price (₦) *</label>
-                            <div class="helper-text" id="priceHelper">Enter amount in Naira. Be fair – students love good deals.</div>
-                        </div>
-
-                        <!-- Listing Type -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold mb-2">Listing type *</label>
-                            <div id="listingTypeGroup" class="listing-type-group"></div>
-                            <div id="listingTypeDescription" class="helper-text mt-1" style="font-weight:500; color:var(--accent-dark);">
-                                Selling an item you own.
-                            </div>
-                            <div class="helper-text mt-1">Select the type that best describes your listing.</div>
-                        </div>
-
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary-custom next-step">Next <i class="fas fa-arrow-right ms-2"></i></button>
-                        </div>
-                    </div>
-
-                    <!-- STEP 2 -->
-                    <div id="step2" class="form-step">
-                        <h5 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Where can you meet?</h5>
-                        <p class="small text-muted">Select one or more safe campus spots where you're comfortable meeting the buyer.</p>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold mb-2">Campus hotspots *</label>
-                            <div id="hotspotsContainer" class="hotspot-checkboxes">
-                                <div class="text-muted">Loading safe meeting spots…</div>
-                            </div>
-                            <div class="helper-text mt-2">✅ Choose locations with CCTV, well-lit, and public – like library, cafeteria, faculty buildings.</div>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-custom prev-step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
-                            <button type="button" class="btn btn-primary-custom next-step">Next <i class="fas fa-arrow-right ms-2"></i></button>
-                        </div>
-                    </div>
-
-                    <!-- STEP 3 -->
-                    <div id="step3" class="form-step">
-                        <h5 class="mb-3"><i class="fas fa-tag me-2"></i>Optional extras</h5>
-
-                        <div class="form-floating-group">
-                            <select class="form-select" name="badge" id="badge">
-                                <option value=""></option>
-                            </select>
-                            <label class="form-label" for="badge">Badge (Optional)</label>
-                            <div class="helper-text">Badges help your listing stand out.</div>
-                        </div> <br>
-
-                        <!-- Promotion checkboxes -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Promote your listing (optional)</label>
-                            <div id="advertTypeContainer"></div>
-                            <div class="helper-text">Select one or both to increase visibility. Points will be deducted from your balance.</div>
-                            <div id="advertPointsInfo" class="mt-2 small text-muted"></div>
-                        </div> <br>
-
-                        <div class="form-floating-group">
-                            <input type="file" class="form-control" name="images" id="images" multiple accept="image/*" />
-                            <label class="form-label" for="images">Images (Optional)</label>
-                            <div class="helper-text">Upload up to 5 images of your item.</div>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-custom prev-step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
-                            <button type="button" class="btn btn-primary-custom next-step">Review <i class="fas fa-eye ms-2"></i></button>
-                        </div>
-                    </div>
-
-                    <!-- STEP 4 -->
-                    <div id="step4" class="form-step">
-                        <h5 class="mb-3"><i class="fas fa-clipboard-list me-2"></i>Review your listing</h5>
-                        <div class="bg-light p-3 rounded-4 mb-3" id="reviewContent"></div>
-                        <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-custom prev-step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
-                            <button type="button" class="btn btn-primary-custom" id="submitListingBtn">Post Listing <i class="fas fa-paper-plane ms-2"></i></button>
-                        </div>
-                    </div>
-
-                </form>
             </div>
         </div>
+    </main>
+
+    <!-- Mobile bottom nav -->
+    <div class="dashboard-mobile-actions d-md-none mt-5">
+        <a href="main.html" class="action-link">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="create-listing.html" class="action-link active">
+            <i class="fas fa-plus-circle"></i>
+            <span>Post</span>
+        </a>
+        <a href="listings.html" class="action-link">
+            <i class="fas fa-list"></i>
+            <span>Listings</span>
+        </a>
     </div>
-</div>
-</main>
 
-<!-- Mobile bottom nav -->
-<div class="dashboard-mobile-actions d-md-none mt-5">
-    <a href="main.html" class="action-link">
-        <i class="fas fa-home"></i>
-        <span>Dashboard</span>
-    </a>
-    <a href="create-listing.html" class="action-link active">
-        <i class="fas fa-plus-circle"></i>
-        <span>Post</span>
-    </a>
-    <a href="listings.html" class="action-link">
-        <i class="fas fa-list"></i>
-        <span>Listings</span>
-    </a>
-</div>
-
-<!-- Modals -->
-<div id="formModal" class="modal-overlay" style="display:none;">
-    <div class="modal-container">
-        <div class="modal-header">
-            <h3 id="formModalTitle">Form Title</h3>
-            <button class="modal-close" id="closeFormModalBtn">&times;</button>
+    <!-- Modals -->
+    <div id="formModal" class="modal-overlay" style="display:none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="formModalTitle">Form Title</h3>
+                <button class="modal-close" id="closeFormModalBtn">&times;</button>
+            </div>
+            <div class="modal-body" id="formModalBody"></div>
+            <div class="modal-footer" id="formModalFooter"></div>
         </div>
-        <div class="modal-body" id="formModalBody"></div>
-        <div class="modal-footer" id="formModalFooter"></div>
     </div>
-</div>
-<div id="confirmModal" class="modal-overlay" style="display: none;"><div class="modal-container confirm-modal-container"><div class="modal-header"><h3 id="confirmModalTitle">Confirm Action</h3><button class="modal-close" id="closeConfirmModalBtn">&times;</button></div><div class="modal-body" id="confirmModalBody"><p id="confirmMessage"></p></div><div class="modal-footer" id="confirmModalFooter"></div></div></div>
+    <div id="confirmModal" class="modal-overlay" style="display: none;"><div class="modal-container confirm-modal-container"><div class="modal-header"><h3 id="confirmModalTitle">Confirm Action</h3><button class="modal-close" id="closeConfirmModalBtn">&times;</button></div><div class="modal-body" id="confirmModalBody"><p id="confirmMessage"></p></div><div class="modal-footer" id="confirmModalFooter"></div></div></div>
 
-<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
-    <i class="fas fa-arrow-up" aria-hidden="true"></i>
-</button>
+    <button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
 
-<div id="toast-container" class="toast-container"></div>
+    <div id="toast-container" class="toast-container"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
-</script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
-</script>
-<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js">
-</script>
-<script src="../assets/js/main.js">
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js">
+    </script>
+    <script src="../assets/js/main.js">
+    </script>
 
-<script>
-    // ──────────────────────────────────────────────────────────────
-    //  MAIN SCRIPT
-    // ──────────────────────────────────────────────────────────────
+    <script>
+        // ──────────────────────────────────────────────────────────────
+        //  MAIN SCRIPT
+        // ──────────────────────────────────────────────────────────────
 
-    isAuthenticated();
+        isAuthenticated();
 
-    const LOOKUP_URL = CAMPUS_URL + 'get-lookup';
+        const LOOKUP_URL = CAMPUS_URL + 'get-lookup';
+        const BASE_POINTS_COST = 1; // each listing costs 1 point
 
-    // ---- helpers ----
-    function updateTypeDescription(value) {
-        const map = {
-            'sell': 'Selling an item you own.',
-            'wanted': 'You are looking to buy an item.',
-            'freebie': 'Giving away an item for free.',
-            'service': 'Offering a service (tutoring, repairs, etc.)'
-        };
-        const el = document.getElementById('listingTypeDescription');
-        if (el) el.textContent = map[value] || 'Select the type that best describes your listing.';
-    }
+        // ---- helpers ----
+        function updateTypeDescription(value) {
+            const map = {
+                'sell': 'Selling an item you own.',
+                'wanted': 'You are looking to buy an item.',
+                'freebie': 'Giving away an item for free.',
+                'service': 'Offering a service (tutoring, repairs, etc.)'
+            };
+            const el = document.getElementById('listingTypeDescription');
+            if (el) el.textContent = map[value] || 'Select the type that best describes your listing.';
+        }
 
-    function handlePriceForFreebie(value) {
-        const priceInput = document.getElementById('price');
-        if (!priceInput) return;
-        const helper = document.getElementById('priceHelper');
-        if (value === 'freebie') {
-            priceInput.value = 0;
-            priceInput.disabled = true;
-            priceInput.style.opacity = '0.6';
-            priceInput.style.cursor = 'not-allowed';
-            priceInput.removeAttribute('required');
-            if (helper) helper.textContent = 'Price is set to ₦0 for freebies.';
-        } else {
-            if (priceInput.disabled) {
-                priceInput.disabled = false;
-                priceInput.style.opacity = '1';
-                priceInput.style.cursor = 'text';
-                priceInput.value = '';
-                priceInput.setAttribute('required', 'required');
-                if (helper) helper.textContent = 'Enter amount in Naira. Be fair – students love good deals.';
+        // ---- Price formatting helpers ----
+        function getRawPrice() {
+            const input = document.getElementById('price');
+            if (!input) return '';
+            let val = input.value;
+            // Remove all non-digit except decimal
+            let raw = val.replace(/[^\d.]/g, '');
+            // If empty, return empty
+            if (raw === '') return '';
+            // Parse as float
+            let num = parseFloat(raw);
+            if (isNaN(num)) return '';
+            return num.toString();
+        }
+
+        function formatNaira(value) {
+            if (value === '' || value === null || value === undefined) return '';
+            let num = parseFloat(value);
+            if (isNaN(num)) return '';
+            // Format with commas and ₦
+            return '₦' + num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        }
+
+        function setupPriceInput() {
+            const priceInput = document.getElementById('price');
+            if (!priceInput) return;
+
+            // On input: allow only digits and one decimal
+            priceInput.addEventListener('input', function(e) {
+                let val = this.value;
+                // Remove any non-digit except decimal
+                val = val.replace(/[^\d.]/g, '');
+                // Ensure only one decimal
+                let parts = val.split('.');
+                if (parts.length > 2) {
+                    val = parts[0] + '.' + parts.slice(1).join('');
+                }
+                // If empty, set empty
+                this.value = val;
+                // Update helper text if needed
+            });
+
+            // On blur: format with ₦ and commas
+            priceInput.addEventListener('blur', function(e) {
+                let val = this.value;
+                if (val === '') return;
+                let num = parseFloat(val);
+                if (isNaN(num)) return;
+                this.value = formatNaira(num);
+            });
+
+            // On focus: remove formatting to allow editing
+            priceInput.addEventListener('focus', function(e) {
+                let val = this.value;
+                let raw = val.replace(/[^\d.]/g, '');
+                this.value = raw;
+                // Select all text for easy editing
+                this.select();
+            });
+        }
+
+        // ---- Get current points balance from cookie ----
+        function getPointsBalance() {
+            return parseInt(getCookie('point_bal') || '0', 10);
+        }
+
+        // ---- Calculate total points needed (base + promotions) ----
+        function calculateTotalPoints() {
+            const container = document.getElementById('advertTypeContainer');
+            if (!container) return BASE_POINTS_COST;
+            const selected = container.querySelectorAll('input[type="checkbox"]:checked');
+            let promoPoints = 0;
+            selected.forEach(cb => promoPoints += parseInt(cb.dataset.points, 10) || 0);
+            return BASE_POINTS_COST + promoPoints;
+        }
+
+        // ---- Update points display and summary bar ----
+        function updatePointsDisplay() {
+            const balance = getPointsBalance();
+            const el = document.getElementById('pointsBalanceDisplay');
+            if (el) el.textContent = balance;
+
+            const total = calculateTotalPoints();
+            const hasPromo = total > BASE_POINTS_COST;
+
+            // Update summary bar (step 3)
+            const summaryBar = document.getElementById('pointsSummaryBar');
+            const totalCostEl = document.getElementById('totalPointsCost');
+            const balanceSummaryEl = document.getElementById('pointsBalanceSummary');
+
+            if (summaryBar) {
+                if (total > 0) {
+                    summaryBar.style.display = 'flex';
+                    if (totalCostEl) {
+                        totalCostEl.textContent = total;
+                        totalCostEl.className = 'total-cost' + (total > balance ? ' insufficient' : '');
+                    }
+                    if (balanceSummaryEl) {
+                        balanceSummaryEl.textContent = balance;
+                        balanceSummaryEl.className = 'balance' + (total > balance ? ' insufficient' : '');
+                    }
+                } else {
+                    summaryBar.style.display = 'none';
+                }
+            }
+
+            // Update review summary (step 4)
+            const reviewSummary = document.getElementById('reviewPointsSummary');
+            const reviewTotalEl = document.getElementById('reviewTotalPointsCost');
+            const reviewBalanceEl = document.getElementById('reviewPointsBalance');
+            if (reviewSummary) {
+                if (total > 0) {
+                    reviewSummary.style.display = 'flex';
+                    if (reviewTotalEl) {
+                        reviewTotalEl.textContent = total;
+                        reviewTotalEl.className = 'total-cost' + (total > balance ? ' insufficient' : '');
+                    }
+                    if (reviewBalanceEl) {
+                        reviewBalanceEl.textContent = balance;
+                        reviewBalanceEl.className = 'balance' + (total > balance ? ' insufficient' : '');
+                    }
+                } else {
+                    reviewSummary.style.display = 'none';
+                }
+            }
+
+            // Update the points message (small hint)
+            const msgEl = document.getElementById('pointsMessage');
+            if (msgEl) {
+                if (hasPromo) {
+                    msgEl.textContent = `Total: ${total} points (base 1 + promotions)`;
+                } else {
+                    msgEl.textContent = 'Each listing costs 1 point';
+                }
+            }
+
+            // Update advert points info (legacy)
+            updateAdvertPointsInfo();
+        }
+
+        // ---- Populate advert types (Banner / Hot Sale) ----
+        function populateAdvertTypes(advertTypes) {
+            const container = document.getElementById('advertTypeContainer');
+            if (!container) return;
+            if (!advertTypes || !advertTypes.length) {
+                container.innerHTML = '<p class="text-muted">No promotion options available.</p>';
+                return;
+            }
+            let html = '';
+            advertTypes.forEach(advert => {
+                html += `
+                    <div class="form-check form-check-custom">
+                        <input class="form-check-input" type="checkbox" id="advert_${advert.value}" value="${advert.value}" data-points="${advert.points}">
+                        <label class="form-check-label" for="advert_${advert.value}">
+                            ${advert.label} (costs ${advert.points} points)
+                        </label>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            // Update points info on change
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    updatePointsDisplay();
+                });
+            });
+            updatePointsDisplay();
+        }
+
+        // ---- Legacy advert points info (kept for compatibility, now uses updatePointsDisplay) ----
+        function updateAdvertPointsInfo() {
+            const container = document.getElementById('advertTypeContainer');
+            const info = document.getElementById('advertPointsInfo');
+            if (!container || !info) return;
+
+            const selected = container.querySelectorAll('input[type="checkbox"]:checked');
+            let promoTotal = 0;
+            selected.forEach(cb => promoTotal += parseInt(cb.dataset.points, 10) || 0);
+            const total = BASE_POINTS_COST + promoTotal;
+            const balance = getPointsBalance();
+
+            if (promoTotal > 0) {
+                info.textContent = `Base cost: 1 point + ${promoTotal} promotion point(s) = ${total} total. You have ${balance} points.`;
+                if (total > balance) {
+                    info.style.color = '#dc3545';
+                    info.textContent += ' (Insufficient points!)';
+                } else {
+                    info.style.color = '#2c7a5e';
+                }
+            } else {
+                info.textContent = `Base cost: 1 point. You have ${balance} points.`;
+                info.style.color = 'var(--text-muted)';
             }
         }
-    }
 
-    // ---- Populate advert types (Banner / Hot Sale) ----
-    function populateAdvertTypes(advertTypes) {
-    const container = document.getElementById('advertTypeContainer');
-    if (!container) return;
-    if (!advertTypes || !advertTypes.length) {
-        container.innerHTML = '<p class="text-muted">No promotion options available.</p>';
-        return;
-    }
-    let html = '';
-    advertTypes.forEach(advert => {
-        html += `
-        <div class="form-check form-check-custom">
-            <input class="form-check-input" type="checkbox" id="advert_${advert.value}" value="${advert.value}" data-points="${advert.points}">
-            <label class="form-check-label" for="advert_${advert.value}">
-            ${advert.label} (costs ${advert.points} points)
-            </label>
-        </div>
-        `;
-    });
-    container.innerHTML = html;
-
-    // Update points info on change
-    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        cb.addEventListener('change', updateAdvertPointsInfo);
-    });
-    updateAdvertPointsInfo();
-    }
-
-    function updateAdvertPointsInfo() {
-    const container = document.getElementById('advertTypeContainer');
-    const info = document.getElementById('advertPointsInfo');
-    if (!container || !info) return;
-    const selected = container.querySelectorAll('input[type="checkbox"]:checked');
-    let total = 0;
-    selected.forEach(cb => total += parseInt(cb.dataset.points, 10));
-    const points = parseInt(getCookie('point_bal') || '0', 10);
-    if (total > 0) {
-        info.textContent = `Selected promotions will deduct ${total} point(s) from your balance. You have ${points} points.`;
-        if (total > points) {
-        info.style.color = '#dc3545';
-        info.textContent += ' (Insufficient points!)';
-        } else {
-        info.style.color = '#2c7a5e';
-        }
-    } else {
-        info.textContent = '';
-    }
-    }
-
-    // ---- Populate listing type radios ----
-    function populateListingTypes(typeChoices) {
-        const container = document.getElementById('listingTypeGroup');
-        if (!container) return;
-        if (!typeChoices || !typeChoices.length) {
-            container.innerHTML = '<p class="text-muted">No listing types available.</p>';
-            return;
-        }
-        let html = '';
-        typeChoices.forEach((type, index) => {
-            const checked = index === 0 ? 'checked' : '';
-            html += `
+        // ---- Populate listing type radios ----
+        function populateListingTypes(typeChoices) {
+            const container = document.getElementById('listingTypeGroup');
+            if (!container) return;
+            if (!typeChoices || !typeChoices.length) {
+                container.innerHTML = '<p class="text-muted">No listing types available.</p>';
+                return;
+            }
+            let html = '';
+            typeChoices.forEach((type, index) => {
+                const checked = index === 0 ? 'checked' : '';
+                html += `
                     <label class="form-check-custom radio">
                         <input type="radio" name="listing_type" value="${escapeHtml(type.value)}" ${checked}>
                         <span class="checkmark"></span>
                         <span class="label-text">${escapeHtml(type.label)}</span>
                     </label>
                 `;
-        });
-        container.innerHTML = html;
+            });
+            container.innerHTML = html;
 
-        const first = container.querySelector('input[name="listing_type"]:checked');
-        if (first) {
-            updateTypeDescription(first.value);
-            handlePriceForFreebie(first.value);
+            const first = container.querySelector('input[name="listing_type"]:checked');
+            if (first) {
+                updateTypeDescription(first.value);
+                handlePriceForFreebie(first.value);
+            }
+            container.querySelectorAll('input[name="listing_type"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateTypeDescription(this.value);
+                    handlePriceForFreebie(this.value);
+                });
+            });
         }
-        container.querySelectorAll('input[name="listing_type"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                updateTypeDescription(this.value);
-                handlePriceForFreebie(this.value);
-            });
-        });
-    }
 
-    // ---- Wizard state ----
-    let currentStep = 1;
-    const totalSteps = 4;
-    let steps, indicators;
-
-    function initWizard() {
-        steps = document.querySelectorAll('.form-step');
-        indicators = {
-            1: document.getElementById('step1Indicator'),
-            2: document.getElementById('step2Indicator'),
-            3: document.getElementById('step3Indicator'),
-            4: document.getElementById('step4Indicator')
-        };
-
-        currentStep = 1;
-        updateStepUI();
-
-        document.querySelectorAll('.next-step').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (validateStep(currentStep)) {
-                    if (currentStep < totalSteps) {
-                        currentStep++;
-                        updateStepUI();
-                        if (currentStep === 4) populateReview();
-                    }
-                }
-            });
-        });
-
-        document.querySelectorAll('.prev-step').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (currentStep > 1) {
-                    currentStep--;
-                    updateStepUI();
-                }
-            });
-        });
-
-        // Submit
-        document.getElementById('submitListingBtn').addEventListener('click', onSubmitListing);
-    }
-
-    function updateStepUI() {
-        steps.forEach((step, idx) => {
-            step.classList.toggle('active-step', idx + 1 === currentStep);
-        });
-        for (let i = 1; i <= totalSteps; i++) {
-            const ind = indicators[i];
-            if (!ind) continue;
-            if (i < currentStep) {
-                ind.classList.add('completed');
-                ind.classList.remove('active');
-            } else if (i === currentStep) {
-                ind.classList.add('active');
-                ind.classList.remove('completed');
+        // ---- Handle freebie price ----
+        function handlePriceForFreebie(value) {
+            const priceInput = document.getElementById('price');
+            if (!priceInput) return;
+            const helper = document.getElementById('priceHelper');
+            if (value === 'freebie') {
+                priceInput.value = '₦0';
+                priceInput.disabled = true;
+                priceInput.style.opacity = '0.6';
+                priceInput.style.cursor = 'not-allowed';
+                priceInput.removeAttribute('required');
+                if (helper) helper.textContent = 'Price is set to ₦0 for freebies.';
             } else {
-                ind.classList.remove('active', 'completed');
-            }
-        }
-        document.querySelector('.dashboard-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    // ---- VALIDATION (FIXED for hotspots) ----
-    function validateStep(step) {
-        if (step === 1) {
-            const title = document.querySelector('input[name="title"]')?.value.trim();
-            const category = document.querySelector('select[name="category"]')?.value;
-            const desc = document.querySelector('textarea[name="description"]')?.value.trim();
-            const price = document.querySelector('input[name="price"]')?.value.trim();
-            if (!title) { showToast('Please enter a title.', 'error'); return false; }
-            if (!category) { showToast('Please select a category.', 'error'); return false; }
-            if (!desc) { showToast('Please enter a description.', 'error'); return false; }
-            if (!price || isNaN(parseFloat(price))) { showToast('Please enter a valid price.', 'error'); return false; }
-            return true;
-        }
-
-        if (step === 2) {
-            // 🔥 FIX: use a more specific selector inside the container
-            const container = document.getElementById('hotspotsContainer');
-            if (!container) {
-              confirmModal.open({
-                title: 'Error',
-                message: `Hotspot container not found. Please refresh the page.`,
-                confirmText: 'Okay',
-                onConfirm: () => formModal.close()
-              });
-                return false;
-            }
-
-            const checked = container.querySelectorAll('input[type="checkbox"]:checked');
-            if (checked.length === 0) {
-                showToast('Please select at least one safe meeting spot.', 'error');
-                return false;
-            }
-            return true;
-        }
-
-        // steps 3 & 4 have no required validation
-        return true;
-    }
-
-    // ---- Review ----
-    function populateReview() {
-        const title = document.querySelector('input[name="title"]')?.value || '';
-        const catSelect = document.querySelector('select[name="category"]');
-        const catText = catSelect?.options[catSelect.selectedIndex]?.text || '';
-        const desc = document.querySelector('textarea[name="description"]')?.value || '';
-        const price = document.querySelector('input[name="price"]')?.value || '';
-        const typeRadio = document.querySelector('input[name="listing_type"]:checked');
-        let typeLabel = typeRadio?.value || '';
-        if (typeRadio) {
-            const parent = typeRadio.closest('.form-check-custom');
-            if (parent) {
-                const lbl = parent.querySelector('.label-text');
-                if (lbl) typeLabel = lbl.innerText;
-            }
-        }
-        const badgeSelect = document.getElementById('badge');
-        const badge = badgeSelect?.value ? badgeSelect.options[badgeSelect.selectedIndex].text : 'None';
-
-        const container = document.getElementById('hotspotsContainer');
-        const checkedLabels = [];
-        if (container) {
-            container.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
-                const parent = cb.closest('.form-check-custom');
-                if (parent) {
-                    const strong = parent.querySelector('.label-text strong');
-                    if (strong) checkedLabels.push(strong.innerText);
+                if (priceInput.disabled) {
+                    priceInput.disabled = false;
+                    priceInput.style.opacity = '1';
+                    priceInput.style.cursor = 'text';
+                    priceInput.value = '';
+                    priceInput.setAttribute('required', 'required');
+                    if (helper) helper.textContent = 'Enter amount in Naira. Be fair – students love good deals.';
                 }
-            });
+            }
         }
 
-        const images = document.getElementById('images')?.files?.length || 0;
+        // ---- Wizard state ----
+        let currentStep = 1;
+        const totalSteps = 4;
+        let steps, indicators;
 
-        document.getElementById('reviewContent').innerHTML = `
+        function initWizard() {
+            steps = document.querySelectorAll('.form-step');
+            indicators = {
+                1: document.getElementById('step1Indicator'),
+                2: document.getElementById('step2Indicator'),
+                3: document.getElementById('step3Indicator'),
+                4: document.getElementById('step4Indicator')
+            };
+
+            currentStep = 1;
+            updateStepUI();
+
+            document.querySelectorAll('.next-step').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (validateStep(currentStep)) {
+                        if (currentStep < totalSteps) {
+                            currentStep++;
+                            updateStepUI();
+                            if (currentStep === 4) {
+                                populateReview();
+                                updatePointsDisplay();
+                            }
+                            if (currentStep === 3 || currentStep === 4) {
+                                updatePointsDisplay();
+                            }
+                        }
+                    }
+                });
+            });
+
+            document.querySelectorAll('.prev-step').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (currentStep > 1) {
+                        currentStep--;
+                        updateStepUI();
+                        if (currentStep === 3 || currentStep === 4) {
+                            updatePointsDisplay();
+                        }
+                    }
+                });
+            });
+
+            // Submit
+            document.getElementById('submitListingBtn').addEventListener('click', onSubmitListing);
+        }
+
+        function updateStepUI() {
+            steps.forEach((step, idx) => {
+                step.classList.toggle('active-step', idx + 1 === currentStep);
+            });
+            for (let i = 1; i <= totalSteps; i++) {
+                const ind = indicators[i];
+                if (!ind) continue;
+                if (i < currentStep) {
+                    ind.classList.add('completed');
+                    ind.classList.remove('active');
+                } else if (i === currentStep) {
+                    ind.classList.add('active');
+                    ind.classList.remove('completed');
+                } else {
+                    ind.classList.remove('active', 'completed');
+                }
+            }
+            document.querySelector('.dashboard-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ---- VALIDATION ----
+        function validateStep(step) {
+            if (step === 1) {
+                const title = document.querySelector('input[name="title"]')?.value.trim();
+                const category = document.querySelector('select[name="category"]')?.value;
+                const desc = document.querySelector('textarea[name="description"]')?.value.trim();
+                const priceRaw = getRawPrice();
+                if (!title) { showToast('Please enter a title.', 'error'); return false; }
+                if (!category) { showToast('Please select a category.', 'error'); return false; }
+                if (!desc) { showToast('Please enter a description.', 'error'); return false; }
+                if (priceRaw === '' || isNaN(parseFloat(priceRaw))) { showToast('Please enter a valid price.', 'error'); return false; }
+                return true;
+            }
+
+            if (step === 2) {
+                const container = document.getElementById('hotspotsContainer');
+                if (!container) {
+                    confirmModal.open({
+                        title: 'Error',
+                        message: 'Hotspot container not found. Please refresh the page.',
+                        confirmText: 'Okay',
+                        onConfirm: () => formModal.close()
+                    });
+                    return false;
+                }
+                const checked = container.querySelectorAll('input[type="checkbox"]:checked');
+                if (checked.length === 0) {
+                    showToast('Please select at least one safe meeting spot.', 'error');
+                    return false;
+                }
+                return true;
+            }
+
+            return true;
+        }
+
+        // ---- Review ----
+        function populateReview() {
+            const title = document.querySelector('input[name="title"]')?.value || '';
+            const catSelect = document.querySelector('select[name="category"]');
+            const catText = catSelect?.options[catSelect.selectedIndex]?.text || '';
+            const desc = document.querySelector('textarea[name="description"]')?.value || '';
+            const priceRaw = getRawPrice();
+            const formattedPrice = formatNaira(priceRaw);
+            const typeRadio = document.querySelector('input[name="listing_type"]:checked');
+            let typeLabel = typeRadio?.value || '';
+            if (typeRadio) {
+                const parent = typeRadio.closest('.form-check-custom');
+                if (parent) {
+                    const lbl = parent.querySelector('.label-text');
+                    if (lbl) typeLabel = lbl.innerText;
+                }
+            }
+            const badgeSelect = document.getElementById('badge');
+            const badge = badgeSelect?.value ? badgeSelect.options[badgeSelect.selectedIndex].text : 'None';
+
+            const container = document.getElementById('hotspotsContainer');
+            const checkedLabels = [];
+            if (container) {
+                container.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                    const parent = cb.closest('.form-check-custom');
+                    if (parent) {
+                        const strong = parent.querySelector('.label-text strong');
+                        if (strong) checkedLabels.push(strong.innerText);
+                    }
+                });
+            }
+
+            const images = document.getElementById('images')?.files?.length || 0;
+
+            const promoContainer = document.getElementById('advertTypeContainer');
+            let promoLabels = [];
+            if (promoContainer) {
+                promoContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                    const parent = cb.closest('.form-check-custom');
+                    if (parent) {
+                        const lbl = parent.querySelector('.label-text');
+                        if (lbl) promoLabels.push(lbl.textContent.trim());
+                    }
+                });
+            }
+
+            document.getElementById('reviewContent').innerHTML = `
                 <div class="row g-2">
                     <div class="col-md-6"><strong>Title:</strong> ${escapeHtml(title)}</div>
                     <div class="col-md-6"><strong>Category:</strong> ${escapeHtml(catText)}</div>
                     <div class="col-12"><strong>Description:</strong> ${escapeHtml(desc)}</div>
-                    <div class="col-md-4"><strong>Price:</strong> ₦${escapeHtml(price)}</div>
+                    <div class="col-md-4"><strong>Price:</strong> ${escapeHtml(formattedPrice || '₦0')}</div>
                     <div class="col-md-4"><strong>Type:</strong> ${escapeHtml(typeLabel)}</div>
                     <div class="col-md-4"><strong>Badge:</strong> ${escapeHtml(badge)}</div>
                     <div class="col-12"><strong>Meeting spots:</strong> ${checkedLabels.length ? checkedLabels.join(', ') : 'None'}</div>
                     <div class="col-12"><strong>Images:</strong> ${images} file(s) selected</div>
+                    ${promoLabels.length ? `<div class="col-12"><strong>Promotions:</strong> ${promoLabels.join(', ')}</div>` : ''}
                 </div>
             `;
-    }
-
-    // ---- Submit ----
-    async function onSubmitListing() {
-        const submitBtn = document.getElementById('submitListingBtn');
-        const originalHTML = submitBtn.innerHTML;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Posting...';
-        
-        const form = document.getElementById('listingForm');
-        const formData = new FormData(form);
-
-        const imageInput = document.getElementById('images');
-        if (imageInput?.files?.length > 0) {
-            formData.append('image', imageInput.files[0]);
-        } else {
-            formData.append('image', '');
         }
 
-        const type = formData.get('listing_type');
-        if (type === 'freebie') formData.set('price', '0');
+        // ---- POINTS VALIDATION before submit ----
+        function validatePointsBalance() {
+            const balance = getPointsBalance();
+            const total = calculateTotalPoints();
 
-        // Collect hotspots from the container
-        const container = document.getElementById('hotspotsContainer');
-        const hotspotIds = [];
-        if (container) {
-            container.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
-                hotspotIds.push(parseInt(cb.value, 10));
-            });
-        }
-        formData.set('hotspot_ids', JSON.stringify(hotspotIds));
-
-        const isBanner = document.querySelector('#advertTypeContainer input[value="banner"]:checked') ? true : false;
-        const isHotSale = document.querySelector('#advertTypeContainer input[value="hot_sale"]:checked') ? true : false;
-        formData.append('is_ads_banner', isBanner ? 'true' : 'false');
-        formData.append('is_hot_sales', isHotSale ? 'true' : 'false');
-
-        try {
-            const token = getCookie('access_token');
-            const response = await fetch(CAMPUS_URL + 'create-listing', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: formData,
-            });
-
-            const result = await response.json();
-
-            if (response.ok && result.is_success) {
-              showToast(result.message || 'Your item has been posted successfully. It will appear in the marketplace within a few minutes.', 'success');
-              resetForm()
-              return;
-
-            } else {
-                const errors = result.data?.errors || {};
-                let msg = result.message || 'Failed to create listing.';
-                if (Object.keys(errors).length) {
-                    msg += '\n\n' + Object.entries(errors)
-                        .map(([field, msgs]) => `${field}: ${msgs.join(', ')}`)
-                        .join('\n');
-                }
-                showToast(msg, 'error');
+            if (balance < total) {
+                showToast(
+                    `Insufficient points! You need ${total} point(s) but you only have ${balance}. ` +
+                    `Earn more points by completing transactions or engaging on CampusConnect.`,
+                    'error'
+                );
+                return false;
             }
-        } catch (err) {
-            console.error('Error creating listing:', err);
-            showToast('An unexpected error occurred. Please try again.', 'error');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalHTML;
+            return true;
         }
-    }
 
-    // ---- Points display ----
-    function updatePointsDisplay() {
-        const pts = getCookie('point_bal') || '0';
-        const el = document.getElementById('pointsBalanceDisplay');
-        if (el) el.textContent = pts;
-    }
-
-    // ---- Load page data ----
-    async function loadPageData() {
-        const skeleton = document.getElementById('skeletonLoader');
-        const realContent = document.getElementById('realContent');
-        if (!skeleton || !realContent) return;
-
-        skeleton.style.display = 'block';
-        realContent.style.display = 'none';
-
-        try {
-            const response = await fetch(LOOKUP_URL, {
-                headers: {
-                    'Accept': 'application/json',
-                    ...getAuthHeaders()
+        // ---- Submit ----
+        async function onSubmitListing() {
+            // 1. Validate points
+            if (!validatePointsBalance()) {
+                const display = document.getElementById('pointsBalanceDisplay');
+                if (display) {
+                    display.style.color = '#dc3545';
+                    setTimeout(() => display.style.color = 'var(--accent)', 3000);
                 }
-            });
-
-            if (response.status === 401 || response.status === 403) {
-                deleteAuthCookies();
-                window.location.href = '../index.html';
+                if (currentStep !== 3) {
+                    currentStep = 3;
+                    updateStepUI();
+                    updatePointsDisplay();
+                }
                 return;
             }
-            if (!response.ok) throw new Error('Failed to fetch lookup data');
 
-            const result = await response.json();
-            if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
+            const submitBtn = document.getElementById('submitListingBtn');
+            const originalHTML = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Posting...';
 
-            const data = result.data;
+            const form = document.getElementById('listingForm');
+            const formData = new FormData(form);
 
-            // Categories
-            const catSelect = document.querySelector('select[name="category"]');
-            if (catSelect) {
-                catSelect.innerHTML = '<option value="">Select a category</option>' +
-                    data.categories.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+            // Override price with raw numeric value
+            const rawPrice = getRawPrice();
+            formData.set('price', rawPrice);
+
+            const imageInput = document.getElementById('images');
+            if (imageInput?.files?.length > 0) {
+                formData.append('image', imageInput.files[0]);
+            } else {
+                formData.append('image', '');
             }
 
-            // Hotspots
+            const type = formData.get('listing_type');
+            if (type === 'freebie') formData.set('price', '0');
+
+            // Collect hotspots
             const container = document.getElementById('hotspotsContainer');
+            const hotspotIds = [];
             if (container) {
-                if (data.hotspots && data.hotspots.length) {
-                    container.innerHTML = data.hotspots.map(hs => `
-                            <label class="form-check-custom">
-                                <input type="checkbox" name="hotspots" value="${hs.id}">
-                                <span class="checkmark"></span>
-                                <span class="label-text">
-                                    <strong>${escapeHtml(hs.name)}</strong> – <span class="small text-muted">${escapeHtml(hs.description)}</span>
-                                </span>
-                            </label>
-                        `).join('');
+                container.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                    hotspotIds.push(parseInt(cb.value, 10));
+                });
+            }
+            formData.set('hotspot_ids', JSON.stringify(hotspotIds));
+
+            const isBanner = document.querySelector('#advertTypeContainer input[value="banner"]:checked') ? true : false;
+            const isHotSale = document.querySelector('#advertTypeContainer input[value="hot_sale"]:checked') ? true : false;
+            formData.append('is_ads_banner', isBanner ? 'true' : 'false');
+            formData.append('is_hot_sales', isHotSale ? 'true' : 'false');
+
+            const totalPoints = calculateTotalPoints();
+            formData.append('total_points_cost', totalPoints);
+
+            try {
+                const token = getCookie('access_token');
+                const response = await fetch(CAMPUS_URL + 'create-listing', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.is_success) {
+                    showToast(result.message || 'Your item has been posted successfully. It will appear in the marketplace within a few minutes.', 'success');
+                    updatePointsDisplay();
+                    resetForm();
+                    return;
                 } else {
-                    container.innerHTML = '<p class="text-muted mb-0">No hotspots available. Please contact support.</p>';
+                    const errors = result.data?.errors || {};
+                    let msg = result.message || 'Failed to create listing.';
+                    if (Object.keys(errors).length) {
+                        msg += '\n\n' + Object.entries(errors)
+                            .map(([field, msgs]) => `${field}: ${msgs.join(', ')}`)
+                            .join('\n');
+                    }
+                    if (msg.toLowerCase().includes('points') || msg.toLowerCase().includes('balance')) {
+                        updatePointsDisplay();
+                    }
+                    showToast(msg, 'error');
                 }
-            }
-
-            // Badges
-            const badgeSelect = document.getElementById('badge');
-            if (badgeSelect) {
-                badgeSelect.innerHTML = '<option value="">None</option>' +
-                    data.badge_choices.map(b => `<option value="${b.value}">${escapeHtml(b.label)}</option>`).join('');
-            }
-
-            // Listing types
-            populateListingTypes(data.type_choices);
-
-            if (data.advert_type) {
-                populateAdvertTypes(data.advert_type);
-            }
-
-            updatePointsDisplay();
-
-            skeleton.style.display = 'none';
-            realContent.style.display = 'block';
-
-            initWizard();
-
-        } catch (err) {
-            console.error('Error loading page data:', err);
-            skeleton.style.display = 'none';
-            if (err.message.includes('Failed to fetch') || 
-                err.name === 'TypeError' || 
-                err.message.includes('NetworkError') ||
-                err.message.includes('network')) {
-                showNetworkError();
-            }
-            else{
-                realContent.style.display = 'block';
-                const errDiv = document.createElement('div');
-                errDiv.className = 'alert alert-danger m-4';
-                errDiv.textContent = 'Unable to load categories and hotspots. Please refresh the page.';
-                document.querySelector('.dashboard-card')?.prepend(errDiv);
+            } catch (err) {
+                console.error('Error creating listing:', err);
+                showToast('An unexpected error occurred. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalHTML;
             }
         }
-    }
 
+        // ---- Reset form ----
+        function resetForm() {
+            document.getElementById('listingForm').reset();
 
-    // --- Reset form to initial state ---
-function resetForm() {
-    // 1. Reset all form fields
-    document.getElementById('listingForm').reset();
+            const fileInput = document.getElementById('images');
+            if (fileInput) fileInput.value = '';
 
-    // 2. Clear file input
-    const fileInput = document.getElementById('images');
-    if (fileInput) fileInput.value = '';
+            document.querySelectorAll('#hotspotsContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
 
-    // 3. Uncheck all hotspot checkboxes
-    document.querySelectorAll('#hotspotsContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+            const firstRadio = document.querySelector('input[name="listing_type"]');
+            if (firstRadio) {
+                firstRadio.checked = true;
+                const evt = new Event('change', { bubbles: true });
+                firstRadio.dispatchEvent(evt);
+            }
 
-    // 4. Reset listing type to first radio (if any)
-    const firstRadio = document.querySelector('input[name="listing_type"]');
-    if (firstRadio) {
-        firstRadio.checked = true;
-        // Trigger change event to update description and price behavior
-        const evt = new Event('change', { bubbles: true });
-        firstRadio.dispatchEvent(evt);
-    }
+            const badgeSelect = document.getElementById('badge');
+            if (badgeSelect) badgeSelect.value = '';
 
-    // 5. Reset badge dropdown to "None"
-    const badgeSelect = document.getElementById('badge');
-    if (badgeSelect) badgeSelect.value = '';
+            // Reset price input
+            const priceInput = document.getElementById('price');
+            if (priceInput) {
+                priceInput.value = '';
+                priceInput.disabled = false;
+                priceInput.style.opacity = '1';
+                priceInput.style.cursor = 'text';
+                priceInput.setAttribute('required', 'required');
+            }
 
-    // 6. Reset wizard to step 1
-    currentStep = 1;
-    updateStepUI();
+            currentStep = 1;
+            updateStepUI();
 
-    // 7. Clear review content
-    document.getElementById('reviewContent').innerHTML = '';
+            document.getElementById('reviewContent').innerHTML = '';
 
-    document.querySelectorAll('#advertTypeContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
-    updateAdvertPointsInfo();
+            document.querySelectorAll('#advertTypeContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updatePointsDisplay();
 
-    // 8. Refresh points display (in case backend updated points)
-    updatePointsDisplay();
+            const display = document.getElementById('pointsBalanceDisplay');
+            if (display) display.style.color = 'var(--accent)';
 
-    // 9. Scroll to top of form
-    document.querySelector('.dashboard-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}   
+            document.querySelector('.dashboard-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
 
-    // ---- Bootstrap ----
-    document.addEventListener('DOMContentLoaded', () => {
-        loadPageData();
-        updatePointsDisplay();
-    });
-</script>
+        // ---- Load page data ----
+        async function loadPageData() {
+            const skeleton = document.getElementById('skeletonLoader');
+            const realContent = document.getElementById('realContent');
+            if (!skeleton || !realContent) return;
+
+            skeleton.style.display = 'block';
+            realContent.style.display = 'none';
+
+            try {
+                const response = await fetch(LOOKUP_URL, {
+                    headers: {
+                        'Accept': 'application/json',
+                        ...getAuthHeaders()
+                    }
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    deleteAuthCookies();
+                    window.location.href = '../index.html';
+                    return;
+                }
+                if (!response.ok) throw new Error('Failed to fetch lookup data');
+
+                const result = await response.json();
+                if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
+
+                const data = result.data;
+
+                // Categories
+                const catSelect = document.querySelector('select[name="category"]');
+                if (catSelect) {
+                    catSelect.innerHTML = '<option value="">Select a category</option>' +
+                        data.categories.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+                }
+
+                // Hotspots
+                const container = document.getElementById('hotspotsContainer');
+                if (container) {
+                    if (data.hotspots && data.hotspots.length) {
+                        container.innerHTML = data.hotspots.map(hs => `
+                                <label class="form-check-custom">
+                                    <input type="checkbox" name="hotspots" value="${hs.id}">
+                                    <span class="checkmark"></span>
+                                    <span class="label-text">
+                                        <strong>${escapeHtml(hs.name)}</strong> – <span class="small text-muted">${escapeHtml(hs.description)}</span>
+                                    </span>
+                                </label>
+                            `).join('');
+                    } else {
+                        container.innerHTML = '<p class="text-muted mb-0">No hotspots available. Please contact support.</p>';
+                    }
+                }
+
+                // Badges
+                const badgeSelect = document.getElementById('badge');
+                if (badgeSelect) {
+                    badgeSelect.innerHTML = '<option value="">None</option>' +
+                        data.badge_choices.map(b => `<option value="${b.value}">${escapeHtml(b.label)}</option>`).join('');
+                }
+
+                // Listing types
+                populateListingTypes(data.type_choices);
+
+                if (data.advert_type) {
+                    populateAdvertTypes(data.advert_type);
+                }
+
+                // Setup price formatting
+                setupPriceInput();
+
+                // Initial points display
+                updatePointsDisplay();
+
+                skeleton.style.display = 'none';
+                realContent.style.display = 'block';
+
+                initWizard();
+
+                setTimeout(updatePointsDisplay, 100);
+
+            } catch (err) {
+                console.error('Error loading page data:', err);
+                skeleton.style.display = 'none';
+                if (err.message.includes('Failed to fetch') ||
+                    err.name === 'TypeError' ||
+                    err.message.includes('NetworkError') ||
+                    err.message.includes('network')) {
+                    showNetworkError();
+                } else {
+                    realContent.style.display = 'block';
+                    const errDiv = document.createElement('div');
+                    errDiv.className = 'alert alert-danger m-4';
+                    errDiv.textContent = 'Unable to load categories and hotspots. Please refresh the page.';
+                    document.querySelector('.dashboard-card')?.prepend(errDiv);
+                }
+            }
+        }
+
+        // ---- Bootstrap ----
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPageData();
+            setInterval(updatePointsDisplay, 5000);
+        });
+    </script>
 
 </body>
 </html>
