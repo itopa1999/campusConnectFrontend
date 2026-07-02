@@ -1291,75 +1291,123 @@ async function handlePromotionToggle(type, enable) {
   const toggle = document.getElementById(toggleId);
   const badgeId = type === 'banner' ? 'bannerActiveBadge' : 'hotSaleActiveBadge';
   const badge = document.getElementById(badgeId);
-  const originalChecked = toggle.checked;
 
-  // Prevent double click
-  toggle.disabled = true;
+  // Store the new state (what the toggle shows now) and the old state
+  const newState = enable;
+  const oldState = !newState; // because the change event already flipped it
 
-  try {
+  // If enabling, check points first (no modal if insufficient)
+  if (newState) {
     const advert = allAdvertTypes.find(a => a.value === type);
     const cost = advert ? advert.points : 0;
-
-    // If enabling, check points
-    if (enable) {
-      const points = parseInt(getCookie('point_bal') || '0', 10);
-      if (points < cost) {
-        showToast(`Not enough points. You need ${cost} points for ${type}.`, 'error');
-        toggle.checked = false;
-        return;
-      }
+    const points = parseInt(getCookie('point_bal') || '0', 10);
+    if (points < cost) {
+      showToast(`Not enough points. You need ${cost} points for ${type}.`, 'error');
+      toggle.checked = oldState; // revert
+      return;
     }
+  }
 
-    // Build payload
-    const payload = {};
-    if (type === 'banner') payload.is_ads_banner = enable;
-    else if (type === 'hot_sale') payload.is_hot_sales = enable;
+  // Disable toggle to prevent double‑clicks during confirmation
+  toggle.disabled = true;
 
-    const token = getCookie('access_token');
-    const response = await fetch(LISTING_DETAIL_URL + '/' + listingData.id, {
-      method: 'PATCH',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+  // Build modal content
+  const label = type === 'banner' ? 'Banner' : 'Hot Sale';
+  const cost = allAdvertTypes.find(a => a.value === type)?.points || 0;
+  let title, message, confirmText;
+
+  if (newState) {
+    title = `Enable ${label} Promotion`;
+    message = `This will cost <strong>${cost}</strong> point(s). Are you sure you want to enable ${label} for this listing?`;
+    confirmText = 'Yes, Enable';
+  } else {
+    title = `Disable ${label} Promotion`;
+    message = `Are you sure you want to disable ${label} for this listing? No points will be refunded.`;
+    confirmText = 'Yes, Disable';
+  }
+
+  // ─── Define the action to perform on confirmation ───
+  async function performUpdate() {
+    try {
+      const payload = {};
+      if (type === 'banner') payload.is_ads_banner = newState;
+      else if (type === 'hot_sale') payload.is_hot_sales = newState;
+
+      const token = getCookie('access_token');
+      const response = await fetch(CAMPUS_URL + 'listing-update-ads/' + listingData.id, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || 'Update failed');
+      }
+
+      const result = await response.json();
+      if (result.is_success) {
+        showToast(`${label} ${newState ? 'enabled' : 'disabled'} successfully!`, 'success');
+
+        // Refresh listing data and re-render
+        await fetchListingData(listingData.id);
+        renderViewMode(); // this will call setupPromotionToggles again
+
+        // Update points cookie if enabled
+        if (newState) {
+          const newPoints = parseInt(getCookie('point_bal') || '0', 10) - cost;
+          setCookie('point_bal', newPoints, 10);
+          document.getElementById('userPoints').innerText = newPoints;
+          userPoints = newPoints;
+        }
+      } else {
+        throw new Error(result.message || 'Update failed');
+      }
+    } catch (err) {
+      console.error('Toggle promotion error:', err);
+      showToast('Failed to toggle: ' + err.message, 'error');
+      // Revert toggle on error
+      toggle.checked = oldState;
+    } finally {
+      toggle.disabled = false;
+    }
+  }
+
+  // ─── Show confirmation modal ──────────────────────────────
+  if (typeof confirmModal !== 'undefined' && confirmModal) {
+    confirmModal.open({
+      title: title,
+      message: message,
+      confirmText: confirmText,
+      cancelText: 'Cancel',
+      onConfirm: performUpdate,
+      onCancel: () => {
+        // User cancelled – revert toggle and re-enable
+        toggle.checked = oldState;
+        toggle.disabled = false;
       },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.message || 'Update failed');
-    }
-
-    const result = await response.json();
-    if (result.is_success) {
-      showToast(`${type} ${enable ? 'enabled' : 'disabled'} successfully!`, 'success');
-
-      // Update listing data and re-render
-      await fetchListingData(listingData.id);
-      renderViewMode(); // this will call setupPromotionToggles again
-
-      // Update points cookie if enabled
-      if (enable) {
-        const newPoints = parseInt(getCookie('point_bal') || '0', 10) - cost;
-        setCookie('point_bal', newPoints, 10);
-        document.getElementById('userPoints').innerText = newPoints;
-        userPoints = newPoints;
+      onClose: () => {
+        // Modal closed via X – same as cancel
+        toggle.checked = oldState;
+        toggle.disabled = false;
       }
-
-      // Update badge visibility immediately (optional, but renderViewMode will handle it)
+    });
+  } else {
+    // Fallback to native confirm
+    const userConfirmed = confirm(`${title}\n${message.replace(/<[^>]*>/g, '')}`);
+    if (userConfirmed) {
+      await performUpdate();
     } else {
-      throw new Error(result.message || 'Update failed');
+      toggle.checked = oldState;
+      toggle.disabled = false;
     }
-  } catch (err) {
-    console.error('Toggle promotion error:', err);
-    showToast('Failed to toggle: ' + err.message, 'error');
-    // Revert toggle state
-    toggle.checked = !enable;
-  } finally {
-    toggle.disabled = false;
   }
 }
+
 
   // ─── Bootstrap ──────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', loadListing);

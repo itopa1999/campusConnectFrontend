@@ -1,8 +1,8 @@
 // ========== UTILITIES (always safe) ==========
-const AUTH_URL = 'http://192.168.1.179:8000/user/api/auth/';
-const REPORT_URL = 'http://192.168.1.179:8000/user/api/report/';
-const CAMPUS_URL = 'http://192.168.1.179:8000/campus/api/campus/';
-const REFRESH_URL = 'http://192.168.1.179:8000/user/api/';
+const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
+const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
+const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
+const REFRESH_URL = 'http://127.0.0.1:8000/user/api/';
 
 
 // ─── Global Refresh Spinner (injected dynamically) ──────────────

@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
-  <!-- CampusConnect styles -->
   <link rel="stylesheet" href="../assets/css/main.css" />
 
   <style>
@@ -23,7 +22,7 @@
       background: #f9fbf8;
     }
 
-    /* Toggle switch (same as before) */
+    /* Toggle switch */
     .toggle-switch {
       position: relative;
       display: inline-block;
@@ -155,7 +154,7 @@
       background: var(--primary-dark);
     }
 
-    /* Skeleton loading styles */
+    /* ─── Skeleton Loader ─── */
     .skeleton-loader {
       background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
       background-size: 200% 100%;
@@ -186,21 +185,34 @@
       border-radius: 8px;
     }
 
-    /* Hide content initially, show after loading */
-    .profile-content {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .profile-content.visible {
-      display: block;
-      opacity: 1;
-    }
     .skeleton-wrapper {
       display: block;
     }
     .skeleton-wrapper.hidden {
       display: none;
+    }
+
+    /* ─── Profile content ─── */
+    .profile-content {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .profile-content.visible {
+      display: block;
+      opacity: 1;
+    }
+
+    /* ─── Edit mode toggles ─── */
+    .edit-section {
+      transition: all 0.2s;
+    }
+    .edit-section .form-floating-label {
+      margin-bottom: 1.25rem;
+    }
+    .form-floating-label label.required:after {
+      content: " *";
+      color: #dc3545;
     }
   </style>
 </head>
@@ -219,9 +231,9 @@
       </label>
     </div>
 
-    <!-- SKELETON LOADER (visible initially) -->
+    <!-- SKELETON LOADER -->
     <div id="skeletonWrapper" class="row g-4 skeleton-wrapper">
-      <div class="col-lg-4">
+      <div class="col-12 col-lg-4">
         <div class="section-card shadow-sm p-4 text-center">
           <div class="skeleton-avatar skeleton-loader"></div>
           <div class="skeleton-text skeleton-loader" style="height:24px; width:70%; margin:0 auto;"></div>
@@ -234,7 +246,7 @@
           <div class="skeleton-text skeleton-loader" style="height:80px;"></div>
         </div>
       </div>
-      <div class="col-lg-8">
+      <div class="col-12 col-lg-8">
         <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
         <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
         <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
@@ -243,11 +255,11 @@
       </div>
     </div>
 
-    <!-- ACTUAL PROFILE CONTENT (hidden until loaded) -->
+    <!-- ACTUAL PROFILE CONTENT -->
     <div id="profileContent" class="profile-content">
       <div class="row g-4">
         <!-- LEFT COLUMN -->
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4">
           <div class="section-card shadow-sm p-4 text-center mb-4" data-aos="fade-right">
             <div class="position-relative d-inline-block mb-3">
               <img src="https://ui-avatars.com/api/?background=2c7a5e&color=fff&name=Salawu+Lucky" alt="Profile" class="profile-avatar-large" />
@@ -313,14 +325,14 @@
         </div>
 
         <!-- RIGHT COLUMN -->
-        <div class="col-lg-8">
+        <div class="col-12 col-lg-8">
           <!-- Personal Information -->
           <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left">
             <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
               <h5 class="mb-0"><i class="fas fa-user me-2" style="color: var(--primary);"></i>Personal Information</h5>
             </div>
             <!-- View mode -->
-            <div id="personalView">
+            <div id="personalView" class="edit-section">
               <div class="row g-3">
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Full name</span><span class="info-value" id="viewFullName">Salawu Lucky</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Email</span><span class="info-value" id="viewEmail">salawu.lucky@stu.ui.edu.ng</span></div></div>
@@ -329,14 +341,14 @@
               </div>
             </div>
             <!-- Edit mode -->
-            <div id="personalEdit" class="d-none">
+            <div id="personalEdit" class="edit-section d-none">
               <div class="form-floating-label">
                 <input type="text" class="form-control" id="editFullName" placeholder=" " value="Salawu Lucky" />
-                <label class="form-label" for="editFullName">Full name</label>
+                <label class="form-label required" for="editFullName">Full name</label>
               </div>
               <div class="form-floating-label">
                 <input type="email" class="form-control" id="editEmail" placeholder=" " value="salawu.lucky@stu.ui.edu.ng" />
-                <label class="form-label" for="editEmail">Email address</label>
+                <label class="form-label required" for="editEmail">Email address</label>
               </div>
               <div class="form-floating-label">
                 <input type="tel" class="form-control" id="editPhone" placeholder=" " value="+234 801 234 5678" />
@@ -348,7 +360,7 @@
           <!-- Academic -->
           <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="50">
             <h5 class="mb-3"><i class="fas fa-graduation-cap me-2" style="color: var(--primary);"></i>Academic Information</h5>
-            <div id="academicView">
+            <div id="academicView" class="edit-section">
               <div class="row g-3">
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Matric number</span><span class="info-value" id="viewMatric">UI/2022/12345</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Department</span><span class="info-value" id="viewDept">Computer Science</span></div></div>
@@ -356,22 +368,22 @@
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Level</span><span class="info-value" id="viewLevel">300 Level</span></div></div>
               </div>
             </div>
-            <div id="academicEdit" class="d-none">
+            <div id="academicEdit" class="edit-section d-none">
               <div class="form-floating-label">
                 <input type="text" class="form-control" id="editMatric" placeholder=" " value="UI/2022/12345" />
-                <label class="form-label" for="editMatric">Matric number</label>
+                <label class="form-label required" for="editMatric">Matric number</label>
               </div>
               <div class="form-floating-label">
                 <input type="text" class="form-control" id="editDept" placeholder=" " value="Computer Science" />
-                <label class="form-label" for="editDept">Department</label>
+                <label class="form-label required" for="editDept">Department</label>
               </div>
               <div class="form-floating-label">
                 <input type="text" class="form-control" id="editFaculty" placeholder=" " value="Science" />
-                <label class="form-label" for="editFaculty">Faculty</label>
+                <label class="form-label required" for="editFaculty">Faculty</label>
               </div>
               <div class="form-floating-label">
                 <input type="text" class="form-control" id="editLevel" placeholder=" " value="300 Level" />
-                <label class="form-label" for="editLevel">Level</label>
+                <label class="form-label required" for="editLevel">Level</label>
               </div>
             </div>
           </div>
@@ -432,13 +444,13 @@
           <!-- Settings -->
           <div class="section-card shadow-sm p-4" data-aos="fade-left" data-aos-delay="200">
             <h5 class="mb-3"><i class="fas fa-sliders-h me-2" style="color: var(--primary);"></i>Settings & Preferences</h5>
-            <div id="settingsView">
+            <div id="settingsView" class="edit-section">
               <div class="row g-3 mb-3">
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Email notifications</span><span class="info-value" id="viewNotifications">Enabled</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Profile visibility</span><span class="info-value" id="viewVisibility">Public (UI students)</span></div></div>
               </div>
             </div>
-            <div id="settingsEdit" class="d-none">
+            <div id="settingsEdit" class="edit-section d-none">
               <div class="form-floating-label">
                 <select class="form-select" id="editNotifications">
                   <option value="Enabled" selected>Enabled</option>
@@ -477,19 +489,16 @@
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<!-- Load main.js for auth and utilities -->
 <script src="../assets/js/main.js"></script>
 
 <script>
   (function() {
-    // === 1. AUTH ===
+    // ─── 1. AUTH ──────────────────────────────────────────────
     if (typeof isAuthenticated === 'function') {
-     console.log('oooooo') // isAuthenticated();
-    } else {
-      console.warn('isAuthenticated not defined – make sure main.js is loaded.');
+      isAuthenticated();
     }
 
-    // === 2. DUMMY PROFILE DATA ===
+    // ─── 2. PROFILE DATA (static for demo) ──────────────────
     let profileData = {
       fullName: "Salawu Lucky",
       email: "salawu.lucky@stu.ui.edu.ng",
@@ -502,7 +511,7 @@
       visibility: "Public (UI students)"
     };
 
-    // DOM references
+    // ─── 3. DOM REFERENCES ──────────────────────────────────
     const viewFullName = document.getElementById('viewFullName');
     const viewEmail = document.getElementById('viewEmail');
     const viewPhone = document.getElementById('viewPhone');
@@ -534,7 +543,7 @@
     const saveBtnContainer = document.getElementById('saveProfileBtnContainer');
     const editModeToggle = document.getElementById('editModeToggle');
 
-    // === 3. FUNCTIONS ===
+    // ─── 4. FUNCTIONS ──────────────────────────────────────
     function refreshViewMode() {
       viewFullName.innerText = profileData.fullName;
       viewEmail.innerText = profileData.email;
@@ -551,15 +560,20 @@
 
     function toggleEditMode() {
       const isEdit = editModeToggle.checked;
+      // Personal
       personalView.classList.toggle('d-none', isEdit);
       personalEdit.classList.toggle('d-none', !isEdit);
+      // Academic
       academicView.classList.toggle('d-none', isEdit);
       academicEdit.classList.toggle('d-none', !isEdit);
+      // Settings
       settingsView.classList.toggle('d-none', isEdit);
       settingsEdit.classList.toggle('d-none', !isEdit);
+      // Save button
       saveBtnContainer.classList.toggle('d-none', !isEdit);
 
       if (isEdit) {
+        // Populate edit fields with current data
         editFullName.value = profileData.fullName;
         editEmail.value = profileData.email;
         editPhone.value = profileData.phone;
@@ -573,6 +587,7 @@
     }
 
     function saveProfile() {
+      // Gather values from edit fields
       profileData.fullName = editFullName.value.trim();
       profileData.email = editEmail.value.trim();
       profileData.phone = editPhone.value.trim();
@@ -586,7 +601,7 @@
       refreshViewMode();
       editModeToggle.checked = false;
       toggleEditMode();
-      alert('Profile updated successfully!');
+      showToast('Profile updated successfully!', 'success');
     }
 
     function escapeHtml(str) {
@@ -599,48 +614,51 @@
       });
     }
 
-    // === 4. SKELETON LOADING ===
+    // ─── 5. SKELETON LOADER ─────────────────────────────────
     function showProfile() {
       const skeleton = document.getElementById('skeletonWrapper');
       const content = document.getElementById('profileContent');
       skeleton.classList.add('hidden');
       content.classList.add('visible');
-      // init AOS after content visible
+      // Refresh AOS for new elements
       if (typeof AOS !== 'undefined') AOS.refresh();
     }
 
-    // Simulate loading delay (1s)
-    setTimeout(showProfile, 1000);
+    // Simulate loading delay (800ms)
+    setTimeout(showProfile, 800);
 
-    // === 5. EVENT LISTENERS ===
+    // ─── 6. EVENT LISTENERS ─────────────────────────────────
     editModeToggle.addEventListener('change', toggleEditMode);
     document.getElementById('saveProfileChanges')?.addEventListener('click', saveProfile);
-    document.getElementById('changePasswordBtn')?.addEventListener('click', () => alert('Password change flow (OTP to email)'));
-    document.getElementById('uploadStudentIdBtn')?.addEventListener('click', () => alert('Upload student ID for verification.'));
-    document.getElementById('profilePicUpload')?.addEventListener('change', (e) => {
-      if (e.target.files.length) alert('Profile picture uploaded (simulated)');
+    document.getElementById('changePasswordBtn')?.addEventListener('click', function() {
+      showToast('Password change flow (OTP to email) – coming soon.', 'info');
+    });
+    document.getElementById('uploadStudentIdBtn')?.addEventListener('click', function() {
+      showToast('Student ID upload will be available soon.', 'info');
+    });
+    document.getElementById('profilePicUpload')?.addEventListener('change', function(e) {
+      if (e.target.files.length) {
+        showToast('Profile picture uploaded (simulated).', 'success');
+        // You can read the file and update the avatar preview here.
+      }
     });
 
-    // Load points from localStorage or use default
-    let points = localStorage.getItem('userPoints') || 3;
+    // ─── 7. POINTS from cookie ──────────────────────────────
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    }
+    let points = getCookie('point_bal') || '3';
     document.getElementById('pointsDisplay') && (document.getElementById('pointsDisplay').innerText = points);
     document.getElementById('pointsBalance') && (document.getElementById('pointsBalance').innerText = points);
 
-    // Populate mobile user info (from main.js if available)
-    if (typeof populateUserProfile === 'function') {
-      populateUserProfile();
-    }
+    // ─── 8. TRUST SCORE (dummy) ─────────────────────────────
+    document.getElementById('trustScore') && (document.getElementById('trustScore').innerText = '46%');
 
-    // Ensure logout works (defined in main.js)
-    window.logout = function() {
-      if (typeof deleteAuthCookies === 'function') deleteAuthCookies();
-      else {
-        ['access_token','refresh_token','user_id','is_email_verified'].forEach(name => {
-          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-        });
-      }
-      window.location.href = '../index.html';
-    };
+    // ─── 9. NAVIGATION PLACEHOLDER ──────────────────────────
+    // The nav is loaded via main.js if available.
 
   })();
 </script>
