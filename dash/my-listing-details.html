@@ -254,6 +254,15 @@
   display: inline-block;
   margin-left: 0.3rem;
 }
+
+.restriction-warning {
+  background: #fff8e7;
+  border-left: 4px solid #f5b042;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  margin: 1rem 0;
+}
   </style>
 </head>
 <body>
@@ -343,14 +352,7 @@
             </div>
           </div>
 
-          <!-- Last modified info -->
-          <div class="last-modified mb-3">
-            <i class="far fa-clock me-1"></i> Last modified: <span id="lastModifiedDisplay">--</span>
-          </div>
-
-          <div class="last-modified mb-3">
-            <i class="far fa-calendar-plus me-1"></i> Next edit allowed: <span id="nextEditDateDisplay">--</span>
-          </div>
+          <div id="editRestrictionWarning" class="restriction-warning" style="display: none;"></div>
 
           <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 mb-4">
             <!-- Listing Image -->
@@ -438,7 +440,23 @@
                   </div>
                 </div>
                 <div id="promotionInfo" class="promotion-info-text"></div>
-              </div>              <!-- Reviews -->
+              </div>
+              <div class="mt-3 pt-3 border-top">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div>
+                  <h5 class="mb-1"><i class="fas fa-sync-alt me-2 text-warning"></i>Auto-Reactivation</h5>
+                  <p class="text-muted small mb-0">Automatically reactivate when expired (costs 1 point each time).</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-light text-dark" id="autoReactivateStatus">Off</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="autoReactivateToggle" disabled>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+              <!-- Reviews -->
               <div class="mt-4 pt-3 border-top">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                   <h5 class="mb-0"><i class="fas fa-star me-2" style="color: #f5b042;"></i>Reviews</h5>
@@ -544,6 +562,7 @@
 
   const LOOKUP_URL = CAMPUS_URL + 'get-lookup';
   const LISTING_DETAIL_URL = CAMPUS_URL + 'listing';
+  const AUTO_REACTIVATE_URL = CAMPUS_URL + 'listing-auto-reactivate';
 
   let listingData = {};
   let userPoints = 0;
@@ -717,28 +736,23 @@
 
     // Last modified & next edit
     const lastMod = listingData.modified_at;
-    const period = listingData.editing_period_day || 7;
-    document.getElementById('lastModifiedDisplay').innerText = lastMod ? new Date(lastMod).toLocaleString() : 'Never';
-    if (lastMod) {
-      const nextDate = new Date(new Date(lastMod).getTime() + (period * 24 * 60 * 60 * 1000));
-      document.getElementById('nextEditDateDisplay').innerText = nextDate.toLocaleString();
-    } else {
-      document.getElementById('nextEditDateDisplay').innerText = 'Now (never edited)';
-    }
+    const period = listingData.editing_period_day || 0;
+   
 
     // Points
     userPoints = parseInt(getCookie('point_bal') || '0', 10);
     document.getElementById('userPoints').innerText = userPoints;
 
     setupPromotionToggles();
-
+    setupAutoReactivateToggle();
     updateEditToggleState();
   }
 
   // ─── Edit mode logic ────────────────────────────────────────
   function isEditAllowed() {
+    const period = listingData.editing_period_day || 0;
+    if (period === 0) return true;
     const lastMod = listingData.modified_at;
-    const period = listingData.editing_period_day || 7;
     if (!lastMod) return true;
     const nextEdit = new Date(new Date(lastMod).getTime() + (period * 24 * 60 * 60 * 1000));
     return new Date() >= nextEdit;
@@ -747,8 +761,15 @@
   function updateEditToggleState() {
     const toggle = document.getElementById('editModeToggle');
     const warningDiv = document.getElementById('editRestrictionWarning');
+    const period = listingData.editing_period_day || 0;
     const lastMod = listingData.modified_at;
-    const period = listingData.editing_period_day || 7;
+
+    if (period === 0) {
+      toggle.disabled = false;
+      warningDiv.style.display = 'none';
+      return;
+    }
+
 
     if (!isEditAllowed()) {
       toggle.disabled = true;
@@ -816,6 +837,11 @@
     document.getElementById('saveBasicBtn').classList.toggle('d-none', !isEdit);
     if (isEdit) {
       populateEditFields();
+      const firstInput = document.getElementById('titleEdit');
+      if (firstInput) {
+        firstInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => firstInput.focus(), 500);
+      }
     }
   }
 
@@ -1067,6 +1093,8 @@
     // Normalize field names (API returns is_hot_sale, is_ads_banner)
     listingData.is_hot_sales = listingData.is_hot_sale || false;
     listingData.is_ads_banner = listingData.is_ads_banner || false;
+    listingData.auto_reactivate = listingData.auto_reactivate || false;
+    listingData.editing_period_day = listingData.editing_period_day || 0;
     userPoints = parseInt(getCookie('point_bal') || '0', 10);
   }
 
@@ -1405,6 +1433,99 @@ async function handlePromotionToggle(type, enable) {
       toggle.checked = oldState;
       toggle.disabled = false;
     }
+  }
+}
+
+
+function setupAutoReactivateToggle() {
+  const toggle = document.getElementById('autoReactivateToggle');
+  const statusBadge = document.getElementById('autoReactivateStatus');
+
+  // Only show if listing is active (or maybe also for expired/sold?)
+  // Typically auto-reactivation only makes sense for active or expired listings.
+  const isActive = listingData.status === 'active';
+  const isExpired = listingData.status === 'expired';
+  toggle.disabled = !(isActive || isExpired);
+  if (!(isActive || isExpired)) {
+    statusBadge.innerText = 'N/A';
+    toggle.checked = false;
+    return;
+  }
+
+  // Set initial state from listingData
+  const autoReactivate = listingData.auto_reactivate || false;
+  toggle.checked = autoReactivate;
+  statusBadge.innerText = autoReactivate ? 'On' : 'Off';
+  statusBadge.className = `badge ${autoReactivate ? 'bg-success' : 'bg-secondary'}`;
+
+  // Remove old listener and add new one
+  toggle.removeEventListener('change', handleAutoReactivateToggle);
+  toggle.addEventListener('change', handleAutoReactivateToggle);
+}
+
+async function handleAutoReactivateToggle(e) {
+  const toggle = e.target;
+  const newState = toggle.checked;
+  const oldState = !newState;
+
+  // Disable toggle while processing
+  toggle.disabled = true;
+
+  // Optional: confirm with user
+  if (typeof confirmModal !== 'undefined' && confirmModal) {
+    const userConfirmed = await new Promise((resolve) => {
+      confirmModal.open({
+        title: newState ? 'Enable Auto-Reactivation' : 'Disable Auto-Reactivation',
+        message: newState
+          ? 'When this listing expires, it will be automatically reactivated (cost 1 point each time). Are you sure?'
+          : 'Auto-reactivation will be disabled. No points will be deducted. Are you sure?',
+        confirmText: newState ? 'Yes, Enable' : 'Yes, Disable',
+        cancelText: 'Cancel',
+        onConfirm: () => resolve(true),
+        onCancel: () => resolve(false),
+        onClose: () => resolve(false)
+      });
+    });
+    if (!userConfirmed) {
+      toggle.checked = oldState;
+      toggle.disabled = false;
+      return;
+    }
+  }
+
+  try {
+    const token = getCookie('access_token');
+    const payload = { auto_reactivate: newState };
+    const response = await fetch(`${AUTO_REACTIVATE_URL}/${listingData.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || 'Update failed');
+    }
+
+    const result = await response.json();
+    if (result.is_success) {
+      showToast(`Auto-reactivation ${newState ? 'enabled' : 'disabled'} successfully!`, 'success');
+      // Update listing data and re-render
+      await fetchListingData(listingData.id);
+      renderViewMode();  // will call setupAutoReactivateToggle again
+    } else {
+      throw new Error(result.message || 'Update failed');
+    }
+  } catch (err) {
+    console.error('Auto-react toggle error:', err);
+    showToast('Failed to update: ' + err.message, 'error');
+    toggle.checked = oldState;
+  } finally {
+    toggle.disabled = false;
   }
 }
 

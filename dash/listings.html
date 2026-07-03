@@ -86,16 +86,6 @@
         <div class="load-more-btn"><button class="btn btn-outline-custom load-more" data-section="hot">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
       </section>
 
-      <!-- Top sales section -->
-      <section class="mb-5" data-section="top">
-        <div class="section-heading">
-          <h3 class="fw-bold mb-0"><i class="fas fa-trophy me-2" style="color: #f5b042;"></i>Top sales 🏆</h3>
-          <p class="text-muted">Best selling items this month</p>
-        </div>
-        <div class="row g-3 top-grid" data-page="1" data-total-pages="3"></div>
-        <div class="load-more-btn"><button class="btn btn-outline-custom load-more" data-section="top">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
-      </section>
-
       <!-- Departmental sales -->
       <section class="mb-5" data-section="dept">
         <div class="section-heading">
@@ -175,7 +165,6 @@
   function generateItems(sectionKey, page, itemsPerPage = 8) {
     const baseNames = {
       hot: ["🔥 iPhone 12", "🔥 Gaming Mouse", "🔥 Nike Air Max", "🔥 Desk Lamp", "🔥 Textbook", "🔥 Hoodie", "🔥 Speaker", "🔥 Calculator"],
-      top: ["🏆 Samsung Tablet", "🏆 Office Chair", "🏆 Headphones", "🏆 Backpack", "🏆 Sneakers", "🏆 Monitor", "🏆 Keyboard", "🏆 Jacket"],
       dept: ["📘 CSC 401 Notes", "📗 Python Book", "📕 Economics Guide", "📙 Engineering Kit", "📔 Lab Coat", "📒 Calculator", "📓 Projector", "📚 Past Questions"],
       foryou: ["🎓 ML Course Materials", "🎓 Logitech Mouse", "🎓 USB Drive", "🎓 Coding Desk", "🎓 Java Textbook", "🎓 Resume Template", "🎓 Hoodie", "🎓 Coffee Mug"]
     };
@@ -287,7 +276,7 @@
 
   // Initialize all sections with first page
   function initSections() {
-    const sections = ['hot', 'top', 'dept', 'foryou'];
+    const sections = ['hot', 'dept', 'foryou'];
     sections.forEach(section => {
       const grid = document.querySelector(`.${section}-grid`);
       if (grid) {

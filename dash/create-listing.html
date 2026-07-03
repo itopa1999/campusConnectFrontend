@@ -358,6 +358,51 @@
         #price {
             -moz-appearance: textfield;
         }
+
+        /* Drop area */
+.drop-area {
+    border: 2px dashed rgba(44, 122, 94, 0.25);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fafcfb;
+}
+.drop-area:hover {
+    border-color: rgba(44, 122, 94, 0.5);
+    background: #f4f8f6;
+}
+.drop-area.drag-over {
+    border-color: #2c7a5e;
+    background: #eaf7f0;
+}
+.drop-area i {
+    font-size: 2.5rem;
+    color: #2c7a5e;
+    margin-bottom: 0.5rem;
+}
+.drop-area p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+.drop-area .small {
+    font-size: 0.8rem;
+}
+.image-preview {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.image-preview img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 8px;
+    border: 1px solid #eef2f0;
+    object-fit: cover;
+}
     </style>
 </head>
 <body>
@@ -540,9 +585,17 @@
                                     </div> <br>
 
                                     <div class="form-floating-group">
-                                        <input type="file" class="form-control" name="images" id="images" multiple accept="image/*" />
-                                        <label class="form-label" for="images">Images (Optional)</label>
-                                        <div class="helper-text">Upload up to 5 images of your item.</div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold">Images (Optional)</label>
+                                            <div class="drop-area" id="imageDropArea">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                                <p>Drag & drop an image here or click to browse</p>
+                                                <div class="small text-muted">JPEG, PNG, WEBP up to 2MB</div>
+                                                <input type="file" id="imageInput" accept="image/*" hidden>
+                                            </div>
+                                            <div class="image-preview" id="imagePreview"></div>
+                                            <div class="helper-text mt-1">Upload a clear image of your item (optional).</div>
+                                        </div>
                                     </div>
 
                                     <div class="d-flex justify-content-between">
@@ -632,6 +685,8 @@
         // ──────────────────────────────────────────────────────────────
 
         isAuthenticated();
+
+        let selectedImageFile = null;
 
         const LOOKUP_URL = CAMPUS_URL + 'get-lookup';
         const BASE_POINTS_COST = 1; // each listing costs 1 point
@@ -1115,11 +1170,8 @@
             const rawPrice = getRawPrice();
             formData.set('price', rawPrice);
 
-            const imageInput = document.getElementById('images');
-            if (imageInput?.files?.length > 0) {
-                formData.append('image', imageInput.files[0]);
-            } else {
-                formData.append('image', '');
+            if (selectedImageFile) {
+                formData.append('image', selectedImageFile);
             }
 
             const type = formData.get('listing_type');
@@ -1186,8 +1238,9 @@
         function resetForm() {
             document.getElementById('listingForm').reset();
 
-            const fileInput = document.getElementById('images');
-            if (fileInput) fileInput.value = '';
+            selectedImageFile = null;
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('imageInput').value = '';
 
             document.querySelectorAll('#hotspotsContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
 
@@ -1304,6 +1357,8 @@
 
                 initWizard();
 
+                setupImageUpload();
+
                 setTimeout(updatePointsDisplay, 100);
 
             } catch (err) {
@@ -1323,6 +1378,73 @@
                 }
             }
         }
+
+        function setupImageUpload() {
+    const dropArea = document.getElementById('imageDropArea');
+    const fileInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('imagePreview');
+    if (!dropArea || !fileInput) return;
+
+    const handleFile = (file) => {
+        if (!file) return;
+        // Validate size
+        if (file.size > 2 * 1024 * 1024) {
+            showToast('Image must be less than 2MB.', 'error');
+            return false;
+        }
+        // Validate type
+        const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!allowed.includes(file.type)) {
+            showToast('Only JPG, PNG, and WEBP images are allowed.', 'error');
+            return false;
+        }
+        // Store file and show preview
+        selectedImageFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+        };
+        reader.readAsDataURL(file);
+        return true;
+    };
+
+    // Click to open file picker
+    dropArea.addEventListener('click', () => fileInput.click());
+
+    // Drag & drop events
+    dropArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropArea.classList.add('drag-over');
+    });
+    dropArea.addEventListener('dragleave', () => {
+        dropArea.classList.remove('drag-over');
+    });
+    dropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropArea.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            if (handleFile(file)) {
+                // Update file input to reflect the dropped file (optional)
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                fileInput.files = dt.files;
+            }
+        }
+    });
+
+    // File input change
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            handleFile(fileInput.files[0]);
+        } else {
+            // If user cancels selection, clear preview
+            previewContainer.innerHTML = '';
+            selectedImageFile = null;
+        }
+    });
+}
 
         // ---- Bootstrap ----
         document.addEventListener('DOMContentLoaded', () => {

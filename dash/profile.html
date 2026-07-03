@@ -7,10 +7,11 @@
   <!-- Bootstrap, Icons, Fonts, AOS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
   <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/modal.css">
 
   <style>
     :root {
@@ -185,24 +186,6 @@
       border-radius: 8px;
     }
 
-    .skeleton-wrapper {
-      display: block;
-    }
-    .skeleton-wrapper.hidden {
-      display: none;
-    }
-
-    /* ─── Profile content ─── */
-    .profile-content {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    .profile-content.visible {
-      display: block;
-      opacity: 1;
-    }
-
     /* ─── Edit mode toggles ─── */
     .edit-section {
       transition: all 0.2s;
@@ -214,15 +197,51 @@
       content: " *";
       color: #dc3545;
     }
-  </style>
+
+    /* History items */
+    .history-item {
+      border-bottom: 1px solid #eef2f0;
+      padding: 0.75rem 0;
+      transition: background 0.15s;
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-item:hover {
+      background: #fafcfb;
+      margin: 0 -0.75rem;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+      border-radius: 0.75rem;
+    }
+
+    /* Pagination load more */
+    .load-more-btn {
+      border-radius: 40px;
+      padding: 0.4rem 1.5rem;
+      font-size: 0.9rem;
+    }
+    .restriction-warning {
+      background: #fff8e7;
+      border-left: 4px solid #f5b042;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+    }
+
+    #avatarSpinner {
+      display: none !important;
+    }
+
+</style>
 </head>
 <body>
+<div id="particles-js"></div>
 
 <div id="nav-placeholder"></div>
 <main class="pt-5 mt-4">
   <div class="container py-4">
 
-    <!-- Edit mode toggle row -->
+    <!-- Edit mode toggle row (visible always) -->
     <div class="d-flex justify-content-end align-items-center gap-3 mb-4">
       <span class="fw-semibold">Edit mode</span>
       <label class="toggle-switch">
@@ -231,38 +250,47 @@
       </label>
     </div>
 
-    <!-- SKELETON LOADER -->
-    <div id="skeletonWrapper" class="row g-4 skeleton-wrapper">
-      <div class="col-12 col-lg-4">
-        <div class="section-card shadow-sm p-4 text-center">
-          <div class="skeleton-avatar skeleton-loader"></div>
-          <div class="skeleton-text skeleton-loader" style="height:24px; width:70%; margin:0 auto;"></div>
-          <div class="skeleton-text skeleton-loader" style="width:50%; margin:0 auto;"></div>
-          <div class="row g-2 mt-3">
-            <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:60px;"></div></div>
-            <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:60px;"></div></div>
+    <!-- SKELETON LOADER (visible initially) -->
+    <div id="skeletonLoader">
+      <div class="row g-4">
+        <div class="col-12 col-lg-4">
+          <div class="section-card shadow-sm p-4 text-center">
+            <div class="skeleton-avatar skeleton-loader"></div>
+            <div class="skeleton-text skeleton-loader" style="height:24px; width:70%; margin:0 auto;"></div>
+            <div class="skeleton-text skeleton-loader" style="width:50%; margin:0 auto;"></div>
+            <div class="row g-2 mt-3">
+              <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:60px;"></div></div>
+              <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:60px;"></div></div>
+            </div>
+            <div class="skeleton-text skeleton-loader mt-3" style="height:100px;"></div>
+            <div class="skeleton-text skeleton-loader" style="height:80px;"></div>
           </div>
-          <div class="skeleton-text skeleton-loader mt-3" style="height:100px;"></div>
-          <div class="skeleton-text skeleton-loader" style="height:80px;"></div>
         </div>
-      </div>
-      <div class="col-12 col-lg-8">
-        <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
-        <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
-        <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
-        <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
-        <div class="section-card shadow-sm p-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+        <div class="col-12 col-lg-8">
+          <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+          <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+          <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+          <div class="section-card shadow-sm p-4 mb-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+          <div class="section-card shadow-sm p-4"><div class="skeleton-text skeleton-loader" style="height:20px; width:30%;"></div><div class="skeleton-text skeleton-loader"></div><div class="skeleton-text skeleton-loader"></div></div>
+        </div>
       </div>
     </div>
 
-    <!-- ACTUAL PROFILE CONTENT -->
-    <div id="profileContent" class="profile-content">
+    <!-- REAL CONTENT (hidden initially) -->
+    <div id="realContent" style="display: none;">
+      <div id="editRestrictionWarning" class="restriction-warning" style="display: none;"></div>
       <div class="row g-4">
         <!-- LEFT COLUMN -->
         <div class="col-12 col-lg-4">
           <div class="section-card shadow-sm p-4 text-center mb-4" data-aos="fade-right">
             <div class="position-relative d-inline-block mb-3">
-              <img src="https://ui-avatars.com/api/?background=2c7a5e&color=fff&name=Salawu+Lucky" alt="Profile" class="profile-avatar-large" />
+              <img src="https://ui-avatars.com/api/?background=2c7a5e&color=fff&name=Salawu+Lucky" alt="Profile" class="profile-avatar-large" id="profileAvatar" />
+              <!-- Spinner overlay (hidden by default) -->
+              <div id="avatarSpinner" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-light bg-opacity-75 rounded-circle" style="display: none; z-index: 10;">
+                <div class="spinner-border text-success" role="status">
+                  <span class="visually-hidden">Uploading...</span>
+                </div>
+              </div>
               <label for="profilePicUpload" class="position-absolute bottom-0 end-0 bg-white rounded-circle p-1 shadow-sm" style="cursor: pointer;">
                 <i class="fas fa-camera fa-sm text-primary"></i>
               </label>
@@ -276,14 +304,14 @@
                 <div class="stat-badge">
                   <i class="fas fa-coins fs-5" style="color: var(--primary);"></i>
                   <div class="small text-muted">Points</div>
-                  <strong class="fs-5" id="pointsDisplay">3</strong>
+                  <strong class="fs-5" id="pointsDisplay">0</strong>
                 </div>
               </div>
               <div class="col-6">
                 <div class="stat-badge">
                   <i class="fas fa-star fs-5" style="color: var(--primary);"></i>
                   <div class="small text-muted">Trust score</div>
-                  <strong class="fs-5" id="trustScore">46%</strong>
+                  <strong class="fs-5" id="trustScore">0%</strong>
                 </div>
               </div>
             </div>
@@ -293,7 +321,7 @@
               <h6 class="mb-3"><i class="fas fa-shield-alt me-2"></i>Verification summary</h6>
               <div class="d-flex align-items-center gap-2 mb-2">
                 <span class="verification-icon"><i class="fas fa-envelope"></i></span>
-                <div><strong>Email</strong><br /><span class="small text-success">Verified @stu.ui.edu.ng</span></div>
+                <div><strong>Email</strong><br /><span class="small" id="emailVerifiedStatus">Not verified</span></div>
               </div>
               <div class="d-flex align-items-center gap-2 mb-2">
                 <span class="verification-icon"><i class="fas fa-id-card"></i></span>
@@ -301,24 +329,34 @@
               </div>
               <div class="d-flex align-items-center gap-2">
                 <span class="verification-icon"><i class="fas fa-building"></i></span>
-                <div><strong>Hall residence</strong><br /><span class="small text-success">Idia Hall (verified)</span></div>
+                <div><strong>Hall residence</strong><br /><span class="small" id="hallVerifiedStatus">Not verified</span></div>
               </div>
+            </div>
+
+            <!-- Profile Completion -->
+            <div class="mt-3">
+              <div class="d-flex justify-content-between small">
+                <span>Profile completion</span>
+                <span id="profileCompletionPercent">0%</span>
+              </div>
+              <div class="progress-bar-custom mt-1">
+                <div class="progress-fill" id="profileCompletionFill" style="width:0%"></div>
+              </div>
+              <div id="profileMissingFields" class="mt-2 small text-start" style="display: none;"></div>
+              <div class="small text-muted mt-1" id="profileCompletionHint">Complete your profile to get more visibility.</div>
             </div>
 
             <div class="mt-4">
               <a href="buy-points.html" class="btn btn-primary-custom w-100 mb-2"><i class="fas fa-plus-circle me-1"></i>Add points</a>
-              <a href="listings.html" class="btn btn-outline-custom w-100"><i class="fas fa-list-ul me-1"></i>My listings</a>
+              <a href="main.html#listings" class="btn btn-outline-custom w-100"><i class="fas fa-list-ul me-1"></i>My listings</a>
             </div>
           </div>
 
           <!-- Badges -->
           <div class="section-card shadow-sm p-4" data-aos="fade-right" data-aos-delay="100">
             <h6 class="mb-3"><i class="fas fa-medal me-2"></i>Badges earned</h6>
-            <div class="d-flex flex-wrap gap-2">
-              <span class="badge-custom"><i class="fas fa-check-circle text-success"></i> Email verified</span>
-              <span class="badge-custom"><i class="fas fa-home text-primary"></i> Hall verified</span>
-              <span class="badge-custom"><i class="fas fa-handshake text-warning"></i> Trusted seller</span>
-              <span class="badge-custom"><i class="fas fa-rocket"></i> Early adopter</span>
+            <div class="d-flex flex-wrap gap-2" id="badgesContainer">
+              <!-- dynamic badges -->
             </div>
             <div class="mt-3 small text-muted">Complete your student ID verification to unlock the “ID verified” badge.</div>
           </div>
@@ -337,22 +375,22 @@
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Full name</span><span class="info-value" id="viewFullName">Salawu Lucky</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Email</span><span class="info-value" id="viewEmail">salawu.lucky@stu.ui.edu.ng</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Phone number</span><span class="info-value" id="viewPhone">+234 801 234 5678</span></div></div>
-                <div class="col-md-6"><div class="info-row"><span class="info-label">Member since</span><span class="info-value">2024</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Member since</span><span class="info-value" id="viewMemberSince">2024</span></div></div>
               </div>
             </div>
             <!-- Edit mode -->
             <div id="personalEdit" class="edit-section d-none">
               <div class="form-floating-label">
-                <input type="text" class="form-control" id="editFullName" placeholder=" " value="Salawu Lucky" />
+                <input type="text" class="form-control" id="editFullName" placeholder=" " />
                 <label class="form-label required" for="editFullName">Full name</label>
               </div>
               <div class="form-floating-label">
-                <input type="email" class="form-control" id="editEmail" placeholder=" " value="salawu.lucky@stu.ui.edu.ng" />
+                <input type="email" class="form-control" id="editEmail" disabled placeholder=" " />
                 <label class="form-label required" for="editEmail">Email address</label>
               </div>
               <div class="form-floating-label">
-                <input type="tel" class="form-control" id="editPhone" placeholder=" " value="+234 801 234 5678" />
-                <label class="form-label" for="editPhone">Phone number</label>
+                <input type="tel" class="form-control" id="editPhone" placeholder=" " />
+                <label class="form-label" for="editPhone">Phone number <i class="fab fa-whatsapp"></i></label>
               </div>
             </div>
           </div>
@@ -370,42 +408,41 @@
             </div>
             <div id="academicEdit" class="edit-section d-none">
               <div class="form-floating-label">
-                <input type="text" class="form-control" id="editMatric" placeholder=" " value="UI/2022/12345" />
+                <input type="text" class="form-control" id="editMatric" placeholder=" " />
                 <label class="form-label required" for="editMatric">Matric number</label>
               </div>
               <div class="form-floating-label">
-                <input type="text" class="form-control" id="editDept" placeholder=" " value="Computer Science" />
+                <input type="text" class="form-control" id="editDept" placeholder=" " />
                 <label class="form-label required" for="editDept">Department</label>
               </div>
               <div class="form-floating-label">
-                <input type="text" class="form-control" id="editFaculty" placeholder=" " value="Science" />
+                <input type="text" class="form-control" id="editFaculty" placeholder=" " />
                 <label class="form-label required" for="editFaculty">Faculty</label>
               </div>
               <div class="form-floating-label">
-                <input type="text" class="form-control" id="editLevel" placeholder=" " value="300 Level" />
+                <input type="text" class="form-control" id="editLevel" placeholder=" " />
                 <label class="form-label required" for="editLevel">Level</label>
               </div>
             </div>
           </div>
 
-          <!-- Points -->
+          <!-- Points & Transactions -->
           <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="100">
-            <h5 class="mb-3"><i class="fas fa-coins me-2" style="color: var(--primary);"></i>Points & Credits</h5>
+            <h5 class="mb-3"><i class="fas fa-coins me-2" style="color: var(--primary);"></i>Points & Transaction History</h5>
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
               <div>
                 <span class="text-muted">Available points</span>
-                <div class="display-6 fw-bold" id="pointsBalance">3</div>
+                <div class="display-6 fw-bold" id="pointsBalance">0</div>
                 <small class="text-muted">Each new listing costs 1 point</small>
               </div>
               <a href="buy-points.html" class="btn btn-primary-custom"><i class="fas fa-bolt me-1"></i>Top up points</a>
             </div>
             <hr />
-            <div class="small text-muted">📜 Transaction history</div>
-            <ul class="list-unstyled mt-2 small">
-              <li><i class="fas fa-plus-circle text-success me-2"></i> +3 points · Signup bonus (Jan 10, 2025)</li>
-              <li><i class="fas fa-minus-circle text-danger me-2"></i> -1 point · Listing “ECO 211 textbook” (Feb 1, 2025)</li>
-              <li><i class="fas fa-gift text-info me-2"></i> +5 points · Referral reward (Feb 10, 2025)</li>
-            </ul>
+            <div class="small text-muted mb-2">Recent transactions</div>
+            <div id="transactionsList" class="mt-2"></div>
+            <div class="text-center mt-3">
+              <button id="loadMoreTransactionsBtn" class="btn btn-outline-custom load-more-btn" style="display: none;">Load more <i class="fas fa-arrow-down ms-1"></i></button>
+            </div>
           </div>
 
           <!-- Trust & Reviews -->
@@ -413,31 +450,20 @@
             <h5 class="mb-3"><i class="fas fa-star me-2" style="color: var(--primary);"></i>Trust & Reviews</h5>
             <div class="d-flex align-items-center gap-4 flex-wrap mb-4">
               <div>
-                <span class="display-6 fw-bold">4.6</span>
+                <span class="display-6 fw-bold" id="avgRatingDisplay">0.0</span>
                 <span class="text-muted">/5</span>
-                <div class="rating-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                <div class="rating-stars" id="avgStars"></div>
+                <small class="text-muted" id="totalReviewsCount">0 reviews</small>
               </div>
               <div style="flex:1">
-                <div class="d-flex justify-content-between small"><span>Overall trust score</span><span>46%</span></div>
-                <div class="progress-bar-custom mt-1"><div class="progress-fill" style="width:46%"></div></div>
-                <div class="small text-muted mt-1">Based on 12 reviews</div>
+                <div class="d-flex justify-content-between small"><span>Overall trust score</span><span id="trustScoreBar">0%</span></div>
+                <div class="progress-bar-custom mt-1"><div class="progress-fill" id="trustMeterFill" style="width:0%"></div></div>
+                <div class="small text-muted mt-1">Based on <span id="reviewCountForTrust">0</span> reviews</div>
               </div>
             </div>
-            <div>
-              <div class="review-item p-3 rounded-3 border mb-2">
-                <div class="d-flex justify-content-between align-items-start flex-wrap">
-                  <div><strong>Aisha K.</strong> <span class="rating-stars small"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span></div>
-                  <small class="text-muted">2 weeks ago · COS102 textbook</small>
-                </div>
-                <p class="small text-muted mt-1 mb-0">“Prompt meetup and item as described. Thank you!”</p>
-              </div>
-              <div class="review-item p-3 rounded-3 border mb-2">
-                <div class="d-flex justify-content-between align-items-start flex-wrap">
-                  <div><strong>Daniel O.</strong> <span class="rating-stars small"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
-                  <small class="text-muted">1 month ago · PHY 115 manual</small>
-                </div>
-                <p class="small text-muted mt-1 mb-0">“Great seller — honest pricing and quick communication.”</p>
-              </div>
+            <div id="reviewsListContainer"></div>
+            <div class="text-center mt-3">
+              <button id="loadMoreReviewsBtn" class="btn btn-outline-custom load-more-btn" style="display: none;">Load more <i class="fas fa-arrow-down ms-1"></i></button>
             </div>
           </div>
 
@@ -453,26 +479,26 @@
             <div id="settingsEdit" class="edit-section d-none">
               <div class="form-floating-label">
                 <select class="form-select" id="editNotifications">
-                  <option value="Enabled" selected>Enabled</option>
+                  <option value="Enabled">Enabled</option>
                   <option value="Disabled">Disabled</option>
                 </select>
                 <label class="form-label" for="editNotifications">Email notifications</label>
               </div>
               <div class="form-floating-label">
                 <select class="form-select" id="editVisibility">
-                  <option value="Public (UI students)" selected>Public (UI students)</option>
+                  <option value="Public (UI students)">Public (UI students)</option>
                   <option value="Private">Private</option>
                 </select>
                 <label class="form-label" for="editVisibility">Profile visibility</label>
               </div>
             </div>
-            <div class="d-flex flex-wrap gap-2 mt-3" id="settingsActions">
+            <div class="d-flex flex-wrap gap-2 mt-3">
               <button type="button" class="btn btn-outline-secondary btn-sm" id="changePasswordBtn"><i class="fas fa-key me-1"></i>Change password</button>
               <button type="button" class="btn btn-outline-danger btn-sm" id="uploadStudentIdBtn"><i class="fas fa-id-card me-1"></i>Upload student ID</button>
             </div>
           </div>
 
-          <!-- Save button (appears only in edit mode) -->
+          <!-- Save button -->
           <div id="saveProfileBtnContainer" class="mt-4 text-end d-none">
             <button id="saveProfileChanges" class="btn btn-primary-custom px-4"><i class="fas fa-save me-2"></i>Save all changes</button>
           </div>
@@ -482,13 +508,24 @@
   </div>
 </main>
 
-<footer class="text-center py-3 text-muted small border-top mt-5">
-  <div class="container">&copy; 2025 CampusConnect UI — University of Ibadan. Only verified students.</div>
-</footer>
+<div id="formModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 id="formModalTitle">Form Title</h3>
+      <button class="modal-close" id="closeFormModalBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="formModalBody"></div>
+    <div class="modal-footer" id="formModalFooter"></div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<button class="scroll-top-btn" data-scroll-top><i class="fas fa-arrow-up"></i></button>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 
 <script>
@@ -498,39 +535,56 @@
       isAuthenticated();
     }
 
-    // ─── 2. PROFILE DATA (static for demo) ──────────────────
-    let profileData = {
-      fullName: "Salawu Lucky",
-      email: "salawu.lucky@stu.ui.edu.ng",
-      phone: "+234 801 234 5678",
-      matric: "UI/2022/12345",
-      department: "Computer Science",
-      faculty: "Science",
-      level: "300 Level",
-      notifications: "Enabled",
-      visibility: "Public (UI students)"
-    };
+    // ─── 2. GLOBALS ──────────────────────────────────────────
+    const PROFILE_URL = AUTH_URL + 'profile';
+
+    // Data will be populated from API
+    let userData = {};
 
     // ─── 3. DOM REFERENCES ──────────────────────────────────
+    // (same as before – keep all)
+    const profileAvatar = document.getElementById('profileAvatar');
+    const nameDisplayView = document.getElementById('nameDisplayView');
+    const emailDisplayView = document.getElementById('emailDisplayView');
+    const pointsDisplay = document.getElementById('pointsDisplay');
+    const trustScore = document.getElementById('trustScore');
+    const emailVerifiedStatus = document.getElementById('emailVerifiedStatus');
+    const studentIdStatus = document.getElementById('studentIdStatus');
+    const hallVerifiedStatus = document.getElementById('hallVerifiedStatus');
+    const badgesContainer = document.getElementById('badgesContainer');
+
     const viewFullName = document.getElementById('viewFullName');
     const viewEmail = document.getElementById('viewEmail');
     const viewPhone = document.getElementById('viewPhone');
+    const viewMemberSince = document.getElementById('viewMemberSince');
+    const editFullName = document.getElementById('editFullName');
+    const editEmail = document.getElementById('editEmail');
+    const editPhone = document.getElementById('editPhone');
+
     const viewMatric = document.getElementById('viewMatric');
     const viewDept = document.getElementById('viewDept');
     const viewFaculty = document.getElementById('viewFaculty');
     const viewLevel = document.getElementById('viewLevel');
-    const viewNotifications = document.getElementById('viewNotifications');
-    const viewVisibility = document.getElementById('viewVisibility');
-    const nameDisplayView = document.getElementById('nameDisplayView');
-    const emailDisplayView = document.getElementById('emailDisplayView');
-
-    const editFullName = document.getElementById('editFullName');
-    const editEmail = document.getElementById('editEmail');
-    const editPhone = document.getElementById('editPhone');
     const editMatric = document.getElementById('editMatric');
     const editDept = document.getElementById('editDept');
     const editFaculty = document.getElementById('editFaculty');
     const editLevel = document.getElementById('editLevel');
+
+    const pointsBalance = document.getElementById('pointsBalance');
+    const transactionsList = document.getElementById('transactionsList');
+    const loadMoreTransactionsBtn = document.getElementById('loadMoreTransactionsBtn');
+
+    const avgRatingDisplay = document.getElementById('avgRatingDisplay');
+    const avgStars = document.getElementById('avgStars');
+    const totalReviewsCount = document.getElementById('totalReviewsCount');
+    const reviewsListContainer = document.getElementById('reviewsListContainer');
+    const loadMoreReviewsBtn = document.getElementById('loadMoreReviewsBtn');
+    const trustScoreBar = document.getElementById('trustScoreBar');
+    const trustMeterFill = document.getElementById('trustMeterFill');
+    const reviewCountForTrust = document.getElementById('reviewCountForTrust');
+
+    const viewNotifications = document.getElementById('viewNotifications');
+    const viewVisibility = document.getElementById('viewVisibility');
     const editNotifications = document.getElementById('editNotifications');
     const editVisibility = document.getElementById('editVisibility');
 
@@ -543,67 +597,16 @@
     const saveBtnContainer = document.getElementById('saveProfileBtnContainer');
     const editModeToggle = document.getElementById('editModeToggle');
 
-    // ─── 4. FUNCTIONS ──────────────────────────────────────
-    function refreshViewMode() {
-      viewFullName.innerText = profileData.fullName;
-      viewEmail.innerText = profileData.email;
-      viewPhone.innerText = profileData.phone;
-      viewMatric.innerText = profileData.matric;
-      viewDept.innerText = profileData.department;
-      viewFaculty.innerText = profileData.faculty;
-      viewLevel.innerText = profileData.level;
-      viewNotifications.innerText = profileData.notifications;
-      viewVisibility.innerText = profileData.visibility;
-      nameDisplayView.innerHTML = `<h3 class="fw-bold mb-1">${escapeHtml(profileData.fullName)}</h3>`;
-      emailDisplayView.innerHTML = `<p class="text-muted small">${escapeHtml(profileData.email)}</p>`;
-    }
+    // ─── 4. PAGINATION STATE ──────────────────────────────
+    let transactionPage = 1;
+    const transactionPerPage = 3;
+    let allTransactions = [];
 
-    function toggleEditMode() {
-      const isEdit = editModeToggle.checked;
-      // Personal
-      personalView.classList.toggle('d-none', isEdit);
-      personalEdit.classList.toggle('d-none', !isEdit);
-      // Academic
-      academicView.classList.toggle('d-none', isEdit);
-      academicEdit.classList.toggle('d-none', !isEdit);
-      // Settings
-      settingsView.classList.toggle('d-none', isEdit);
-      settingsEdit.classList.toggle('d-none', !isEdit);
-      // Save button
-      saveBtnContainer.classList.toggle('d-none', !isEdit);
+    let reviewPage = 1;
+    const reviewPerPage = 3;
+    let allReviews = [];
 
-      if (isEdit) {
-        // Populate edit fields with current data
-        editFullName.value = profileData.fullName;
-        editEmail.value = profileData.email;
-        editPhone.value = profileData.phone;
-        editMatric.value = profileData.matric;
-        editDept.value = profileData.department;
-        editFaculty.value = profileData.faculty;
-        editLevel.value = profileData.level;
-        editNotifications.value = profileData.notifications;
-        editVisibility.value = profileData.visibility;
-      }
-    }
-
-    function saveProfile() {
-      // Gather values from edit fields
-      profileData.fullName = editFullName.value.trim();
-      profileData.email = editEmail.value.trim();
-      profileData.phone = editPhone.value.trim();
-      profileData.matric = editMatric.value.trim();
-      profileData.department = editDept.value.trim();
-      profileData.faculty = editFaculty.value.trim();
-      profileData.level = editLevel.value.trim();
-      profileData.notifications = editNotifications.value;
-      profileData.visibility = editVisibility.value;
-
-      refreshViewMode();
-      editModeToggle.checked = false;
-      toggleEditMode();
-      showToast('Profile updated successfully!', 'success');
-    }
-
+    // ─── 5. HELPERS ─────────────────────────────────────────
     function escapeHtml(str) {
       if (!str) return '';
       return str.replace(/[&<>]/g, function(m) {
@@ -614,52 +617,746 @@
       });
     }
 
-    // ─── 5. SKELETON LOADER ─────────────────────────────────
-    function showProfile() {
-      const skeleton = document.getElementById('skeletonWrapper');
-      const content = document.getElementById('profileContent');
-      skeleton.classList.add('hidden');
-      content.classList.add('visible');
-      // Refresh AOS for new elements
-      if (typeof AOS !== 'undefined') AOS.refresh();
+    function renderStars(rating) {
+      const full = Math.floor(rating);
+      const half = rating % 1 >= 0.5 ? 1 : 0;
+      const empty = 5 - full - half;
+      return '<i class="fas fa-star"></i>'.repeat(full) +
+             (half ? '<i class="fas fa-star-half-alt"></i>' : '') +
+             '<i class="far fa-star"></i>'.repeat(empty);
     }
 
-    // Simulate loading delay (800ms)
-    setTimeout(showProfile, 800);
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
 
-    // ─── 6. EVENT LISTENERS ─────────────────────────────────
+
+    // ─── 5. EDIT RESTRICTION FUNCTIONS ─────────────────────
+    function isEditAllowed() {
+      const editDay = userData.editDay || 0;
+      if (editDay === 0) return true;
+      if (!userData.lastModified) return true;
+      const lastMod = new Date(userData.lastModified);
+      const nextEdit = new Date(lastMod.getTime() + (editDay * 24 * 60 * 60 * 1000));
+      return new Date() >= nextEdit;
+    }
+
+    function updateEditToggleState() {
+      const toggle = document.getElementById('editModeToggle');
+      const warningDiv = document.getElementById('editRestrictionWarning');
+      const editDay = userData.editDay || 0;
+
+      if (!isEditAllowed()) {
+        toggle.disabled = true;
+        toggle.checked = false;
+        if (userData.lastModified && editDay > 0) {
+          const lastMod = new Date(userData.lastModified);
+          const nextDate = new Date(lastMod.getTime() + (editDay * 24 * 60 * 60 * 1000));
+          warningDiv.style.display = 'block';
+          warningDiv.innerHTML = `
+            <i class="fas fa-clock me-2"></i>
+            <strong>${editDay}‑day restriction:</strong> You can only edit your profile once every ${editDay} days. Last edit was ${lastMod.toLocaleDateString()}. Next edit allowed: ${nextDate.toLocaleDateString()}.
+          `;
+        } else {
+          warningDiv.style.display = 'none';
+        }
+        // Force view mode
+        document.getElementById('personalView').classList.remove('d-none');
+        document.getElementById('personalEdit').classList.add('d-none');
+        document.getElementById('academicView').classList.remove('d-none');
+        document.getElementById('academicEdit').classList.add('d-none');
+        document.getElementById('settingsView').classList.remove('d-none');
+        document.getElementById('settingsEdit').classList.add('d-none');
+        document.getElementById('saveProfileBtnContainer').classList.add('d-none');
+      } else {
+        toggle.disabled = false;
+        warningDiv.style.display = 'none';
+      }
+    }
+
+
+    // ─── 6. RENDER FUNCTIONS ──────────────────────────────
+    function renderUserProfile() {
+      // Left column
+      const initials = userData.fullName.split(' ').map(n => n[0]).join('');
+      if (userData.profilePicture) {
+        profileAvatar.src = userData.profilePicture;
+      } else {
+        const initials = userData.fullName.split(' ').map(n => n[0]).join('');
+        profileAvatar.src = `https://ui-avatars.com/api/?background=2c7a5e&color=fff&name=${encodeURIComponent(userData.fullName)}`;
+      }
+      nameDisplayView.innerHTML = `<h3 class="fw-bold mb-1">${escapeHtml(userData.fullName)}</h3>`;
+      emailDisplayView.innerHTML = `<p class="text-muted small">${escapeHtml(userData.email)}</p>`;
+      pointsDisplay.innerText = userData.points;
+      trustScore.innerText = userData.trustScore + '%';
+      emailVerifiedStatus.innerText = userData.emailVerified ? 'Verified ✓' : 'Not verified';
+      emailVerifiedStatus.className = userData.emailVerified ? 'small text-success' : 'small text-danger';
+      studentIdStatus.innerText = userData.studentIdVerified ? 'Verified ✓' : 'Pending verification';
+      studentIdStatus.className = userData.studentIdVerified ? 'small text-success' : 'small text-warning';
+      hallVerifiedStatus.innerText = userData.hallVerified ? 'Verified ✓' : 'Not verified';
+      hallVerifiedStatus.className = userData.hallVerified ? 'small text-success' : 'small text-danger';
+
+      if (userData.studentIdVerified) {
+          const uploadBtn = document.getElementById('uploadStudentIdBtn');
+          if (uploadBtn) {
+              uploadBtn.style.display = 'none';
+          }
+      }
+      // Profile completion
+      const completionPercent = document.getElementById('profileCompletionPercent');
+      const completionFill = document.getElementById('profileCompletionFill');
+      const missingContainer = document.getElementById('profileMissingFields');
+      const hint = document.getElementById('profileCompletionHint');
+
+      // 1. Calculate missing fields using the same logic as backend
+      const profileFields = {
+        phone: { value: userData.phone, label: 'Phone number', icon: 'fa-phone' },
+        profile_picture: { value: userData.profilePicture, label: 'Profile picture', icon: 'fa-image' },
+        matric_number: { value: userData.matric, label: 'Matric number', icon: 'fa-id-card' },
+        department: { value: userData.department, label: 'Department', icon: 'fa-building' },
+        faculty: { value: userData.faculty, label: 'Faculty', icon: 'fa-university' },
+        level: { value: userData.level, label: 'Level', icon: 'fa-graduation-cap' },
+        student_id_verified: { value: userData.studentIdVerified, label: 'Student ID verified', icon: 'fa-check-circle' },
+        hall_verified: { value: userData.hallVerified, label: 'Hall verified', icon: 'fa-home' },
+        email_verified: { value: userData.emailVerified, label: 'Email verified', icon: 'fa-envelope' },
+      };
+
+      // 2. Find missing fields (for booleans, we consider true as "filled")
+      const missingFields = Object.keys(profileFields).filter(key => {
+        const field = profileFields[key];
+        // For booleans, check if true; for others, check if value is truthy (non-empty)
+        if (typeof field.value === 'boolean') {
+          return !field.value;
+        }
+        return !field.value || field.value === '';
+      });
+
+      // 3. Update progress bar
+      const filled = Object.keys(profileFields).length - missingFields.length;
+      const total = Object.keys(profileFields).length;
+      const completion = Math.round((filled / total) * 100);
+      if (completionPercent) completionPercent.innerText = completion + '%';
+      if (completionFill) completionFill.style.width = completion + '%';
+
+      // 4. Render missing fields list
+      if (missingFields.length > 0) {
+        missingContainer.style.display = 'block';
+        missingContainer.innerHTML = '<i class="fas fa-info-circle text-warning me-1"></i> Complete these to reach 100%:';
+        const list = document.createElement('ul');
+        list.className = 'list-unstyled mt-1 mb-0';
+        missingFields.forEach(key => {
+          const field = profileFields[key];
+          const li = document.createElement('li');
+          li.className = 'small text-muted';
+          li.innerHTML = `<i class="fas ${field.icon} me-1" style="width:18px;"></i> ${field.label}`;
+          list.appendChild(li);
+        });
+        missingContainer.appendChild(list);
+        hint.innerText = `${missingFields.length} field${missingFields.length > 1 ? 's' : ''} left to complete.`;
+      } else {
+        missingContainer.style.display = 'none';
+        hint.innerText = '🎉 Your profile is 100% complete – you\'re ready to connect!';
+      }
+
+      // Badges – map backend badge names to FontAwesome icons and colors
+      const badgeIconMap = {
+        'verified': { icon: 'fa-check-circle', color: 'text-success' },
+        'trusted': { icon: 'fa-handshake', color: 'text-warning' },
+        'top_seller': { icon: 'fa-crown', color: 'text-primary' },
+        // add more as needed
+      };
+      badgesContainer.innerHTML = userData.badges.map(b => {
+        const mapping = badgeIconMap[b.name] || { icon: 'fa-tag', color: 'text-secondary' };
+        return `<span class="badge-custom"><i class="fas ${mapping.icon} ${mapping.color} me-1"></i> ${escapeHtml(b.name)}</span>`;
+      }).join('');
+
+      // Personal
+      viewFullName.innerText = userData.fullName;
+      viewEmail.innerText = userData.email;
+      viewPhone.innerText = userData.phone || 'Not set';
+      viewMemberSince.innerText = userData.memberSince;
+
+      // Academic
+      viewMatric.innerText = userData.matric || 'Not set';
+      viewDept.innerText = userData.department || 'Not set';
+      viewFaculty.innerText = userData.faculty || 'Not set';
+      viewLevel.innerText = userData.level ? userData.level + ' Level' : 'Not set';
+
+      // Points balance
+      pointsBalance.innerText = userData.points;
+
+      // Settings
+      viewNotifications.innerText = userData.notifications ? 'Enabled' : 'Disabled';
+      viewVisibility.innerText = userData.visibility ? 'Public (UI students)' : 'Private';
+
+      // Trust & Reviews
+      avgRatingDisplay.innerText = userData.avgRating.toFixed(1);
+      avgStars.innerHTML = renderStars(userData.avgRating);
+      totalReviewsCount.innerText = userData.reviewCount + ' reviews';
+      trustScoreBar.innerText = userData.trustScore + '%';
+      trustMeterFill.style.width = userData.trustScore + '%';
+      reviewCountForTrust.innerText = userData.reviewCount;
+
+      // Populate reviews & transactions
+      allReviews = userData.reviews;
+      allTransactions = userData.transactions;
+      reviewPage = 1;
+      transactionPage = 1;
+      renderReviews();
+      renderTransactions();
+      updateEditToggleState();
+    }
+
+    function renderReviews() {
+      const start = 0;
+      const end = reviewPage * reviewPerPage;
+      const visible = allReviews.slice(start, end);
+      if (visible.length === 0) {
+        reviewsListContainer.innerHTML = '<p class="text-muted small mb-0">No reviews yet.</p>';
+        loadMoreReviewsBtn.style.display = 'none';
+        return;
+      }
+      reviewsListContainer.innerHTML = visible.map(r => `
+        <div class="review-item p-3 mb-3 rounded-3 border">
+          <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
+            <strong>${escapeHtml(r.from)}</strong>
+            <div class="rating-stars small">${renderStars(r.rating)}</div>
+            <small class="text-muted">${formatDate(r.date)}</small>
+          </div>
+          <p class="small text-muted mb-0">${escapeHtml(r.comment)}</p>
+        </div>
+      `).join('');
+      if (end < allReviews.length) {
+        loadMoreReviewsBtn.style.display = 'inline-block';
+        loadMoreReviewsBtn.disabled = false;
+      } else {
+        loadMoreReviewsBtn.style.display = 'none';
+      }
+    }
+
+    function renderTransactions() {
+      const start = 0;
+      const end = transactionPage * transactionPerPage;
+      const visible = allTransactions.slice(start, end);
+      if (visible.length === 0) {
+        transactionsList.innerHTML = '<p class="text-muted small mb-0">No transactions yet.</p>';
+        loadMoreTransactionsBtn.style.display = 'none';
+        return;
+      }
+      transactionsList.innerHTML = visible.map(t => {
+        const isCredit = t.amount > 0;
+        const sign = isCredit ? '+' : '';
+        const color = isCredit ? 'text-success' : 'text-danger';
+        return `
+          <div class="history-item d-flex flex-wrap justify-content-between align-items-center">
+            <div>
+              <strong>${escapeHtml(t.description)}</strong>
+              <div class="small text-muted">${formatDate(t.date)}</div>
+            </div>
+            <div class="text-end">
+              <span class="fw-bold ${color}">${sign}${t.amount}</span>
+              <div class="small text-muted">Balance: ${t.balance}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      if (end < allTransactions.length) {
+        loadMoreTransactionsBtn.style.display = 'inline-block';
+        loadMoreTransactionsBtn.disabled = false;
+      } else {
+        loadMoreTransactionsBtn.style.display = 'none';
+      }
+    }
+
+    function toggleEditMode() {
+      const isEdit = editModeToggle.checked;
+
+      if (isEdit && !isEditAllowed()) {
+        const editDay = userData.editDay || 0;
+        showToast(`You can only edit your profile once every ${editDay} days.`, 'error');
+        editModeToggle.checked = false;
+        return;
+      }
+
+      personalView.classList.toggle('d-none', isEdit);
+      personalEdit.classList.toggle('d-none', !isEdit);
+      academicView.classList.toggle('d-none', isEdit);
+      academicEdit.classList.toggle('d-none', !isEdit);
+      settingsView.classList.toggle('d-none', isEdit);
+      settingsEdit.classList.toggle('d-none', !isEdit);
+      saveBtnContainer.classList.toggle('d-none', !isEdit);
+
+      if (isEdit) {
+        // Populate edit fields with current userData
+        editFullName.value = userData.fullName || '';
+        editEmail.value = userData.email || '';
+        editPhone.value = userData.phone || '';
+        editMatric.value = userData.matric || '';
+        editDept.value = userData.department || '';
+        editFaculty.value = userData.faculty || '';
+        editLevel.value = userData.level || '';
+        editNotifications.value = userData.notifications ? 'Enabled' : 'Disabled';
+        editVisibility.value = userData.visibility ? 'Public (UI students)' : 'Private';
+
+        // Smooth scroll to the first input in edit mode (Full Name)
+        const firstInput = document.getElementById('editFullName');
+        if (firstInput) {
+          firstInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => firstInput.focus(), 500);
+        }
+      }
+    }
+
+    // ─── 8. SAVE PROFILE (PUT to API) ──────────────────────
+    async function saveProfile() {
+      const saveBtn = document.getElementById('saveProfileChanges');
+      if (saveBtn.disabled) return;
+
+      const originalText = saveBtn.innerHTML;
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...';
+
+      // Gather data from edit fields
+      const payload = {
+        full_name: editFullName.value.trim(),
+        phone: editPhone.value.trim(),
+        department: editDept.value.trim(),
+        faculty: editFaculty.value.trim(),
+        level: parseInt(editLevel.value) || null,
+        matric_number: editMatric.value.trim(),
+        notification: editNotifications.value === 'Enabled' ? true : false,
+        visibility: editVisibility.value === 'Public (UI students)' ? true : false
+      };
+
+      if (payload.level !== null && (payload.level < 1 || payload.level > 7)) {
+        showToast('Level must be between 1 and 7.', 'error');
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalText;
+        return;
+      }
+
+      try {
+        const token = getCookie('access_token');
+        if (!token) throw new Error('Not authenticated');
+
+        const response = await fetch(PROFILE_URL, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.message || 'Update failed');
+        }
+
+        const result = await response.json();
+        if (result.is_success) {
+
+          loadProfile();
+
+          editModeToggle.checked = false;
+          personalView.classList.remove('d-none');
+          personalEdit.classList.add('d-none');
+          academicView.classList.remove('d-none');
+          academicEdit.classList.add('d-none');
+          settingsView.classList.remove('d-none');
+          settingsEdit.classList.add('d-none');
+          saveBtnContainer.classList.add('d-none');
+          showToast('Profile updated successfully!', 'success');
+        } else {
+          throw new Error(result.message || 'Update failed');
+        }
+      } catch (err) {
+        console.error('Save error:', err);
+        showToast('Failed to update: ' + err.message, 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalText;
+      }
+    }
+
+    // ─── 9. LOAD MORE ──────────────────────────────────────
+    function loadMoreTransactions() {
+      transactionPage++;
+      renderTransactions();
+    }
+
+    function loadMoreReviews() {
+      reviewPage++;
+      renderReviews();
+    }
+
+    // ─── 10. LOAD PROFILE (GET from API) ──────────────────
+    async function loadProfile() {
+      const skeleton = document.getElementById('skeletonLoader');
+      const realContent = document.getElementById('realContent');
+
+      try {
+        const token = getCookie('access_token');
+        if (!token) throw new Error('Not authenticated');
+
+        const response = await fetch(PROFILE_URL, {
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            deleteAuthCookies();
+            window.location.href = '../index.html';
+            return;
+          }
+          throw new Error('Failed to fetch profile');
+        }
+
+        const result = await response.json();
+        if (!result.is_success) throw new Error(result.message || 'Invalid response');
+
+        const data = result.data;
+
+        // ─── Map API data to userData structure ─────────────
+        userData = {
+          fullName: data.full_name || '',
+          email: data.email || '',
+          phone: data.phone || '',
+          matric: data.matric_number || '',
+          department: data.department || '',
+          faculty: data.faculty || '',
+          level: data.level || '',
+          memberSince: data.member_since || '',
+          profileCompletion: data.profile_completion || 0,
+          points: data.points || 0,
+          trustScore: data.trust_score || 0,
+          emailVerified: data.email_verified || false,
+          studentIdVerified: data.student_id_verified || false,
+          hallVerified: data.hall_verified || false,
+          badges: data.badges || [],
+          profilePicture: data.profile_picture || null,
+          notifications: data.notification,
+          visibility: data.visibility,
+          avgRating: data.avg_rating || 0,
+          reviewCount: data.review_count || 0,
+          editDay: data.edit_day || 0,
+          lastModified: data.modified_at || null,
+          reviews: data.reviews ? data.reviews.map(r => ({
+            from: r.from_user_name,
+            rating: r.rating,
+            comment: r.comment,
+            date: r.date
+          })) : [],
+          transactions: data.transactions ? data.transactions.map(t => ({
+            type: t.type,
+            amount: t.amount,
+            description: t.description,
+            date: t.date,
+            balance: t.balance
+          })) : []
+        };
+
+        renderUserProfile();
+        skeleton.style.display = 'none';
+        realContent.style.display = 'block';
+        if (typeof AOS !== 'undefined') AOS.refresh();
+
+        // Update points in cookie if different
+        const pointsFromCookie = getCookie('point_bal');
+        if (pointsFromCookie && parseInt(pointsFromCookie) !== userData.points) {
+          setCookie('point_bal', userData.points, 10);
+        }
+
+      } catch (err) {
+        console.error('Profile load error:', err);
+        skeleton.style.display = 'none';
+        if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
+          showNetworkError();
+        } else {
+          showToast('Failed to load profile: ' + err.message, 'error');
+        }
+      }
+    }
+
+    // ─── 11. EVENT LISTENERS ──────────────────────────────
     editModeToggle.addEventListener('change', toggleEditMode);
     document.getElementById('saveProfileChanges')?.addEventListener('click', saveProfile);
-    document.getElementById('changePasswordBtn')?.addEventListener('click', function() {
-      showToast('Password change flow (OTP to email) – coming soon.', 'info');
-    });
-    document.getElementById('uploadStudentIdBtn')?.addEventListener('click', function() {
-      showToast('Student ID upload will be available soon.', 'info');
-    });
-    document.getElementById('profilePicUpload')?.addEventListener('change', function(e) {
-      if (e.target.files.length) {
-        showToast('Profile picture uploaded (simulated).', 'success');
-        // You can read the file and update the avatar preview here.
+
+    function ensureModals() {
+      if (!formModal) {
+        if (document.getElementById('formModal')) {
+          formModal = new FormModal();
+        }
+      }
+      if (!formModal) {
+        showToast('Modal system not ready. Please refresh the page.', 'error');
+        return false;
+      }
+      return true;
+    }
+
+    // ─── 11. OPEN CHANGE PASSWORD MODAL ────────────────────
+    function openChangePasswordModal() {
+      if (!ensureModals()) return;
+
+      formModal.open({
+        title: 'Change Password',
+        formHtml: `
+          <div class="form-floating-label">
+            <input type="password" class="form-control" id="oldPassword" placeholder=" " required>
+            <label class="form-label required" for="oldPassword">Current password</label>
+          </div>
+          <div class="form-floating-label">
+            <input type="password" class="form-control" id="newPassword" placeholder=" " required>
+            <label class="form-label required" for="newPassword">New password</label>
+          </div>
+          <div class="form-floating-label">
+            <input type="password" class="form-control" id="confirmPassword" placeholder=" " required>
+            <label class="form-label required" for="confirmPassword">Confirm new password</label>
+          </div>
+        `,
+        submitLabel: 'Update Password',
+        onSubmit: async (form, submitBtn) => {
+          const oldPassword = document.getElementById('oldPassword').value;
+          const newPassword = document.getElementById('newPassword').value;
+          const confirmPassword = document.getElementById('confirmPassword').value;
+
+          if (!oldPassword || !newPassword || !confirmPassword) {
+            showToast('Please fill in all fields.', 'error');
+            return;
+          }
+          if (newPassword.length < 8) {
+            showToast('New password must be at least 8 characters.', 'error');
+            return;
+          }
+          if (newPassword !== confirmPassword) {
+            showToast('Passwords do not match.', 'error');
+            return;
+          }
+
+          const originalText = submitBtn.innerHTML;
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Updating...';
+
+          try {
+            const token = getCookie('access_token');
+            const response = await fetch(AUTH_URL + 'change-password', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                current_password: oldPassword,
+                new_password: newPassword
+              })
+            });
+
+            const result = await response.json();
+            if (!response.ok || !result.is_success) {
+              throw new Error(result.message || 'Failed to change password');
+            }
+
+            showToast('Password changed successfully!', 'success');
+            formModal.close();
+          } catch (err) {
+            showToast('Error: ' + err.message, 'error');
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+          }
+        }
+      });
+    }
+
+    // ─── 12. OPEN STUDENT ID UPLOAD MODAL ──────────────────
+    function openStudentIdUploadModal() {
+      if (!ensureModals()) return;
+
+      formModal.open({
+        title: 'Upload Student ID',
+        formHtml: `
+          <p class="text-muted mb-3">Upload a clear image of your student ID (JPEG, PNG, WEBP, max 2MB).</p>
+          <div class="drop-area" id="studentIdDropArea" style="border: 2px dashed rgba(44, 122, 94, 0.25); border-radius: 16px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; background: #fafcfb;">
+            <i class="fas fa-cloud-upload-alt" style="font-size: 2.5rem; color: #2c7a5e; margin-bottom: 0.5rem;"></i>
+            <p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Drag & drop your image here or click to browse</p>
+            <div class="small text-muted mt-1">JPEG, PNG, WEBP up to 2MB</div>
+            <input type="file" id="studentIdFileInput" accept="image/*" hidden>
+          </div>
+          <div id="studentIdPreview" style="margin-top: 1rem; display: none;">
+            <img id="studentIdPreviewImg" src="#" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 8px; border: 1px solid #eef2f0;">
+          </div>
+        `,
+        submitLabel: 'Upload ID',
+        onSubmit: async (form, submitBtn) => {
+          const fileInput = document.getElementById('studentIdFileInput');
+          if (!fileInput || !fileInput.files.length) {
+            showToast('Please select an image.', 'error');
+            return;
+          }
+          const file = fileInput.files[0];
+          if (file.size > 2 * 1024 * 1024) {
+            showToast('Image must be less than 2MB.', 'error');
+            return;
+          }
+          const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+          if (!allowed.includes(file.type)) {
+            showToast('Only JPEG, PNG, and WEBP images are allowed.', 'error');
+            return;
+          }
+
+          const originalText = submitBtn.innerHTML;
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Uploading...';
+
+          const formData = new FormData();
+          formData.append('student_id', file);
+
+          try {
+            const token = getCookie('access_token');
+            const response = await fetch(AUTH_URL + 'upload-student-id', {
+              method: 'PATCH',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+              body: formData
+            });
+
+            const result = await response.json();
+            if (!response.ok || !result.is_success) {
+              throw new Error(result.message || 'Upload failed');
+            }
+
+            showToast(result.message || 'Student ID uploaded successfully!', 'success');
+            await loadProfile();
+            formModal.close();
+          } catch (err) {
+            showToast('Error: ' + err.message, 'error');
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+          }
+        }
+      });
+
+      // ─── Drag‑and‑drop handlers (same as lost‑and‑found) ──
+      setTimeout(() => {
+        const dropArea = document.getElementById('studentIdDropArea');
+        const fileInput = document.getElementById('studentIdFileInput');
+        const previewContainer = document.getElementById('studentIdPreview');
+        const previewImg = document.getElementById('studentIdPreviewImg');
+
+        if (!dropArea) return;
+
+        const handleFile = (file) => {
+          if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              previewImg.src = e.target.result;
+              previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          } else {
+            showToast('Please select an image file.', 'error');
+          }
+        };
+
+        dropArea.addEventListener('click', () => fileInput.click());
+        dropArea.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          dropArea.style.borderColor = '#2c7a5e';
+          dropArea.style.background = '#eaf7f0';
+        });
+        dropArea.addEventListener('dragleave', () => {
+          dropArea.style.borderColor = 'rgba(44,122,94,0.25)';
+          dropArea.style.background = '#fafcfb';
+        });
+        dropArea.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dropArea.style.borderColor = 'rgba(44,122,94,0.25)';
+          dropArea.style.background = '#fafcfb';
+          const file = e.dataTransfer.files[0];
+          if (file) {
+            fileInput.files = e.dataTransfer.files;
+            handleFile(file);
+          }
+        });
+        fileInput.addEventListener('change', () => {
+          if (fileInput.files.length) handleFile(fileInput.files[0]);
+        });
+      }, 300);
+    }
+
+    document.getElementById('changePasswordBtn')?.addEventListener('click', openChangePasswordModal);
+    document.getElementById('uploadStudentIdBtn')?.addEventListener('click', openStudentIdUploadModal);
+
+    document.getElementById('profilePicUpload')?.addEventListener('change', async function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Image must be less than 2MB.', 'error');
+        this.value = '';
+        return;
+      }
+      // Validate file type
+      const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowed.includes(file.type)) {
+        showToast('Only JPG, PNG, and WEBP images are allowed.', 'error');
+        this.value = '';
+        return;
+      }
+
+      // Show spinner overlay
+      const spinner = document.getElementById('avatarSpinner');
+      spinner.style.display = 'flex';
+
+      const formData = new FormData();
+      formData.append('profile_picture', file);
+
+      try {
+        const token = getCookie('access_token');
+        if (!token) throw new Error('Not authenticated');
+
+        const uploadUrl = AUTH_URL + 'profile-picture';
+        const response = await fetch(uploadUrl, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.message || 'Upload failed');
+        }
+
+        const result = await response.json();
+        if (result.is_success) {
+          loadProfile();
+          showToast('Profile picture updated!', 'success');
+        } else {
+          throw new Error(result.message || 'Upload failed');
+        }
+      } catch (err) {
+        console.error('Upload error:', err);
+        showToast('Failed to upload: ' + err.message, 'error');
+      } finally {
+        spinner.style.display = 'none';
+        this.value = ''; // reset input
       }
     });
 
-    // ─── 7. POINTS from cookie ──────────────────────────────
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-      return null;
-    }
-    let points = getCookie('point_bal') || '3';
-    document.getElementById('pointsDisplay') && (document.getElementById('pointsDisplay').innerText = points);
-    document.getElementById('pointsBalance') && (document.getElementById('pointsBalance').innerText = points);
+    loadMoreTransactionsBtn.addEventListener('click', loadMoreTransactions);
+    loadMoreReviewsBtn.addEventListener('click', loadMoreReviews);
 
-    // ─── 8. TRUST SCORE (dummy) ─────────────────────────────
-    document.getElementById('trustScore') && (document.getElementById('trustScore').innerText = '46%');
-
-    // ─── 9. NAVIGATION PLACEHOLDER ──────────────────────────
-    // The nav is loaded via main.js if available.
-
+    // ─── 12. START ──────────────────────────────────────────
+    loadProfile();
   })();
 </script>
 </body>
