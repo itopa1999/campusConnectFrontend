@@ -42,7 +42,7 @@ loginForm.addEventListener('submit', async (e) => {
 
     if (response.ok && result.is_success === true) {
       
-      const expiryDays = rememberMe ? 7 : null;
+      const expiryDays = rememberMe ? 3 : null;
 
       setCookie('access_token', result.data.access_token, expiryDays);    
       setCookie('refresh_token', result.data.refresh_token, expiryDays);    

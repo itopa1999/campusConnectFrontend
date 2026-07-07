@@ -230,15 +230,15 @@
 </head>
 <body>
 <div id="particles-js"></div>
-<div id="toast-container" class="toast-container"></div>
+
 
 <nav class="navbar navbar-expand-md support-nav fixed-top">
   <div class="container">
-    <a class="support-brand" href="../index.html">
+    <a class="support-brand" href="../index.html" data-bs-toggle="tooltip" title="Go home">
       <img src="../assets/img/icon.jpg" alt="CampusConnect UI">
       <span>CampusConnect UI</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#supportNavMenu" aria-controls="supportNavMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#supportNavMenu" aria-controls="supportNavMenu" aria-expanded="false" aria-label="Toggle navigation" data-tooltip="true" title="Open menu">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse support-nav-menu" id="supportNavMenu">
@@ -263,42 +263,42 @@
 
   <section class="support-grid row g-3" id="issueGrid" data-aos="fade-up" data-aos-delay="100">
     <div class="col-md-6 col-lg-4">
-      <article class="issue-card" data-issue="report_listing" tabindex="0" role="button">
+      <article class="issue-card" data-issue="report_listing" tabindex="0" role="button" data-bs-toggle="tooltip" title="Report listing">
         <span class="issue-icon"><i class="fas fa-flag"></i></span>
         <h2>Report a listing</h2>
         <p>Scam, suspicious price, prohibited item, misleading photos, duplicate listing, or stolen item concern.</p>
       </article>
     </div>
     <div class="col-md-6 col-lg-4">
-      <article class="issue-card" data-issue="report_user" tabindex="0" role="button">
+      <article class="issue-card" data-issue="report_user" tabindex="0" role="button" data-bs-toggle="tooltip" title="Report user">
         <span class="issue-icon" style="background: linear-gradient(135deg, #e96345, #9f3524);"><i class="fas fa-user-slash"></i></span>
         <h2>Report a user</h2>
         <p>Harassment, threats, impersonation, fraud attempt, spam, unsafe meetup behavior, or policy violation.</p>
       </article>
     </div>
     <div class="col-md-6 col-lg-4">
-      <article class="issue-card" data-issue="bug" tabindex="0" role="button">
+      <article class="issue-card" data-issue="bug" tabindex="0" role="button" data-bs-toggle="tooltip" title="Report bug">
         <span class="issue-icon" style="background: linear-gradient(135deg, #386fa4, #1e4d74);"><i class="fas fa-bug"></i></span>
         <h2>Technical bug</h2>
         <p>Login issues, broken pages, listing upload problems, missing dashboard data, or errors while using the site.</p>
       </article>
     </div>
     <div class="col-md-6 col-lg-4">
-      <article class="issue-card" data-issue="question" tabindex="0" role="button">
+      <article class="issue-card" data-issue="question" tabindex="0" role="button" data-bs-toggle="tooltip" title="Ask question">
         <span class="issue-icon" style="background: linear-gradient(135deg, #f4b740, #bd7b13);"><i class="fas fa-lightbulb"></i></span>
         <h2>Question or feature</h2>
         <p>Ask how something works, suggest a feature, request improvement, or share product feedback.</p>
       </article>
     </div>
     <div class="col-md-6 col-lg-4">
-      <article class="issue-card" data-issue="account" tabindex="0" role="button">
+      <article class="issue-card" data-issue="account" tabindex="0" role="button" data-bs-toggle="tooltip" title="Account help">
         <span class="issue-icon"><i class="fas fa-id-card"></i></span>
         <h2>Account or verification</h2>
         <p>Email verification, student status, profile corrections, password access, or account safety questions.</p>
       </article>
     </div>
     <div class="col-md-6 col-lg-4">
-      <article class="issue-card" data-issue="other" tabindex="0" role="button">
+      <article class="issue-card" data-issue="other" tabindex="0" role="button" data-bs-toggle="tooltip" title="Other support">
         <span class="issue-icon" style="background: linear-gradient(135deg, #6c757d, #343a40);"><i class="fas fa-envelope"></i></span>
         <h2>Other support</h2>
         <p>Anything else that does not fit the categories above. We will route it to the right place.</p>
@@ -334,7 +334,7 @@
   <div class="modal-container">
     <div class="modal-header">
       <h3 id="formModalTitle">Report issue</h3>
-      <button class="modal-close" id="closeFormModalBtn" aria-label="Close">&times;</button>
+      <button class="modal-close" id="closeFormModalBtn" aria-label="Close" data-bs-toggle="tooltip" title="Close form">&times;</button>
     </div>
     <div class="modal-body" id="formModalBody"></div>
     <div class="modal-footer" id="formModalFooter"></div>
@@ -345,7 +345,7 @@
   <div class="modal-container confirm-modal-container">
     <div class="modal-header">
       <h3 id="confirmModalTitle">Confirm Action</h3>
-      <button class="modal-close" id="closeConfirmModalBtn" aria-label="Close">&times;</button>
+      <button class="modal-close" id="closeConfirmModalBtn" aria-label="Close" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
     </div>
     <div class="modal-body" id="confirmModalBody">
       <p id="confirmMessage"></p>
@@ -354,7 +354,7 @@
   </div>
 </div>
 
-<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
+<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top" data-bs-toggle="tooltip" title="Scroll to top">
   <i class="fas fa-arrow-up" aria-hidden="true"></i>
 </button>
 
@@ -505,13 +505,43 @@
       submitLabel: 'Send report',
       cancelLabel: 'Cancel',
       onSubmit: async (form) => {
+        // ─── VALIDATE REQUIRED FIELDS ──────────────────────────
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        let firstInvalid = null;
+
+        requiredFields.forEach(field => {
+          const value = field.value.trim();
+          if (!value) {
+            field.classList.add('is-invalid');
+            if (!firstInvalid) firstInvalid = field;
+            isValid = false;
+          } else {
+            field.classList.remove('is-invalid');
+          }
+        });
+
+        if (!isValid) {
+          showToast('Please fill in all required fields.', 'error');
+          if (firstInvalid) {
+            firstInvalid.focus();
+            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return;
+        }
+
+        // ─── PROCEED WITH SUBMISSION ──────────────────────────
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
         data.issue_type = issueType;
 
-        const submitBtn = form.closest('.modal-container')?.querySelector('.btn-primary');
+        // Find submit button inside the modal
+        const submitBtn = document.querySelector('#formModal .modal-footer .btn-primary');
         const originalText = submitBtn?.innerHTML || 'Send report';
-        setButtonLoading(submitBtn, true, originalText);
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Sending...';
+        }
 
         try {
           const response = await fetch(`${REPORT_URL}submit`, {
@@ -535,10 +565,20 @@
           console.error('Network error:', err);
           showToast('Network error. Please check your connection and try again.', 'error');
         } finally {
-          setButtonLoading(submitBtn, false, originalText);
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+          }
         }
       }
     });
+
+    // After modal opens, attach tooltips to the new elements (if any)
+    setTimeout(() => {
+      if (typeof initTooltips === 'function') {
+        initTooltips();
+      }
+    }, 300);
   }
 
   document.querySelectorAll('.issue-card').forEach(card => {

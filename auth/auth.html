@@ -105,8 +105,8 @@
       </div>
 
       <div class="auth-tabs" role="tablist" aria-label="Authentication tabs">
-        <button class="auth-tab active" data-form="login" type="button">Sign in</button>
-        <button class="auth-tab" data-form="signup" type="button">Create account</button>
+        <button class="auth-tab active" data-form="login" type="button" data-bs-toggle="tooltip" title="Show sign in">Sign in</button>
+        <button class="auth-tab" data-form="signup" type="button" data-bs-toggle="tooltip" title="Show registration">Create account</button>
       </div>
 
       <div id="login-form" class="auth-form active-form">
@@ -124,9 +124,9 @@
               <input class="form-check-input" type="checkbox" id="rememberCheck" style="border-radius: 6px;">
               <label class="form-check-label remember-check" for="rememberCheck">Remember me</label>
             </div>
-            <a href="forget_password.html" class="forgot-link text-decoration-none">Forgot password?</a>
+            <a href="forget_password.html" class="forgot-link text-decoration-none" data-bs-toggle="tooltip" title="Reset password">Forgot password?</a>
           </div>
-          <button type="submit" class="btn btn-primary-custom w-100" id="loginBtn">Sign in</button>
+          <button type="submit" class="btn btn-primary-custom w-100" id="loginBtn" data-bs-toggle="tooltip" title="Sign in">Sign in</button>
         </form>
         <div class="auth-meta text-center mt-4">
           Protected by UI email verification. <a class="auth-home-link" href="../index.html">Return home</a>
@@ -175,11 +175,11 @@
             <i class="fas fa-envelope"></i>
             <span>
               Already signed up but didn't receive the verification email?
-              <button type="button" class="resend-btn-link" id="resendTokenBtn">Click here to resend</button>
+              <button type="button" class="resend-btn-link" id="resendTokenBtn" data-bs-toggle="tooltip" title="Resend email">Click here to resend</button>
             </span>
           </div>
 
-          <button type="submit" class="btn btn-primary-custom w-100 mt-4" id="signupBtn">Create free account</button>
+          <button type="submit" class="btn btn-primary-custom w-100 mt-4" id="signupBtn" data-bs-toggle="tooltip" title="Create account">Create free account</button>
         </form>
 
         <div class="auth-meta text-center mt-4">
@@ -190,14 +190,14 @@
   </div>
 </main>
 
-<div id="toast-container" class="toast-container"></div>
+
 
 <!-- ====== Modal containers (already in your layout) ====== -->
 <div id="formModal" class="modal-overlay" style="display: none;">
   <div class="modal-container">
     <div class="modal-header">
       <h3 id="formModalTitle">Form Title</h3>
-      <button class="modal-close" id="closeFormModalBtn">&times;</button>
+      <button class="modal-close" id="closeFormModalBtn" data-bs-toggle="tooltip" title="Close form">&times;</button>
     </div>
     <div class="modal-body" id="formModalBody"></div>
     <div class="modal-footer" id="formModalFooter"></div>
@@ -207,7 +207,7 @@
   <div class="modal-container confirm-modal-container">
     <div class="modal-header">
       <h3 id="confirmModalTitle">Confirm Action</h3>
-      <button class="modal-close" id="closeConfirmModalBtn">&times;</button>
+      <button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
     </div>
     <div class="modal-body" id="confirmModalBody">
       <p id="confirmMessage"></p>

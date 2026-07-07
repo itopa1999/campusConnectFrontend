@@ -280,8 +280,9 @@
 <div id="particles-js"></div>
 
 <div id="nav-placeholder"></div>
+<div id="breadcrumb-placeholder"></div>
 
-<main class="pt-5 mt-4">
+<main class="">
   <div class="container py-4">
 
     <!-- SKELETON LOADER -->
@@ -347,12 +348,12 @@
       <div class="mt-5" data-aos="fade-up" data-aos-delay="250">
         <ul class="nav nav-pills dashboard-pills mb-4 justify-content-center" role="tablist">
           <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="purchases-tab" data-bs-toggle="pill" data-bs-target="#purchases" type="button" role="tab" aria-controls="purchases" aria-selected="true">
+            <button class="nav-link active" id="purchases-tab" data-bs-toggle="pill" data-bs-target="#purchases" type="button" role="tab" aria-controls="purchases" aria-selected="true" data-tooltip="true" title="View purchases">
               <i class="fas fa-shopping-cart me-1"></i> Purchases
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" id="transactions-tab" data-bs-toggle="pill" data-bs-target="#transactions" type="button" role="tab" aria-controls="transactions" aria-selected="false">
+            <button class="nav-link" id="transactions-tab" data-bs-toggle="pill" data-bs-target="#transactions" type="button" role="tab" aria-controls="transactions" aria-selected="false" data-tooltip="true" title="View transactions">
               <i class="fas fa-exchange-alt me-1"></i> Transactions
             </button>
           </li>
@@ -365,7 +366,7 @@
               <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
                 <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Purchase history</h5>
                 <div class="d-flex align-items-center gap-2">
-                  <button class="filter-toggle-btn" id="purchaseFilterToggle">
+                  <button class="filter-toggle-btn" id="purchaseFilterToggle" data-bs-toggle="tooltip" title="Filter purchases">
                     <i class="fas fa-calendar-alt me-1"></i> Filter by date
                   </button>
                 </div>
@@ -374,15 +375,15 @@
                 <input type="date" id="purchaseDateFrom" class="form-control form-control-sm">
                 <span class="text-muted small">to</span>
                 <input type="date" id="purchaseDateTo" class="form-control form-control-sm">
-                <button class="btn btn-sm btn-outline-custom" id="purchaseFilterBtn">Apply</button>
-                <button class="btn btn-sm btn-outline-danger" id="purchaseClearFilterBtn">Clear</button>
+                <button class="btn btn-sm btn-outline-custom" id="purchaseFilterBtn" data-bs-toggle="tooltip" title="Apply date filter">Apply</button>
+                <button class="btn btn-sm btn-outline-danger" id="purchaseClearFilterBtn" data-bs-toggle="tooltip" title="Clear date filter">Clear</button>
               </div>
               <div id="purchaseList" class="mt-3"><div class="text-center text-muted py-3">Loading purchases...</div></div>
               <div class="d-flex justify-content-between align-items-center mt-3">
                 <span class="text-muted small" id="purchaseCount">0 purchases</span>
                 <div class="pagination-controls d-flex gap-2">
-                  <button class="btn btn-sm btn-outline-custom" id="purchasePrevBtn" disabled><i class="fas fa-chevron-left"></i> Prev</button>
-                  <button class="btn btn-sm btn-outline-custom" id="purchaseNextBtn">Next <i class="fas fa-chevron-right"></i></button>
+                  <button class="btn btn-sm btn-outline-custom" id="purchasePrevBtn" disabled data-bs-toggle="tooltip" title="Previous purchases"><i class="fas fa-chevron-left"></i> Prev</button>
+                  <button class="btn btn-sm btn-outline-custom" id="purchaseNextBtn" data-bs-toggle="tooltip" title="Next purchases">Next <i class="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             </div>
@@ -394,7 +395,7 @@
               <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
                 <h5 class="mb-0"><i class="fas fa-list-ul me-2"></i>Transaction history</h5>
                 <div class="d-flex align-items-center gap-2">
-                  <button class="filter-toggle-btn" id="transactionFilterToggle">
+                  <button class="filter-toggle-btn" id="transactionFilterToggle" data-bs-toggle="tooltip" title="Filter transactions">
                     <i class="fas fa-calendar-alt me-1"></i> Filter by date
                   </button>
                 </div>
@@ -403,15 +404,15 @@
                 <input type="date" id="transactionDateFrom" class="form-control form-control-sm">
                 <span class="text-muted small">to</span>
                 <input type="date" id="transactionDateTo" class="form-control form-control-sm">
-                <button class="btn btn-sm btn-outline-custom" id="transactionFilterBtn">Apply</button>
-                <button class="btn btn-sm btn-outline-danger" id="transactionClearFilterBtn">Clear</button>
+                <button class="btn btn-sm btn-outline-custom" id="transactionFilterBtn" data-bs-toggle="tooltip" title="Apply date filter">Apply</button>
+                <button class="btn btn-sm btn-outline-danger" id="transactionClearFilterBtn" data-bs-toggle="tooltip" title="Clear date filter">Clear</button>
               </div>
               <div id="transactionList" class="mt-3"><div class="text-center text-muted py-3">Loading transactions...</div></div>
               <div class="d-flex justify-content-between align-items-center mt-3">
                 <span class="text-muted small" id="transactionCount">0 transactions</span>
                 <div class="pagination-controls d-flex gap-2">
-                  <button class="btn btn-sm btn-outline-custom" id="transactionPrevBtn" disabled><i class="fas fa-chevron-left"></i> Prev</button>
-                  <button class="btn btn-sm btn-outline-custom" id="transactionNextBtn">Next <i class="fas fa-chevron-right"></i></button>
+                  <button class="btn btn-sm btn-outline-custom" id="transactionPrevBtn" disabled data-bs-toggle="tooltip" title="Previous transactions"><i class="fas fa-chevron-left"></i> Prev</button>
+                  <button class="btn btn-sm btn-outline-custom" id="transactionNextBtn" data-bs-toggle="tooltip" title="Next transactions">Next <i class="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             </div>
@@ -433,9 +434,9 @@
 
 <!-- Mobile bottom nav -->
 <div class="dashboard-mobile-actions d-md-none">
-  <a href="main.html" class="action-link"><i class="fas fa-home"></i><span>Home</span></a>
-  <a href="create-listing.html" class="action-link"><i class="fas fa-plus-circle"></i><span>Post</span></a>
-  <a href="listings.html" class="action-link"><i class="fas fa-list"></i><span>Listings</span></a>
+  <a href="main.html" class="action-link" data-bs-toggle="tooltip" title="Go home"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="create-listing.html" class="action-link" data-bs-toggle="tooltip" title="Post listing"><i class="fas fa-plus-circle"></i><span>Post</span></a>
+  <a href="listings.html" class="action-link" data-bs-toggle="tooltip" title="View listings"><i class="fas fa-list"></i><span>Listings</span></a>
 </div>
 
 <!-- Modals -->
@@ -443,7 +444,7 @@
   <div class="modal-container">
     <div class="modal-header">
       <h3 id="formModalTitle">Form Title</h3>
-      <button class="modal-close" id="closeFormModalBtn">&times;</button>
+      <button class="modal-close" id="closeFormModalBtn" data-bs-toggle="tooltip" title="Close form">&times;</button>
     </div>
     <div class="modal-body" id="formModalBody"></div>
     <div class="modal-footer" id="formModalFooter"></div>
@@ -454,7 +455,7 @@
   <div class="modal-container confirm-modal-container">
     <div class="modal-header">
       <h3 id="confirmModalTitle">Confirm Action</h3>
-      <button class="modal-close" id="closeConfirmModalBtn">&times;</button>
+      <button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
     </div>
     <div class="modal-body" id="confirmModalBody">
       <p id="confirmMessage"></p>
@@ -462,9 +463,9 @@
     <div class="modal-footer" id="confirmModalFooter"></div>
   </div>
 </div>
-<div id="toast-container" class="toast-container"></div>
 
-<button class="scroll-top-btn" data-scroll-top><i class="fas fa-arrow-up"></i></button>
+
+<button class="scroll-top-btn" data-scroll-top data-bs-toggle="tooltip" title="Scroll to top"><i class="fas fa-arrow-up"></i></button>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -519,7 +520,7 @@
       const iconClass = pkg.is_popular ? 'fa-fire' : (pkg.is_best_value ? 'fa-gem' : 'fa-coins');
       return `
         <div class="col-6 col-lg-3">
-          <div class="package-card p-4 text-center" data-package-id="${pkg.id}" data-points="${pkg.points}" data-price="${pkg.price}" data-description="${pkg.description || ''}">
+          <div class="package-card p-4 text-center" data-package-id="${pkg.id}" data-points="${pkg.points}" data-price="${pkg.price}" data-description="${pkg.description || ''}" data-bs-toggle="tooltip" title="Buy points">
             <div class="card-icon mx-auto"><i class="fas ${iconClass}"></i></div>
             <div class="package-points">${pkg.points} points</div>
             <div class="package-price">₦${pkg.price.toLocaleString()}</div>
@@ -535,6 +536,7 @@
     document.querySelectorAll('.package-card').forEach(card => {
       card.addEventListener('click', onPackageClick);
     });
+    setTimeout(initTooltips, 100);
   }
 
 // ─── Package click (opens payment modal) ──────────────────
@@ -566,7 +568,7 @@ function onPackageClick(e) {
         <p class="mt-3 text-muted small">🔒 Secure payment – points are added instantly.</p>
       </div>
       <p class="mb-3">Choose your preferred payment gateway:</p>
-      <div class="payment-option d-flex align-items-center gap-3 mb-3" data-gateway="paystack">
+      <div class="payment-option d-flex align-items-center gap-3 mb-3" data-gateway="paystack" data-bs-toggle="tooltip" title="Pay with Paystack">
         <div class="payment-icon"><i class="fab fa-paystack fa-2x"></i></div>
         <div>
           <strong>Paystack</strong>
@@ -574,7 +576,7 @@ function onPackageClick(e) {
         </div>
         <i class="fas fa-check-circle ms-auto text-success" style="opacity:0;"></i>
       </div>
-      <div class="payment-option d-flex align-items-center gap-3 mb-3" data-gateway="monnify">
+      <div class="payment-option d-flex align-items-center gap-3 mb-3" data-gateway="monnify" data-bs-toggle="tooltip" title="Pay with Monnify">
         <div class="payment-icon"><i class="fas fa-building fa-2x"></i></div>
         <div>
           <strong>Monnify</strong>
@@ -582,7 +584,7 @@ function onPackageClick(e) {
         </div>
         <i class="fas fa-check-circle ms-auto text-success" style="opacity:0;"></i>
       </div>
-      <div class="payment-option d-flex align-items-center gap-3 mb-3" data-gateway="flutterwave">
+      <div class="payment-option d-flex align-items-center gap-3 mb-3" data-gateway="flutterwave" data-bs-toggle="tooltip" title="Pay with Flutterwave">
         <div class="payment-icon"><i class="fab fa-flutterwave fa-2x"></i></div>
         <div>
           <strong>Flutterwave</strong>
@@ -621,9 +623,7 @@ function onPackageClick(e) {
 
         console.log(payload)
 
-        // 4. Call your backend payment initiation endpoint
-        // Replace with your actual URL
-        const response = await fetch(AUTH_URL + 'buy-points-initial', {
+        const response = await fetchWithAuth(AUTH_URL + 'buy-points-initial', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -681,7 +681,7 @@ function onPackageClick(e) {
   async function fetchData(type, page = 1, perPage = 10) {
     const param = type === 'purchase' ? 'is_purchase=true' : 'is_transaction=true';
     const url = `${POINT_PACKAGES_URL}?${param}&page=${page}&per_page=${perPage}`;
-    const response = await fetch(url, {
+    const response = await fetchWithAuth(url, {
       headers: { 'Accept': 'application/json', ...getAuthHeaders() }
     });
     if (!response.ok) {
@@ -708,7 +708,7 @@ function onPackageClick(e) {
       // Retry button for failed/pending
       let retryButton = '';
       if (p.status === 'failed' || p.status === 'pending') {
-        retryButton = `<button class="btn btn-sm btn-outline-danger retry-purchase mt-1" data-id="${p.id}" data-status="${p.status}"><i class="fas fa-redo"></i> Retry</button>`;
+        retryButton = `<button class="btn btn-sm btn-outline-danger retry-purchase mt-1" data-id="${p.id}" data-status="${p.status}" data-bs-toggle="tooltip" title="Retry payment"><i class="fas fa-redo"></i> Retry</button>`;
       }
       return `
         <div class="history-item d-flex flex-wrap justify-content-between align-items-center">
@@ -735,10 +735,12 @@ function onPackageClick(e) {
         retryPurchase(purchaseId, status);
       });
     });
+    setTimeout(initTooltips, 100);
 
       countEl.textContent = `${filtered.length} purchases (filtered from ${purchaseState.items.length})`;
     }
     updatePaginationButtons('purchase');
+    setTimeout(initTooltips, 100);
   }
 
   function renderTransactions() {
@@ -770,6 +772,7 @@ function onPackageClick(e) {
       countEl.textContent = `${filtered.length} transactions (filtered from ${transactionState.items.length})`;
     }
     updatePaginationButtons('transaction');
+    setTimeout(initTooltips, 100);
   }
 
   async function retryPurchase(purchaseId, currentStatus) {
@@ -802,7 +805,7 @@ function onPackageClick(e) {
       }
 
       try {
-        const response = await fetch(AUTH_URL + 'retry-purchase', {
+        const response = await fetchWithAuth(AUTH_URL + 'retry-purchase', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -868,7 +871,12 @@ function onPackageClick(e) {
     } catch (err) {
       console.error(`Error loading ${type}s:`, err);
       container.innerHTML = `<div class="text-center text-danger py-3"><i class="fas fa-exclamation-triangle me-2"></i>${err.message}</div>`;
-      showNetworkError();
+      if (err.message.includes('Failed to fetch') ||
+        err.name === 'TypeError' ||
+        err.message.includes('NetworkError') ||
+        err.message.includes('network')) {
+        showNetworkError();
+      }
     }
   }
 
@@ -935,7 +943,7 @@ function onPackageClick(e) {
 
     try {
       // 1. Fetch packages
-      const packagesResponse = await fetch(POINT_PACKAGES_URL, {
+      const packagesResponse = await fetchWithAuth(POINT_PACKAGES_URL, {
         headers: { 'Accept': 'application/json', ...getAuthHeaders() }
       });
       if (!packagesResponse.ok) {
@@ -987,9 +995,18 @@ function onPackageClick(e) {
       console.error('Load error:', err);
       skeleton.style.display = 'none';
       realContent.style.display = 'block';
-      showNetworkError();
+      if (err.message.includes('Failed to fetch') ||
+        err.name === 'TypeError' ||
+        err.message.includes('NetworkError') ||
+        err.message.includes('network')) {
+        showNetworkError();
+      } else {
+        showToast(err.message || 'Unable to load page', 'error');
+      }
     }
   }
+
+  injectBreadcrumb('Points & Transactions');
 
   document.getElementById('refreshPointsBtn')?.addEventListener('click', refreshPointBalance);
 

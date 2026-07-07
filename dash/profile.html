@@ -238,7 +238,8 @@
 <div id="particles-js"></div>
 
 <div id="nav-placeholder"></div>
-<main class="pt-5 mt-4">
+<div id="breadcrumb-placeholder"></div>
+<main class="">
   <div class="container py-4">
 
     <!-- Edit mode toggle row (visible always) -->
@@ -441,7 +442,7 @@
             <div class="small text-muted mb-2">Recent transactions</div>
             <div id="transactionsList" class="mt-2"></div>
             <div class="text-center mt-3">
-              <button id="loadMoreTransactionsBtn" class="btn btn-outline-custom load-more-btn" style="display: none;">Load more <i class="fas fa-arrow-down ms-1"></i></button>
+              <button id="loadMoreTransactionsBtn" class="btn btn-outline-custom load-more-btn" style="display: none;" data-bs-toggle="tooltip" title="Load transactions">Load more <i class="fas fa-arrow-down ms-1"></i></button>
             </div>
           </div>
 
@@ -463,7 +464,7 @@
             </div>
             <div id="reviewsListContainer"></div>
             <div class="text-center mt-3">
-              <button id="loadMoreReviewsBtn" class="btn btn-outline-custom load-more-btn" style="display: none;">Load more <i class="fas fa-arrow-down ms-1"></i></button>
+              <button id="loadMoreReviewsBtn" class="btn btn-outline-custom load-more-btn" style="display: none;" data-bs-toggle="tooltip" title="Load reviews">Load more <i class="fas fa-arrow-down ms-1"></i></button>
             </div>
           </div>
 
@@ -493,14 +494,14 @@
               </div>
             </div>
             <div class="d-flex flex-wrap gap-2 mt-3">
-              <button type="button" class="btn btn-outline-secondary btn-sm" id="changePasswordBtn"><i class="fas fa-key me-1"></i>Change password</button>
-              <button type="button" class="btn btn-outline-danger btn-sm" id="uploadStudentIdBtn"><i class="fas fa-id-card me-1"></i>Upload student ID</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm" id="changePasswordBtn" data-bs-toggle="tooltip" title="Change password"><i class="fas fa-key me-1"></i>Change password</button>
+              <button type="button" class="btn btn-outline-danger btn-sm" id="uploadStudentIdBtn" data-bs-toggle="tooltip" title="Upload ID"><i class="fas fa-id-card me-1"></i>Upload student ID</button>
             </div>
           </div>
 
           <!-- Save button -->
           <div id="saveProfileBtnContainer" class="mt-4 text-end d-none">
-            <button id="saveProfileChanges" class="btn btn-primary-custom px-4"><i class="fas fa-save me-2"></i>Save all changes</button>
+            <button id="saveProfileChanges" class="btn btn-primary-custom px-4" data-bs-toggle="tooltip" title="Save changes"><i class="fas fa-save me-2"></i>Save all changes</button>
           </div>
         </div>
       </div>
@@ -512,15 +513,15 @@
   <div class="modal-container">
     <div class="modal-header">
       <h3 id="formModalTitle">Form Title</h3>
-      <button class="modal-close" id="closeFormModalBtn">&times;</button>
+      <button class="modal-close" id="closeFormModalBtn" data-bs-toggle="tooltip" title="Close form">&times;</button>
     </div>
     <div class="modal-body" id="formModalBody"></div>
     <div class="modal-footer" id="formModalFooter"></div>
   </div>
 </div>
 
-<div id="toast-container" class="toast-container"></div>
-<button class="scroll-top-btn" data-scroll-top><i class="fas fa-arrow-up"></i></button>
+
+<button class="scroll-top-btn" data-scroll-top data-bs-toggle="tooltip" title="Scroll to top"><i class="fas fa-arrow-up"></i></button>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -533,6 +534,7 @@
     // ─── 1. AUTH ──────────────────────────────────────────────
     if (typeof isAuthenticated === 'function') {
       isAuthenticated();
+      injectBreadcrumb('My Profile');
     }
 
     // ─── 2. GLOBALS ──────────────────────────────────────────
@@ -940,7 +942,7 @@
         const token = getCookie('access_token');
         if (!token) throw new Error('Not authenticated');
 
-        const response = await fetch(PROFILE_URL, {
+        const response = await fetchWithAuth(PROFILE_URL, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -1000,7 +1002,7 @@
         const token = getCookie('access_token');
         if (!token) throw new Error('Not authenticated');
 
-        const response = await fetch(PROFILE_URL, {
+        const response = await fetchWithAuth(PROFILE_URL, {
           headers: {
             'Accept': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -1068,7 +1070,7 @@
         // Update points in cookie if different
         const pointsFromCookie = getCookie('point_bal');
         if (pointsFromCookie && parseInt(pointsFromCookie) !== userData.points) {
-          setCookie('point_bal', userData.points, 10);
+          setCookie('point_bal', userData.points, 3);
         }
 
       } catch (err) {
@@ -1144,7 +1146,7 @@
 
           try {
             const token = getCookie('access_token');
-            const response = await fetch(AUTH_URL + 'change-password', {
+            const response = await fetchWithAuth(AUTH_URL + 'change-password', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -1218,7 +1220,7 @@
 
           try {
             const token = getCookie('access_token');
-            const response = await fetch(AUTH_URL + 'upload-student-id', {
+            const response = await fetchWithAuth(AUTH_URL + 'upload-student-id', {
               method: 'PATCH',
               headers: {
                 'Authorization': `Bearer ${token}`
@@ -1323,7 +1325,7 @@
         if (!token) throw new Error('Not authenticated');
 
         const uploadUrl = AUTH_URL + 'profile-picture';
-        const response = await fetch(uploadUrl, {
+        const response = await fetchWithAuth(uploadUrl, {
           method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${token}`

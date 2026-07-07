@@ -163,7 +163,7 @@
   <header class="site-header fixed-top">
     <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
       <div class="container header-inner">
-        <a class="site-brand" href="index.html" aria-label="CampusConnect UI home">
+        <a class="site-brand" href="index.html" aria-label="CampusConnect UI home" data-bs-toggle="tooltip" title="Go home">
           <img src="assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo" />
           <span class="site-brand-name">
             <span class="brand-full">CampusConnect UI</span>
@@ -171,7 +171,7 @@
           </span>
         </a>
 
-        <button class="mobile-menu-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="mobile-menu-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation" data-tooltip="true" title="Open menu">
           <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -197,9 +197,9 @@
           <h2 class="fw-bold mt-3" style="color: var(--accent-dark);">John Doe</h2>
           <p class="text-muted">Full‑Stack Developer &amp; UI/UX Enthusiast</p>
           <div class="d-flex justify-content-center gap-2 mt-2">
-            <a href="#" class="btn btn-outline-custom btn-sm"><i class="fab fa-github"></i></a>
-            <a href="#" class="btn btn-outline-custom btn-sm"><i class="fab fa-linkedin"></i></a>
-            <a href="#" class="btn btn-outline-custom btn-sm"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="btn btn-outline-custom btn-sm" data-bs-toggle="tooltip" title="Open GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" class="btn btn-outline-custom btn-sm" data-bs-toggle="tooltip" title="Open LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="btn btn-outline-custom btn-sm" data-bs-toggle="tooltip" title="Open Twitter"><i class="fab fa-twitter"></i></a>
           </div>
         </div>
         <div class="col-lg-8" data-aos="fade-left" data-aos-duration="800" data-aos-delay="100">
@@ -357,7 +357,7 @@
                 Since then, I've dedicated my spare time to learning web development and 
                 security best practices. CampusConnect is the result of that journey.
               </span>
-              <button class="btn-read-more" id="toggleFactBtn" onclick="toggleFact()">
+              <button class="btn-read-more" id="toggleFactBtn" onclick="toggleFact()" data-bs-toggle="tooltip" title="Toggle fact">
                 <i class="fas fa-plus-circle me-1"></i> Read more
               </button>
             </p>
@@ -418,7 +418,7 @@
     <div class="modal-container">
       <div class="modal-header">
         <h3 id="formModalTitle">Form Title</h3>
-        <button class="modal-close" id="closeFormModalBtn">&times;</button>
+        <button class="modal-close" id="closeFormModalBtn" data-bs-toggle="tooltip" title="Close form">&times;</button>
       </div>
       <div class="modal-body" id="formModalBody"></div>
       <div class="modal-footer" id="formModalFooter"></div>
@@ -428,7 +428,7 @@
     <div class="modal-container confirm-modal-container">
       <div class="modal-header">
         <h3 id="confirmModalTitle">Confirm Action</h3>
-        <button class="modal-close" id="closeConfirmModalBtn">&times;</button>
+        <button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
       </div>
       <div class="modal-body" id="confirmModalBody"><p id="confirmMessage"></p></div>
       <div class="modal-footer" id="confirmModalFooter"></div>
@@ -436,7 +436,7 @@
   </div>
 
   <!-- Scroll to top button -->
-  <button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
+  <button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top" data-bs-toggle="tooltip" title="Scroll to top">
     <i class="fas fa-arrow-up"></i>
   </button>
 

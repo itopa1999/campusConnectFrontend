@@ -1,424 +1,1211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CampusConnect UI · Listing Details</title>
-  <!-- Bootstrap 5 + Icons + Fonts + AOS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
-  <link rel="stylesheet" href="../assets/css/main.css">
-  <style>
-    /* Listing detail custom styles */
-    .listing-image-carousel {
-      background: #f1f3f2;
-      border-radius: 1.5rem;
-      overflow: hidden;
-      aspect-ratio: 4 / 3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #adb5bd;
-    }
-    .seller-card {
-      border: 1px solid rgba(44,122,94,0.12);
-      border-radius: 1.25rem;
-      transition: all 0.2s;
-    }
-    .seller-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.05);
-    }
-    .badge-trust {
-      background: #fef7e0;
-      color: #b87c00;
-      border-radius: 50px;
-      padding: 0.25rem 0.75rem;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-    .review-item {
-      border-left: 3px solid transparent;
-      transition: all 0.2s;
-    }
-    .review-item:hover {
-      border-left-color: var(--accent);
-      background: #fefcf8;
-      transform: translateX(3px);
-    }
-    .hotspot-badge {
-      background: var(--accent-light);
-      color: var(--accent-dark);
-      border-radius: 50px;
-      padding: 0.4rem 1rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .rating-stars i {
-      color: #f5b042;
-      margin-right: 2px;
-    }
-    @media (max-width: 768px) {
-      .listing-detail-sidebar {
-        margin-top: 2rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>CampusConnect · Listing Details</title>
+
+    <!-- Bootstrap 5 + Icons + Fonts + AOS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+        /* ── Listing detail custom styles ── */
+        .listing-image-carousel {
+            background: #f1f3f2;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            aspect-ratio: 4 / 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .listing-image-carousel:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        .listing-image-carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .listing-image-carousel .click-hint {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.55);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .listing-image-carousel:hover .click-hint {
+            opacity: 1;
+        }
+
+        .seller-card .seller-avatar-wrapper {
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s ease;
+            border-radius: 50%;
+        }
+        .seller-card .seller-avatar-wrapper:hover {
+            transform: scale(1.05);
+        }
+        .seller-card .seller-avatar-wrapper .avatar-hint {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 0.5rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+        .seller-card .seller-avatar-wrapper:hover .avatar-hint {
+            opacity: 1;
+        }
+
+        /* ── Lightbox / Image Viewer ── */
+        .image-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            padding: 2rem;
+            cursor: pointer;
+        }
+        .image-lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+        .image-lightbox .lightbox-content {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+            transform: scale(0.92);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: default;
+            position: relative;
+            background: #111;
+        }
+        .image-lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+        .image-lightbox .lightbox-content img {
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+        .image-lightbox .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 28px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+            backdrop-filter: blur(4px);
+            z-index: 10;
+        }
+        .image-lightbox .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        .image-lightbox .lightbox-caption {
+            position: absolute;
+            bottom: 24px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            pointer-events: none;
+            padding: 0 1rem;
+        }
+
+        .seller-card {
+            border: 1px solid rgba(44, 122, 94, 0.12);
+            border-radius: 1.25rem;
+            transition: all 0.2s;
+        }
+        .seller-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        .badge-trust {
+            background: #fef7e0;
+            color: #b87c00;
+            border-radius: 50px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .review-item {
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .review-item:hover {
+            border-left-color: var(--accent);
+            background: #fefcf8;
+            transform: translateX(3px);
+        }
+
+        .hotspot-badge {
+            background: var(--accent-light);
+            color: var(--accent-dark);
+            border-radius: 50px;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .rating-stars i {
+            color: #f5b042;
+            margin-right: 2px;
+        }
+
+        .listing-type-badge {
+            border-radius: 50px;
+            padding: 0.25rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .listing-type-sell {
+            background: #e3f5ec;
+            color: #1e7b4a;
+        }
+        .listing-type-wanted {
+            background: #fff3e0;
+            color: #b87c00;
+        }
+        .listing-type-freebie {
+            background: #e3f0ff;
+            color: #0d6efd;
+        }
+        .listing-type-service {
+            background: #f3e8ff;
+            color: #6f42c1;
+        }
+
+        .badge-status-detail {
+            border-radius: 50px;
+            padding: 0.25rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .badge-active {
+            background: #e3f5ec;
+            color: #1e7b4a;
+        }
+        .badge-sold {
+            background: #f0f0f0;
+            color: #5a6268;
+        }
+        .badge-expired {
+            background: #ffe6e5;
+            color: #c23d2e;
+        }
+
+        .seller-badge-item {
+            background: #f0f7f3;
+            color: var(--accent-dark);
+            border-radius: 50px;
+            padding: 0.15rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-right: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .progress-bar-custom {
+            background: #eef2f0;
+            border-radius: 50px;
+            height: 8px;
+            overflow: hidden;
+        }
+        .progress-bar-custom .progress-fill {
+            height: 100%;
+            border-radius: 50px;
+            background: var(--accent);
+            transition: width 0.6s ease;
+        }
+
+        .trust-item {
+            font-size: 0.85rem;
+        }
+        .trust-item .fas {
+            width: 18px;
+        }
+
+        /* ── Owner action button ── */
+        #ownerActions .btn-manage {
+            background: var(--accent);
+            color: white;
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            width: 100%;
+        }
+        #ownerActions .btn-manage:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(44, 122, 94, 0.2);
+        }
+
+        /* ── Seller contact info ── */
+        .seller-contact-info {
+            background: #f8faf9;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+        }
+        .seller-contact-info .info-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.15rem 0;
+        }
+        .seller-contact-info .info-row i {
+            width: 18px;
+            color: var(--accent);
+        }
+        .seller-contact-info .info-row .label {
+            font-weight: 500;
+            margin-right: 0.25rem;
+        }
+        .visibility-hidden-note {
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 0.3rem;
+        }
+
+        /* ── Skeleton Loader ── */
+        .skeleton {
+            background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 8px;
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        .skeleton-image {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            border-radius: 1.5rem;
+        }
+        .skeleton-title {
+            height: 28px;
+            width: 60%;
+            margin-bottom: 1rem;
+        }
+        .skeleton-text {
+            height: 16px;
+            margin-bottom: 0.5rem;
+        }
+        .skeleton-text.short {
+            width: 60%;
+        }
+        .skeleton-text.medium {
+            width: 80%;
+        }
+        .skeleton-price {
+            height: 36px;
+            width: 40%;
+            margin-bottom: 1rem;
+        }
+        .skeleton-seller {
+            height: 80px;
+            border-radius: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .skeleton-badge {
+            height: 24px;
+            width: 80px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        .skeleton-review {
+            height: 80px;
+            border-radius: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .listing-detail-sidebar {
+                margin-top: 2rem;
+            }
+            .image-lightbox {
+                padding: 1rem;
+            }
+            .image-lightbox .lightbox-content {
+                max-width: 98vw;
+                max-height: 80vh;
+            }
+            .image-lightbox .lightbox-content img {
+                max-width: 98vw;
+                max-height: 80vh;
+            }
+            .image-lightbox .lightbox-close {
+                top: 12px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ── Error state ── */
+        .error-icon {
+            font-size: 4rem;
+            color: #f5b042;
+        }
+    </style>
 </head>
 <body>
-<div id="particles-js"></div>
 
-<!-- Navigation (same as main.html) -->
-<div id="nav-placeholder"></div>
+    <div id="particles-js"></div>
 
-<main class="pt-5 mt-4">
-  <div class="container py-4 mb-5">
-    <!-- Loading state -->
-    <div id="loadingState" class="text-center py-5">
-      <div class="spinner-border text-success" role="status"></div>
-      <p class="mt-3">Loading listing details...</p>
-    </div>
+    <!-- Navigation & Breadcrumb -->
+    <div id="nav-placeholder"></div>
+    <div id="breadcrumb-placeholder"></div>
 
-    <!-- Main content (hidden initially) -->
-    <div id="listingContent" style="display: none;">
-      <div class="row g-4">
-        <!-- Left column: Images & details -->
-        <div class="col-lg-7">
-          <div class="listing-image-carousel mb-4" id="listingImage">
-            <i class="fas fa-image fa-3x"></i>
-          </div>
-          <div class="dashboard-card p-4 mb-4">
-            <h2 id="listingTitle" class="fw-bold mb-3">Loading...</h2>
-            <div class="d-flex flex-wrap gap-3 mb-3">
-              <span class="badge bg-white text-dark border px-3 py-2 rounded-pill" id="listingCategory"></span>
-              <span class="badge bg-white text-dark border px-3 py-2 rounded-pill" id="listingBadge"></span>
-              <span class="badge bg-white text-dark border px-3 py-2 rounded-pill"><i class="fas fa-map-marker-alt me-1"></i> <span id="listingLocation">Campus meetup</span></span>
+    <main>
+        <div class="container py-4 mb-5">
+
+            <!-- ═══ SKELETON LOADER ═══ -->
+            <div id="skeletonLoader">
+                <div class="row g-4">
+                    <!-- Left column skeleton -->
+                    <div class="col-lg-7">
+                        <div class="skeleton skeleton-image"></div>
+                        <div class="dashboard-card p-4 mt-3">
+                            <div class="skeleton skeleton-title"></div>
+                            <div class="d-flex gap-2 mb-3">
+                                <div class="skeleton skeleton-badge"></div>
+                                <div class="skeleton skeleton-badge"></div>
+                                <div class="skeleton skeleton-badge"></div>
+                            </div>
+                            <div class="skeleton skeleton-price"></div>
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text"></div>
+                            <hr />
+                            <div class="skeleton skeleton-text" style="width:40%;"></div>
+                            <div class="d-flex gap-2 mt-2">
+                                <div class="skeleton skeleton-badge"></div>
+                                <div class="skeleton skeleton-badge"></div>
+                                <div class="skeleton skeleton-badge"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right column skeleton -->
+                    <div class="col-lg-5 listing-detail-sidebar">
+                        <div class="skeleton skeleton-seller"></div>
+                        <div class="dashboard-card p-4">
+                            <div class="skeleton skeleton-text" style="width:40%;"></div>
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-review"></div>
+                            <div class="skeleton skeleton-review"></div>
+                            <div class="skeleton skeleton-review"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="mb-4">
-              <div class="display-6 fw-bold text-success" id="listingPrice"></div>
-              <div class="small text-muted">Cash or transfer at meetup</div>
+
+            <!-- ═══ ERROR STATE ═══ -->
+            <div id="errorState" class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 text-center" style="display: none;">
+                <div class="py-5">
+                    <i class="fas fa-exclamation-triangle error-icon mb-4"></i>
+                    <h3>Listing not found</h3>
+                    <p class="text-muted" id="errorMessage">The listing you are looking for does not exist or you don't have permission to view it.</p>
+                    <a href="main.html" class="btn btn-primary-custom mt-3" data-bs-toggle="tooltip" title="Go to dashboard">
+                        <i class="fas fa-arrow-left me-2"></i>Go to Dashboard
+                    </a>
+                </div>
             </div>
-            <h5 class="fw-semibold">Description</h5>
-            <p class="text-muted" id="listingDescription"></p>
-            <hr>
-            <h5 class="fw-semibold">📌 Safe meeting spots</h5>
-            <div id="hotspotsList" class="d-flex flex-wrap gap-2 mt-2"></div>
-            <div class="alert alert-light border mt-3 small">
-              <i class="fas fa-shield-alt text-success me-2"></i> 
-              <strong>Campus safety tip:</strong> Always meet in a public, well‑lit area like those listed above. Bring a friend if possible.
+
+            <!-- ═══ MAIN CONTENT ═══ -->
+            <div id="listingContent" style="display: none;">
+                <div class="row g-4">
+
+                    <!-- ─── LEFT COLUMN ─── -->
+                    <div class="col-lg-7">
+                        <!-- Image -->
+                        <div class="listing-image-carousel mb-4" id="listingImageContainer" role="button" tabindex="0" aria-label="View listing image full size">
+                            <img id="listingImage" src="" alt="Listing image" style="display: none;" />
+                            <div id="imagePlaceholder" class="text-muted text-center p-4">
+                                <i class="fas fa-image fa-3x mb-2"></i>
+                                <p>No image uploaded</p>
+                            </div>
+                            <span class="click-hint"><i class="fas fa-expand me-1"></i>Click to enlarge</span>
+                        </div>
+
+                        <!-- Details card -->
+                        <div class="dashboard-card p-4 mb-4">
+                            <!-- Title & badges -->
+                            <div class="d-flex flex-wrap align-items-start justify-content-between gap-2 mb-3">
+                                <h2 id="listingTitle" class="fw-bold mb-0">Loading...</h2>
+                                <div class="d-flex gap-1 flex-wrap" id="promotionBadges"></div>
+                            </div>
+
+                            <!-- Category + Badge + Type + Status -->
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="badge bg-white text-dark border px-3 py-2 rounded-pill" id="listingCategory">
+                                    <i class="fas fa-tag me-1"></i> <span>Loading…</span>
+                                </span>
+                                <span class="badge bg-white text-dark border px-3 py-2 rounded-pill" id="listingBadgeDisplay">
+                                    <i class="fas fa-medal me-1"></i> <span>—</span>
+                                </span>
+                                <span class="listing-type-badge" id="listingTypeBadge">—</span>
+                                <span class="badge-status-detail" id="statusBadgeDetail">—</span>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="mb-4">
+                                <div class="display-6 fw-bold text-success" id="listingPrice">—</div>
+                                <div class="small text-muted">Cash or transfer at meetup</div>
+                            </div>
+
+                            <!-- Owner action (Manage Listing) -->
+                            <div id="ownerActions" style="display: none;" class="mb-3"></div>
+
+                            <!-- Description -->
+                            <h5 class="fw-semibold">Description</h5>
+                            <p class="text-muted" id="listingDescription" style="white-space: pre-wrap;"></p>
+
+                            <hr />
+
+                            <!-- Hotspots -->
+                            <h5 class="fw-semibold"><i class="fas fa-map-pin me-2"></i>Safe meeting spots</h5>
+                            <div id="hotspotsList" class="d-flex flex-wrap gap-2 mt-2"></div>
+
+                            <!-- Location -->
+                            <div class="mt-3 small text-muted">
+                                <i class="fas fa-map-marker-alt me-1"></i> Location: <span id="listingLocation">—</span>
+                            </div>
+
+                            <div class="alert alert-light border mt-3 small">
+                                <i class="fas fa-shield-alt text-success me-2"></i>
+                                <strong>Campus safety tip:</strong> Always meet in a public, well‑lit area like those listed above. Bring a friend if possible.
+                            </div>
+
+                            <!-- Meta info -->
+                            <div class="text-muted small mt-2">
+                                Listing ID: <span id="listingIdMeta">—</span> &middot; Created: <span id="createdDateMeta">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─── RIGHT COLUMN ─── -->
+                    <div class="col-lg-5 listing-detail-sidebar">
+
+                        <!-- Seller card -->
+                        <div class="seller-card p-4 mb-4">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="flex-shrink-0 seller-avatar-wrapper" role="button" tabindex="0" aria-label="View seller profile picture full size">
+                                    <img id="sellerAvatar" src="" alt="Seller avatar"
+                                    style="width:56px; height:56px; border-radius:50%; object-fit:cover; background:#f1f3f2; display:none;" />
+                                    <i id="sellerAvatarFallback" class="fas fa-user-circle fa-3x text-secondary" style="border-radius:50%;"></i>
+                                    <span class="avatar-hint"><i class="fas fa-expand"></i></span>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-0" id="sellerName">—</h5>
+                                    <div class="small text-muted" id="sellerDepartment">—</div>
+                                </div>
+                            </div>
+
+                            <!-- Seller contact info (hidden if visibility false) -->
+                            <div id="sellerContactInfo" style="display: none;">
+                                <div class="seller-contact-info">
+                                    <div class="info-row">
+                                        <i class="fas fa-envelope"></i>
+                                        <span><span class="label">Email:</span> <span id="sellerEmail">—</span></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <i class="fas fa-phone"></i>
+                                        <span><span class="label">Phone:</span> <span id="sellerPhone">—</span></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        <span><span class="label">Level:</span> <span id="sellerLevel">—</span></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <i class="fas fa-id-card"></i>
+                                        <span><span class="label">Matric:</span> <span id="sellerMatric">—</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="visibilityNote" class="visibility-hidden-note" style="display: none;">
+                                <i class="fas fa-eye-slash me-1"></i> Contact info hidden by seller.
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+                                <div>
+                                    <span class="fw-bold" id="sellerRating">0.0</span> <span class="text-muted">/5</span>
+                                    <div class="rating-stars d-inline-block ms-2" id="sellerStars"></div>
+                                </div>
+                                <span class="badge-trust" id="sellerVerifiedBadge">✓ Verified student</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="small text-muted">Member since <span id="memberSince">—</span></div>
+                                <div class="small text-muted">
+                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                    <span id="sellerTotalReviews">0</span> reviews
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="sellerBadgesContainer">
+                                <!-- dynamic badges -->
+                            </div>
+
+                            <button id="contactSellerBtn" class="btn btn-primary-custom w-100" data-bs-toggle="tooltip" title="Contact seller">
+                                <i class="fas fa-envelope me-2"></i>Contact seller
+                            </button>
+                        </div>
+
+                        <!-- Trust summary -->
+                        <div class="dashboard-card p-4 mb-4">
+                            <h6 class="fw-bold"><i class="fas fa-shield-alt me-2"></i>Trust &amp; credibility</h6>
+                            <div class="progress-bar-custom mt-2 mb-2">
+                                <div class="progress-fill" id="trustMeterFill" style="width: 0%;"></div>
+                            </div>
+                            <p class="small text-muted" id="trustMessage">Based on verification and reviews</p>
+                            <ul class="list-unstyled mt-3">
+                                <li class="trust-item mb-2" id="emailVerifiedItem">
+                                    <i class="fas fa-envelope text-success me-2"></i> Email verified
+                                </li>
+                                <li class="trust-item mb-2" id="hallVerifiedItem">
+                                    <i class="fas fa-building text-muted me-2"></i> Hall verification pending
+                                </li>
+                                <li class="trust-item mb-2" id="studentIdItem">
+                                    <i class="fas fa-id-card text-muted me-2"></i> Student ID not yet verified
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Reviews section -->
+                        <div class="dashboard-card p-4">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-star me-2" style="color: #f5b042;"></i>
+                                Reviews <span class="text-muted fw-normal" id="reviewCountLabel">(0)</span>
+                            </h6>
+                            <div id="reviewsList">
+                                <div class="text-muted text-center py-3">Loading reviews…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
+    </main>
 
-        <!-- Right column: Seller & trust -->
-        <div class="col-lg-5 listing-detail-sidebar">
-          <!-- Seller card -->
-          <div class="seller-card p-4 mb-4">
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <div class="flex-shrink-0">
-                <i class="fas fa-user-circle fa-3x text-secondary"></i>
-              </div>
-              <div>
-                <h5 class="fw-bold mb-0" id="sellerName"></h5>
-                <div class="small text-muted" id="sellerDepartment"></div>
-              </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div>
-                <span class="fw-bold" id="sellerRating">0.0</span> <span class="text-muted">/5</span>
-                <div class="rating-stars d-inline-block ms-2" id="sellerStars"></div>
-              </div>
-              <span class="badge-trust" id="sellerVerifiedBadge">✓ Verified student</span>
-            </div>
-            <div class="mb-3">
-              <div class="small text-muted">Member since <span id="memberSince"></span></div>
-              <div class="small text-muted"><i class="fas fa-check-circle text-success me-1"></i> <span id="totalReviews"></span> reviews</div>
-            </div>
-            <div class="mb-3" id="sellerBadges">
-              <!-- dynamic badges -->
-            </div>
-            <button id="contactSellerBtn" class="btn btn-primary-custom w-100"><i class="fas fa-envelope me-2"></i>Contact seller</button>
-          </div>
-
-          <!-- Trust summary -->
-          <div class="dashboard-card p-4 mb-4">
-            <h6 class="fw-bold"><i class="fas fa-shield-alt me-2"></i>Trust & credibility</h6>
-            <div class="progress-bar-custom mt-2 mb-2">
-              <div class="progress-fill" id="trustMeterFill" style="width: 0%;"></div>
-            </div>
-            <p class="small text-muted" id="trustMessage">Based on verification and reviews</p>
-            <ul class="list-unstyled mt-3">
-              <li class="mb-2"><i class="fas fa-envelope text-success me-2"></i> Email verified</li>
-              <li class="mb-2" id="hallVerifiedItem"><i class="fas fa-building text-success me-2"></i> Hall verified</li>
-              <li class="mb-2" id="studentIdItem"><i class="fas fa-id-card text-muted me-2"></i> Student ID pending</li>
-            </ul>
-          </div>
-
-          <!-- Reviews section -->
-          <div class="dashboard-card p-4">
-            <h6 class="fw-bold mb-3"><i class="fas fa-star me-2" style="color: #f5b042;"></i>Recent reviews</h6>
-            <div id="reviewsList">
-              <div class="text-muted text-center py-3">Loading reviews...</div>
-            </div>
-          </div>
+    <!-- ═══ IMAGE LIGHTBOX ═══ -->
+    <div id="imageLightbox" class="image-lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <div class="lightbox-content" onclick="event.stopPropagation();">
+            <button class="lightbox-close" id="lightboxCloseBtn" aria-label="Close image viewer">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="lightboxImg" src="" alt="Enlarged view" />
+            <div class="lightbox-caption" id="lightboxCaption"></div>
         </div>
-      </div>
     </div>
-  </div>
-</main>
 
-<div class="dashboard-mobile-actions d-md-none mt-5">
-  <a href="main.html" class="action-link">
-    <i class="fas fa-home"></i>
-    <span>Dashboard</span>
-  </a>
-  <a href="create-listing.html" class="action-link">
-    <i class="fas fa-plus-circle"></i>
-    <span>Post</span>
-  </a>
-  <a href="listings.html" class="action-link active">
-    <i class="fas fa-list"></i>
-    <span>Listings</span>
-  </a>
-</div>
-
-<!-- Modals -->
-<div id="formModal" class="modal-overlay" style="display: none;">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h3 id="formModalTitle">Form Title</h3>
-      <button class="modal-close" id="closeFormModalBtn">&times;</button>
+    <!-- Mobile actions -->
+    <div class="dashboard-mobile-actions d-md-none mt-5">
+        <a href="main.html" class="action-link" data-bs-toggle="tooltip" title="Go to dashboard">
+            <i class="fas fa-home"></i><span>Dashboard</span>
+        </a>
+        <a href="create-listing.html" class="action-link" data-bs-toggle="tooltip" title="Post listing">
+            <i class="fas fa-plus-circle"></i><span>Post</span>
+        </a>
+        <a href="listings.html" class="action-link active" data-bs-toggle="tooltip" title="View listings">
+            <i class="fas fa-list"></i><span>Listings</span>
+        </a>
     </div>
-    <div class="modal-body" id="formModalBody"></div>
-    <div class="modal-footer" id="formModalFooter"></div>
-  </div>
-</div>
-<div id="confirmModal" class="modal-overlay" style="display: none;">
-  <div class="modal-container confirm-modal-container">
-    <div class="modal-header">
-      <h3 id="confirmModalTitle">Confirm Action</h3>
-      <button class="modal-close" id="closeConfirmModalBtn">&times;</button>
-    </div>
-    <div class="modal-body" id="confirmModalBody">
-      <p id="confirmMessage"></p>
-    </div>
-    <div class="modal-footer" id="confirmModalFooter"></div>
-  </div>
-</div>
 
-<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top">
-  <i class="fas fa-arrow-up" aria-hidden="true"></i>
-</button>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<script src="../assets/js/main.js"></script>
-<script>
-  isAuthenticated()
-
-  // Dummy data generator based on listing ID
-  function getListingData(id) {
-    const listingsDB = {
-      1: {
-        id: 1,
-        title: "HP Laptop Core i5 / 8GB RAM",
-        description: "Perfect for programming, Microsoft office. Battery lasts 4hrs. Slight scratch on bottom, otherwise excellent condition.",
-        price: 145000,
-        category: "Electronics",
-        badge: "⭐ Featured",
-        location: "Independence Hall",
-        hotspots: ["Kennedy Library", "Awo Hall Cafeteria", "New Lecture Theatre"],
-        seller: {
-          id: 101,
-          name: "Daniel O.",
-          department: "Computer Science",
-          memberSince: "2024-01-15",
-          averageRating: 4.8,
-          totalReviews: 24,
-          emailVerified: true,
-          hallVerified: true,
-          studentIdVerified: true,
-          badges: ["Top Seller", "Trusted Member", "Hall Verified"],
-          trustScore: 92
-        },
-        reviews: [
-          { from: "Aisha K.", rating: 5, comment: "Great seller, item exactly as described. Fast meetup at the library.", date: "2025-05-20" },
-          { from: "Emeka O.", rating: 4, comment: "Good laptop, battery life is decent. Would buy again.", date: "2025-05-15" },
-          { from: "Tolani S.", rating: 5, comment: "Very responsive and friendly. Recommended!", date: "2025-05-10" }
-        ],
-        images: []
-      },
-      2: {
-        id: 2,
-        title: "ECO 211 - Principles of Economics",
-        description: "Barely used, no highlights. Original price ₦8,000, selling for ₦3,500. Covers full syllabus.",
-        price: 3500,
-        category: "Textbooks",
-        badge: "🔥 Urgent sale",
-        location: "Mellanby Hall",
-        hotspots: ["Faculty of Social Sciences", "Kennedy Library"],
-        seller: {
-          id: 102,
-          name: "Oluwatobi A.",
-          department: "Economics",
-          memberSince: "2024-09-01",
-          averageRating: 4.9,
-          totalReviews: 12,
-          emailVerified: true,
-          hallVerified: true,
-          studentIdVerified: true,
-          badges: ["Early Adopter", "Trusted Seller"],
-          trustScore: 88
-        },
-        reviews: [
-          { from: "Bola F.", rating: 5, comment: "Book was in perfect condition. Fast response.", date: "2025-06-01" }
-        ],
-        images: []
-      }
-    };
-    return listingsDB[id] || listingsDB[1]; // fallback to first for demo
-  }
-
-  function renderStars(rating) {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5;
-    let html = '';
-    for (let i = 0; i < fullStars; i++) html += '<i class="fas fa-star"></i>';
-    if (halfStar) html += '<i class="fas fa-star-half-alt"></i>';
-    for (let i = fullStars + (halfStar ? 1 : 0); i < 5; i++) html += '<i class="far fa-star"></i>';
-    return html;
-  }
-
-  function renderBadges(badges) {
-    return badges.map(b => `<span class="badge-trust me-2 mb-1">${b}</span>`).join('');
-  }
-
-  function renderReviews(reviews) {
-    if (!reviews.length) return '<div class="text-muted text-center py-3">No reviews yet. Be the first to leave a review!</div>';
-    return reviews.map(rev => `
-      <div class="review-item p-3 mb-2 rounded-3 border">
-        <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
-          <strong>${escapeHtml(rev.from)}</strong>
-          <div class="rating-stars small">${renderStars(rev.rating)}</div>
-          <small class="text-muted">${new Date(rev.date).toLocaleDateString()}</small>
+    <!-- Modals -->
+    <div id="formModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="formModalTitle">Form</h3>
+                <button class="modal-close" id="closeFormModalBtn" data-bs-toggle="tooltip" title="Close form">&times;</button>
+            </div>
+            <div class="modal-body" id="formModalBody"></div>
+            <div class="modal-footer" id="formModalFooter"></div>
         </div>
-        <p class="small text-muted mb-0">${escapeHtml(rev.comment)}</p>
-      </div>
-    `).join('');
-  }
+    </div>
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
-  }
+    <div id="confirmModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container confirm-modal-container">
+            <div class="modal-header">
+                <h3 id="confirmModalTitle">Confirm Action</h3>
+                <button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
+            </div>
+            <div class="modal-body" id="confirmModalBody">
+                <p id="confirmMessage"></p>
+            </div>
+            <div class="modal-footer" id="confirmModalFooter"></div>
+        </div>
+    </div>
 
-  // Load listing from URL parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  const listingId = urlParams.get('id') || '1';
-  const data = getListingData(parseInt(listingId));
+    <button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top" data-bs-toggle="tooltip" title="Scroll to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
 
-  // Populate page
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('listingContent').style.display = 'block';
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js">
+    </script>
+    <script src="../assets/js/main.js">
+    </script>
 
-  // Basic info
-  document.getElementById('listingTitle').innerText = data.title;
-  document.getElementById('listingCategory').innerHTML = `<i class="fas fa-tag me-1"></i> ${data.category}`;
-  document.getElementById('listingBadge').innerHTML = data.badge ? `${data.badge}` : 'No badge';
-  document.getElementById('listingPrice').innerHTML = `₦${data.price.toLocaleString()}`;
-  document.getElementById('listingDescription').innerText = data.description;
-  // Hotspots
-  const hotspotsHtml = data.hotspots.map(h => `<span class="hotspot-badge"><i class="fas fa-map-marker-alt me-1"></i> ${h}</span>`).join('');
-  document.getElementById('hotspotsList').innerHTML = hotspotsHtml;
+    <script>
+        // ──────────────────────────────────────────────────────────────
+        // 1.  Authentication & breadcrumb
+        // ──────────────────────────────────────────────────────────────
+        isAuthenticated();
+        injectBreadcrumb('Listing Details');
 
-  // Seller info
-  const seller = data.seller;
-  document.getElementById('sellerName').innerText = seller.name;
-  document.getElementById('sellerDepartment').innerText = seller.department;
-  document.getElementById('sellerRating').innerText = seller.averageRating.toFixed(1);
-  document.getElementById('sellerStars').innerHTML = renderStars(seller.averageRating);
-  document.getElementById('totalReviews').innerText = seller.totalReviews;
-  document.getElementById('memberSince').innerText = new Date(seller.memberSince).toLocaleDateString('en-GB', { year: 'numeric', month: 'long' });
-  document.getElementById('sellerBadges').innerHTML = renderBadges(seller.badges);
-  
-  // Trust indicators
-  const trustPercent = seller.trustScore;
-  document.getElementById('trustMeterFill').style.width = `${trustPercent}%`;
-  let trustMsg = '';
-  if (trustPercent >= 90) trustMsg = '⭐ Excellent reputation – highly trusted seller';
-  else if (trustPercent >= 70) trustMsg = '👍 Good standing – reliable seller';
-  else trustMsg = '🔄 New seller – meet in public and inspect item carefully';
-  document.getElementById('trustMessage').innerText = trustMsg;
-  
-  document.getElementById('hallVerifiedItem').innerHTML = seller.hallVerified ? 
-    '<i class="fas fa-building text-success me-2"></i> Hall verified' : 
-    '<i class="fas fa-building text-muted me-2"></i> Hall verification pending';
-  document.getElementById('studentIdItem').innerHTML = seller.studentIdVerified ? 
-    '<i class="fas fa-id-card text-success me-2"></i> Student ID verified' : 
-    '<i class="fas fa-id-card text-muted me-2"></i> Student ID not yet verified';
-  
-  // Reviews
-  document.getElementById('reviewsList').innerHTML = renderReviews(data.reviews);
+        // ──────────────────────────────────────────────────────────────
+        // 2.  Constants
+        // ──────────────────────────────────────────────────────────────
+        const LISTING_DETAIL_URL = CAMPUS_URL + 'listing-details';
 
-  // Contact seller button
-  document.getElementById('contactSellerBtn').addEventListener('click', () => {
-    if (typeof formModal !== 'undefined' && formModal) {
-      formModal.open({
-        title: `Contact ${seller.name}`,
-        formHtml: `
-          <div class="mb-3">
-            <label class="form-label">Your name *</label>
-            <input type="text" name="buyer_name" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Your email *</label>
-            <input type="email" name="buyer_email" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Message *</label>
-            <textarea name="message" class="form-control" rows="4" placeholder="Hi, I'm interested in your ${data.title}..."></textarea>
-          </div>
-          <div class="small text-muted mt-2">
-            <i class="fas fa-shield-alt"></i> We'll share your message with the seller. They'll reply to your email.
-          </div>
-        `,
-        submitLabel: 'Send Message',
-        onSubmit: async (form) => {
-          await new Promise(r => setTimeout(r, 500));
-          if (typeof confirmModal !== 'undefined' && confirmModal) {
-            confirmModal.open({
-              title: 'Message Sent ✅',
-              message: `Your message has been sent to ${seller.name}. They will contact you via email within 24 hours.`,
-              confirmText: 'OK',
-              onConfirm: () => formModal.close()
+        // ──────────────────────────────────────────────────────────────
+        // 3.  Helpers
+        // ──────────────────────────────────────────────────────────────
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
             });
-          } else {
-            alert('Message sent (demo)');
-            formModal.close();
-          }
         }
-      });
-    } else {
-      alert('Messaging system loading. Please try again.');
-    }
-  });
 
-  // Simple image placeholder (you can replace with real carousel later)
-  const imgContainer = document.getElementById('listingImage');
-  imgContainer.innerHTML = `<i class="fas fa-image fa-3x"></i><div class="mt-2 small text-muted">No image provided</div>`;
+        function formatCurrency(amount) {
+            if (amount == null) return '₦0';
+            return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 })
+                .format(amount);
+        }
 
-</script>
+        function renderStars(rating) {
+            const full = Math.floor(rating);
+            const half = rating % 1 >= 0.5;
+            let html = '';
+            for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
+            if (half) html += '<i class="fas fa-star-half-alt"></i>';
+            for (let i = full + (half ? 1 : 0); i < 5; i++) html += '<i class="far fa-star"></i>';
+            return html;
+        }
+
+        function getListingTypeLabel(type) {
+            const map = { sell: 'Sell', wanted: 'Wanted', freebie: 'Freebie', service: 'Service' };
+            return map[type] || type || '—';
+        }
+
+        function getListingTypeClass(type) {
+            const map = { sell: 'listing-type-sell', wanted: 'listing-type-wanted', freebie: 'listing-type-freebie',
+                service: 'listing-type-service' };
+            return map[type] || '';
+        }
+
+        function getStatusClass(status) {
+            const map = { active: 'badge-active', sold: 'badge-sold', expired: 'badge-expired' };
+            return map[status] || 'badge-active';
+        }
+
+        function getStatusLabel(status) {
+            const map = { active: 'Active', sold: 'Sold', expired: 'Expired' };
+            return map[status] || status || '—';
+        }
+
+        function mapBadgeDisplay(code) {
+            if (!code) return 'None';
+            const map = {
+                'bundle': '📦 Bundle',
+                'featured': '⭐ Featured',
+                'urgent': '🔥 Urgent',
+                'new': '🆕 New',
+                'premium': '💎 Premium'
+            };
+            return map[code] || code;
+        }
+
+        function mapSellerBadge(code) {
+            const map = {
+                'verified': '✓ Verified',
+                'trusted': 'Trusted Member',
+                'top_seller': '⭐ Top Seller',
+                'early_adopter': '🚀 Early Adopter',
+                'hall_verified': '🏠 Hall Verified'
+            };
+            return map[code] || code;
+        }
+
+        function showErrorState(message) {
+            const el = document.getElementById('errorState');
+            if (el) {
+                el.style.display = 'block';
+                document.getElementById('errorMessage').innerText = message || 'Listing not found.';
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 4.  Lightbox controls
+        // ──────────────────────────────────────────────────────────────
+        const lightbox = document.getElementById('imageLightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+        let lightboxOpen = false;
+
+        function openLightbox(src, caption) {
+            if (!src) return;
+            lightboxImg.src = src;
+            lightboxImg.alt = caption || 'Enlarged view';
+            lightboxCaption.textContent = caption || '';
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            lightboxOpen = true;
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            lightboxOpen = false;
+        }
+
+        // Click on overlay closes
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Close button
+        document.getElementById('lightboxCloseBtn').addEventListener('click', closeLightbox);
+
+        // Keyboard: ESC to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && lightboxOpen) {
+                closeLightbox();
+            }
+        });
+
+        // ──────────────────────────────────────────────────────────────
+        // 5.  Render main view
+        // ──────────────────────────────────────────────────────────────
+        function renderListing(data) {
+            // ── Basic info ──
+            document.getElementById('listingTitle').innerText = data.title || 'Untitled';
+
+            // Category
+            const catEl = document.getElementById('listingCategory');
+            catEl.innerHTML = `<i class="fas fa-tag me-1"></i> ${escapeHtml(data.category || 'Uncategorized')}`;
+
+            // Badge
+            const badgeEl = document.getElementById('listingBadgeDisplay');
+            const badgeLabel = mapBadgeDisplay(data.badge);
+            badgeEl.innerHTML = `<i class="fas fa-medal me-1"></i> ${escapeHtml(badgeLabel)}`;
+
+            // Listing type
+            const typeEl = document.getElementById('listingTypeBadge');
+            const typeLabel = getListingTypeLabel(data.listing_type);
+            typeEl.className = `listing-type-badge ${getListingTypeClass(data.listing_type)}`;
+            typeEl.innerText = typeLabel;
+
+            // Status
+            const statusEl = document.getElementById('statusBadgeDetail');
+            const status = data.status || 'active';
+            statusEl.className = `badge-status-detail ${getStatusClass(status)}`;
+            statusEl.innerText = getStatusLabel(status);
+
+            // Price
+            document.getElementById('listingPrice').innerHTML = formatCurrency(data.price);
+
+            // Description
+            document.getElementById('listingDescription').innerText = data.description || 'No description provided.';
+
+            // Location
+            document.getElementById('listingLocation').innerText = data.location || 'Campus meetup';
+
+            // Meta
+            document.getElementById('listingIdMeta').innerText = data.id || '—';
+            document.getElementById('createdDateMeta').innerText = data.created_at ?
+                new Date(data.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) :
+                '—';
+
+            // ── Promotion badges ──
+            const promoContainer = document.getElementById('promotionBadges');
+            let promoHtml = '';
+            if (data.is_hot_sale) {
+                promoHtml += '<span class="badge bg-danger"><i class="fas fa-fire me-1"></i>Hot Sale</span> ';
+            }
+            if (data.is_ads_banner) {
+                promoHtml += '<span class="badge bg-primary"><i class="fas fa-bullhorn me-1"></i>Banner</span>';
+            }
+            promoContainer.innerHTML = promoHtml;
+
+            // ── Image ──
+            const imgEl = document.getElementById('listingImage');
+            const placeholder = document.getElementById('imagePlaceholder');
+            const imageContainer = document.getElementById('listingImageContainer');
+            let imageSrc = null;
+
+            if (data.image) {
+                imgEl.src = data.image;
+                imgEl.style.display = 'block';
+                placeholder.style.display = 'none';
+                imageSrc = data.image;
+            } else {
+                imgEl.style.display = 'none';
+                placeholder.style.display = 'block';
+                imageSrc = null;
+            }
+
+            // Click on image container opens lightbox
+            imageContainer.onclick = function() {
+                if (imageSrc) {
+                    openLightbox(imageSrc, data.title || 'Listing image');
+                }
+            };
+            // Also allow keyboard enter/space
+            imageContainer.onkeydown = function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (imageSrc) {
+                        openLightbox(imageSrc, data.title || 'Listing image');
+                    }
+                }
+            };
+
+            // ── Hotspots ──
+            const hotspotsList = document.getElementById('hotspotsList');
+            if (data.hotspots && data.hotspots.length) {
+                hotspotsList.innerHTML = data.hotspots.map(function(h) {
+                    return `<span class="hotspot-badge"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(h)}</span>`;
+                }).join('');
+            } else {
+                hotspotsList.innerHTML = '<span class="text-muted">No meeting spots listed.</span>';
+            }
+
+            
+
+            // ── Seller ──
+            const seller = data.seller || {};
+            const sellerName = seller.name || 'Anonymous';
+            document.getElementById('sellerName').innerText = sellerName;
+
+            const dept = seller.department || '—';
+            document.getElementById('sellerDepartment').innerText = dept;
+
+            // ── Owner action (Manage Listing) ──
+            const ownerActions = document.getElementById('ownerActions');
+            if (seller.is_owner === true) {
+                ownerActions.style.display = 'block';
+                ownerActions.innerHTML = `
+                    <a href="my-listing-details.html?id=${data.id}&title=${encodeURIComponent(data.title)}" class="btn btn-manage">
+                        <i class="fas fa-edit me-2"></i>Manage Listing
+                    </a>
+                `;
+            } else {
+                ownerActions.style.display = 'none';
+                ownerActions.innerHTML = '';
+            }
+
+            // Contact info – show only if visibility is true
+            const contactInfo = document.getElementById('sellerContactInfo');
+            const visibilityNote = document.getElementById('visibilityNote');
+            const isVisible = seller.visibility === true;
+
+            if (isVisible) {
+                contactInfo.style.display = 'block';
+                visibilityNote.style.display = 'none';
+                document.getElementById('sellerEmail').innerText = seller.email || '—';
+                document.getElementById('sellerPhone').innerText = seller.phone || '—';
+                document.getElementById('sellerLevel').innerText = seller.level != null ? seller.level : '—';
+                document.getElementById('sellerMatric').innerText = seller.matric_no || '—';
+            } else {
+                contactInfo.style.display = 'none';
+                visibilityNote.style.display = 'block';
+            }
+
+            // Avatar – click to enlarge
+            const avatarWrapper = document.querySelector('.seller-avatar-wrapper');
+            const avatarImg = document.getElementById('sellerAvatar');
+            const fallbackIcon = document.getElementById('sellerAvatarFallback');
+            let avatarSrc = null;
+
+            if (seller.profile_picture) {
+                avatarImg.src = seller.profile_picture;
+                avatarImg.style.display = 'block';
+                fallbackIcon.style.display = 'none';
+                avatarSrc = seller.profile_picture;
+            } else {
+                avatarImg.style.display = 'none';
+                fallbackIcon.style.display = 'block';
+                avatarSrc = null;
+            }
+
+            avatarWrapper.onclick = function() {
+                if (avatarSrc) {
+                    openLightbox(avatarSrc, sellerName + ' — profile picture');
+                }
+            };
+            avatarWrapper.onkeydown = function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (avatarSrc) {
+                        openLightbox(avatarSrc, sellerName + ' — profile picture');
+                    }
+                }
+            };
+
+            // Rating
+            const avgRating = seller.average_rating || 0;
+            document.getElementById('sellerRating').innerText = avgRating.toFixed(1);
+            document.getElementById('sellerStars').innerHTML = renderStars(avgRating);
+
+            // Member since
+            const memberSince = seller.member_since || '—';
+            document.getElementById('memberSince').innerText = memberSince;
+
+            // Total reviews (seller's total)
+            const totalRev = seller.total_reviews || 0;
+            document.getElementById('sellerTotalReviews').innerText = totalRev;
+
+            // Seller badges
+            const badgesContainer = document.getElementById('sellerBadgesContainer');
+            if (seller.badges && seller.badges.length) {
+                badgesContainer.innerHTML = seller.badges.map(function(b) {
+                    return `<span class="seller-badge-item">${escapeHtml(mapSellerBadge(b))}</span>`;
+                }).join('');
+            } else {
+                badgesContainer.innerHTML = '<span class="text-muted small">No badges yet.</span>';
+            }
+
+            // Verified badge
+            const verifiedBadge = document.getElementById('sellerVerifiedBadge');
+            const isVerified = seller.email_verified && seller.student_id_verified;
+            verifiedBadge.innerText = isVerified ? '✓ Verified student' : '⚠️ Unverified';
+            verifiedBadge.className = 'badge-trust ' + (isVerified ? '' : 'bg-light text-danger');
+
+            // ── Trust ──
+            const trustScore = seller.trust_score || 0;
+            document.getElementById('trustMeterFill').style.width = Math.min(trustScore, 100) + '%';
+            let trustMsg = 'Based on verification and reviews';
+            if (trustScore >= 90) trustMsg = '⭐ Excellent reputation – highly trusted seller';
+            else if (trustScore >= 70) trustMsg = '👍 Good standing – reliable seller';
+            else if (trustScore >= 40) trustMsg = '🔄 New seller – meet in public and inspect item carefully';
+            else trustMsg = '⚠️ Exercise caution – low trust score';
+            document.getElementById('trustMessage').innerText = trustMsg;
+
+            // Trust items
+            const emailItem = document.getElementById('emailVerifiedItem');
+            emailItem.innerHTML = seller.email_verified ?
+                '<i class="fas fa-envelope text-success me-2"></i> Email verified' :
+                '<i class="fas fa-envelope text-muted me-2"></i> Email not verified';
+
+            const hallItem = document.getElementById('hallVerifiedItem');
+            hallItem.innerHTML = seller.hall_verified ?
+                '<i class="fas fa-building text-success me-2"></i> Hall verified' :
+                '<i class="fas fa-building text-muted me-2"></i> Hall verification pending';
+
+            const studentItem = document.getElementById('studentIdItem');
+            studentItem.innerHTML = seller.student_id_verified ?
+                '<i class="fas fa-id-card text-success me-2"></i> Student ID verified' :
+                '<i class="fas fa-id-card text-muted me-2"></i> Student ID not yet verified';
+
+            // ── Reviews ──
+            const reviews = data.reviews || [];
+            const reviewCount = data.review_count || reviews.length;
+            document.getElementById('reviewCountLabel').innerText = '(' + reviewCount + ')';
+
+            const reviewsContainer = document.getElementById('reviewsList');
+            if (!reviews.length) {
+                reviewsContainer.innerHTML = '<div class="text-muted text-center py-3">No reviews yet. Be the first to leave a review!</div>';
+            } else {
+                reviewsContainer.innerHTML = reviews.map(function(r) {
+                    const from = r.from || 'Anonymous';
+                    const rating = r.rating || 0;
+                    const comment = r.comment || '';
+                    const date = r.date ? new Date(r.date).toLocaleDateString('en-GB', { day: 'numeric',
+                        month: 'short', year: 'numeric' }) : '—';
+                    return `
+                        <div class="review-item p-3 mb-2 rounded-3 border">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
+                                <strong>${escapeHtml(from)}</strong>
+                                <div class="rating-stars small">${renderStars(rating)}</div>
+                                <small class="text-muted">${date}</small>
+                            </div>
+                            <p class="small text-muted mb-0">${escapeHtml(comment)}</p>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 6.  Fetch listing data
+        // ──────────────────────────────────────────────────────────────
+        async function fetchListingData(id) {
+            const token = getCookie('access_token');
+            if (!token) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + id, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Listing not found');
+                }
+                if (response.status === 401 || response.status === 403) {
+                    deleteAuthCookies();
+                    window.location.href = '../index.html';
+                    return;
+                }
+                throw new Error('Failed to fetch listing');
+            }
+
+            const result = await response.json();
+            if (!result.is_success) {
+                throw new Error(result.message || 'Invalid response');
+            }
+            return result.data;
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 7.  Main load
+        // ──────────────────────────────────────────────────────────────
+        async function loadListing() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            const skeleton = document.getElementById('skeletonLoader');
+            const content = document.getElementById('listingContent');
+            const errorState = document.getElementById('errorState');
+
+            if (!id || id.trim() === '' || id === 'null' || id === 'undefined') {
+                skeleton.style.display = 'none';
+                content.style.display = 'none';
+                showErrorState('No listing ID provided.');
+                return;
+            }
+
+            errorState.style.display = 'none';
+            skeleton.style.display = 'block';
+            content.style.display = 'none';
+
+            try {
+                const data = await fetchListingData(id);
+                renderListing(data);
+                skeleton.style.display = 'none';
+                content.style.display = 'block';
+            } catch (err) {
+                console.error('Load error:', err);
+                skeleton.style.display = 'none';
+                const msg = err.message || 'An unexpected error occurred.';
+                if (msg === 'Listing not found' || msg.includes('404')) {
+                    showErrorState(msg);
+                } else if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
+                    showNetworkError();
+                } else {
+                    showErrorState('An unexpected error occurred. Please try again.');
+                }
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 8.  Contact seller modal
+        // ──────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('#contactSellerBtn');
+                if (!btn) return;
+
+                const sellerName = document.getElementById('sellerName').innerText || 'Seller';
+                const listingTitle = document.getElementById('listingTitle').innerText || 'item';
+
+                alert(`Contacting ${sellerName} about "${listingTitle}" is not implemented in this demo.`);
+            });
+        });
+
+        // ──────────────────────────────────────────────────────────────
+        // 9.  Bootstrap
+        // ──────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', loadListing);
+    </script>
 </body>
 </html>
