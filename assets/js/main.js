@@ -183,8 +183,14 @@ const authCookies = [
     'user_email',
     'profile_pic',
     'point_bal',
-    'trusting_score'
+    'trusting_score',
+    'redirect_after_login'
   ];
+
+
+function deleteCookie(name) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+}
 
 function deleteAuthCookies() {
   authCookies.forEach(name => {
@@ -197,6 +203,9 @@ function isAuthenticated() {
   const refreshToken = getCookie('refresh_token');
   if (!accessToken || !refreshToken) {
     deleteAuthCookies()
+    const currentPath = window.location.pathname + window.location.search + window.location.hash;
+    setCookie('redirect_after_login', currentPath, 1);
+ 
     window.location.href = '../index.html';
   }
 }
@@ -541,7 +550,7 @@ function initReportLostFeature() {
         }
 
         try {
-          const response = await fetch(CAMPUS_URL + 'report-lost-item', {
+          const response = await fetchWithAuth(CAMPUS_URL + 'report-lost-item', {
             method: 'POST',
             body: formData
           });
@@ -633,7 +642,7 @@ async function performLogout() {
     const accessToken = getCookie('access_token');
 
     if (refreshToken && accessToken) {
-      const response = await fetch(`${AUTH_URL}logout-user`, {
+      const response = await fetchWithAuth(`${AUTH_URL}logout-user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -951,7 +960,7 @@ async function refreshAccessToken() {
   if (!refreshToken) {
     throw new Error('No refresh token available');
   }
-  const response = await fetch(`${AUTH_URL}refresh-token`, {
+  const response = await fetchWithAuth(`${AUTH_URL}refresh-token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ refresh_token: refreshToken })
@@ -1101,6 +1110,12 @@ async function fetchWithAuth(url, options = {}) {
     } catch (refreshError) {
       isRefreshing = false;
       deleteAuthCookies();
+
+      const currentPath = window.location.pathname + window.location.search + window.location.hash;
+      if (currentPath && !currentPath.includes('index.html') && currentPath !== '/') {
+        setCookie('redirect_after_login', currentPath, 1);
+      }
+
       showToast('Session expired. Please log in again.', 'error');
       setTimeout(() => {
         window.location.href = '../index.html';
@@ -1218,7 +1233,7 @@ async function refreshPointBalance() {
   showRefreshSpinner();
 
   try {
-    const response = await fetch(REFRESH_URL, {
+    const response = await fetchWithAuth(REFRESH_URL, {
       headers: { 'Accept': 'application/json', ...getAuthHeaders() }
     });
     if (!response.ok) throw new Error('Failed to refresh dashboard');

@@ -326,7 +326,7 @@
         <p class="text-muted col-lg-7 mx-auto">Buy and sell used items safely within the UI community. All sellers are verified students.</p>
       </div>
 
-      <div class="col-12">
+      <div id="emptyState" class="col-12" style="display: none;">
         <div class="text-center py-5 my-4">
           <i class="fas fa-box-open fa-3x text-muted mb-3" style="opacity:0.5;"></i>
           <h4 class="fw-bold">No Listings Available</h4>
@@ -566,7 +566,7 @@
       <div class="col-6 col-md-4 col-lg-3">
         <div class="listing-card h-100" data-id="${item.id}" data-title="${escapeHtml(item.title)}" data-bs-toggle="tooltip" title="View details">
           <div class="listing-image">
-            ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${escapeHtml(item.title)}">` : `<i class="fas fa-image"></i> No image provided`}
+            ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${escapeHtml(item.title)}">` : `<i class="fas fa-image"></i> No image`}
           </div>
           <div class="card-body p-2 p-md-3">
             <div class="d-flex justify-content-between align-items-start mb-2">
@@ -680,7 +680,7 @@ async function loadSection(sectionKey, gridSelector) {
   const grid = document.querySelector(gridSelector);
   const btn = document.querySelector(`.load-more[data-section="${sectionKey}"]`);
   const section = grid?.closest('section');
-  if (!grid) return;
+  if (!grid) return false;
 
   try {
     const data = await fetchSection(sectionKey, 1, 8);
@@ -689,7 +689,10 @@ async function loadSection(sectionKey, gridSelector) {
     if (items.length === 0) {
       // Hide the entire section
       if (section) section.style.display = 'none';
-      return;
+
+      if (btn) btn.style.display = 'none';
+
+      return false;
     }
 
     // Show the section (in case it was hidden)
@@ -710,11 +713,15 @@ async function loadSection(sectionKey, gridSelector) {
         btn.innerHTML = 'Load more <i class="fas fa-arrow-down ms-1"></i>';
       }
     }
+    return true;
   } catch (err) {
     console.error(`Error loading ${sectionKey}:`, err);
     // On error, hide the section or show an error message? We'll keep the error message.
     grid.innerHTML = `<div class="col-12 text-center text-danger py-4">Failed to load items. Please refresh.</div>`;
     if (btn) btn.style.display = 'none';
+
+    return false;
+
   }
 }
 
@@ -781,10 +788,25 @@ async function loadMore(sectionKey) {
       sponsoredItems = [];
     }
 
-    // Load the three listing sections
-    await loadSection('hot_sales', '.hot_sales-grid');
-    await loadSection('departmental', '.departmental-grid');
-    await loadSection('for_you', '.for_you-grid');
+    // ─── Load the three listing sections ─────────────────────
+    const results = await Promise.all([
+      loadSection('hot_sales', '.hot_sales-grid'),
+      loadSection('departmental', '.departmental-grid'),
+      loadSection('for_you', '.for_you-grid')
+    ]);
+
+    const anyNonEmpty = results.some(result => result === true);
+
+    // Toggle global empty state and sections container
+    const emptyState = document.getElementById('emptyState');
+    const sectionsContainer = document.getElementById('sectionsContainer');
+    if (anyNonEmpty) {
+      emptyState.style.display = 'none';
+      sectionsContainer.style.display = 'block';
+    } else {
+      emptyState.style.display = 'block';
+      sectionsContainer.style.display = 'none';
+    }
 
     // Build the banner carousel (now uses real sponsored items)
     buildAdBanner();

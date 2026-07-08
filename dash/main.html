@@ -163,66 +163,97 @@
   <div id="realContent" style="display: none;">
     <!-- Hero section -->
     <section id="dashboardHome" class="dashboard-hero py-5">
-      <div class="container" data-aos="fade-up" data-aos-duration="900">
-        <div class="row align-items-end">
-          <div class="col-lg-7">
-            <span class="badge-verify mb-3"><i class="fas fa-chart-line me-1"></i> student dashboard</span>
-            <h1 class="display-6 fw-semibold">Welcome back, <span id="dashboardUserName">Null</span></h1>
-            <p class="text-muted mb-4">Track your campus listings, messages, sales and trust score in one place with exceptional clarity and style.</p>
-          </div>
-          <div class="col-lg-5 text-lg-end" data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
-            <a href="create-listing.html" class="btn btn-primary-custom me-2 mb-2"><i class="fas fa-plus-circle me-1"></i>Post a listing</a>
-            <a href="listings.html" class="btn btn-outline-custom mb-2"><i class="fas fa-search me-1"></i>Browse listings</a>
-          </div>
-        </div>
+  <div class="container" data-aos="fade-up" data-aos-duration="900">
+    <div class="row align-items-end">
+      <div class="col-lg-7">
+        <span class="badge-verify mb-3"><i class="fas fa-chart-line me-1"></i> student dashboard</span>
+        <h1 class="display-6 fw-semibold">Welcome back, <span id="dashboardUserName">Null</span></h1>
+        <p class="text-muted mb-4">Track your campus listings, sales and trust score in one place</p>
+      </div>
+      <div class="col-lg-5 text-lg-end" data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
+        <a href="create-listing.html" class="btn btn-primary-custom me-2 mb-2"><i class="fas fa-plus-circle me-1"></i>Post a listing</a>
+        <a href="listings.html" class="btn btn-outline-custom mb-2"><i class="fas fa-search me-1"></i>Browse listings</a>
+      </div>
+    </div>
 
-        <!-- Stats row -->
-        <div class="row g-3 stats-row mt-4" data-aos="fade-up" data-aos-duration="700">
-          <div class="col-6 col-md-3">
-            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
-              <div class="stat-label"><i class="fas fa-tag me-1"></i> Active listings</div>
-              <div class="stat-value" id="activeListingsCount">0</div>
-              <small class="text-muted">Live offers on campus</small>
-            </div>
+    <!-- Stats row - ALL stats inside the same row -->
+    <div class="row g-3 stats-row mt-4" data-aos="fade-up" data-aos-duration="700">
+      
+      <!-- Active Listings -->
+      <div class="col-6 col-md-3">
+        <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+          <div class="stat-label">
+            <i class="fas fa-store me-1"></i> Active Listings
           </div>
-          <div class="col-6 col-md-3">
-            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
-              <div class="stat-label"><i class="fas fa-clock me-1"></i> Expired listings</div>
-              <div class="stat-value" id="expiredListingsCount">0</div>
-              <small class="text-muted">Past opportunities</small>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
-              <div class="stat-label"><i class="fas fa-check-circle me-1"></i> Sold listings</div>
-              <div class="stat-value" id="soldListingsCount">0</div>
-              <small class="text-muted">Completed transactions</small>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
-              <div class="stat-label"><i class="fas fa-shield-alt me-1"></i> Trust score</div>
-              <div class="stat-value" id="trustScoreValue">0%</div>
-              <small class="text-muted">Verified student badge</small>
-            </div>
-          </div>
-          <div class="col-12 col-md-3 col-lg-3">
-            <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4 position-relative">
-              <div class="stat-label"><i class="fas fa-coins me-1"></i> Points Balance</div>
-              <div class="stat-value" id="pointsBalanceValue">0</div>
-              <small class="text-muted">Available for posting</small>
-              <!-- Refresh icon – bottom‑right, larger -->
-                      <button class="btn-refresh-points position-absolute bottom-0 end-0 m-2 p-2 border-0 bg-transparent" 
-                      id="refreshPointsBtn" 
-                      data-bs-toggle="tooltip"
-                      title="Refresh balance">
-                <i class="fas fa-sync-alt fs-5 text-success"></i>
-              </button>
-            </div>
-          </div>
+          <div class="stat-value" id="activeListingsCount">0</div>
+          <small class="text-muted">Currently available listings</small>
         </div>
       </div>
-    </section>
+
+      <!-- Listings Marked Sold -->
+      <div class="col-6 col-md-3">
+        <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+          <div class="stat-label">
+            <i class="fas fa-box-open me-1"></i> Listings Marked Sold
+          </div>
+          <div class="stat-value" id="MarkedsoldListings">0</div>
+          <small class="text-muted">Listings with a Sold status</small>
+        </div>
+      </div>
+
+      <!-- Expired Listings -->
+      <div class="col-6 col-md-3">
+        <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+          <div class="stat-label">
+            <i class="fas fa-hourglass-end me-1"></i> Expired Listings
+          </div>
+          <div class="stat-value" id="expiredListingsCount">0</div>
+          <small class="text-muted">Listings that have expired</small>
+        </div>
+      </div>
+
+      <!-- Successful Sales -->
+      <div class="col-6 col-md-3">
+        <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+          <div class="stat-label">
+            <i class="fas fa-handshake me-1"></i> Successful Sales
+          </div>
+          <div class="stat-value" id="soldListingsCount">0</div>
+          <small class="text-muted">Completed sales transactions</small>
+        </div>
+      </div>
+
+      <!-- Trust Score -->
+      <div class="col-6 col-md-3">
+        <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+          <div class="stat-label">
+            <i class="fas fa-shield-alt me-1"></i> Trust score
+          </div>
+          <div class="stat-value" id="trustScoreValue">0%</div>
+          <small class="text-muted">Verified student badge</small>
+        </div>
+      </div>
+
+      <!-- Points Balance -->
+      <div class="col-6 col-md-3">
+        <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4 position-relative">
+          <div class="stat-label">
+            <i class="fas fa-coins me-1"></i> Points Balance
+          </div>
+          <div class="stat-value" id="pointsBalanceValue">0</div>
+          <!-- Refresh icon -->
+          <button class="btn-refresh-points position-absolute bottom-0 end-0 m-2 p-2 border-0 bg-transparent" 
+                  id="refreshPointsBtn" 
+                  data-bs-toggle="tooltip"
+                  title="Refresh balance">
+            <i class="fas fa-sync-alt fs-5 text-success"></i>
+          </button>
+        </div>
+      </div>
+      
+    </div> <!-- End stats row -->
+  </div>
+</section>
 
     <!-- Tabs section (Overview, My listings, Reviews) -->
     <section class="dashboard-tabs-section py-4">
@@ -397,6 +428,7 @@
       // --- Stats & overview ---
       document.getElementById('dashboardUserName').innerText = data.first_name || data.user || 'Student';
       document.getElementById('activeListingsCount').innerText = data.total_active;
+      document.getElementById('MarkedsoldListings').innerText = data.total_marked_sold;
       document.getElementById('expiredListingsCount').innerText = data.total_expired;
       document.getElementById('soldListingsCount').innerText = data.total_sold;
       document.getElementById('trustScoreValue').innerText = `${data.trust_score}%`;

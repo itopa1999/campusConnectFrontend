@@ -1371,6 +1371,8 @@
               if (mobileIcon) mobileIcon.style.display = 'block';
             }
 
+          loadProfile();
+
           showToast('Profile picture updated!', 'success');
         } else {
           throw new Error(result.message || 'Upload failed');

@@ -65,7 +65,18 @@ loginForm.addEventListener('submit', async (e) => {
       document.getElementById('rememberCheck').checked = false;
 
       setTimeout(() => {
-        window.location.href = '/dash/main.html';
+        const redirectCookie = getCookie("redirect_after_login");
+          if (!redirectCookie) {
+            window.location.href = "/dash/main.html";
+            return;
+        }
+
+        const redirectPath = decodeURIComponent(redirectCookie);
+
+        deleteCookie("redirect_after_login");
+
+        window.location.href = redirectPath;
+        
       }, 1000);
     } else {
       showToast(result.message || 'Invalid email or password.', 'error');

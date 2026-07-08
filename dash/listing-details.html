@@ -966,7 +966,9 @@
 
             // ── Owner action (Manage Listing) ──
             const ownerActions = document.getElementById('ownerActions');
+            
             if (seller.is_owner === true) {
+                document.getElementById('contactSellerBtn').style.display = 'none';
                 ownerActions.style.display = 'block';
                 ownerActions.innerHTML = `
                     <a href="my-listing-details.html?id=${data.id}&title=${encodeURIComponent(data.title)}" class="btn btn-manage">
@@ -1052,7 +1054,7 @@
             // Verified badge
             const verifiedBadge = document.getElementById('sellerVerifiedBadge');
             const isVerified = seller.email_verified && seller.student_id_verified;
-            verifiedBadge.innerText = isVerified ? '✓ Verified student' : '⚠️ Unverified';
+            verifiedBadge.innerText = isVerified ? 'Student ID: ✓ Verified student' : 'Student ID: ⚠️ Unverified';
             verifiedBadge.className = 'badge-trust ' + (isVerified ? '' : 'bg-light text-danger');
 
             // ── Trust ──
