@@ -1340,7 +1340,37 @@
 
         const result = await response.json();
         if (result.is_success) {
-          loadProfile();
+          const profilePic = result.data.profile_picture_url || null;
+
+          if (profilePic) {
+            setCookie('profile_pic', profilePic, 3);
+          } else {
+            document.cookie = 'profile_pic=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          }
+          // ─── Desktop avatar ──────────────────────────────────────
+            const desktopImg = document.getElementById('desktopAvatarImg');
+            const desktopIcon = document.getElementById('desktopAvatarIcon');
+            if (profilePic && desktopImg) {
+              desktopImg.src = profilePic;
+              desktopImg.style.display = 'inline-block';
+              if (desktopIcon) desktopIcon.style.display = 'none';
+            } else {
+              if (desktopImg) desktopImg.style.display = 'none';
+              if (desktopIcon) desktopIcon.style.display = 'inline-block';
+            }
+
+            // ─── Mobile avatar ──────────────────────────────────────
+            const mobileImg = document.getElementById('mobileAvatarImg');
+            const mobileIcon = document.getElementById('mobileAvatarIcon');
+            if (profilePic && mobileImg) {
+              mobileImg.src = profilePic;
+              mobileImg.style.display = 'block';
+              if (mobileIcon) mobileIcon.style.display = 'none';
+            } else {
+              if (mobileImg) mobileImg.style.display = 'none';
+              if (mobileIcon) mobileIcon.style.display = 'block';
+            }
+
           showToast('Profile picture updated!', 'success');
         } else {
           throw new Error(result.message || 'Upload failed');
