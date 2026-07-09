@@ -682,6 +682,7 @@ function onPackageClick(e) {
     const param = type === 'purchase' ? 'is_purchase=true' : 'is_transaction=true';
     const url = `${POINT_PACKAGES_URL}?${param}&page=${page}&per_page=${perPage}`;
     const response = await fetchWithAuth(url, {
+      method: 'GET',
       headers: { 'Accept': 'application/json', ...getAuthHeaders() }
     });
     if (!response.ok) {
@@ -944,6 +945,7 @@ function onPackageClick(e) {
     try {
       // 1. Fetch packages
       const packagesResponse = await fetchWithAuth(POINT_PACKAGES_URL, {
+        method: 'GET',
         headers: { 'Accept': 'application/json', ...getAuthHeaders() }
       });
       if (!packagesResponse.ok) {

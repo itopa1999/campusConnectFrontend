@@ -1292,6 +1292,7 @@
 
             try {
                 const response = await fetchWithAuth(LOOKUP_URL, {
+                    method: 'GET',
                     headers: {
                         'Accept': 'application/json',
                         ...getAuthHeaders()

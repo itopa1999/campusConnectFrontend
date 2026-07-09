@@ -404,6 +404,7 @@
 
     try {
       const response = await fetchWithAuth(CAMPUS_URL + 'dashboard', {
+        method: 'GET',
         headers: {
           'Accept': 'application/json',
           ...getAuthHeaders()

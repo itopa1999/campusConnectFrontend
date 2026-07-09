@@ -1234,6 +1234,7 @@ async function refreshPointBalance() {
 
   try {
     const response = await fetchWithAuth(REFRESH_URL, {
+      method: 'GET',
       headers: { 'Accept': 'application/json', ...getAuthHeaders() }
     });
     if (!response.ok) throw new Error('Failed to refresh dashboard');

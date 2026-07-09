@@ -1003,6 +1003,7 @@
         if (!token) throw new Error('Not authenticated');
 
         const response = await fetchWithAuth(PROFILE_URL, {
+          method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Authorization': `Bearer ${token}`

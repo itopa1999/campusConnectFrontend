@@ -542,6 +542,7 @@
 
     try {
       const response = await fetch(INDEX_PRODUCTS_URL, {
+        method: 'GET',
         headers: { 'Accept': 'application/json' }
       });
       const result = await response.json();

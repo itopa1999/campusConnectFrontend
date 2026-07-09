@@ -1261,6 +1261,7 @@
     if (!token) throw new Error('Not authenticated');
 
     const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + id, {
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
@@ -1325,6 +1326,7 @@
 
       // Fetch lookup data (categories, hotspots, badges, adverts)
       const lookupRes = await fetchWithAuth(LOOKUP_URL, {
+        method: 'GET',
         headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` }
       });
       if (!lookupRes.ok) throw new Error('Failed to fetch lookup');

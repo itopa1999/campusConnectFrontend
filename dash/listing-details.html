@@ -1123,6 +1123,7 @@
             }
 
             const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + id, {
+                method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': 'Bearer ' + token,
