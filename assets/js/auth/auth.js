@@ -21,8 +21,8 @@ loginForm.addEventListener('submit', async (e) => {
     return;
   }
 
-  // if (!email.endsWith('@ui.edu.ng') && !email.endsWith('@stu.ui.edu.ng')) {
-  //   showToast('Please use a valid @ui.edu.ng or @stu.ui.edu.ng email.', 'error');
+  // if (!email.endsWith('@Demo University.edu.ng') && !email.endsWith('@stu.Demo University.edu.ng')) {
+  //   showToast('Please use a valid @Demo University.edu.ng or @stu.Demo University.edu.ng email.', 'error');
   //   return;
   // }
 

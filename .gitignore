@@ -1,0 +1,5 @@
+.venv
+.venv/
+.tmp_replace_demo
+tmp_replace_demo
+tmp_replace_demo/

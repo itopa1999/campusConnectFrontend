@@ -3,105 +3,315 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CampusConnect UI · Browse Listings</title>
+  <title>CampusConnect Demo University · Browse Listings</title>
   <!-- Bootstrap 5 + Icons + Fonts + AOS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
-    /* ─── Existing styles ─── */
-    .listing-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      border-radius: 1rem;
+    /* ──────────────────────────────────────────────────────────────
+       ROOT & GLOBAL
+       ────────────────────────────────────────────────────────────── */
+    :root {
+      --accent: #2c7a5e;
+      --accent-light: #eaf7f0;
+      --accent-dark: #1f5e48;
+      --accent-glow: rgba(44, 122, 94, 0.18);
+      --card-radius: 20px;
+      --shadow-card: 0 12px 40px rgba(31, 94, 72, 0.07);
+      --shadow-card-hover: 0 20px 56px rgba(31, 94, 72, 0.13);
+      --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
+      --transition-smooth: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    body {
+      background: #f6f9f8;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       HEADER & SEARCH
+       ────────────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(145deg, #ffffff 0%, #f6faf8 100%);
+      border-radius: var(--card-radius);
+      padding: 2rem 2rem 1.5rem;
+      border: 1px solid rgba(44, 122, 94, 0.05);
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 2rem;
+      position: relative;
       overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(44, 122, 94, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .page-header .badge-verify {
+      background: rgba(44, 122, 94, 0.10);
+      color: var(--accent-dark);
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      display: inline-block;
+      border: 1px solid rgba(44, 122, 94, 0.08);
+    }
+
+    .page-header h1 {
+      font-weight: 800;
+      font-size: 1.8rem;
+      letter-spacing: -0.02em;
+      color: #14211f;
+      margin-bottom: 0.25rem;
+    }
+
+    .page-header p {
+      color: #5f7775;
+      font-size: 0.95rem;
+      max-width: 560px;
+    }
+
+    .search-wrapper {
+      position: relative;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .search-wrapper .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7a9490;
+      font-size: 0.9rem;
+      pointer-events: none;
+      transition: var(--transition-smooth);
+    }
+
+    .search-wrapper .form-control {
+      padding: 0.7rem 1rem 0.7rem 2.8rem;
+      border-radius: 50px;
+      border: 1.5px solid rgba(44, 122, 94, 0.10);
+      font-weight: 500;
+      font-size: 0.9rem;
       background: white;
-      border: 1px solid rgba(44,122,94,0.1);
+      transition: var(--transition-smooth);
+      box-shadow: var(--shadow-soft);
+      width: 100%;
+    }
+
+    .search-wrapper .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.08);
+      outline: none;
+    }
+
+    .search-wrapper .form-control::placeholder {
+      color: #b0c6c0;
+      font-weight: 400;
+    }
+
+    .search-wrapper .clear-search {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: #b0c6c0;
       cursor: pointer;
+      padding: 0.25rem;
+      display: none;
+      transition: var(--transition-smooth);
     }
+
+    .search-wrapper .clear-search:hover {
+      color: #dc3545;
+    }
+
+    .search-wrapper .clear-search.visible {
+      display: block;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       LISTING CARD – enhanced
+       ────────────────────────────────────────────────────────────── */
+    .listing-card {
+      background: #ffffff;
+      border-radius: var(--card-radius);
+      border: 1px solid rgba(44, 122, 94, 0.05);
+      box-shadow: var(--shadow-soft);
+      transition: var(--transition-smooth);
+      overflow: hidden;
+      cursor: pointer;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
     .listing-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 30px rgba(0,0,0,0.08);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(44, 122, 94, 0.12);
     }
-    .listing-image {
+
+    .listing-card .card-img-top {
+      height: 160px;
       background: #f1f3f2;
-      height: 150px;
+      object-fit: cover;
+      width: 100%;
+      display: block;
+    }
+
+    .listing-card .card-img-top .placeholder-icon {
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 100%;
       color: #adb5bd;
-      font-size: 2rem;
+      font-size: 2.5rem;
     }
-    .section-heading {
-      margin-bottom: 1.5rem;
-      border-left: 4px solid var(--accent);
-      padding-left: 1rem;
+
+    .listing-card .card-body {
+      padding: 1rem 1.25rem 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
-    .load-more-btn {
-      margin-top: 2rem;
-      text-align: center;
-    }
-    .badge-category {
-      background: var(--accent-light);
-      color: var(--accent-dark);
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 0.25rem 0.75rem;
-      border-radius: 50px;
-    }
-    .card-title {
+
+    .listing-card .card-title {
+      font-weight: 700;
       font-size: 1rem;
-      font-weight: 600;
+      color: #14211f;
+      margin-bottom: 0.2rem;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
 
-    .badge-category {
+    .listing-card .card-text {
+      color: #5f7775;
+      font-size: 0.8rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .listing-card .badge-category {
       background: var(--accent-light);
       color: var(--accent-dark);
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 0.25rem 0.75rem;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
       border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      align-self: flex-start;
     }
-    /* New badge for listing type */
-    .badge-listing-type {
-      background: #e9ecef;
-      color: #495057;
-      font-size: 0.65rem;
-      font-weight: 600;
+
+    .listing-card .price-tag {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent-dark);
+    }
+
+    .listing-card .meta-row {
+      font-size: 0.7rem;
+      color: #7a9490;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.75rem;
+      margin-top: 0.3rem;
+    }
+
+    .listing-card .meta-row i {
+      width: 14px;
+      color: var(--accent);
+      opacity: 0.6;
+    }
+
+    .listing-card .promo-badge {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      color: white;
+      font-size: 0.55rem;
+      font-weight: 700;
       padding: 0.2rem 0.6rem;
       border-radius: 50px;
-      text-transform: capitalize;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      pointer-events: none;
     }
-    .badge-listing-type.sell { background: #d4edda; color: #155724; }
-    .badge-listing-type.wanted { background: #fff3cd; color: #856404; }
-    .badge-listing-type.freebie { background: #cce5ff; color: #004085; }
-    .badge-listing-type.service { background: #f8d7da; color: #721c24; }
 
+    .listing-card .promo-badge.hot {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    }
 
-    /* ─── Advert Banner ─── */
+    .listing-card .promo-badge.banner {
+      background: linear-gradient(135deg, #4a90d9, #357abd);
+    }
+
+    .listing-card .listing-type-badge {
+      font-size: 0.6rem;
+      font-weight: 600;
+      padding: 0.15rem 0.6rem;
+      border-radius: 50px;
+      text-transform: capitalize;
+      display: inline-block;
+    }
+
+    .listing-type-sell { background: #d4edda; color: #155724; }
+    .listing-type-wanted { background: #fff3cd; color: #856404; }
+    .listing-type-freebie { background: #cce5ff; color: #004085; }
+    .listing-type-service { background: #f8d7da; color: #721c24; }
+
+    /* ──────────────────────────────────────────────────────────────
+       AD BANNER – enhanced
+       ────────────────────────────────────────────────────────────── */
     .ad-banner-wrapper {
       overflow: hidden;
-      border-radius: 1.25rem;
+      border-radius: var(--card-radius);
       background: #f8faf9;
       position: relative;
       touch-action: pan-y;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(44, 122, 94, 0.05);
     }
+
     .ad-banner-track {
       display: flex;
       transition: transform 0.6s ease-in-out;
       will-change: transform;
       cursor: grab;
     }
+
     .ad-banner-track.dragging {
       cursor: grabbing;
       transition: none;
     }
+
     .ad-banner-item {
       flex: 0 0 33.3333%;
       padding: 0.5rem;
@@ -109,6 +319,7 @@
       cursor: pointer;
       user-select: none;
     }
+
     .ad-banner-item .ad-card {
       border-radius: 1rem;
       overflow: hidden;
@@ -117,24 +328,29 @@
       transition: transform 0.2s;
       height: 100%;
     }
+
     .ad-banner-item .ad-card:hover {
       transform: scale(1.02);
     }
+
     .ad-banner-item .ad-image {
       width: 100%;
       height: 140px;
       object-fit: cover;
       display: block;
       pointer-events: none;
+      background: #f1f3f2;
     }
+
     .ad-banner-item .ad-title {
       padding: 0.75rem 1rem;
       font-weight: 700;
       font-size: 0.9rem;
-      color: var(--text-dark);
+      color: #14211f;
       text-align: center;
       background: white;
     }
+
     @media (max-width: 768px) {
       .ad-banner-item {
         flex: 0 0 100%;
@@ -145,7 +361,6 @@
       }
     }
 
-    /* ─── Controls (transparent) ─── */
     .ad-control {
       position: absolute;
       top: 50%;
@@ -166,23 +381,26 @@
       z-index: 10;
       opacity: 0.35;
     }
+
     .ad-control:hover {
       background: rgba(255,255,255,0.15);
       color: rgba(255,255,255,0.6);
       opacity: 1;
     }
+
     .ad-control:active {
       transform: translateY(-50%) scale(0.92);
     }
+
     .ad-prev { left: 12px; }
     .ad-next { right: 12px; }
+
     @media (max-width: 768px) {
       .ad-control { width: 32px; height: 32px; font-size: 0.9rem; }
       .ad-prev { left: 6px; }
       .ad-next { right: 6px; }
     }
 
-    /* ─── Dots ─── */
     .ad-dots {
       position: absolute;
       bottom: 16px;
@@ -192,6 +410,7 @@
       gap: 8px;
       z-index: 10;
     }
+
     .ad-dot {
       width: 10px;
       height: 10px;
@@ -203,75 +422,274 @@
       transition: all 0.3s;
       opacity: 0.5;
     }
+
     .ad-dot.active {
       background: rgba(255,255,255,0.8);
       transform: scale(1.25);
       opacity: 1;
     }
+
     .ad-dot:hover {
       background: rgba(255,255,255,0.6);
       opacity: 0.8;
     }
+
     @media (max-width: 768px) {
       .ad-dots { bottom: 10px; gap: 6px; }
       .ad-dot { width: 8px; height: 8px; }
     }
 
-    /* ─── Skeleton ─── */
-    .skeleton-stat { height: 70px; border-radius: 1rem; }
-    .skeleton-heading { height: 28px; width: 60%; border-radius: 8px; margin-bottom: 1rem; }
-    .skeleton-text { height: 16px; border-radius: 8px; margin-bottom: 0.5rem; }
-    .skeleton-text.short { width: 60%; }
-    .skeleton-text.medium { width: 80%; }
+    /* ──────────────────────────────────────────────────────────────
+       SECTIONS
+       ────────────────────────────────────────────────────────────── */
+    .section-heading {
+      border-left: 4px solid var(--accent);
+      padding-left: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-heading h3 {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #14211f;
+      margin-bottom: 0.1rem;
+    }
+
+    .section-heading p {
+      font-size: 0.85rem;
+      color: #7a9490;
+      margin: 0;
+    }
+
+    .load-more-btn {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .load-more-btn .btn {
+      background: transparent;
+      border: 1.5px solid rgba(44, 122, 94, 0.12);
+      color: var(--accent);
+      padding: 0.4rem 1.8rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .load-more-btn .btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .load-more-btn .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SKELETON LOADER
+       ────────────────────────────────────────────────────────────── */
     .skeleton {
       background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
       background-size: 200% 100%;
       animation: shimmer 1.4s infinite;
       border-radius: 8px;
     }
+
     @keyframes shimmer {
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
-    .skeleton-card-img { height: 150px; border-radius: 1rem 1rem 0 0; }
-    .skeleton-card-body { padding: 1rem; }
-    .skeleton-card-title { height: 20px; width: 80%; margin-bottom: 0.5rem; }
-    .skeleton-card-text { height: 14px; width: 100%; margin-bottom: 0.5rem; }
-    .skeleton-card-price { height: 24px; width: 40%; margin-top: 0.5rem; }
-
-    .badge-verify {
-      background: rgba(44, 122, 94, 0.12);
-      color: var(--accent-dark);
-      padding: 0.3rem 1rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: inline-block;
-    }
 
     .skeleton-banner {
       height: 160px;
-      border-radius: 1.25rem;
-      background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.4s infinite;
-    }
-    @media (max-width: 768px) {
-      .skeleton-banner { height: 200px; }
+      border-radius: var(--card-radius);
     }
 
-    .btn-custom {
+    .skeleton-card-img {
+      height: 160px;
+      border-radius: var(--card-radius) var(--card-radius) 0 0;
+    }
+
+    .skeleton-card-body {
+      padding: 1rem;
+    }
+
+    .skeleton-card-title {
+      height: 20px;
+      width: 80%;
+      margin-bottom: 0.5rem;
+    }
+
+    .skeleton-card-text {
+      height: 14px;
+      width: 100%;
+      margin-bottom: 0.4rem;
+    }
+
+    .skeleton-card-price {
+      height: 24px;
+      width: 40%;
+      margin-top: 0.5rem;
+    }
+
+    .skeleton-text {
+      height: 14px;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+
+    .skeleton-text.short { width: 60%; }
+    .skeleton-text.medium { width: 80%; }
+
+    /* ──────────────────────────────────────────────────────────────
+       SCROLL TOP
+       ────────────────────────────────────────────────────────────── */
+    .scroll-top-btn {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 1080;
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px);
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .scroll-top-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(10px) scale(1.05);
+      box-shadow: 0 12px 36px rgba(44, 122, 94, 0.30);
+    }
+
+    .scroll-top-btn.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .scroll-top-btn {
+        right: 1rem;
+        bottom: 5.5rem;
+        width: 44px;
+        height: 44px;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       BREADCRUMB
+       ────────────────────────────────────────────────────────────── */
+    #breadcrumb-placeholder nav {
+      background: transparent !important;
+      padding: 0.75rem 0 0.25rem 0 !important;
+    }
+
+    #breadcrumb-placeholder .breadcrumb {
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      font-size: 0.8rem;
+    }
+
+    #breadcrumb-placeholder .breadcrumb-item a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    #breadcrumb-placeholder .breadcrumb-item a:hover {
+      color: var(--accent-dark);
+      text-decoration: underline;
+    }
+
+    #breadcrumb-placeholder .breadcrumb-item.active {
+      color: #5f7775;
+      font-weight: 500;
+    }
+
+    #breadcrumb-placeholder .breadcrumb-item+.breadcrumb-item::before {
+      color: #b0c6c0;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TOOLTIP
+       ────────────────────────────────────────────────────────────── */
+    .tooltip-inner {
+      background: #14211f;
+      font-weight: 500;
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+    }
+
+    .tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+    .tooltip.bs-tooltip-top .tooltip-arrow::before {
+      border-top-color: #14211f;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       RESPONSIVE
+       ────────────────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 1.5rem 1rem 1rem;
+      }
+      .page-header h1 {
+        font-size: 1.4rem;
+      }
+      .search-wrapper {
+        max-width: 100%;
+      }
+      .listing-card .card-img-top {
+        height: 130px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .listing-card .card-img-top {
+        height: 110px;
+      }
+      .listing-card .card-title {
+        font-size: 0.9rem;
+      }
+      .listing-card .price-tag {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       DASHBOARD MOBILE ACTIONS
+       ────────────────────────────────────────────────────────────── */
+    .dashboard-mobile-actions .action-link.active {
       background: var(--accent);
       color: white;
-      border-radius: 50px;
-      padding: 0.5rem 1.5rem;
-      font-weight: 600;
-      border: none;
-      transition: background 0.2s;
     }
-    .btn-custom:hover {
-      background: var(--accent-dark);
+    .dashboard-mobile-actions .action-link.active i {
       color: white;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       EMPTY STATE
+       ────────────────────────────────────────────────────────────── */
+    .empty-state-icon {
+      font-size: 4rem;
+      color: var(--accent);
+      opacity: 0.15;
     }
   </style>
 </head>
@@ -281,7 +699,7 @@
 <div id="nav-placeholder"></div>
 <div id="breadcrumb-placeholder"></div>
 
-<main class="">
+<main>
   <div class="container py-4 mb-5">
 
     <!-- SKELETON LOADER -->
@@ -289,29 +707,64 @@
       <div class="skeleton-banner mb-4"></div>
       <div class="text-center mb-4">
         <div class="skeleton" style="width:120px; height:24px; border-radius:40px; margin:0 auto 0.5rem;"></div>
-        <div class="skeleton skeleton-heading" style="width:60%; margin:0 auto;"></div>
+        <div class="skeleton" style="height:32px; width:60%; margin:0 auto;"></div>
         <div class="skeleton skeleton-text" style="width:80%; margin:0.5rem auto;"></div>
       </div>
-      <!-- 3 section skeletons (banner removed) -->
-      <div class="mb-5" data-section="hot_sales">
+      <div class="mb-5">
         <div class="skeleton" style="width:160px; height:28px; border-radius:8px; margin-bottom:1rem;"></div>
-        <div class="row g-3"><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div></div>
+        <div class="row g-3">
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+        </div>
       </div>
-      <div class="mb-5" data-section="departmental">
+      <div class="mb-5">
         <div class="skeleton" style="width:160px; height:28px; border-radius:8px; margin-bottom:1rem;"></div>
-        <div class="row g-3"><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div></div>
+        <div class="row g-3">
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+        </div>
       </div>
-      <div class="mb-5" data-section="for_you">
+      <div class="mb-5">
         <div class="skeleton" style="width:160px; height:28px; border-radius:8px; margin-bottom:1rem;"></div>
-        <div class="row g-3"><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div><div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div></div>
+        <div class="row g-3">
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+          <div class="col-6 col-md-4 col-lg-3"><div class="skeleton" style="height:250px; border-radius:1rem;"></div></div>
+        </div>
       </div>
     </div>
 
-    <!-- REAL CONTENT (hidden initially) -->
+    <!-- REAL CONTENT -->
     <div id="realContent" style="display: none;">
 
-      <!-- ─── DYNAMIC SPONSORED BANNER CAROUSEL ─── -->
-      <section class="mb-5" data-aos="fade-up">
+      <!-- ─── HEADER WITH SEARCH ─── -->
+      <div class="page-header" data-aos="fade-up">
+        <div class="row align-items-center g-3">
+          <div class="col-md-7">
+            <span class="badge-verify mb-2"><i class="fas fa-store me-1"></i> Campus Marketplace</span>
+            <h1>Discover great deals from fellow students</h1>
+            <p>Buy and sell used items safely within the Demo University community. All sellers are verified students.</p>
+          </div>
+          <div class="col-md-5">
+            <div class="search-wrapper">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" class="form-control" id="searchInput" placeholder="Search for items..." autocomplete="off">
+              <button class="clear-search" id="clearSearchBtn" aria-label="Clear search">
+                <i class="fas fa-times-circle"></i>
+              </button>
+            </div>
+            <div id="searchStatus" class="small text-muted mt-2" style="display: none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SPONSORED BANNER ─── -->
+      <section class="mb-5" data-aos="fade-up" data-aos-delay="100">
         <div class="ad-banner-wrapper" id="adBannerWrapper">
           <div class="ad-banner-track" id="adBannerTrack"></div>
           <button class="ad-control ad-prev" id="adPrev" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
@@ -320,53 +773,48 @@
         </div>
       </section>
 
-      <div class="text-center mb-4" data-aos="fade-up">
-        <span class="badge-verify mb-2"><i class="fas fa-store me-1"></i> Campus Marketplace</span>
-        <h1 class="fw-bold">Discover great deals from fellow students</h1>
-        <p class="text-muted col-lg-7 mx-auto">Buy and sell used items safely within the UI community. All sellers are verified students.</p>
-      </div>
-
+      <!-- ─── EMPTY STATE ─── -->
       <div id="emptyState" class="col-12" style="display: none;">
         <div class="text-center py-5 my-4">
-          <i class="fas fa-box-open fa-3x text-muted mb-3" style="opacity:0.5;"></i>
+          <div class="empty-state-icon mb-3"><i class="fas fa-box-open"></i></div>
           <h4 class="fw-bold">No Listings Available</h4>
           <p class="text-muted">Be the first to share something in this category!</p>
-          <a href="create-listing.html" class="btn btn-custom mt-2">
+          <a href="create-listing.html" class="btn btn-primary-custom mt-2" style="padding:0.5rem 2rem;">
             <i class="fas fa-plus-circle me-2"></i>Post a Listing
           </a>
         </div>
       </div>
 
-      <!-- ─── LISTING SECTIONS ─── -->
+      <!-- ─── SECTIONS CONTAINER ─── -->
       <div id="sectionsContainer">
         <!-- Hot Sales -->
         <section class="mb-5" data-section="hot_sales">
           <div class="section-heading">
-            <h3 class="fw-bold mb-0"><i class="fas fa-fire me-2" style="color: #e67e22;"></i>Hot sales 🔥</h3>
-            <p class="text-muted">Trending items with high demand</p>
+            <h3><i class="fas fa-fire me-2" style="color: #e67e22;"></i>Hot sales 🔥</h3>
+            <p>Trending items with high demand</p>
           </div>
           <div class="row g-3 hot_sales-grid" data-page="1" data-total-pages="1"></div>
-          <div class="load-more-btn"><button class="btn btn-outline-custom load-more" data-section="hot_sales" data-bs-toggle="tooltip" title="Load hot sales">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
+          <div class="load-more-btn"><button class="btn load-more" data-section="hot_sales">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
         </section>
 
         <!-- Departmental -->
         <section class="mb-5" data-section="departmental">
           <div class="section-heading">
-            <h3 class="fw-bold mb-0"><i class="fas fa-building me-2" style="color: var(--accent);"></i>From your department 📚</h3>
-            <p class="text-muted" id="departmentalSubtext">Items from fellow students in your department</p>
+            <h3><i class="fas fa-building me-2" style="color: var(--accent);"></i>From your department 📚</h3>
+            <p id="departmentalSubtext">Items from fellow students in your department</p>
           </div>
           <div class="row g-3 departmental-grid" data-page="1" data-total-pages="1"></div>
-          <div class="load-more-btn"><button class="btn btn-outline-custom load-more" data-section="departmental" data-bs-toggle="tooltip" title="Load department listings">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
+          <div class="load-more-btn"><button class="btn load-more" data-section="departmental">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
         </section>
 
         <!-- For You -->
         <section class="mb-5" data-section="for_you">
           <div class="section-heading">
-            <h3 class="fw-bold mb-0"><i class="fas fa-user-check me-2" style="color: var(--accent-dark);"></i>For you 🎯</h3>
-            <p class="text-muted">Recommended just for you</p>
+            <h3><i class="fas fa-user-check me-2" style="color: var(--accent-dark);"></i>For you 🎯</h3>
+            <p>Recommended just for you</p>
           </div>
           <div class="row g-3 for_you-grid" data-page="1" data-total-pages="1"></div>
-          <div class="load-more-btn"><button class="btn btn-outline-custom load-more" data-section="for_you" data-bs-toggle="tooltip" title="Load recommendations">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
+          <div class="load-more-btn"><button class="btn load-more" data-section="for_you">Load more <i class="fas fa-arrow-down ms-1"></i></button></div>
         </section>
       </div>
     </div>
@@ -400,19 +848,113 @@
   <i class="fas fa-arrow-up" aria-hidden="true"></i>
 </button>
 
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
+  // ──────────────────────────────────────────────────────────────
+  //  AUTH & BREADCRUMB
+  // ──────────────────────────────────────────────────────────────
   isAuthenticated();
   injectBreadcrumb('Browse Listings');
 
-  // ─── Sponsored items will be fetched and stored here ──────
+  // ──────────────────────────────────────────────────────────────
+  //  GLOBALS
+  // ──────────────────────────────────────────────────────────────
   let sponsoredItems = [];
+  let searchTimeout = null;
+  const SEARCH_URL = CAMPUS_URL + 'listings/search'; // dummy endpoint
 
-  // ─── Build Ad Banner from sponsored listings ────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  HELPERS
+  // ──────────────────────────────────────────────────────────────
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+  }
+
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+  }
+
+  function renderStars(rating) {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5 ? 1 : 0;
+    const empty = 5 - full - half;
+    return '<i class="fas fa-star"></i>'.repeat(full) +
+           (half ? '<i class="fas fa-star-half-alt"></i>' : '') +
+           '<i class="far fa-star empty"></i>'.repeat(empty);
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  RENDER LISTING CARD
+  // ──────────────────────────────────────────────────────────────
+  function renderCard(item) {
+    const typeClass = item.listing_type ? 'listing-type-' + item.listing_type : '';
+    const typeLabel = item.listing_type ? item.listing_type.charAt(0).toUpperCase() + item.listing_type.slice(1) : '';
+
+    let promoHtml = '';
+    if (item.is_hot_sale) promoHtml += '<span class="promo-badge hot"><i class="fas fa-fire"></i> Hot</span>';
+    if (item.is_ads_banner) promoHtml += '<span class="promo-badge banner"><i class="fas fa-bullhorn"></i> Banner</span>';
+
+    const imageHtml = item.image
+      ? `<img src="${escapeHtml(item.image)}" class="card-img-top" alt="${escapeHtml(item.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+      : '';
+    const placeholderHtml = `<div class="card-img-top d-flex align-items-center justify-content-center text-muted" style="height:160px; background:#f1f3f2; display:${item.image ? 'none' : 'flex'}"><i class="fas fa-image fa-3x opacity-25"></i></div>`;
+
+    return `
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="listing-card" data-id="${item.id}" data-title="${escapeHtml(item.title)}">
+          ${promoHtml}
+          ${imageHtml}
+          ${placeholderHtml}
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <span class="badge-category">${escapeHtml(item.category)}</span>
+              ${typeLabel ? `<span class="listing-type-badge ${typeClass}">${escapeHtml(typeLabel)}</span>` : ''}
+            </div>
+            <h5 class="card-title">${escapeHtml(item.title)}</h5>
+            <p class="card-text">${escapeHtml(item.description)}</p>
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <span class="price-tag">${formatCurrency(item.price)}</span>
+              <span class="meta-row">
+                <span><i class="far fa-clock"></i> ${escapeHtml(item.created_at_humanized || '')}</span>
+              </span>
+            </div>
+            <div class="meta-row mt-1">
+              <span><i class="fas fa-map-marker-alt"></i> ${escapeHtml(item.location || 'Campus')}</span>
+              ${item.seller_name ? `<span><i class="fas fa-user"></i> ${escapeHtml(item.seller_name)}</span>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  CLICK HANDLER FOR CARDS
+  // ──────────────────────────────────────────────────────────────
+  function cardClickHandler(e) {
+    const card = this.closest('.listing-card');
+    if (!card) return;
+    const id = card.dataset.id;
+    const title = card.dataset.title || 'Listing';
+    if (id) {
+      window.location.href = `listing-details.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}`;
+    }
+  }
+
+  function attachCardClickEvents() {
+    document.querySelectorAll('.listing-card').forEach(card => {
+      card.removeEventListener('click', cardClickHandler);
+      card.addEventListener('click', cardClickHandler);
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  AD BANNER
+  // ──────────────────────────────────────────────────────────────
   function buildAdBanner() {
     const track = document.getElementById('adBannerTrack');
     const dotsContainer = document.getElementById('adDots');
@@ -420,7 +962,6 @@
     const nextBtn = document.getElementById('adNext');
     const wrapper = document.getElementById('adBannerWrapper');
     if (!track || !dotsContainer || !sponsoredItems.length) {
-      // If no sponsored items, hide the banner section
       if (wrapper) wrapper.style.display = 'none';
       return;
     }
@@ -429,7 +970,6 @@
     const totalSlides = sponsoredItems.length;
     const visibleSlides = window.innerWidth <= 768 ? 1 : 3;
 
-    // Build track items (duplicate for infinite loop)
     const items = [...sponsoredItems, ...sponsoredItems, ...sponsoredItems];
     track.innerHTML = items.map((item, index) => {
       const imgSrc = item.image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"%3E%3Crect x="3" y="3" width="18" height="18" rx="2" ry="2"%3E%3C/rect%3E%3Ccircle cx="8.5" cy="8.5" r="1.5"%3E%3C/circle%3E%3Cpolyline points="21 15 16 10 5 21"%3E%3C/polyline%3E%3C/svg%3E';
@@ -443,7 +983,6 @@
       `;
     }).join('');
 
-    // Dots
     dotsContainer.innerHTML = '';
     for (let i = 0; i < totalSlides; i++) {
       const dot = document.createElement('button');
@@ -497,7 +1036,6 @@
     wrapper.addEventListener('mouseenter', stopAutoScroll);
     wrapper.addEventListener('mouseleave', startAutoScroll);
 
-    // Swipe / drag
     let startX = 0, isDragging = false;
     const onDragStart = (e) => {
       const touch = e.type === 'touchstart' ? e.touches[0] : e;
@@ -540,7 +1078,6 @@
       }, 200);
     });
 
-    // Add click handler to banner items to navigate to listing detail
     track.addEventListener('click', (e) => {
       const itemEl = e.target.closest('.ad-banner-item');
       if (!itemEl) return;
@@ -554,62 +1091,11 @@
     setTimeout(() => goToSlide(0, true), 100);
     updateDots();
     startAutoScroll();
-    window.goToSlide = goToSlide;
   }
 
-  // ─── Render a single listing card ──────────────────────────
-  function renderCard(item) {
-    const typeClass = item.badge ? item.badge.toLowerCase() : '';
-    const typeLabel = item.badge ? item.badge.charAt(0).toUpperCase() + item.badge.slice(1) : '';
-
-    return `
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="listing-card h-100" data-id="${item.id}" data-title="${escapeHtml(item.title)}" data-bs-toggle="tooltip" title="View details">
-          <div class="listing-image">
-            ${item.image ? `<img src="${item.image}" class="w-100 h-100 object-fit-cover" alt="${escapeHtml(item.title)}">` : `<i class="fas fa-image"></i> No image`}
-          </div>
-          <div class="card-body p-2 p-md-3">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <span class="badge-category">${escapeHtml(item.category)}</span>
-            </div>
-            <h5 class="card-title mt-1">${escapeHtml(item.title)}</h5>
-            <div class="mt-2">
-              <span class="fw-bold text-success">${formatCurrency(item.price)}</span> 
-              ${typeLabel ? `<span class="badge-listing-type ${typeClass}">${escapeHtml(typeLabel)}</span>` : ''}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
-  }
-
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
-  }
-
-  // ─── Click handler: redirect to listing-details.html ──────
-  function cardClickHandler(e) {
-    const card = this;
-    const id = card.getAttribute('data-id');
-    const title = card.getAttribute('data-title') || 'Listing';
-    if (id) {
-      window.location.href = `listing-details.html?id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}`;
-    }
-  }
-
-  function attachCardClickEvents() {
-    document.querySelectorAll('.listing-card').forEach(card => {
-      card.removeEventListener('click', cardClickHandler);
-      card.addEventListener('click', cardClickHandler);
-    });
-  }
-
-  // ─── API fetch for a specific section ──────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  API FETCH
+  // ──────────────────────────────────────────────────────────────
   async function fetchSection(section, page = 1, perPage = 8) {
     const token = getCookie('access_token');
     const url = `${CAMPUS_URL}listings/categorized?section=${section}&page=${page}&per_page=${perPage}`;
@@ -626,20 +1112,149 @@
     }
     const result = await response.json();
     if (!result.is_success) throw new Error(result.message || 'Failed to fetch listings');
-    return result.data; // { items, page, total_pages, total_items }
+    return result.data;
   }
 
-  // ─── Load more for a section ───────────────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  SEARCH FUNCTION
+  // ──────────────────────────────────────────────────────────────
+  async function performSearch(query) {
+    const statusEl = document.getElementById('searchStatus');
+    if (!query.trim()) {
+      statusEl.style.display = 'none';
+      // Reload original sections
+      await initSections();
+      return;
+    }
+
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Searching...';
+
+    try {
+      const token = getCookie('access_token');
+      const url = `${SEARCH_URL}?q=${encodeURIComponent(query)}`;
+      const response = await fetchWithAuth(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || 'Search failed');
+      }
+      const result = await response.json();
+      if (!result.is_success) throw new Error(result.message || 'Search failed');
+
+      const items = result.data?.items || [];
+      if (items.length === 0) {
+        statusEl.innerHTML = '<i class="fas fa-info-circle me-1"></i> No results found.';
+        // Hide all sections and show empty state with search message
+        document.getElementById('sectionsContainer').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'block';
+        document.getElementById('emptyState').querySelector('h4').innerText = 'No results found';
+        document.getElementById('emptyState').querySelector('p').innerText = `We couldn't find anything matching "${escapeHtml(query)}". Try a different keyword.`;
+        return;
+      }
+
+      statusEl.innerHTML = `<i class="fas fa-check-circle text-success me-1"></i> Found ${items.length} results.`;
+      // Render search results in a special container or replace sections
+      const sectionsContainer = document.getElementById('sectionsContainer');
+      sectionsContainer.style.display = 'block';
+      document.getElementById('emptyState').style.display = 'none';
+
+      // Clear all grids and show only search results in a new section
+      // We'll inject a new section "Search results" and hide others
+      // First, hide all existing sections
+      document.querySelectorAll('#sectionsContainer > section').forEach(sec => sec.style.display = 'none');
+
+      // Check if a search results section already exists, if not create one
+      let searchSection = document.getElementById('searchResultsSection');
+      if (!searchSection) {
+        searchSection = document.createElement('section');
+        searchSection.id = 'searchResultsSection';
+        searchSection.className = 'mb-5';
+        searchSection.innerHTML = `
+          <div class="section-heading">
+            <h3><i class="fas fa-search me-2" style="color: var(--accent);"></i>Search results</h3>
+            <p id="searchResultSubtext">Found ${items.length} items</p>
+          </div>
+          <div class="row g-3 search-results-grid" data-page="1" data-total-pages="1"></div>
+        `;
+        sectionsContainer.prepend(searchSection);
+      } else {
+        searchSection.style.display = '';
+        document.getElementById('searchResultSubtext').innerText = `Found ${items.length} items`;
+      }
+
+      const grid = searchSection.querySelector('.search-results-grid');
+      grid.innerHTML = items.map(renderCard).join('');
+      attachCardClickEvents();
+      setTimeout(initTooltips, 100);
+
+    } catch (err) {
+      console.error('Search error:', err);
+      statusEl.innerHTML = `<i class="fas fa-exclamation-circle text-danger me-1"></i> Search failed: ${err.message}`;
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  LOAD SECTION
+  // ──────────────────────────────────────────────────────────────
+  async function loadSection(sectionKey, gridSelector) {
+    const grid = document.querySelector(gridSelector);
+    const btn = document.querySelector(`.load-more[data-section="${sectionKey}"]`);
+    const section = grid?.closest('section');
+    if (!grid) return false;
+
+    try {
+      const data = await fetchSection(sectionKey, 1, 8);
+      const items = data.items || [];
+
+      if (items.length === 0) {
+        if (section) section.style.display = 'none';
+        if (btn) btn.style.display = 'none';
+        return false;
+      }
+
+      if (section) section.style.display = '';
+      grid.innerHTML = items.map(renderCard).join('');
+      setTimeout(initTooltips, 100);
+      grid.setAttribute('data-page', data.page);
+      grid.setAttribute('data-total-pages', data.total_pages);
+      attachCardClickEvents();
+
+      if (btn) {
+        if (data.page >= data.total_pages) {
+          btn.style.display = 'none';
+        } else {
+          btn.style.display = 'inline-block';
+          btn.disabled = false;
+          btn.innerHTML = 'Load more <i class="fas fa-arrow-down ms-1"></i>';
+        }
+      }
+      return true;
+    } catch (err) {
+      console.error(`Error loading ${sectionKey}:`, err);
+      grid.innerHTML = `<div class="col-12 text-center text-danger py-4">Failed to load items. Please refresh.</div>`;
+      if (btn) btn.style.display = 'none';
+      return false;
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  LOAD MORE
+  // ──────────────────────────────────────────────────────────────
   async function loadMore(sectionKey) {
     const grid = document.querySelector(`.${sectionKey}-grid`);
     const btn = document.querySelector(`.load-more[data-section="${sectionKey}"]`);
-    if (!grid || !btn || btn.disabled) return;
+    if (!grid || !btn) return;
 
     const currentPage = parseInt(grid.getAttribute('data-page') || '1');
     const totalPages = parseInt(grid.getAttribute('data-total-pages') || '1');
     if (currentPage >= totalPages) {
-      btn.disabled = true;
-      btn.textContent = 'No more items';
+      btn.style.display = 'none';
       return;
     }
 
@@ -651,8 +1266,7 @@
       const data = await fetchSection(sectionKey, nextPage, 8);
       const newItems = data.items || [];
       if (newItems.length === 0) {
-        btn.disabled = true;
-        btn.textContent = 'No more items';
+        btn.style.display = 'none';
         return;
       }
       grid.insertAdjacentHTML('beforeend', newItems.map(renderCard).join(''));
@@ -662,125 +1276,38 @@
       attachCardClickEvents();
 
       if (data.page >= data.total_pages) {
-        btn.disabled = true;
-        btn.textContent = 'No more items';
+        btn.style.display = 'none';
       } else {
+        btn.style.display = 'inline-block';
         btn.disabled = false;
         btn.innerHTML = 'Load more <i class="fas fa-arrow-down ms-1"></i>';
       }
     } catch (err) {
       console.error('Load more error:', err);
       showToast('Failed to load more items', 'error');
-      btn.disabled = false;
-      btn.innerHTML = 'Load more <i class="fas fa-arrow-down ms-1"></i>';
-    }
-  }
-
-// ─── Load a section's first page ────────────────────────────
-async function loadSection(sectionKey, gridSelector) {
-  const grid = document.querySelector(gridSelector);
-  const btn = document.querySelector(`.load-more[data-section="${sectionKey}"]`);
-  const section = grid?.closest('section');
-  if (!grid) return false;
-
-  try {
-    const data = await fetchSection(sectionKey, 1, 8);
-    const items = data.items || [];
-
-    if (items.length === 0) {
-      // Hide the entire section
-      if (section) section.style.display = 'none';
-
-      if (btn) btn.style.display = 'none';
-
-      return false;
-    }
-
-    // Show the section (in case it was hidden)
-    if (section) section.style.display = '';
-
-    grid.innerHTML = items.map(renderCard).join('');
-    setTimeout(initTooltips, 100);
-    grid.setAttribute('data-page', data.page);
-    grid.setAttribute('data-total-pages', data.total_pages);
-    attachCardClickEvents();
-
-    if (btn) {
-      if (data.page >= data.total_pages) {
-        btn.style.display = 'none'; // hide instead of disabling
-      } else {
-        btn.style.display = 'inline-block';
-        btn.disabled = false;
-        btn.innerHTML = 'Load more <i class="fas fa-arrow-down ms-1"></i>';
-      }
-    }
-    return true;
-  } catch (err) {
-    console.error(`Error loading ${sectionKey}:`, err);
-    // On error, hide the section or show an error message? We'll keep the error message.
-    grid.innerHTML = `<div class="col-12 text-center text-danger py-4">Failed to load items. Please refresh.</div>`;
-    if (btn) btn.style.display = 'none';
-
-    return false;
-
-  }
-}
-
-// ─── Load more for a section ───────────────────────────────
-async function loadMore(sectionKey) {
-  const grid = document.querySelector(`.${sectionKey}-grid`);
-  const btn = document.querySelector(`.load-more[data-section="${sectionKey}"]`);
-  if (!grid || !btn) return;
-
-  const currentPage = parseInt(grid.getAttribute('data-page') || '1');
-  const totalPages = parseInt(grid.getAttribute('data-total-pages') || '1');
-  if (currentPage >= totalPages) {
-    btn.style.display = 'none'; // hide when no more pages
-    return;
-  }
-
-  const nextPage = currentPage + 1;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Loading...';
-
-  try {
-    const data = await fetchSection(sectionKey, nextPage, 8);
-    const newItems = data.items || [];
-    if (newItems.length === 0) {
-      btn.style.display = 'none';
-      return;
-    }
-    grid.insertAdjacentHTML('beforeend', newItems.map(renderCard).join(''));
-    setTimeout(initTooltips, 100);
-    grid.setAttribute('data-page', data.page);
-    grid.setAttribute('data-total-pages', data.total_pages);
-    attachCardClickEvents();
-
-    if (data.page >= data.total_pages) {
-      btn.style.display = 'none';
-    } else {
       btn.style.display = 'inline-block';
       btn.disabled = false;
       btn.innerHTML = 'Load more <i class="fas fa-arrow-down ms-1"></i>';
     }
-  } catch (err) {
-    console.error('Load more error:', err);
-    showToast('Failed to load more items', 'error');
-    btn.style.display = 'inline-block';
-    btn.disabled = false;
-    btn.innerHTML = 'Load more <i class="fas fa-arrow-down ms-1"></i>';
   }
-}
-  // ─── Initialize all sections ───────────────────────────────
+
+  // ──────────────────────────────────────────────────────────────
+  //  INIT SECTIONS
+  // ──────────────────────────────────────────────────────────────
   async function initSections() {
-    // Show subtext for departmental section with user's department
     const userDept = getCookie('department');
     if (userDept) {
       const deptSubtext = document.getElementById('departmentalSubtext');
       if (deptSubtext) deptSubtext.textContent = `Items from ${decodeURIComponent(userDept)} students`;
     }
 
-    // ─── Fetch sponsored items for banner ────────────────────
+    // Hide search results section if exists
+    const searchSection = document.getElementById('searchResultsSection');
+    if (searchSection) searchSection.style.display = 'none';
+
+    // Show all sections (they will be hidden by loadSection if empty)
+    document.querySelectorAll('#sectionsContainer > section').forEach(sec => sec.style.display = '');
+
     try {
       const bannerData = await fetchSection('banner', 1, 10);
       sponsoredItems = bannerData.items || [];
@@ -789,7 +1316,6 @@ async function loadMore(sectionKey) {
       sponsoredItems = [];
     }
 
-    // ─── Load the three listing sections ─────────────────────
     const results = await Promise.all([
       loadSection('hot_sales', '.hot_sales-grid'),
       loadSection('departmental', '.departmental-grid'),
@@ -797,8 +1323,6 @@ async function loadMore(sectionKey) {
     ]);
 
     const anyNonEmpty = results.some(result => result === true);
-
-    // Toggle global empty state and sections container
     const emptyState = document.getElementById('emptyState');
     const sectionsContainer = document.getElementById('sectionsContainer');
     if (anyNonEmpty) {
@@ -809,10 +1333,8 @@ async function loadMore(sectionKey) {
       sectionsContainer.style.display = 'none';
     }
 
-    // Build the banner carousel (now uses real sponsored items)
     buildAdBanner();
 
-    // Attach load more listeners
     document.querySelectorAll('.load-more').forEach(btn => {
       btn.removeEventListener('click', loadMoreHandler);
       btn.addEventListener('click', loadMoreHandler);
@@ -824,7 +1346,50 @@ async function loadMore(sectionKey) {
     loadMore(section);
   }
 
-  // ─── Load page with skeleton ──────────────────────────────
+  // ──────────────────────────────────────────────────────────────
+  //  SEARCH DEBOUNCE
+  // ──────────────────────────────────────────────────────────────
+  function setupSearch() {
+    const input = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearchBtn');
+
+    input.addEventListener('input', function() {
+      const query = this.value.trim();
+      if (query.length > 0) {
+        clearBtn.classList.add('visible');
+      } else {
+        clearBtn.classList.remove('visible');
+      }
+
+      if (searchTimeout) clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        performSearch(query);
+      }, 400);
+    });
+
+    clearBtn.addEventListener('click', function() {
+      input.value = '';
+      clearBtn.classList.remove('visible');
+      document.getElementById('searchStatus').style.display = 'none';
+      // Reset to original sections
+      initSections();
+      // Remove search results section if exists
+      const searchSection = document.getElementById('searchResultsSection');
+      if (searchSection) searchSection.style.display = 'none';
+      document.querySelectorAll('#sectionsContainer > section').forEach(sec => sec.style.display = '');
+    });
+
+    // Also clear on Esc key
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        clearBtn.click();
+      }
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  LOAD PAGE
+  // ──────────────────────────────────────────────────────────────
   async function loadListings() {
     const skeleton = document.getElementById('skeletonLoader');
     const realContent = document.getElementById('realContent');
@@ -835,6 +1400,7 @@ async function loadMore(sectionKey) {
 
     try {
       await initSections();
+      setupSearch();
 
       skeleton.style.display = 'none';
       realContent.style.display = 'block';
@@ -855,7 +1421,6 @@ async function loadMore(sectionKey) {
     }
   }
 
-  // ─── Start ──────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', loadListings);
 </script>
 </body>

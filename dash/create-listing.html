@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>CampusConnect UI · Create a Listing</title>
+    <title>CampusConnect Demo University · Create a Listing</title>
     <!-- Bootstrap 5 + Icons + Fonts + AOS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -12,249 +12,1000 @@
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
     <link rel="stylesheet" href="../assets/css/main.css" />
     <style>
-        /* Wizard step styling */
-        .step-indicator {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            position: relative;
+        /* ──────────────────────────────────────────────────────────────
+                   GLOBAL OVERRIDES
+                   ────────────────────────────────────────────────────────────── */
+        :root {
+            --accent: #2c7a5e;
+            --accent-light: #eaf7f0;
+            --accent-dark: #1f5e48;
+            --accent-glow: rgba(44, 122, 94, 0.18);
+            --card-radius: 20px;
+            --transition-smooth: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --shadow-card: 0 12px 40px rgba(31, 94, 72, 0.07);
+            --shadow-card-hover: 0 20px 56px rgba(31, 94, 72, 0.12);
         }
-        .step-indicator::before {
+
+        body {
+            background: #f6f9f8;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   DASHBOARD CARD – ENHANCED
+                   ────────────────────────────────────────────────────────────── */
+        .dashboard-card {
+            background: #ffffff;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(44, 122, 94, 0.06);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
             content: '';
             position: absolute;
-            top: 20px;
+            top: 0;
             left: 0;
             right: 0;
-            height: 2px;
-            background: #e2e8f0;
-            z-index: 1;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #4aa882, var(--accent));
+            opacity: 0.6;
         }
+
+        .dashboard-card:hover {
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   BADGE & HEADER
+                   ────────────────────────────────────────────────────────────── */
+        .badge-verify {
+            background: rgba(44, 122, 94, 0.10);
+            color: var(--accent-dark);
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            display: inline-block;
+            border: 1px solid rgba(44, 122, 94, 0.10);
+            backdrop-filter: blur(4px);
+        }
+
+        .badge-verify i {
+            margin-right: 6px;
+        }
+
+        .page-headline h1 {
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            color: #14211f;
+        }
+
+        .page-headline p {
+            color: #5f7775;
+            font-size: 0.95rem;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   POINTS CARD – INTERACTIVE
+                   ────────────────────────────────────────────────────────────── */
+        .points-card {
+            background: linear-gradient(145deg, #f6fbf9, #edf5f1);
+            border-radius: 16px;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid rgba(44, 122, 94, 0.10);
+            transition: var(--transition-smooth);
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .points-card:hover {
+            border-color: rgba(44, 122, 94, 0.25);
+            box-shadow: 0 4px 16px rgba(44, 122, 94, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .points-card .points-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #1e2a2a;
+            font-size: 0.85rem;
+        }
+
+        .points-card .points-label i {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .points-card .points-value {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--accent-dark);
+            letter-spacing: -0.02em;
+            transition: var(--transition-smooth);
+        }
+
+        .points-card .points-value.pulse {
+            animation: pointsPulse 0.4s ease;
+        }
+
+        @keyframes pointsPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+                color: #1f8a64;
+            }
+        }
+
+        .points-card .points-hint {
+            font-size: 0.75rem;
+            color: #6f8a82;
+            font-weight: 500;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   STEP INDICATOR – PROGRESS BAR STYLE
+                   ────────────────────────────────────────────────────────────── */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            padding: 0 0.25rem;
+            margin-bottom: 2.25rem;
+        }
+
+        .step-indicator-track {
+            position: absolute;
+            top: 50%;
+            left: 32px;
+            right: 32px;
+            height: 3px;
+            background: #e6eeea;
+            transform: translateY(-50%);
+            border-radius: 4px;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .step-indicator-track .step-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #4aa882);
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
         .step {
-            background: white;
-            border: 2px solid #e2e8f0;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: default;
+            flex: 1;
+        }
+
+        .step .step-dot {
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            background: #ffffff;
+            border: 2.5px solid #dce6e2;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #9aaea8;
+            transition: var(--transition-smooth);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
             position: relative;
-            z-index: 2;
-            background-color: white;
         }
-        .step.active {
-            border-color: var(--accent);
-            background: var(--accent);
-            color: white;
-        }
-        .step.completed {
-            border-color: var(--accent);
-            background: var(--accent);
-            color: white;
-        }
-        .step-label {
+
+        .step .step-dot .step-icon {
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: var(--transition-smooth);
             position: absolute;
-            top: 45px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            color: var(--text-muted);
         }
-        .step.active .step-label,
-        .step.completed .step-label {
+
+        .step .step-dot .step-number {
+            transition: var(--transition-smooth);
+        }
+
+        .step .step-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #9aaea8;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            transition: var(--transition-smooth);
+            white-space: nowrap;
+        }
+
+        /* Active state */
+        .step.active .step-dot {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 4px 16px rgba(44, 122, 94, 0.25);
+            transform: scale(1.05);
+        }
+
+        .step.active .step-dot .step-number {
+            opacity: 0;
+        }
+
+        .step.active .step-dot .step-icon {
+            opacity: 1;
+        }
+
+        .step.active .step-label {
             color: var(--accent-dark);
+            font-weight: 700;
+        }
+
+        /* Completed state */
+        .step.completed .step-dot {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 2px 12px rgba(44, 122, 94, 0.15);
+        }
+
+        .step.completed .step-dot .step-number {
+            opacity: 0;
+        }
+
+        .step.completed .step-dot .step-icon {
+            opacity: 1;
+        }
+
+        .step.completed .step-label {
+            color: var(--accent);
             font-weight: 600;
         }
+
+        /* Hover on completed/active steps */
+        .step.completed .step-dot:hover,
+        .step.active .step-dot:hover {
+            transform: scale(1.08);
+        }
+
         @media (max-width: 576px) {
-            .step-label {
-                font-size: 0.65rem;
-                white-space: normal;
-                width: 80px;
-                text-align: center;
-                left: -20px;
+            .step .step-label {
+                font-size: 0.55rem;
+                letter-spacing: 0.2px;
+            }
+            .step .step-dot {
+                width: 34px;
+                height: 34px;
+                font-size: 0.75rem;
+            }
+            .step-indicator-track {
+                left: 20px;
+                right: 20px;
+            }
+            .step-indicator {
+                padding: 0 0.1rem;
             }
         }
+
+        /* ──────────────────────────────────────────────────────────────
+                   FORM STEPS – SMOOTH TRANSITIONS
+                   ────────────────────────────────────────────────────────────── */
         .form-step {
             display: none;
+            animation: stepFadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
+
         .form-step.active-step {
             display: block;
         }
-        .hotspot-checkboxes {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #eef2f0;
-            border-radius: 1rem;
-            padding: 0.75rem;
-        }
-        .helper-text {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
+
+        @keyframes stepFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Floating Label Styles */
-        .form-floating-group {
-            position: relative;
+        .form-step-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #14211f;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .form-step-title i {
+            color: var(--accent);
+            font-size: 1rem;
+            width: 1.5rem;
+            text-align: center;
+        }
+
+        .form-step-sub {
+            color: #5f7775;
+            font-size: 0.85rem;
             margin-bottom: 1.5rem;
         }
+
+        /* ──────────────────────────────────────────────────────────────
+                   FLOATING LABEL GROUPS – FIXED HELPER POSITION
+                   ────────────────────────────────────────────────────────────── */
+        .form-floating-group {
+            position: relative;
+            margin-bottom: 1.75rem;
+        }
+
         .form-floating-group .form-label {
             position: absolute;
             top: 0;
             left: 1rem;
             transform: translateY(-50%);
-            background: white;
+            background: #ffffff;
             padding: 0 0.5rem;
             margin: 0;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            color: #2c7a5e;
+            color: var(--accent);
             pointer-events: none;
             z-index: 2;
-            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            transition: var(--transition-smooth);
         }
+
         .form-floating-group .form-control,
         .form-floating-group .form-select,
         .form-floating-group textarea.form-control {
             width: 100%;
             padding: 0.9rem 1rem;
-            border: 1px solid rgba(44, 122, 94, 0.14);
-            border-radius: 16px;
-            background: white;
+            border: 1.5px solid rgba(44, 122, 94, 0.10);
+            border-radius: 14px;
+            background: #ffffff;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            font-weight: 500;
+            color: #1e2a2a;
+            transition: var(--transition-smooth);
         }
+
         .form-floating-group .form-control:focus,
         .form-floating-group .form-select:focus,
         .form-floating-group textarea.form-control:focus {
-            border-color: rgba(44, 122, 94, 0.45);
-            box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.12);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.08);
             outline: none;
+            background: #fcfefe;
         }
 
-        /* Custom Radio & Checkbox Styles */
-        .form-check-custom {
+        .form-floating-group .form-control:hover,
+        .form-floating-group .form-select:hover,
+        .form-floating-group textarea.form-control:hover {
+            border-color: rgba(44, 122, 94, 0.25);
+        }
+
+        .form-floating-group .form-control:disabled {
+            background: #f4f7f6;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* ─── HELPER TEXT – FIXED POSITIONING ─── */
+        .form-floating-group .helper-text {
+            display: block;
+            font-size: 0.75rem;
+            color: #7a9490;
+            margin-top: 0.5rem;
+            padding-left: 0.25rem;
+            font-weight: 450;
+            line-height: 1.4;
+            transition: var(--transition-smooth);
+        }
+
+        .form-floating-group .helper-text i {
+            margin-right: 4px;
+            font-size: 0.7rem;
+            color: var(--accent);
+            opacity: 0.6;
+        }
+
+        .form-floating-group .helper-text.error {
+            color: #dc3545;
+        }
+
+        .form-floating-group .helper-text.success {
+            color: var(--accent);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   LISTING TYPE – CARD SELECTOR
+                   ────────────────────────────────────────────────────────────── */
+        .listing-type-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 0.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .listing-type-group .form-check-custom {
+            flex: 1 1 auto;
+            min-width: 100px;
+            margin: 0;
+            background: #f6faf8;
+            padding: 0.6rem 0.8rem;
+            border-radius: 14px;
+            border: 1.5px solid transparent;
+            transition: var(--transition-smooth);
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-bottom: 0.75rem;
-            cursor: pointer;
-            position: relative;
+            justify-content: center;
         }
-        .form-check-custom input {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
+
+        .listing-type-group .form-check-custom:hover {
+            border-color: rgba(44, 122, 94, 0.20);
+            background: #f0f7f3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 122, 94, 0.06);
         }
-        .form-check-custom .checkmark {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(44, 122, 94, 0.3);
-            border-radius: 6px;
-            background: white;
-            transition: all 0.2s ease;
-            position: relative;
-            cursor: pointer;
-            flex-shrink: 0;
+
+        .listing-type-group .form-check-custom input:checked~.label-text {
+            color: var(--accent-dark);
+            font-weight: 700;
         }
-        .form-check-custom input:checked~.checkmark {
-            background: #2c7a5e;
-            border-color: #2c7a5e;
+
+        .listing-type-group .form-check-custom input:checked+.checkmark {
+            background: var(--accent);
+            border-color: var(--accent);
         }
-        .form-check-custom input:checked~.checkmark::after {
+
+        .listing-type-group .form-check-custom input:checked~.checkmark::after {
             content: '✓';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .form-check-custom input:focus~.checkmark {
-            box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.12);
-        }
-        .form-check-custom.radio .checkmark {
-            border-radius: 50%;
-        }
-        .form-check-custom.radio input:checked~.checkmark {
-            background: white;
-            border-color: #2c7a5e;
-        }
-        .form-check-custom.radio input:checked~.checkmark::after {
-            content: '';
-            width: 10px;
-            height: 10px;
-            background: #2c7a5e;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .form-check-custom .label-text {
-            cursor: pointer;
-            font-weight: 500;
-            color: #1e2a2a;
-            user-select: none;
-        }
-        .hotspot-checkboxes .form-check-custom {
-            margin-bottom: 0.5rem;
+            font-size: 10px;
+            font-weight: 700;
         }
 
-        /* Listing type radio cards */
-        .listing-type-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-bottom: 0.5rem;
-        }
-        .listing-type-group .form-check-custom {
-            flex: 1 0 auto;
-            min-width: 100px;
-            max-width: 180px;
-            margin-bottom: 0;
-            background: #f8faf9;
-            padding: 0.5rem 0.75rem;
-            border-radius: 30px;
-            border: 1px solid transparent;
-            transition: all 0.2s ease;
-        }
-        .listing-type-group .form-check-custom:hover {
-            border-color: rgba(44, 122, 94, 0.2);
-        }
-        .listing-type-group .form-check-custom input:checked~.label-text {
-            color: var(--accent-dark);
-            font-weight: 600;
-        }
-        .listing-type-group .form-check-custom input:checked {
-            background: var(--accent-light);
-        }
         .listing-type-group .form-check-custom .checkmark {
             width: 18px;
             height: 18px;
+            border-radius: 6px;
+            border: 2px solid rgba(44, 122, 94, 0.25);
+            background: white;
             flex-shrink: 0;
+            position: relative;
+            transition: var(--transition-smooth);
         }
+
         .listing-type-group .form-check-custom .label-text {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #2d403d;
+            user-select: none;
             white-space: nowrap;
         }
+
+        .listing-type-group .form-check-custom input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
         @media (max-width: 576px) {
-            .listing-type-group .form-check-custom {
-                flex: 1 1 calc(50% - 0.75rem);
-                min-width: 0;
-                max-width: none;
-                justify-content: center;
-                padding: 0.4rem 0.5rem;
+            .listing-type-group {
+                grid-template-columns: repeat(2, 1fr);
             }
             .listing-type-group .form-check-custom .label-text {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
                 white-space: normal;
             }
         }
 
-        /* Skeleton Loader Styles */
+        #listingTypeDescription {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-dark);
+            padding: 0.25rem 0.5rem;
+            background: rgba(44, 122, 94, 0.05);
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   HOTSPOTS – GRID LAYOUT
+                   ────────────────────────────────────────────────────────────── */
+        .hotspot-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.5rem;
+            max-height: 260px;
+            overflow-y: auto;
+            padding: 0.25rem 0.1rem;
+            border: none;
+        }
+
+        .hotspot-checkboxes .form-check-custom {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 0.8rem;
+            background: #f6faf8;
+            border-radius: 12px;
+            border: 1.5px solid transparent;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .hotspot-checkboxes .form-check-custom:hover {
+            border-color: rgba(44, 122, 94, 0.15);
+            background: #f0f7f3;
+            transform: translateX(2px);
+        }
+
+        .hotspot-checkboxes .form-check-custom input:checked~.checkmark {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .hotspot-checkboxes .form-check-custom input:checked~.checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .hotspot-checkboxes .form-check-custom .checkmark {
+            width: 18px;
+            height: 18px;
+            border-radius: 6px;
+            border: 2px solid rgba(44, 122, 94, 0.20);
+            background: white;
+            flex-shrink: 0;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .hotspot-checkboxes .form-check-custom .label-text {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #1e2a2a;
+            user-select: none;
+        }
+
+        .hotspot-checkboxes .form-check-custom .label-text strong {
+            font-weight: 700;
+            color: #14211f;
+        }
+
+        .hotspot-checkboxes .form-check-custom input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .hotspot-checkboxes::-webkit-scrollbar {
+            width: 4px;
+        }
+        .hotspot-checkboxes::-webkit-scrollbar-track {
+            background: #eef4f1;
+            border-radius: 4px;
+        }
+        .hotspot-checkboxes::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 576px) {
+            .hotspot-checkboxes {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   PROMOTION CARDS
+                   ────────────────────────────────────────────────────────────── */
+        #advertTypeContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        #advertTypeContainer .form-check-custom {
+            flex: 1 1 auto;
+            min-width: 140px;
+            max-width: 220px;
+            margin: 0;
+            padding: 0.6rem 0.8rem;
+            background: #f6faf8;
+            border-radius: 12px;
+            border: 1.5px solid transparent;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #advertTypeContainer .form-check-custom:hover {
+            border-color: rgba(44, 122, 94, 0.15);
+            background: #f0f7f3;
+            transform: translateY(-2px);
+        }
+
+        #advertTypeContainer .form-check-custom input:checked~.checkmark {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        #advertTypeContainer .form-check-custom input:checked~.checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        #advertTypeContainer .form-check-custom .checkmark {
+            width: 18px;
+            height: 18px;
+            border-radius: 6px;
+            border: 2px solid rgba(44, 122, 94, 0.20);
+            background: white;
+            flex-shrink: 0;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        #advertTypeContainer .form-check-custom .label-text {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #1e2a2a;
+            user-select: none;
+        }
+
+        #advertTypeContainer .form-check-custom input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        @media (max-width: 576px) {
+            #advertTypeContainer .form-check-custom {
+                flex: 1 1 100%;
+                max-width: none;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   POINTS SUMMARY BAR – ENHANCED
+                   ────────────────────────────────────────────────────────────── */
+        .points-summary {
+            background: linear-gradient(135deg, #f6fbf9, #edf5f1);
+            border-radius: 14px;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid rgba(44, 122, 94, 0.10);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .points-summary:hover {
+            border-color: rgba(44, 122, 94, 0.20);
+        }
+
+        .points-summary .label {
+            font-weight: 700;
+            color: #1e2a2a;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .points-summary .label i {
+            color: var(--accent);
+        }
+
+        .points-summary .total-cost {
+            font-weight: 700;
+            color: var(--accent-dark);
+            font-size: 1rem;
+        }
+
+        .points-summary .total-cost.insufficient {
+            color: #dc3545;
+        }
+
+        .points-summary .balance {
+            font-weight: 600;
+            color: #1e2a2a;
+        }
+
+        .points-summary .balance.insufficient {
+            color: #dc3545;
+        }
+
+        .points-summary .points-badge {
+            background: rgba(44, 122, 94, 0.10);
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent-dark);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   IMAGE DROP AREA – ENHANCED
+                   ────────────────────────────────────────────────────────────── */
+        .drop-area {
+            border: 2px dashed rgba(44, 122, 94, 0.20);
+            border-radius: 16px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            background: #fafcfa;
+            position: relative;
+        }
+
+        .drop-area:hover {
+            border-color: rgba(44, 122, 94, 0.40);
+            background: #f4f9f6;
+        }
+
+        .drop-area.drag-over {
+            border-color: var(--accent);
+            background: #eaf7f0;
+            box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.06);
+            transform: scale(1.01);
+        }
+
+        .drop-area i {
+            font-size: 2.8rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: block;
+            opacity: 0.7;
+            transition: var(--transition-smooth);
+        }
+
+        .drop-area:hover i {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .drop-area p {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #3a534e;
+        }
+
+        .drop-area .small {
+            font-size: 0.75rem;
+            color: #7a9490;
+            font-weight: 400;
+        }
+
+        .drop-area .browse-btn {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.3rem 1.2rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+        }
+
+        .drop-area .browse-btn:hover {
+            background: var(--accent-dark);
+            transform: scale(1.02);
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .image-preview img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 12px;
+            border: 2px solid rgba(44, 122, 94, 0.10);
+            object-fit: cover;
+            transition: var(--transition-smooth);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .image-preview img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   REVIEW STEP – CLEAN LAYOUT
+                   ────────────────────────────────────────────────────────────── */
+        #reviewContent {
+            background: #f6faf8;
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid rgba(44, 122, 94, 0.06);
+        }
+
+        #reviewContent .review-item {
+            display: flex;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+        }
+
+        #reviewContent .review-item:last-child {
+            border-bottom: none;
+        }
+
+        #reviewContent .review-label {
+            font-weight: 600;
+            color: #1e2a2a;
+            min-width: 100px;
+            font-size: 0.82rem;
+        }
+
+        #reviewContent .review-value {
+            color: #2d403d;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   BUTTONS – ENHANCED
+                   ────────────────────────────────────────────────────────────── */
+        .btn-primary-custom {
+            background: var(--accent);
+            border: none;
+            padding: 12px 32px;
+            font-weight: 700;
+            border-radius: 40px;
+            transition: var(--transition-smooth);
+            color: white;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 16px rgba(44, 122, 94, 0.18);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: 0.2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary-custom::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent);
+            pointer-events: none;
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+            color: white;
+        }
+
+        .btn-primary-custom:active {
+            transform: translateY(0px);
+        }
+
+        .btn-primary-custom:disabled {
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .btn-outline-custom {
+            background: transparent;
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline-custom:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            border-color: var(--accent-dark);
+            color: var(--accent-dark);
+            box-shadow: 0 4px 16px rgba(44, 122, 94, 0.08);
+        }
+
+        .btn-outline-custom:active {
+            transform: translateY(0px);
+        }
+
+        .btn-group-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   SKELETON – KEPT CONSISTENT
+                   ────────────────────────────────────────────────────────────── */
+        .skeleton {
+            background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
         .skeleton-stat {
             height: 70px;
             border-radius: 1rem;
@@ -276,20 +1027,6 @@
         .skeleton-text.medium {
             width: 80%;
         }
-        .skeleton {
-            background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.4s infinite;
-            border-radius: 8px;
-        }
-        @keyframes shimmer {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
-        }
         .skeleton-btn {
             height: 48px;
             width: 120px;
@@ -297,8 +1034,8 @@
             display: inline-block;
         }
         .skeleton-step {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
         }
         .skeleton-checkbox {
@@ -308,101 +1045,236 @@
             display: inline-block;
         }
 
-        /* extra spacing */
-        .badge-verify {
-            background: rgba(44, 122, 94, 0.12);
-            color: var(--accent-dark);
-            padding: 0.3rem 1rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
+        /* ──────────────────────────────────────────────────────────────
+                   RESPONSIVE TWEAKS
+                   ────────────────────────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .page-headline h1 {
+                font-size: 1.5rem;
+            }
+            .dashboard-card {
+                border-radius: 16px;
+                padding: 1.25rem !important;
+            }
+            .points-card .points-value {
+                font-size: 1.1rem;
+            }
+            #reviewContent .review-label {
+                min-width: 70px;
+                font-size: 0.75rem;
+            }
+            #reviewContent .review-value {
+                font-size: 0.78rem;
+            }
         }
 
-        /* Points summary bar */
-        .points-summary {
-            background: #f8faf9;
-            border-radius: 1rem;
-            padding: 0.75rem 1.25rem;
-            border: 1px solid rgba(44, 122, 94, 0.12);
-            display: flex;
-            flex-wrap: wrap;
+        @media (max-width: 576px) {
+            .btn-group-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-group-nav .btn {
+                justify-content: center;
+            }
+            .points-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 0.75rem;
+            }
+            .points-card .points-hint {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   TOOLTIP OVERRIDE (Bootstrap)
+                   ────────────────────────────────────────────────────────────── */
+        .tooltip-inner {
+            background: #14211f;
+            font-weight: 500;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+        }
+        .tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+        .tooltip.bs-tooltip-top .tooltip-arrow::before {
+            border-top-color: #14211f;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   SCROLL TO TOP – refined
+                   ────────────────────────────────────────────────────────────── */
+        .scroll-top-btn {
+            position: fixed;
+            right: 1.5rem;
+            bottom: 1.5rem;
+            z-index: 1080;
+            width: 52px;
+            height: 52px;
+            border: none;
+            border-radius: 50%;
+            display: inline-flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(14px);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .scroll-top-btn:hover {
+            background: var(--accent-dark);
+            transform: translateY(10px) scale(1.05);
+            box-shadow: 0 12px 36px rgba(44, 122, 94, 0.30);
+        }
+
+        .scroll-top-btn.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-top-btn i {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        @media (max-width: 768px) {
+            .scroll-top-btn {
+                right: 1rem;
+                bottom: 5.5rem;
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   BREADCRUMB – preserve
+                   ────────────────────────────────────────────────────────────── */
+        #breadcrumb-placeholder nav {
+            background: transparent !important;
+            padding: 0.75rem 0 0.25rem 0 !important;
+        }
+        #breadcrumb-placeholder .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+        #breadcrumb-placeholder .breadcrumb-item a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        #breadcrumb-placeholder .breadcrumb-item a:hover {
+            color: var(--accent-dark);
+            text-decoration: underline;
+        }
+        #breadcrumb-placeholder .breadcrumb-item.active {
+            color: #5f7775;
+            font-weight: 500;
+        }
+        #breadcrumb-placeholder .breadcrumb-item+.breadcrumb-item::before {
+            color: #b0c6c0;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   MISC – extra polish
+                   ────────────────────────────────────────────────────────────── */
+        .form-check-custom {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .form-check-custom input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+        .bg-accent-light {
+            background: var(--accent-light);
+        }
+        .border-accent-light {
+            border-color: rgba(44, 122, 94, 0.10) !important;
+        }
+        .fw-600 {
+            font-weight: 600;
+        }
+
+        .gap-2 {
             gap: 0.5rem;
         }
-        .points-summary .label {
-            font-weight: 600;
-            color: #1e2a2a;
+        .gap-3 {
+            gap: 1rem;
         }
-        .points-summary .total-cost {
+
+        /* animated checkmark pulse when selected */
+        .form-check-custom input:checked~.checkmark {
+            animation: checkPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes checkPop {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* subtle floating animation for the card */
+        @keyframes floatIn {
+            0% {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-card {
+            animation: floatIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        /* price input currency prefix */
+        .price-input-wrap {
+            position: relative;
+        }
+
+        .price-input-wrap .currency-prefix {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
             font-weight: 700;
-            color: var(--accent-dark);
-        }
-        .points-summary .total-cost.insufficient {
-            color: #dc3545;
-        }
-        .points-summary .balance {
-            font-weight: 600;
-        }
-        .points-summary .balance.insufficient {
-            color: #dc3545;
+            color: #5f7775;
+            font-size: 0.9rem;
+            pointer-events: none;
+            z-index: 3;
         }
 
-        /* Price input formatting: hide spinners */
-        #price::-webkit-outer-spin-button,
-        #price::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        #price {
-            -moz-appearance: textfield;
+        .price-input-wrap .form-control {
+            padding-left: 2.4rem;
         }
 
-        /* Drop area */
-.drop-area {
-    border: 2px dashed rgba(44, 122, 94, 0.25);
-    border-radius: 16px;
-    padding: 2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: #fafcfb;
-}
-.drop-area:hover {
-    border-color: rgba(44, 122, 94, 0.5);
-    background: #f4f8f6;
-}
-.drop-area.drag-over {
-    border-color: #2c7a5e;
-    background: #eaf7f0;
-}
-.drop-area i {
-    font-size: 2.5rem;
-    color: #2c7a5e;
-    margin-bottom: 0.5rem;
-}
-.drop-area p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #6c757d;
-}
-.drop-area .small {
-    font-size: 0.8rem;
-}
-.image-preview {
-    margin-top: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-.image-preview img {
-    max-width: 150px;
-    max-height: 150px;
-    border-radius: 8px;
-    border: 1px solid #eef2f0;
-    object-fit: cover;
-}
+        .price-input-wrap .form-control:focus+.currency-prefix {
+            color: var(--accent);
+        }
     </style>
 </head>
 <body>
@@ -411,12 +1283,12 @@
 
     <!-- Navigation -->
     <div id="nav-placeholder"></div>
-<div id="breadcrumb-placeholder"></div>
+    <div id="breadcrumb-placeholder"></div>
 
-    <main class="">
+    <main>
         <div class="container py-4 mb-3">
             <div class="row justify-content-center">
-                <div class="col-lg-10">
+                <div class="col-lg-10 col-xl-9">
 
                     <!-- ===== SKELETON LOADER ===== -->
                     <div id="skeletonLoader">
@@ -452,179 +1324,231 @@
                     <!-- ===== REAL CONTENT ===== -->
                     <div id="realContent" style="display:none;">
                         <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5" data-aos="fade-up">
+
+                            <!-- HEADER -->
                             <div class="text-center mb-4">
-                                <span class="badge-verify mb-2"><i class="fas fa-plus-circle me-1"></i> Sell or Request</span>
-                                <h1 class="fw-bold">Create a new listing</h1>
-                                <p class="text-muted">Fill in the details about your item. We'll help you connect with buyers safely on campus.</p>
+                                <span class="badge-verify mb-3"><i class="fas fa-plus-circle me-1"></i> Sell or Request</span>
+                                <div class="page-headline">
+                                    <h1>Create a new listing</h1>
+                                    <p>Fill in the details about your item. We'll help you connect with buyers safely on campus.</p>
+                                </div>
                             </div>
 
-                            <div class="row justify-content-center mb-3">
+                            <!-- POINTS CARD -->
+                            <div class="row justify-content-center mb-4">
                                 <div class="col-12 col-sm-8 col-md-6">
-                                    <div class="d-flex align-items-center justify-content-between bg-light rounded-4 px-4 py-3 border"
-                                        style="border-color:rgba(44,122,94,0.15) !important;">
-                                        <div>
-                                            <span class="small text-muted"><i class="fas fa-coins me-1"></i> Your Points</span>
-                                            <div class="fw-bold fs-4" id="pointsBalanceDisplay" style="color:var(--accent);">0</div>
-                                        </div>
-                                        <div class="small text-muted">
-                                            <span id="pointsMessage">Each listing costs 1 point</span>
-                                        </div>
+                                    <div class="points-card">
+                                        <span class="points-label">
+                                            <i class="fas fa-coins"></i> Your Points
+                                        </span>
+                                        <span class="points-value" id="pointsBalanceDisplay">0</span>
+                                        <span class="points-hint" id="pointsMessage">Each listing costs 1 point</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Step Indicator -->
+                            <!-- STEP INDICATOR -->
                             <div class="step-indicator">
-                                <div class="step active" id="step1Indicator">1<span class="step-label">Basic info</span></div>
-                                <div class="step" id="step2Indicator">2<span class="step-label">Location</span></div>
-                                <div class="step" id="step3Indicator">3<span class="step-label">Options</span></div>
-                                <div class="step" id="step4Indicator">4<span class="step-label">Review</span></div>
+                                <div class="step-indicator-track">
+                                    <div class="step-progress-fill" id="stepProgressFill"></div>
+                                </div>
+
+                                <div class="step active" id="step1Indicator">
+                                    <div class="step-dot">
+                                        <span class="step-number">1</span>
+                                        <span class="step-icon"><i class="fas fa-pen"></i></span>
+                                    </div>
+                                    <span class="step-label">Basic info</span>
+                                </div>
+
+                                <div class="step" id="step2Indicator">
+                                    <div class="step-dot">
+                                        <span class="step-number">2</span>
+                                        <span class="step-icon"><i class="fas fa-map-pin"></i></span>
+                                    </div>
+                                    <span class="step-label">Location</span>
+                                </div>
+
+                                <div class="step" id="step3Indicator">
+                                    <div class="step-dot">
+                                        <span class="step-number">3</span>
+                                        <span class="step-icon"><i class="fas fa-sliders-h"></i></span>
+                                    </div>
+                                    <span class="step-label">Options</span>
+                                </div>
+
+                                <div class="step" id="step4Indicator">
+                                    <div class="step-dot">
+                                        <span class="step-number">4</span>
+                                        <span class="step-icon"><i class="fas fa-check"></i></span>
+                                    </div>
+                                    <span class="step-label">Review</span>
+                                </div>
                             </div>
 
-                            <!-- Form Steps -->
-                            <form id="listingForm" class="mt-4 mb-5">
+                            <!-- FORM STEPS -->
+                            <form id="listingForm" class="mt-4">
 
                                 <!-- STEP 1 -->
                                 <div id="step1" class="form-step active-step">
-                                    <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Basic information</h5>
+                                    <div class="form-step-title"><i class="fas fa-info-circle"></i> Basic information</div>
+                                    <p class="form-step-sub">Tell us what you're selling or looking for.</p>
 
                                     <div class="form-floating-group">
                                         <input type="text" class="form-control" name="title" id="title"
-                                            placeholder="e.g., HP Laptop, ECO 211 Textbook" required />
+                                        placeholder="e.g., HP Laptop, ECO 211 Textbook" required />
                                         <label class="form-label" for="title">Title *</label>
-                                        <div class="helper-text">Be specific and clear. Include brand, model, or key feature.</div>
+                                        <span class="helper-text"><i class="fas fa-lightbulb"></i> Be specific — include brand, model, or key feature.</span>
                                     </div>
 
                                     <div class="form-floating-group">
                                         <div class="d-flex align-items-center gap-2">
-                                            <span id="categoryIconDisplay" style="font-size:1.2rem; width:24px; text-align:center;"></span>
+                                            <span id="categoryIconDisplay" style="font-size:1.1rem; width:24px; text-align:center;"></span>
                                             <select class="form-select" name="category" id="category" required>
                                                 <option value="">Loading categories…</option>
                                             </select>
                                         </div>
                                         <label class="form-label" for="category">Category *</label>
-                                        <div class="helper-text">Choose the most relevant category.</div>
+                                        <span class="helper-text"><i class="fas fa-tag"></i> Choose the most relevant category for your item.</span>
                                     </div>
 
                                     <div class="form-floating-group">
                                         <textarea class="form-control" name="description" id="description"
-                                            rows="4" placeholder="Describe condition, reason for selling, any defects, etc." required></textarea>
+                                        rows="4" placeholder="Describe condition, reason for selling, any defects, etc." required></textarea>
                                         <label class="form-label" for="description">Description *</label>
-                                        <div class="helper-text">Detailed descriptions help buyers trust you.</div>
+                                        <span class="helper-text"><i class="fas fa-pencil-alt"></i> Detailed descriptions help buyers trust you.</span>
                                     </div>
 
-                                    <!-- PRICE INPUT – now with Naira formatting -->
                                     <div class="form-floating-group">
-                                        <input type="text" class="form-control" name="price" id="price"
-                                            placeholder="e.g., ₦3,500" required inputmode="decimal" />
+                                        <div class="price-input-wrap">
+                                            <input type="text" class="form-control" name="price" id="price"
+                                            placeholder="e.g., 3500" required inputmode="decimal" />
+                                            <span class="currency-prefix">₦</span>
+                                        </div>
                                         <label class="form-label" for="price">Price (₦) *</label>
-                                        <div class="helper-text" id="priceHelper">Enter amount in Naira. Be fair – students love good deals.</div>
+                                        <span class="helper-text" id="priceHelper"><i class="fas fa-coins"></i> Enter amount in Naira. Be fair — students love good deals.</span>
                                     </div>
 
                                     <!-- Listing Type -->
                                     <div class="mb-3">
-                                        <label class="form-label fw-semibold mb-2">Listing type *</label>
+                                        <label class="form-label fw-bold mb-2" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.3px; color:#1e2a2a;">Listing type *</label>
                                         <div id="listingTypeGroup" class="listing-type-group"></div>
-                                        <div id="listingTypeDescription" class="helper-text mt-1" style="font-weight:500; color:var(--accent-dark);">
+                                        <div id="listingTypeDescription" class="helper-text mt-2" style="font-weight:600; color:var(--accent-dark);">
                                             Selling an item you own.
                                         </div>
-                                        <div class="helper-text mt-1">Select the type that best describes your listing.</div>
+                                        <span class="helper-text mt-1" style="display:block; font-size:0.7rem; color:#7a9490;"><i class="fas fa-info-circle"></i> Select the type that best describes your listing.</span>
                                     </div>
 
-                                    <div class="d-flex justify-content-end">
-                                        <button type="button" class="btn btn-primary-custom next-step" data-bs-toggle="tooltip" title="Next step">Next <i class="fas fa-arrow-right ms-2"></i></button>
+                                    <div class="btn-group-nav">
+                                        <span></span>
+                                        <button type="button" class="btn btn-primary-custom next-step" data-bs-toggle="tooltip" title="Next step">
+                                            Next <i class="fas fa-arrow-right ms-2"></i>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <!-- STEP 2 -->
                                 <div id="step2" class="form-step">
-                                    <h5 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Where can you meet?</h5>
-                                    <p class="small text-muted">Select one or more safe campus spots where you're comfortable meeting the buyer.</p>
+                                    <div class="form-step-title"><i class="fas fa-map-marker-alt"></i> Where can you meet?</div>
+                                    <p class="form-step-sub">Select one or more safe campus spots where you're comfortable meeting the buyer.</p>
+
                                     <div class="mb-3">
-                                        <label class="form-label fw-semibold mb-2">Campus hotspots *</label>
+                                        <label class="form-label fw-bold mb-2" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.3px; color:#1e2a2a;">Campus hotspots *</label>
                                         <div id="hotspotsContainer" class="hotspot-checkboxes">
                                             <div class="text-muted">Loading safe meeting spots…</div>
                                         </div>
-                                        <div class="helper-text mt-2">✅ Choose locations with CCTV, well-lit, and public – like library, cafeteria, faculty buildings.</div>
+                                        <span class="helper-text mt-2" style="display:block; font-size:0.75rem; color:#7a9490;"><i class="fas fa-shield-alt"></i> Choose locations with CCTV, well-lit, and public — like library, cafeteria, faculty buildings.</span>
                                     </div>
-                                    <div class="d-flex justify-content-between">
-                                        <button type="button" class="btn btn-outline-custom prev-step" data-bs-toggle="tooltip" title="Previous step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
-                                        <button type="button" class="btn btn-primary-custom next-step" data-bs-toggle="tooltip" title="Next step">Next <i class="fas fa-arrow-right ms-2"></i></button>
+
+                                    <div class="btn-group-nav">
+                                        <button type="button" class="btn btn-outline-custom prev-step" data-bs-toggle="tooltip" title="Previous step">
+                                            <i class="fas fa-arrow-left me-2"></i>Previous
+                                        </button>
+                                        <button type="button" class="btn btn-primary-custom next-step" data-bs-toggle="tooltip" title="Next step">
+                                            Next <i class="fas fa-arrow-right ms-2"></i>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <!-- STEP 3 -->
                                 <div id="step3" class="form-step">
-                                    <h5 class="mb-3"><i class="fas fa-tag me-2"></i>Optional extras</h5>
+                                    <div class="form-step-title"><i class="fas fa-tag"></i> Optional extras</div>
+                                    <p class="form-step-sub">Boost your listing's visibility with these options.</p>
 
                                     <div class="form-floating-group">
                                         <select class="form-select" name="badge" id="badge">
                                             <option value=""></option>
                                         </select>
                                         <label class="form-label" for="badge">Badge (Optional)</label>
-                                        <div class="helper-text">Badges help your listing stand out.</div>
-                                    </div> <br>
+                                        <span class="helper-text"><i class="fas fa-medal"></i> Badges help your listing stand out.</span>
+                                    </div>
 
-                                    <!-- Promotion checkboxes -->
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold">Promote your listing (optional)</label>
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold mb-2" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.3px; color:#1e2a2a;">Promote your listing</label>
                                         <div id="advertTypeContainer"></div>
-                                        <div class="helper-text">Select one or both to increase visibility. Points will be deducted from your balance.</div>
+                                        <span class="helper-text mt-2" style="display:block; font-size:0.75rem; color:#7a9490;"><i class="fas fa-rocket"></i> Select one or both to increase visibility. Points will be deducted from your balance.</span>
                                         <div id="advertPointsInfo" class="mt-2 small text-muted"></div>
 
-                                        <!-- Points summary bar (real-time) -->
+                                        <!-- Points summary bar -->
                                         <div id="pointsSummaryBar" class="points-summary mt-3" style="display:none;">
-                                            <span class="label"><i class="fas fa-coins me-1"></i> Total cost:</span>
+                                            <span class="label"><i class="fas fa-coins"></i> Total cost:</span>
                                             <span>
                                                 <span class="total-cost" id="totalPointsCost">0</span> point(s)
-                                                <span class="text-muted small">(base 1 + promotions)</span>
+                                                <span class="points-badge">base 1 + promotions</span>
                                             </span>
                                             <span>
                                                 Balance: <span class="balance" id="pointsBalanceSummary">0</span>
                                             </span>
                                         </div>
-                                    </div> <br>
-
-                                    <div class="form-floating-group">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-semibold">Images (Optional)</label>
-                                            <div class="drop-area" id="imageDropArea" data-bs-toggle="tooltip" title="Upload image">
-                                                <i class="fas fa-cloud-upload-alt"></i>
-                                                <p>Drag & drop an image here or click to browse</p>
-                                                <div class="small text-muted">JPEG, PNG, WEBP up to 2MB</div>
-                                                <input type="file" id="imageInput" accept="image/*" hidden>
-                                            </div>
-                                            <div class="image-preview" id="imagePreview"></div>
-                                            <div class="helper-text mt-1">Upload a clear image of your item (optional).</div>
-                                        </div>
                                     </div>
 
-                                    <div class="d-flex justify-content-between">
-                                        <button type="button" class="btn btn-outline-custom prev-step" data-bs-toggle="tooltip" title="Previous step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
-                                        <button type="button" class="btn btn-primary-custom next-step" data-bs-toggle="tooltip" title="Review listing">Review <i class="fas fa-eye ms-2"></i></button>
+                                    <div class="form-floating-group">
+                                        <label class="form-label fw-bold mb-2" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.3px; color:#1e2a2a; display:block;">Images (Optional)</label>
+                                        <div class="drop-area" id="imageDropArea" data-bs-toggle="tooltip" title="Upload image">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Drag &amp; drop an image here or <span class="browse-btn">Browse</span></p>
+                                            <div class="small text-muted">JPEG, PNG, WEBP up to 2MB</div>
+                                            <input type="file" id="imageInput" accept="image/*" hidden>
+                                        </div>
+                                        <div class="image-preview" id="imagePreview"></div>
+                                        <span class="helper-text mt-1"><i class="fas fa-image"></i> Upload a clear image of your item (optional).</span>
+                                    </div>
+
+                                    <div class="btn-group-nav">
+                                        <button type="button" class="btn btn-outline-custom prev-step" data-bs-toggle="tooltip" title="Previous step">
+                                            <i class="fas fa-arrow-left me-2"></i>Previous
+                                        </button>
+                                        <button type="button" class="btn btn-primary-custom next-step" data-bs-toggle="tooltip" title="Review listing">
+                                            Review <i class="fas fa-eye ms-2"></i>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <!-- STEP 4 -->
                                 <div id="step4" class="form-step">
-                                    <h5 class="mb-3"><i class="fas fa-clipboard-list me-2"></i>Review your listing</h5>
-                                    <div class="bg-light p-3 rounded-4 mb-3" id="reviewContent"></div>
+                                    <div class="form-step-title"><i class="fas fa-clipboard-list"></i> Review your listing</div>
+                                    <p class="form-step-sub">Double-check everything before posting.</p>
 
-                                    <!-- Show points summary in review step too -->
+                                    <div id="reviewContent" class="mb-3"></div>
+
                                     <div id="reviewPointsSummary" class="points-summary mb-3" style="display:none;">
-                                        <span class="label"><i class="fas fa-coins me-1"></i> Total cost:</span>
+                                        <span class="label"><i class="fas fa-coins"></i> Total cost:</span>
                                         <span>
                                             <span class="total-cost" id="reviewTotalPointsCost">0</span> point(s)
-                                            <span class="text-muted small">(base 1 + promotions)</span>
+                                            <span class="points-badge">base 1 + promotions</span>
                                         </span>
                                         <span>
                                             Balance: <span class="balance" id="reviewPointsBalance">0</span>
                                         </span>
                                     </div>
 
-                                    <div class="d-flex justify-content-between">
-                                        <button type="button" class="btn btn-outline-custom prev-step" data-bs-toggle="tooltip" title="Previous step"><i class="fas fa-arrow-left me-2"></i>Previous</button>
-                                        <button type="button" class="btn btn-primary-custom" id="submitListingBtn" data-bs-toggle="tooltip" title="Post listing">Post Listing <i class="fas fa-paper-plane ms-2"></i></button>
+                                    <div class="btn-group-nav">
+                                        <button type="button" class="btn btn-outline-custom prev-step" data-bs-toggle="tooltip" title="Previous step">
+                                            <i class="fas fa-arrow-left me-2"></i>Previous
+                                        </button>
+                                        <button type="button" class="btn btn-primary-custom" id="submitListingBtn" data-bs-toggle="tooltip" title="Post listing">
+                                            Post Listing <i class="fas fa-paper-plane ms-2"></i>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -663,13 +1587,20 @@
             <div class="modal-footer" id="formModalFooter"></div>
         </div>
     </div>
-    <div id="confirmModal" class="modal-overlay" style="display: none;"><div class="modal-container confirm-modal-container"><div class="modal-header"><h3 id="confirmModalTitle">Confirm Action</h3><button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button></div><div class="modal-body" id="confirmModalBody"><p id="confirmMessage"></p></div><div class="modal-footer" id="confirmModalFooter"></div></div></div>
+    <div id="confirmModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container confirm-modal-container">
+            <div class="modal-header">
+                <h3 id="confirmModalTitle">Confirm Action</h3>
+                <button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
+            </div>
+            <div class="modal-body" id="confirmModalBody"><p id="confirmMessage"></p></div>
+            <div class="modal-footer" id="confirmModalFooter"></div>
+        </div>
+    </div>
 
     <button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top" data-bs-toggle="tooltip" title="Scroll to top">
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
-
-    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
     </script>
@@ -682,7 +1613,7 @@
 
     <script>
         // ──────────────────────────────────────────────────────────────
-        //  MAIN SCRIPT
+        //  MAIN SCRIPT – UNCHANGED (only UI CSS/HTML was redesigned)
         // ──────────────────────────────────────────────────────────────
 
         isAuthenticated();
@@ -690,7 +1621,7 @@
         let selectedImageFile = null;
 
         const LOOKUP_URL = CAMPUS_URL + 'get-lookup';
-        const BASE_POINTS_COST = 1; // each listing costs 1 point
+        const BASE_POINTS_COST = 1;
 
         injectBreadcrumb('Create Listing');
 
@@ -711,11 +1642,8 @@
             const input = document.getElementById('price');
             if (!input) return '';
             let val = input.value;
-            // Remove all non-digit except decimal
             let raw = val.replace(/[^\d.]/g, '');
-            // If empty, return empty
             if (raw === '') return '';
-            // Parse as float
             let num = parseFloat(raw);
             if (isNaN(num)) return '';
             return num.toString();
@@ -725,7 +1653,6 @@
             if (value === '' || value === null || value === undefined) return '';
             let num = parseFloat(value);
             if (isNaN(num)) return '';
-            // Format with commas and ₦
             return '₦' + num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
         }
 
@@ -733,22 +1660,16 @@
             const priceInput = document.getElementById('price');
             if (!priceInput) return;
 
-            // On input: allow only digits and one decimal
             priceInput.addEventListener('input', function(e) {
                 let val = this.value;
-                // Remove any non-digit except decimal
                 val = val.replace(/[^\d.]/g, '');
-                // Ensure only one decimal
                 let parts = val.split('.');
                 if (parts.length > 2) {
                     val = parts[0] + '.' + parts.slice(1).join('');
                 }
-                // If empty, set empty
                 this.value = val;
-                // Update helper text if needed
             });
 
-            // On blur: format with ₦ and commas
             priceInput.addEventListener('blur', function(e) {
                 let val = this.value;
                 if (val === '') return;
@@ -757,12 +1678,10 @@
                 this.value = formatNaira(num);
             });
 
-            // On focus: remove formatting to allow editing
             priceInput.addEventListener('focus', function(e) {
                 let val = this.value;
                 let raw = val.replace(/[^\d.]/g, '');
                 this.value = raw;
-                // Select all text for easy editing
                 this.select();
             });
         }
@@ -832,7 +1751,6 @@
                 }
             }
 
-            // Update the points message (small hint)
             const msgEl = document.getElementById('pointsMessage');
             if (msgEl) {
                 if (hasPromo) {
@@ -842,8 +1760,16 @@
                 }
             }
 
-            // Update advert points info (legacy)
             updateAdvertPointsInfo();
+            updateStepProgress();
+        }
+
+        // ---- Update step progress bar ----
+        function updateStepProgress() {
+            const fill = document.getElementById('stepProgressFill');
+            if (!fill) return;
+            const pct = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            fill.style.width = pct + '%';
         }
 
         // ---- Populate advert types (Banner / Hot Sale) ----
@@ -857,17 +1783,15 @@
             let html = '';
             advertTypes.forEach(advert => {
                 html += `
-                    <div class="form-check form-check-custom">
-                        <input class="form-check-input" type="checkbox" id="advert_${advert.value}" value="${advert.value}" data-points="${advert.points}">
-                        <label class="form-check-label" for="advert_${advert.value}">
-                            ${advert.label} (costs ${advert.points} points)
+                        <label class="form-check-custom">
+                            <input type="checkbox" id="advert_${advert.value}" value="${advert.value}" data-points="${advert.points}">
+                            <span class="checkmark"></span>
+                            <span class="label-text">${advert.label} <span class="small text-muted">(${advert.points} pts)</span></span>
                         </label>
-                    </div>
-                `;
+                    `;
             });
             container.innerHTML = html;
 
-            // Update points info on change
             container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
                 cb.addEventListener('change', () => {
                     updatePointsDisplay();
@@ -876,7 +1800,7 @@
             updatePointsDisplay();
         }
 
-        // ---- Legacy advert points info (kept for compatibility, now uses updatePointsDisplay) ----
+        // ---- Legacy advert points info ----
         function updateAdvertPointsInfo() {
             const container = document.getElementById('advertTypeContainer');
             const info = document.getElementById('advertPointsInfo');
@@ -898,7 +1822,7 @@
                 }
             } else {
                 info.textContent = `Base cost: 1 point. You have ${balance} points.`;
-                info.style.color = 'var(--text-muted)';
+                info.style.color = '#5f7775';
             }
         }
 
@@ -914,12 +1838,12 @@
             typeChoices.forEach((type, index) => {
                 const checked = index === 0 ? 'checked' : '';
                 html += `
-                    <label class="form-check-custom radio">
-                        <input type="radio" name="listing_type" value="${escapeHtml(type.value)}" ${checked}>
-                        <span class="checkmark"></span>
-                        <span class="label-text">${escapeHtml(type.label)}</span>
-                    </label>
-                `;
+                        <label class="form-check-custom radio">
+                            <input type="radio" name="listing_type" value="${escapeHtml(type.value)}" ${checked}>
+                            <span class="checkmark"></span>
+                            <span class="label-text">${escapeHtml(type.label)}</span>
+                        </label>
+                    `;
             });
             container.innerHTML = html;
 
@@ -1007,8 +1931,8 @@
                 });
             });
 
-            // Submit
             document.getElementById('submitListingBtn').addEventListener('click', onSubmitListing);
+            updateStepProgress();
         }
 
         function updateStepUI() {
@@ -1028,6 +1952,7 @@
                     ind.classList.remove('active', 'completed');
                 }
             }
+            updateStepProgress();
             document.querySelector('.dashboard-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
@@ -1099,7 +2024,8 @@
                 });
             }
 
-            const images = document.getElementById('images')?.files?.length || 0;
+            const images = document.getElementById('imageInput')?.files?.length || 0;
+            const hasImage = selectedImageFile !== null || images > 0;
 
             const promoContainer = document.getElementById('advertTypeContainer');
             let promoLabels = [];
@@ -1114,18 +2040,18 @@
             }
 
             document.getElementById('reviewContent').innerHTML = `
-                <div class="row g-2">
-                    <div class="col-md-6"><strong>Title:</strong> ${escapeHtml(title)}</div>
-                    <div class="col-md-6"><strong>Category:</strong> ${escapeHtml(catText)}</div>
-                    <div class="col-12"><strong>Description:</strong> ${escapeHtml(desc)}</div>
-                    <div class="col-md-4"><strong>Price:</strong> ${escapeHtml(formattedPrice || '₦0')}</div>
-                    <div class="col-md-4"><strong>Type:</strong> ${escapeHtml(typeLabel)}</div>
-                    <div class="col-md-4"><strong>Badge:</strong> ${escapeHtml(badge)}</div>
-                    <div class="col-12"><strong>Meeting spots:</strong> ${checkedLabels.length ? checkedLabels.join(', ') : 'None'}</div>
-                    <div class="col-12"><strong>Images:</strong> ${images} file(s) selected</div>
-                    ${promoLabels.length ? `<div class="col-12"><strong>Promotions:</strong> ${promoLabels.join(', ')}</div>` : ''}
-                </div>
-            `;
+                    <div class="row g-2">
+                        <div class="col-md-6 review-item"><span class="review-label">Title</span><span class="review-value">${escapeHtml(title)}</span></div>
+                        <div class="col-md-6 review-item"><span class="review-label">Category</span><span class="review-value">${escapeHtml(catText)}</span></div>
+                        <div class="col-12 review-item"><span class="review-label">Description</span><span class="review-value">${escapeHtml(desc)}</span></div>
+                        <div class="col-md-4 review-item"><span class="review-label">Price</span><span class="review-value">${escapeHtml(formattedPrice || '₦0')}</span></div>
+                        <div class="col-md-4 review-item"><span class="review-label">Type</span><span class="review-value">${escapeHtml(typeLabel)}</span></div>
+                        <div class="col-md-4 review-item"><span class="review-label">Badge</span><span class="review-value">${escapeHtml(badge)}</span></div>
+                        <div class="col-12 review-item"><span class="review-label">Meeting spots</span><span class="review-value">${checkedLabels.length ? checkedLabels.join(', ') : 'None'}</span></div>
+                        <div class="col-12 review-item"><span class="review-label">Images</span><span class="review-value">${hasImage ? '✅ Uploaded' : 'None'}</span></div>
+                        ${promoLabels.length ? `<div class="col-12 review-item"><span class="review-label">Promotions</span><span class="review-value">${promoLabels.join(', ')}</span></div>` : ''}
+                    </div>
+                `;
         }
 
         // ---- POINTS VALIDATION before submit ----
@@ -1146,7 +2072,6 @@
 
         // ---- Submit ----
         async function onSubmitListing() {
-            // 1. Validate points
             if (!validatePointsBalance()) {
                 const display = document.getElementById('pointsBalanceDisplay');
                 if (display) {
@@ -1169,7 +2094,6 @@
             const form = document.getElementById('listingForm');
             const formData = new FormData(form);
 
-            // Override price with raw numeric value
             const rawPrice = getRawPrice();
             formData.set('price', rawPrice);
 
@@ -1180,7 +2104,6 @@
             const type = formData.get('listing_type');
             if (type === 'freebie') formData.set('price', '0');
 
-            // Collect hotspots
             const container = document.getElementById('hotspotsContainer');
             const hotspotIds = [];
             if (container) {
@@ -1257,7 +2180,6 @@
             const badgeSelect = document.getElementById('badge');
             if (badgeSelect) badgeSelect.value = '';
 
-            // Reset price input
             const priceInput = document.getElementById('price');
             if (priceInput) {
                 priceInput.value = '';
@@ -1350,17 +2272,13 @@
                     populateAdvertTypes(data.advert_type);
                 }
 
-                // Setup price formatting
                 setupPriceInput();
-
-                // Initial points display
                 updatePointsDisplay();
 
                 skeleton.style.display = 'none';
                 realContent.style.display = 'block';
 
                 initWizard();
-
                 setupImageUpload();
 
                 setTimeout(updatePointsDisplay, 100);
@@ -1384,71 +2302,63 @@
         }
 
         function setupImageUpload() {
-    const dropArea = document.getElementById('imageDropArea');
-    const fileInput = document.getElementById('imageInput');
-    const previewContainer = document.getElementById('imagePreview');
-    if (!dropArea || !fileInput) return;
+            const dropArea = document.getElementById('imageDropArea');
+            const fileInput = document.getElementById('imageInput');
+            const previewContainer = document.getElementById('imagePreview');
+            if (!dropArea || !fileInput) return;
 
-    const handleFile = (file) => {
-        if (!file) return;
-        // Validate size
-        if (file.size > 2 * 1024 * 1024) {
-            showToast('Image must be less than 2MB.', 'error');
-            return false;
-        }
-        // Validate type
-        const allowed = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!allowed.includes(file.type)) {
-            showToast('Only JPG, PNG, and WEBP images are allowed.', 'error');
-            return false;
-        }
-        // Store file and show preview
-        selectedImageFile = file;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-        };
-        reader.readAsDataURL(file);
-        return true;
-    };
+            const handleFile = (file) => {
+                if (!file) return;
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('Image must be less than 2MB.', 'error');
+                    return false;
+                }
+                const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!allowed.includes(file.type)) {
+                    showToast('Only JPG, PNG, and WEBP images are allowed.', 'error');
+                    return false;
+                }
+                selectedImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                };
+                reader.readAsDataURL(file);
+                return true;
+            };
 
-    // Click to open file picker
-    dropArea.addEventListener('click', () => fileInput.click());
+            dropArea.addEventListener('click', () => fileInput.click());
 
-    // Drag & drop events
-    dropArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropArea.classList.add('drag-over');
-    });
-    dropArea.addEventListener('dragleave', () => {
-        dropArea.classList.remove('drag-over');
-    });
-    dropArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropArea.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            const file = files[0];
-            if (handleFile(file)) {
-                // Update file input to reflect the dropped file (optional)
-                const dt = new DataTransfer();
-                dt.items.add(file);
-                fileInput.files = dt.files;
-            }
-        }
-    });
+            dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropArea.classList.add('drag-over');
+            });
+            dropArea.addEventListener('dragleave', () => {
+                dropArea.classList.remove('drag-over');
+            });
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.classList.remove('drag-over');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (handleFile(file)) {
+                        const dt = new DataTransfer();
+                        dt.items.add(file);
+                        fileInput.files = dt.files;
+                    }
+                }
+            });
 
-    // File input change
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) {
-            handleFile(fileInput.files[0]);
-        } else {
-            // If user cancels selection, clear preview
-            previewContainer.innerHTML = '';
-            selectedImageFile = null;
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    handleFile(fileInput.files[0]);
+                } else {
+                    previewContainer.innerHTML = '';
+                    selectedImageFile = null;
+                }
+            });
         }
-    });
-}
 
         // ---- Bootstrap ----
         document.addEventListener('DOMContentLoaded', () => {

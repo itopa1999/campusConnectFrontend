@@ -3,50 +3,428 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>CampusConnect UI · My Profile</title>
+  <title>CampusConnect Demo University · My Profile</title>
   <!-- Bootstrap, Icons, Fonts, AOS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
   <link rel="stylesheet" href="../assets/css/main.css" />
   <link rel="stylesheet" href="../assets/css/modal.css">
 
   <style>
+    /* ──────────────────────────────────────────────────────────────
+       ROOT & GLOBAL
+       ────────────────────────────────────────────────────────────── */
     :root {
-      --primary: #2c7a5e;
-      --primary-dark: #1f5e4a;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f9fbf8;
+      --accent: #2c7a5e;
+      --accent-light: #eaf7f0;
+      --accent-dark: #1f5e48;
+      --accent-glow: rgba(44, 122, 94, 0.18);
+      --card-radius: 20px;
+      --shadow-card: 0 12px 40px rgba(31, 94, 72, 0.07);
+      --shadow-card-hover: 0 20px 56px rgba(31, 94, 72, 0.13);
+      --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
+      --transition-smooth: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Toggle switch */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f6f9f8;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SECTION CARD – enhanced
+       ────────────────────────────────────────────────────────────── */
+    .section-card {
+      background: #ffffff;
+      border-radius: var(--card-radius);
+      border: 1px solid rgba(44, 122, 94, 0.05);
+      box-shadow: var(--shadow-soft);
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #4aa882);
+      opacity: 0.3;
+    }
+
+    .section-card:hover {
+      box-shadow: var(--shadow-card-hover);
+    }
+
+    .section-card .card-header-custom {
+      padding: 1rem 1.25rem 0.5rem;
+      border-bottom: none;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-card .card-header-custom h6 {
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #5f7775;
+      margin: 0;
+    }
+
+    .section-card .card-header-custom i {
+      color: var(--accent);
+      opacity: 0.7;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       PROFILE AVATAR – enhanced
+       ────────────────────────────────────────────────────────────── */
+    .profile-avatar-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .profile-avatar-large {
+      width: 128px;
+      height: 128px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid white;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+      transition: var(--transition-smooth);
+      background: #f1f3f2;
+    }
+
+    .profile-avatar-large:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.14);
+    }
+
+    .profile-avatar-wrapper .avatar-edit-btn {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background: white;
+      border-radius: 50%;
+      padding: 0.35rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      border: 2px solid white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+    }
+
+    .profile-avatar-wrapper .avatar-edit-btn:hover {
+      transform: scale(1.08);
+      background: var(--accent-light);
+    }
+
+    .profile-avatar-wrapper .avatar-edit-btn i {
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
+
+    .profile-avatar-wrapper .avatar-spinner {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.80);
+      backdrop-filter: blur(4px);
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .profile-avatar-wrapper .avatar-spinner.active {
+      display: flex;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       STAT BADGE – enhanced
+       ────────────────────────────────────────────────────────────── */
+    .stat-badge {
+      background: #f8faf9;
+      border-radius: 1rem;
+      padding: 0.75rem 0.5rem;
+      text-align: center;
+      transition: var(--transition-smooth);
+      border: 1px solid rgba(44, 122, 94, 0.04);
+      height: 100%;
+    }
+
+    .stat-badge:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(44, 122, 94, 0.06);
+      border-color: rgba(44, 122, 94, 0.08);
+    }
+
+    .stat-badge .stat-icon {
+      font-size: 1.2rem;
+      color: var(--accent);
+      opacity: 0.7;
+      display: block;
+      margin-bottom: 0.1rem;
+    }
+
+    .stat-badge .stat-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #7a9490;
+    }
+
+    .stat-badge .stat-value {
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: #14211f;
+      line-height: 1.2;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       VERIFICATION ITEMS
+       ────────────────────────────────────────────────────────────── */
+    .verification-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+    }
+
+    .verification-item:last-child {
+      border-bottom: none;
+    }
+
+    .verification-item .v-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--accent-light);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .verification-item:hover .v-icon {
+      transform: scale(1.05);
+    }
+
+    .verification-item .v-info {
+      flex: 1;
+    }
+
+    .verification-item .v-info strong {
+      font-size: 0.85rem;
+      color: #14211f;
+      display: block;
+    }
+
+    .verification-item .v-info span {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .verification-item .v-info span.verified {
+      color: var(--accent);
+    }
+
+    .verification-item .v-info span.pending {
+      color: #f5b042;
+    }
+
+    .verification-item .v-info span.unverified {
+      color: #dc3545;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       BADGES – earned
+       ────────────────────────────────────────────────────────────── */
+    .badge-earned {
+      background: #f0f7f3;
+      color: var(--accent-dark);
+      border-radius: 40px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid rgba(44, 122, 94, 0.06);
+      transition: var(--transition-smooth);
+    }
+
+    .badge-earned:hover {
+      background: #d4ece2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(44, 122, 94, 0.08);
+    }
+
+    .badge-earned i {
+      font-size: 0.7rem;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       INFO ROW – enhanced
+       ────────────────────────────────────────────────────────────── */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+      transition: var(--transition-smooth);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-row:hover {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      background: rgba(44, 122, 94, 0.01);
+      border-radius: 8px;
+    }
+
+    .info-row .info-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #7a9490;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .info-row .info-value {
+      font-weight: 600;
+      color: #14211f;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 576px) {
+      .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.1rem;
+        padding: 0.5rem 0;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       FORM FLOATING LABELS – edit mode
+       ────────────────────────────────────────────────────────────── */
+    .form-floating-label {
+      position: relative;
+      margin-bottom: 1.75rem;
+    }
+
+    .form-floating-label .form-label {
+      position: absolute;
+      top: 0;
+      left: 1rem;
+      transform: translateY(-50%);
+      background: #ffffff;
+      padding: 0 0.5rem;
+      margin: 0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      pointer-events: none;
+      z-index: 2;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      transition: var(--transition-smooth);
+    }
+
+    .form-floating-label .form-label.required::after {
+      content: ' *';
+      color: #dc3545;
+    }
+
+    .form-floating-label .form-control,
+    .form-floating-label .form-select,
+    .form-floating-label textarea.form-control {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1.5px solid rgba(44, 122, 94, 0.10);
+      border-radius: 14px;
+      background: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #1e2a2a;
+      transition: var(--transition-smooth);
+    }
+
+    .form-floating-label .form-control:focus,
+    .form-floating-label .form-select:focus,
+    .form-floating-label textarea.form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.08);
+      outline: none;
+      background: #fcfefe;
+    }
+
+    .form-floating-label .form-control:hover,
+    .form-floating-label .form-select:hover,
+    .form-floating-label textarea.form-control:hover {
+      border-color: rgba(44, 122, 94, 0.25);
+    }
+
+    .form-floating-label .form-control:disabled {
+      background: #f4f7f6;
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TOGGLE SWITCH – enhanced
+       ────────────────────────────────────────────────────────────── */
     .toggle-switch {
       position: relative;
       display: inline-block;
       width: 52px;
       height: 26px;
+      flex-shrink: 0;
     }
+
     .toggle-switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
-    .slider {
+
+    .toggle-switch .slider {
       position: absolute;
       cursor: pointer;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #ccc;
+      background-color: #d1d5db;
       transition: 0.3s;
       border-radius: 34px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
     }
-    .slider:before {
+
+    .toggle-switch .slider::before {
       position: absolute;
       content: "";
       height: 20px;
@@ -56,169 +434,26 @@
       background-color: white;
       transition: 0.3s;
       border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     }
-    input:checked + .slider {
-      background-color: var(--primary);
+
+    .toggle-switch input:checked + .slider {
+      background-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.15);
     }
-    input:checked + .slider:before {
+
+    .toggle-switch input:checked + .slider::before {
       transform: translateX(26px);
     }
 
-    /* Profile avatar */
-    .profile-avatar-large {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 3px solid white;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    .toggle-switch input:disabled + .slider {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
-    .stat-badge {
-      background: white;
-      border-radius: 1rem;
-      padding: 0.75rem;
-      text-align: center;
-      transition: transform 0.2s;
-    }
-    .stat-badge:hover { transform: translateY(-3px); }
-
-    .verification-icon {
-      width: 40px;
-      height: 40px;
-      background: #e9f5ef;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary);
-    }
-
-    .badge-custom {
-      background: #e9ecef;
-      padding: 0.5rem 1rem;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-    .badge-custom i { margin-right: 6px; }
-
-    .rating-stars i { color: #f5b042; }
-
-    .progress-bar-custom {
-      height: 8px;
-      border-radius: 10px;
-      background-color: #e9ecef;
-    }
-    .progress-fill {
-      background: var(--primary);
-      width: 0%;
-      height: 100%;
-      border-radius: 10px;
-    }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .info-label { color: #6c757d; font-weight: 500; }
-    .info-value { font-weight: 600; color: #212529; }
-
-    @media (max-width: 768px) {
-      .info-row { flex-direction: column; gap: 5px; }
-    }
-
-    .section-card {
-      border-radius: 1.5rem;
-      border: none;
-      transition: all 0.2s;
-      background: white;
-    }
-
-    .btn-outline-custom {
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      background: transparent;
-    }
-    .btn-outline-custom:hover {
-      background: var(--primary);
-      color: white;
-    }
-    .btn-primary-custom {
-      background: var(--primary);
-      border: none;
-      color: white;
-    }
-    .btn-primary-custom:hover {
-      background: var(--primary-dark);
-    }
-
-    /* ─── Skeleton Loader ─── */
-    .skeleton-loader {
-      background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.4s infinite;
-      border-radius: 8px;
-    }
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    .skeleton-avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      margin: 0 auto 1rem;
-    }
-    .skeleton-text {
-      height: 16px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-    }
-    .skeleton-text.short { width: 60%; }
-    .skeleton-text.medium { width: 80%; }
-    .skeleton-heading {
-      height: 28px;
-      width: 40%;
-      margin-bottom: 16px;
-      border-radius: 8px;
-    }
-
-    /* ─── Edit mode toggles ─── */
-    .edit-section {
-      transition: all 0.2s;
-    }
-    .edit-section .form-floating-label {
-      margin-bottom: 1.25rem;
-    }
-    .form-floating-label label.required:after {
-      content: " *";
-      color: #dc3545;
-    }
-
-    /* History items */
-    .history-item {
-      border-bottom: 1px solid #eef2f0;
-      padding: 0.75rem 0;
-      transition: background 0.15s;
-    }
-    .history-item:last-child { border-bottom: none; }
-    .history-item:hover {
-      background: #fafcfb;
-      margin: 0 -0.75rem;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-      border-radius: 0.75rem;
-    }
-
-    /* Pagination load more */
-    .load-more-btn {
-      border-radius: 40px;
-      padding: 0.4rem 1.5rem;
-      font-size: 0.9rem;
-    }
+    /* ──────────────────────────────────────────────────────────────
+       RESTRICTION WARNING
+       ────────────────────────────────────────────────────────────── */
     .restriction-warning {
       background: #fff8e7;
       border-left: 4px solid #f5b042;
@@ -226,32 +461,679 @@
       border-radius: 0.75rem;
       font-size: 0.85rem;
       margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    #avatarSpinner {
-      display: none !important;
+    .restriction-warning i {
+      color: #f5b042;
+      font-size: 1.1rem;
     }
 
-</style>
+    /* ──────────────────────────────────────────────────────────────
+       PROGRESS BAR – enhanced
+       ────────────────────────────────────────────────────────────── */
+    .progress-bar-custom {
+      height: 6px;
+      border-radius: 50px;
+      background: #eef2f0;
+      overflow: hidden;
+    }
+
+    .progress-bar-custom .progress-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--accent), #4aa882);
+      transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      width: 0%;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       HISTORY / TRANSACTION ITEMS
+       ────────────────────────────────────────────────────────────── */
+    .history-item {
+      border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+      padding: 0.7rem 0.25rem;
+      transition: var(--transition-smooth);
+      border-radius: 10px;
+      margin: 0 -0.25rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item:hover {
+      background: rgba(44, 122, 94, 0.02);
+      transform: translateX(3px);
+    }
+
+    .history-item .h-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .history-item .h-icon.credit {
+      background: #e3f5ec;
+      color: #1e7b4a;
+    }
+
+    .history-item .h-icon.debit {
+      background: #ffe6e5;
+      color: #c23d2e;
+    }
+
+    .history-item .h-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .history-item .h-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #14211f;
+    }
+
+    .history-item .h-meta {
+      font-size: 0.7rem;
+      color: #7a9490;
+    }
+
+    .history-item .h-amount {
+      font-weight: 700;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .history-item .h-amount.positive {
+      color: var(--accent);
+    }
+
+    .history-item .h-amount.negative {
+      color: #dc3545;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       REVIEW ITEMS – enhanced
+       ────────────────────────────────────────────────────────────── */
+    .review-item {
+      padding: 0.7rem 0.25rem;
+      border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+      transition: var(--transition-smooth);
+      border-radius: 10px;
+      margin: 0 -0.25rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .review-item:last-child {
+      border-bottom: none;
+    }
+
+    .review-item:hover {
+      background: rgba(44, 122, 94, 0.02);
+      transform: translateX(3px);
+    }
+
+    .review-item .review-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.1rem;
+    }
+
+    .review-item .review-header .reviewer {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #14211f;
+    }
+
+    .review-item .review-header .review-date {
+      font-size: 0.65rem;
+      color: #7a9490;
+    }
+
+    .review-item .review-header .review-stars {
+      display: inline-flex;
+      gap: 1px;
+      font-size: 0.7rem;
+    }
+
+    .review-item .review-header .review-stars i {
+      color: #f5b042;
+    }
+
+    .review-item .review-header .review-stars i.empty {
+      color: #dce0dd;
+    }
+
+    .review-item .review-comment {
+      font-size: 0.85rem;
+      color: #2d403d;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       BUTTONS – enhanced
+       ────────────────────────────────────────────────────────────── */
+    .btn-primary-custom {
+      background: var(--accent);
+      border: none;
+      padding: 0.6rem 1.8rem;
+      font-weight: 700;
+      border-radius: 40px;
+      transition: var(--transition-smooth);
+      color: white;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 16px rgba(44, 122, 94, 0.18);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-primary-custom:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+      color: white;
+    }
+
+    .btn-primary-custom:disabled {
+      opacity: 0.6;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-outline-custom {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-outline-custom:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      border-color: var(--accent-dark);
+      color: var(--accent-dark);
+    }
+
+    .btn-outline-custom:active {
+      transform: translateY(0);
+    }
+
+    .btn-outline-secondary-custom {
+      background: transparent;
+      border: 1.5px solid #d1d5db;
+      color: #5f7775;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+      font-size: 0.8rem;
+    }
+
+    .btn-outline-secondary-custom:hover {
+      background: #f1f3f2;
+      border-color: #b0b8b5;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-danger-custom {
+      background: transparent;
+      border: 1.5px solid rgba(220, 53, 69, 0.20);
+      color: #dc3545;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+      font-size: 0.8rem;
+    }
+
+    .btn-outline-danger-custom:hover {
+      background: #dc3545;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       LOAD MORE BUTTON
+       ────────────────────────────────────────────────────────────── */
+    .load-more-btn {
+      background: transparent;
+      border: 1.5px solid rgba(44, 122, 94, 0.12);
+      color: var(--accent);
+      padding: 0.3rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: var(--transition-smooth);
+    }
+
+    .load-more-btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .load-more-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SKELETON LOADER – enhanced
+       ────────────────────────────────────────────────────────────── */
+    .skeleton-loader {
+      background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-avatar {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+    }
+
+    .skeleton-text {
+      height: 14px;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+
+    .skeleton-text.short { width: 60%; }
+    .skeleton-text.medium { width: 80%; }
+
+    .skeleton-heading {
+      height: 28px;
+      width: 40%;
+      margin-bottom: 16px;
+      border-radius: 8px;
+    }
+
+    .skeleton-stat {
+      height: 90px;
+      border-radius: 1rem;
+    }
+
+    .skeleton-card {
+      height: 200px;
+      border-radius: 1rem;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SCROLL TOP – refined
+       ────────────────────────────────────────────────────────────── */
+    .scroll-top-btn {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 1080;
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px);
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .scroll-top-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(10px) scale(1.05);
+      box-shadow: 0 12px 36px rgba(44, 122, 94, 0.30);
+    }
+
+    .scroll-top-btn.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .scroll-top-btn {
+        right: 1rem;
+        bottom: 5.5rem;
+        width: 44px;
+        height: 44px;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       BREADCRUMB – preserve
+       ────────────────────────────────────────────────────────────── */
+    #breadcrumb-placeholder nav {
+      background: transparent !important;
+      padding: 0.75rem 0 0.25rem 0 !important;
+    }
+
+    #breadcrumb-placeholder .breadcrumb {
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      font-size: 0.8rem;
+    }
+
+    #breadcrumb-placeholder .breadcrumb-item a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    #breadcrumb-placeholder .breadcrumb-item a:hover {
+      color: var(--accent-dark);
+      text-decoration: underline;
+    }
+
+    #breadcrumb-placeholder .breadcrumb-item.active {
+      color: #5f7775;
+      font-weight: 500;
+    }
+
+    #breadcrumb-placeholder .breadcrumb-item+.breadcrumb-item::before {
+      color: #b0c6c0;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TOOLTIP
+       ────────────────────────────────────────────────────────────── */
+    .tooltip-inner {
+      background: #14211f;
+      font-weight: 500;
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+    }
+
+    .tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+    .tooltip.bs-tooltip-top .tooltip-arrow::before {
+      border-top-color: #14211f;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       DROP AREA – for ID upload
+       ────────────────────────────────────────────────────────────── */
+    .drop-area {
+      border: 2px dashed rgba(44, 122, 94, 0.20);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      background: #fafcfa;
+    }
+
+    .drop-area:hover {
+      border-color: rgba(44, 122, 94, 0.40);
+      background: #f4f9f6;
+    }
+
+    .drop-area.drag-over {
+      border-color: var(--accent);
+      background: #eaf7f0;
+      box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.06);
+      transform: scale(1.01);
+    }
+
+    .drop-area i {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      display: block;
+      opacity: 0.6;
+      transition: var(--transition-smooth);
+    }
+
+    .drop-area:hover i {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .drop-area p {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #3a534e;
+    }
+
+    .drop-area .small {
+      font-size: 0.75rem;
+      color: #7a9490;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       RESPONSIVE
+       ────────────────────────────────────────────────────────────── */
+    @media (max-width: 992px) {
+      .profile-sidebar {
+        margin-bottom: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+      }
+      .profile-avatar-wrapper .avatar-edit-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+        bottom: 0;
+        right: 0;
+      }
+      .stat-badge .stat-value {
+        font-size: 1.1rem;
+      }
+      .section-card {
+        border-radius: 16px;
+        padding: 0.75rem !important;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .stat-badge {
+        padding: 0.5rem 0.25rem;
+      }
+      .stat-badge .stat-value {
+        font-size: 1rem;
+      }
+      .stat-badge .stat-icon {
+        font-size: 1rem;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       EDIT MODE TOGGLE ROW
+       ────────────────────────────────────────────────────────────── */
+    .edit-mode-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .edit-mode-row .edit-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #5f7775;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SECTION TITLE WITH ICON
+       ────────────────────────────────────────────────────────────── */
+    .section-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #14211f;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-title i {
+      color: var(--accent);
+      font-size: 1rem;
+      opacity: 0.7;
+      width: 1.5rem;
+      text-align: center;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       MISSING FIELDS LIST
+       ────────────────────────────────────────────────────────────── */
+    .missing-fields-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0;
+    }
+
+    .missing-fields-list li {
+      font-size: 0.75rem;
+      color: #5f7775;
+      padding: 0.15rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .missing-fields-list li i {
+      width: 18px;
+      font-size: 0.7rem;
+      color: #f5b042;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       RATING STARS – inline
+       ────────────────────────────────────────────────────────────── */
+    .rating-stars {
+      display: inline-flex;
+      gap: 1px;
+      font-size: 0.8rem;
+    }
+
+    .rating-stars i {
+      color: #f5b042;
+    }
+
+    .rating-stars i.empty {
+      color: #dce0dd;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       ANIMATIONS
+       ────────────────────────────────────────────────────────────── */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-card {
+      animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .section-card:nth-child(1) { animation-delay: 0.05s; }
+    .section-card:nth-child(2) { animation-delay: 0.10s; }
+    .section-card:nth-child(3) { animation-delay: 0.15s; }
+    .section-card:nth-child(4) { animation-delay: 0.20s; }
+    .section-card:nth-child(5) { animation-delay: 0.25s; }
+
+    /* ─── Mobile nav tweaks ─── */
+    .dashboard-mobile-actions .action-link.active {
+      background: var(--accent);
+      color: white;
+    }
+    .dashboard-mobile-actions .action-link.active i {
+      color: white;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       POINTS BALANCE DISPLAY
+       ────────────────────────────────────────────────────────────── */
+    .points-display {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .points-display .amount {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent-dark);
+      letter-spacing: -0.02em;
+    }
+
+    .points-display .label {
+      font-size: 0.8rem;
+      color: #7a9490;
+    }
+  </style>
 </head>
 <body>
 <div id="particles-js"></div>
 
 <div id="nav-placeholder"></div>
 <div id="breadcrumb-placeholder"></div>
-<main class="">
+
+<main>
   <div class="container py-4">
 
-    <!-- Edit mode toggle row (visible always) -->
-    <div class="d-flex justify-content-end align-items-center gap-3 mb-4">
-      <span class="fw-semibold">Edit mode</span>
-      <label class="toggle-switch">
+    <!-- ─── EDIT MODE TOGGLE ─── -->
+    <div class="edit-mode-row">
+      <span class="edit-label">Edit mode</span>
+      <label class="toggle-switch" data-bs-toggle="tooltip" title="Toggle edit mode">
         <input type="checkbox" id="editModeToggle" />
         <span class="slider"></span>
       </label>
     </div>
 
-    <!-- SKELETON LOADER (visible initially) -->
+    <!-- ─── SKELETON LOADER ─── -->
     <div id="skeletonLoader">
       <div class="row g-4">
         <div class="col-12 col-lg-4">
@@ -260,10 +1142,10 @@
             <div class="skeleton-text skeleton-loader" style="height:24px; width:70%; margin:0 auto;"></div>
             <div class="skeleton-text skeleton-loader" style="width:50%; margin:0 auto;"></div>
             <div class="row g-2 mt-3">
-              <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:60px;"></div></div>
-              <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:60px;"></div></div>
+              <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:80px;"></div></div>
+              <div class="col-6"><div class="skeleton-text skeleton-loader" style="height:80px;"></div></div>
             </div>
-            <div class="skeleton-text skeleton-loader mt-3" style="height:100px;"></div>
+            <div class="skeleton-text skeleton-loader mt-3" style="height:120px;"></div>
             <div class="skeleton-text skeleton-loader" style="height:80px;"></div>
           </div>
         </div>
@@ -277,108 +1159,146 @@
       </div>
     </div>
 
-    <!-- REAL CONTENT (hidden initially) -->
+    <!-- ─── REAL CONTENT ─── -->
     <div id="realContent" style="display: none;">
+
+      <!-- Restriction warning -->
       <div id="editRestrictionWarning" class="restriction-warning" style="display: none;"></div>
+
       <div class="row g-4">
-        <!-- LEFT COLUMN -->
-        <div class="col-12 col-lg-4">
+
+        <!-- ─── LEFT COLUMN ─── -->
+        <div class="col-12 col-lg-4 profile-sidebar">
+
+          <!-- Profile card -->
           <div class="section-card shadow-sm p-4 text-center mb-4" data-aos="fade-right">
-            <div class="position-relative d-inline-block mb-3">
-              <img src="https://ui-avatars.com/api/?background=2c7a5e&color=fff&name=Salawu+Lucky" alt="Profile" class="profile-avatar-large" id="profileAvatar" />
-              <!-- Spinner overlay (hidden by default) -->
-              <div id="avatarSpinner" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-light bg-opacity-75 rounded-circle" style="display: none; z-index: 10;">
+
+            <!-- Avatar -->
+            <div class="profile-avatar-wrapper mb-3">
+              <img src="https://Demo University-avatars.com/api/?background=2c7a5e&color=fff&name=Salawu+Lucky"
+                   alt="Profile"
+                   class="profile-avatar-large"
+                   id="profileAvatar" />
+              <div class="avatar-spinner" id="avatarSpinner">
                 <div class="spinner-border text-success" role="status">
                   <span class="visually-hidden">Uploading...</span>
                 </div>
               </div>
-              <label for="profilePicUpload" class="position-absolute bottom-0 end-0 bg-white rounded-circle p-1 shadow-sm" style="cursor: pointer;">
-                <i class="fas fa-camera fa-sm text-primary"></i>
+              <label for="profilePicUpload" class="avatar-edit-btn" data-bs-toggle="tooltip" title="Change profile picture">
+                <i class="fas fa-camera"></i>
               </label>
               <input type="file" id="profilePicUpload" hidden accept="image/*" />
             </div>
-            <div id="nameDisplayView"><h3 class="fw-bold mb-1">Salawu Lucky</h3></div>
-            <div id="emailDisplayView"><p class="text-muted small">salawu.lucky@stu.ui.edu.ng</p></div>
 
+            <!-- Name & Email -->
+            <div id="nameDisplayView">
+              <h3 class="fw-bold mb-1" style="color:#14211f;">Salawu Lucky</h3>
+            </div>
+            <div id="emailDisplayView">
+              <p class="text-muted small" style="font-size:0.8rem;">salawu.lucky@stu.Demo University.edu.ng</p>
+            </div>
+
+            <!-- Stats -->
             <div class="row g-2 mt-3">
               <div class="col-6">
                 <div class="stat-badge">
-                  <i class="fas fa-coins fs-5" style="color: var(--primary);"></i>
-                  <div class="small text-muted">Points</div>
-                  <strong class="fs-5" id="pointsDisplay">0</strong>
+                  <span class="stat-icon"><i class="fas fa-coins"></i></span>
+                  <div class="stat-label">Points</div>
+                  <div class="stat-value" id="pointsDisplay">0</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="stat-badge">
-                  <i class="fas fa-star fs-5" style="color: var(--primary);"></i>
-                  <div class="small text-muted">Trust score</div>
-                  <strong class="fs-5" id="trustScore">0%</strong>
+                  <span class="stat-icon"><i class="fas fa-shield-alt"></i></span>
+                  <div class="stat-label">Trust score</div>
+                  <div class="stat-value" id="trustScore">0%</div>
                 </div>
               </div>
             </div>
 
             <hr class="my-3" />
+
+            <!-- Verification summary -->
             <div class="text-start">
-              <h6 class="mb-3"><i class="fas fa-shield-alt me-2"></i>Verification summary</h6>
-              <div class="d-flex align-items-center gap-2 mb-2">
-                <span class="verification-icon"><i class="fas fa-envelope"></i></span>
-                <div><strong>Email</strong><br /><span class="small" id="emailVerifiedStatus">Not verified</span></div>
+              <h6 class="mb-3" style="font-weight:700; font-size:0.85rem; color:#14211f;">
+                <i class="fas fa-shield-alt me-2 text-accent"></i>Verification summary
+              </h6>
+              <div class="verification-item">
+                <span class="v-icon"><i class="fas fa-envelope"></i></span>
+                <div class="v-info">
+                  <strong>Email</strong>
+                  <span id="emailVerifiedStatus" class="pending">Not verified</span>
+                </div>
               </div>
-              <div class="d-flex align-items-center gap-2 mb-2">
-                <span class="verification-icon"><i class="fas fa-id-card"></i></span>
-                <div><strong>Student ID</strong><br /><span class="small" id="studentIdStatus">Pending verification</span></div>
+              <div class="verification-item">
+                <span class="v-icon"><i class="fas fa-id-card"></i></span>
+                <div class="v-info">
+                  <strong>Student ID</strong>
+                  <span id="studentIdStatus" class="pending">Pending verification</span>
+                </div>
               </div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="verification-icon"><i class="fas fa-building"></i></span>
-                <div><strong>Hall residence</strong><br /><span class="small" id="hallVerifiedStatus">Not verified</span></div>
+              <div class="verification-item">
+                <span class="v-icon"><i class="fas fa-building"></i></span>
+                <div class="v-info">
+                  <strong>Hall residence</strong>
+                  <span id="hallVerifiedStatus" class="unverified">Not verified</span>
+                </div>
               </div>
             </div>
 
-            <!-- Profile Completion -->
-            <div class="mt-3">
+            <!-- Profile completion -->
+            <div class="mt-3 text-start">
               <div class="d-flex justify-content-between small">
-                <span>Profile completion</span>
-                <span id="profileCompletionPercent">0%</span>
+                <span style="font-weight:600; color:#5f7775;">Profile completion</span>
+                <span style="font-weight:700; color:#14211f;" id="profileCompletionPercent">0%</span>
               </div>
               <div class="progress-bar-custom mt-1">
                 <div class="progress-fill" id="profileCompletionFill" style="width:0%"></div>
               </div>
-              <div id="profileMissingFields" class="mt-2 small text-start" style="display: none;"></div>
-              <div class="small text-muted mt-1" id="profileCompletionHint">Complete your profile to get more visibility.</div>
+              <div id="profileMissingFields" class="mt-2" style="display: none;"></div>
+              <div class="small text-muted mt-1" id="profileCompletionHint" style="font-size:0.7rem;">
+                Complete your profile to get more visibility.
+              </div>
             </div>
 
-            <div class="mt-4">
-              <a href="buy-points.html" class="btn btn-primary-custom w-100 mb-2"><i class="fas fa-plus-circle me-1"></i>Add points</a>
+            <!-- Actions -->
+            <div class="mt-4 d-flex flex-column gap-2">
+              <a href="buy-points.html" class="btn btn-primary-custom w-100"><i class="fas fa-plus-circle me-1"></i>Add points</a>
               <a href="main.html#listings" class="btn btn-outline-custom w-100"><i class="fas fa-list-ul me-1"></i>My listings</a>
             </div>
           </div>
 
           <!-- Badges -->
           <div class="section-card shadow-sm p-4" data-aos="fade-right" data-aos-delay="100">
-            <h6 class="mb-3"><i class="fas fa-medal me-2"></i>Badges earned</h6>
+            <h6 class="section-title"><i class="fas fa-medal"></i>Badges earned</h6>
             <div class="d-flex flex-wrap gap-2" id="badgesContainer">
               <!-- dynamic badges -->
             </div>
-            <div class="mt-3 small text-muted">Complete your student ID verification to unlock the “ID verified” badge.</div>
+            <div class="mt-3 small text-muted" style="font-size:0.7rem;">
+              <i class="fas fa-info-circle me-1"></i>Complete your student ID verification to unlock the “ID verified” badge.
+            </div>
           </div>
         </div>
 
-        <!-- RIGHT COLUMN -->
+        <!-- ─── RIGHT COLUMN ─── -->
         <div class="col-12 col-lg-8">
+
           <!-- Personal Information -->
           <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left">
             <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-              <h5 class="mb-0"><i class="fas fa-user me-2" style="color: var(--primary);"></i>Personal Information</h5>
+              <h6 class="section-title mb-0"><i class="fas fa-user"></i>Personal Information</h6>
             </div>
+
             <!-- View mode -->
             <div id="personalView" class="edit-section">
-              <div class="row g-3">
+              <div class="row g-2">
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Full name</span><span class="info-value" id="viewFullName">Salawu Lucky</span></div></div>
-                <div class="col-md-6"><div class="info-row"><span class="info-label">Email</span><span class="info-value" id="viewEmail">salawu.lucky@stu.ui.edu.ng</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Email</span><span class="info-value" id="viewEmail">salawu.lucky@stu.Demo University.edu.ng</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Phone number</span><span class="info-value" id="viewPhone">+234 801 234 5678</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Member since</span><span class="info-value" id="viewMemberSince">2024</span></div></div>
               </div>
             </div>
+
             <!-- Edit mode -->
             <div id="personalEdit" class="edit-section d-none">
               <div class="form-floating-label">
@@ -391,22 +1311,24 @@
               </div>
               <div class="form-floating-label">
                 <input type="tel" class="form-control" id="editPhone" placeholder=" " />
-                <label class="form-label" for="editPhone">Phone number <i class="fab fa-whatsapp"></i></label>
+                <label class="form-label" for="editPhone">Phone number <i class="fab fa-whatsapp" style="color:#25d366;"></i></label>
               </div>
             </div>
           </div>
 
-          <!-- Academic -->
+          <!-- Academic Information -->
           <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="50">
-            <h5 class="mb-3"><i class="fas fa-graduation-cap me-2" style="color: var(--primary);"></i>Academic Information</h5>
+            <h6 class="section-title"><i class="fas fa-graduation-cap"></i>Academic Information</h6>
+
             <div id="academicView" class="edit-section">
-              <div class="row g-3">
-                <div class="col-md-6"><div class="info-row"><span class="info-label">Matric number</span><span class="info-value" id="viewMatric">UI/2022/12345</span></div></div>
+              <div class="row g-2">
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Matric number</span><span class="info-value" id="viewMatric">Demo University/2022/12345</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Department</span><span class="info-value" id="viewDept">Computer Science</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Faculty</span><span class="info-value" id="viewFaculty">Science</span></div></div>
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Level</span><span class="info-value" id="viewLevel">300 Level</span></div></div>
               </div>
             </div>
+
             <div id="academicEdit" class="edit-section d-none">
               <div class="form-floating-label">
                 <input type="text" class="form-control" id="editMatric" placeholder=" " />
@@ -429,54 +1351,73 @@
 
           <!-- Points & Transactions -->
           <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="100">
-            <h5 class="mb-3"><i class="fas fa-coins me-2" style="color: var(--primary);"></i>Points & Transaction History</h5>
+            <h6 class="section-title"><i class="fas fa-coins"></i>Points &amp; Transactions</h6>
+
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
               <div>
-                <span class="text-muted">Available points</span>
-                <div class="display-6 fw-bold" id="pointsBalance">0</div>
-                <small class="text-muted">Each new listing costs 1 point</small>
+                <span class="text-muted" style="font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.3px;">Available points</span>
+                <div class="points-display">
+                  <span class="amount" id="pointsBalance">0</span>
+                  <span class="label">points</span>
+                </div>
+                <small class="text-muted" style="font-size:0.7rem;">Each new listing costs 1 point</small>
               </div>
-              <a href="buy-points.html" class="btn btn-primary-custom"><i class="fas fa-bolt me-1"></i>Top up points</a>
+              <a href="buy-points.html" class="btn btn-primary-custom" style="padding:0.5rem 1.5rem; font-size:0.85rem;">
+                <i class="fas fa-bolt me-1"></i>Top up points
+              </a>
             </div>
-            <hr />
-            <div class="small text-muted mb-2">Recent transactions</div>
+
+            <hr class="my-3" />
+
+            <div class="small text-muted mb-2" style="font-weight:600; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.3px;">Recent transactions</div>
             <div id="transactionsList" class="mt-2"></div>
             <div class="text-center mt-3">
-              <button id="loadMoreTransactionsBtn" class="btn btn-outline-custom load-more-btn" style="display: none;" data-bs-toggle="tooltip" title="Load transactions">Load more <i class="fas fa-arrow-down ms-1"></i></button>
+              <button id="loadMoreTransactionsBtn" class="load-more-btn" style="display: none;" data-bs-toggle="tooltip" title="Load transactions">Load more <i class="fas fa-arrow-down ms-1"></i></button>
             </div>
           </div>
 
           <!-- Trust & Reviews -->
           <div class="section-card shadow-sm p-4 mb-4" data-aos="fade-left" data-aos-delay="150">
-            <h5 class="mb-3"><i class="fas fa-star me-2" style="color: var(--primary);"></i>Trust & Reviews</h5>
-            <div class="d-flex align-items-center gap-4 flex-wrap mb-4">
+            <h6 class="section-title"><i class="fas fa-star" style="color:#f5b042;"></i>Trust &amp; Reviews</h6>
+
+            <div class="d-flex flex-wrap align-items-center gap-4 mb-4">
               <div>
-                <span class="display-6 fw-bold" id="avgRatingDisplay">0.0</span>
-                <span class="text-muted">/5</span>
-                <div class="rating-stars" id="avgStars"></div>
-                <small class="text-muted" id="totalReviewsCount">0 reviews</small>
+                <span class="display-6 fw-bold" id="avgRatingDisplay" style="font-size:2rem; color:#14211f;">0.0</span>
+                <span class="text-muted" style="font-size:0.9rem;">/5</span>
+                <div class="rating-stars" id="avgStars" style="font-size:0.85rem;"></div>
+                <small class="text-muted" id="totalReviewsCount" style="font-size:0.7rem;">0 reviews</small>
               </div>
-              <div style="flex:1">
-                <div class="d-flex justify-content-between small"><span>Overall trust score</span><span id="trustScoreBar">0%</span></div>
-                <div class="progress-bar-custom mt-1"><div class="progress-fill" id="trustMeterFill" style="width:0%"></div></div>
-                <div class="small text-muted mt-1">Based on <span id="reviewCountForTrust">0</span> reviews</div>
+              <div style="flex:1; min-width:120px;">
+                <div class="d-flex justify-content-between small">
+                  <span style="font-weight:600; color:#5f7775;">Overall trust score</span>
+                  <span style="font-weight:700; color:#14211f;" id="trustScoreBar">0%</span>
+                </div>
+                <div class="progress-bar-custom mt-1">
+                  <div class="progress-fill" id="trustMeterFill" style="width:0%"></div>
+                </div>
+                <div class="small text-muted mt-1" style="font-size:0.7rem;">
+                  Based on <span id="reviewCountForTrust">0</span> reviews
+                </div>
               </div>
             </div>
+
             <div id="reviewsListContainer"></div>
             <div class="text-center mt-3">
-              <button id="loadMoreReviewsBtn" class="btn btn-outline-custom load-more-btn" style="display: none;" data-bs-toggle="tooltip" title="Load reviews">Load more <i class="fas fa-arrow-down ms-1"></i></button>
+              <button id="loadMoreReviewsBtn" class="load-more-btn" style="display: none;" data-bs-toggle="tooltip" title="Load reviews">Load more <i class="fas fa-arrow-down ms-1"></i></button>
             </div>
           </div>
 
           <!-- Settings -->
           <div class="section-card shadow-sm p-4" data-aos="fade-left" data-aos-delay="200">
-            <h5 class="mb-3"><i class="fas fa-sliders-h me-2" style="color: var(--primary);"></i>Settings & Preferences</h5>
+            <h6 class="section-title"><i class="fas fa-sliders-h"></i>Settings &amp; Preferences</h6>
+
             <div id="settingsView" class="edit-section">
-              <div class="row g-3 mb-3">
+              <div class="row g-2">
                 <div class="col-md-6"><div class="info-row"><span class="info-label">Email notifications</span><span class="info-value" id="viewNotifications">Enabled</span></div></div>
-                <div class="col-md-6"><div class="info-row"><span class="info-label">Profile visibility</span><span class="info-value" id="viewVisibility">Public (UI students)</span></div></div>
+                <div class="col-md-6"><div class="info-row"><span class="info-label">Profile visibility</span><span class="info-value" id="viewVisibility">Public (Demo University students)</span></div></div>
               </div>
             </div>
+
             <div id="settingsEdit" class="edit-section d-none">
               <div class="form-floating-label">
                 <select class="form-select" id="editNotifications">
@@ -487,21 +1428,28 @@
               </div>
               <div class="form-floating-label">
                 <select class="form-select" id="editVisibility">
-                  <option value="Public (UI students)">Public (UI students)</option>
+                  <option value="Public (Demo University students)">Public (Demo University students)</option>
                   <option value="Private">Private</option>
                 </select>
                 <label class="form-label" for="editVisibility">Profile visibility</label>
               </div>
             </div>
+
             <div class="d-flex flex-wrap gap-2 mt-3">
-              <button type="button" class="btn btn-outline-secondary btn-sm" id="changePasswordBtn" data-bs-toggle="tooltip" title="Change password"><i class="fas fa-key me-1"></i>Change password</button>
-              <button type="button" class="btn btn-outline-danger btn-sm" id="uploadStudentIdBtn" data-bs-toggle="tooltip" title="Upload ID"><i class="fas fa-id-card me-1"></i>Upload student ID</button>
+              <button type="button" class="btn btn-outline-secondary-custom" id="changePasswordBtn" data-bs-toggle="tooltip" title="Change password">
+                <i class="fas fa-key me-1"></i>Change password
+              </button>
+              <button type="button" class="btn btn-outline-danger-custom" id="uploadStudentIdBtn" data-bs-toggle="tooltip" title="Upload ID">
+                <i class="fas fa-id-card me-1"></i>Upload student ID
+              </button>
             </div>
           </div>
 
           <!-- Save button -->
           <div id="saveProfileBtnContainer" class="mt-4 text-end d-none">
-            <button id="saveProfileChanges" class="btn btn-primary-custom px-4" data-bs-toggle="tooltip" title="Save changes"><i class="fas fa-save me-2"></i>Save all changes</button>
+            <button id="saveProfileChanges" class="btn btn-primary-custom px-4" data-bs-toggle="tooltip" title="Save changes">
+              <i class="fas fa-save me-2"></i>Save all changes
+            </button>
           </div>
         </div>
       </div>
@@ -509,6 +1457,23 @@
   </div>
 </main>
 
+<!-- Mobile bottom navigation -->
+<div class="dashboard-mobile-actions d-md-none">
+  <a href="main.html" class="action-link" data-bs-toggle="tooltip" title="Go to dashboard">
+    <i class="fas fa-home"></i>
+    <span>Dashboard</span>
+  </a>
+  <a href="create-listing.html" class="action-link" data-bs-toggle="tooltip" title="Post listing">
+    <i class="fas fa-plus-circle"></i>
+    <span>Post</span>
+  </a>
+  <a href="listings.html" class="action-link" data-bs-toggle="tooltip" title="View listings">
+    <i class="fas fa-list"></i>
+    <span>Listings</span>
+  </a>
+</div>
+
+<!-- Modals -->
 <div id="formModal" class="modal-overlay" style="display: none;">
   <div class="modal-container">
     <div class="modal-header">
@@ -519,7 +1484,6 @@
     <div class="modal-footer" id="formModalFooter"></div>
   </div>
 </div>
-
 
 <button class="scroll-top-btn" data-scroll-top data-bs-toggle="tooltip" title="Scroll to top"><i class="fas fa-arrow-up"></i></button>
 
@@ -539,12 +1503,9 @@
 
     // ─── 2. GLOBALS ──────────────────────────────────────────
     const PROFILE_URL = AUTH_URL + 'profile';
-
-    // Data will be populated from API
     let userData = {};
 
     // ─── 3. DOM REFERENCES ──────────────────────────────────
-    // (same as before – keep all)
     const profileAvatar = document.getElementById('profileAvatar');
     const nameDisplayView = document.getElementById('nameDisplayView');
     const emailDisplayView = document.getElementById('emailDisplayView');
@@ -625,7 +1586,7 @@
       const empty = 5 - full - half;
       return '<i class="fas fa-star"></i>'.repeat(full) +
              (half ? '<i class="fas fa-star-half-alt"></i>' : '') +
-             '<i class="far fa-star"></i>'.repeat(empty);
+             '<i class="far fa-star empty"></i>'.repeat(empty);
     }
 
     function formatDate(iso) {
@@ -633,8 +1594,7 @@
       return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
     }
 
-
-    // ─── 5. EDIT RESTRICTION FUNCTIONS ─────────────────────
+    // ─── 6. EDIT RESTRICTION FUNCTIONS ─────────────────────
     function isEditAllowed() {
       const editDay = userData.editDay || 0;
       if (editDay === 0) return true;
@@ -657,61 +1617,51 @@
           const nextDate = new Date(lastMod.getTime() + (editDay * 24 * 60 * 60 * 1000));
           warningDiv.style.display = 'block';
           warningDiv.innerHTML = `
-            <i class="fas fa-clock me-2"></i>
+            <i class="fas fa-clock"></i>
             <strong>${editDay}‑day restriction:</strong> You can only edit your profile once every ${editDay} days. Last edit was ${lastMod.toLocaleDateString()}. Next edit allowed: ${nextDate.toLocaleDateString()}.
           `;
         } else {
           warningDiv.style.display = 'none';
         }
-        // Force view mode
-        document.getElementById('personalView').classList.remove('d-none');
-        document.getElementById('personalEdit').classList.add('d-none');
-        document.getElementById('academicView').classList.remove('d-none');
-        document.getElementById('academicEdit').classList.add('d-none');
-        document.getElementById('settingsView').classList.remove('d-none');
-        document.getElementById('settingsEdit').classList.add('d-none');
-        document.getElementById('saveProfileBtnContainer').classList.add('d-none');
+        personalView.classList.remove('d-none');
+        personalEdit.classList.add('d-none');
+        academicView.classList.remove('d-none');
+        academicEdit.classList.add('d-none');
+        settingsView.classList.remove('d-none');
+        settingsEdit.classList.add('d-none');
+        saveBtnContainer.classList.add('d-none');
       } else {
         toggle.disabled = false;
         warningDiv.style.display = 'none';
       }
     }
 
-
-    // ─── 6. RENDER FUNCTIONS ──────────────────────────────
+    // ─── 7. RENDER FUNCTIONS ──────────────────────────────
     function renderUserProfile() {
-      // Left column
       const initials = userData.fullName.split(' ').map(n => n[0]).join('');
       if (userData.profilePicture) {
         profileAvatar.src = userData.profilePicture;
       } else {
-        const initials = userData.fullName.split(' ').map(n => n[0]).join('');
-        profileAvatar.src = `https://ui-avatars.com/api/?background=2c7a5e&color=fff&name=${encodeURIComponent(userData.fullName)}`;
+        profileAvatar.src = `https://Demo University-avatars.com/api/?background=2c7a5e&color=fff&name=${encodeURIComponent(userData.fullName)}`;
       }
-      nameDisplayView.innerHTML = `<h3 class="fw-bold mb-1">${escapeHtml(userData.fullName)}</h3>`;
-      emailDisplayView.innerHTML = `<p class="text-muted small">${escapeHtml(userData.email)}</p>`;
+      nameDisplayView.innerHTML = `<h3 class="fw-bold mb-1" style="color:#14211f;">${escapeHtml(userData.fullName)}</h3>`;
+      emailDisplayView.innerHTML = `<p class="text-muted small" style="font-size:0.8rem;">${escapeHtml(userData.email)}</p>`;
       pointsDisplay.innerText = userData.points;
       trustScore.innerText = userData.trustScore + '%';
-      emailVerifiedStatus.innerText = userData.emailVerified ? 'Verified ✓' : 'Not verified';
-      emailVerifiedStatus.className = userData.emailVerified ? 'small text-success' : 'small text-danger';
-      studentIdStatus.innerText = userData.studentIdVerified ? 'Verified ✓' : 'Pending verification';
-      studentIdStatus.className = userData.studentIdVerified ? 'small text-success' : 'small text-warning';
-      hallVerifiedStatus.innerText = userData.hallVerified ? 'Verified ✓' : 'Not verified';
-      hallVerifiedStatus.className = userData.hallVerified ? 'small text-success' : 'small text-danger';
 
-      if (userData.studentIdVerified) {
-          const uploadBtn = document.getElementById('uploadStudentIdBtn');
-          if (uploadBtn) {
-              uploadBtn.style.display = 'none';
-          }
-      }
+      emailVerifiedStatus.innerText = userData.emailVerified ? 'Verified ✓' : 'Not verified';
+      emailVerifiedStatus.className = userData.emailVerified ? 'verified' : 'unverified';
+      studentIdStatus.innerText = userData.studentIdVerified ? 'Verified ✓' : 'Pending verification';
+      studentIdStatus.className = userData.studentIdVerified ? 'verified' : 'pending';
+      hallVerifiedStatus.innerText = userData.hallVerified ? 'Verified ✓' : 'Not verified';
+      hallVerifiedStatus.className = userData.hallVerified ? 'verified' : 'unverified';
+
       // Profile completion
       const completionPercent = document.getElementById('profileCompletionPercent');
       const completionFill = document.getElementById('profileCompletionFill');
       const missingContainer = document.getElementById('profileMissingFields');
       const hint = document.getElementById('profileCompletionHint');
 
-      // 1. Calculate missing fields using the same logic as backend
       const profileFields = {
         phone: { value: userData.phone, label: 'Phone number', icon: 'fa-phone' },
         profile_picture: { value: userData.profilePicture, label: 'Profile picture', icon: 'fa-image' },
@@ -724,53 +1674,46 @@
         email_verified: { value: userData.emailVerified, label: 'Email verified', icon: 'fa-envelope' },
       };
 
-      // 2. Find missing fields (for booleans, we consider true as "filled")
       const missingFields = Object.keys(profileFields).filter(key => {
         const field = profileFields[key];
-        // For booleans, check if true; for others, check if value is truthy (non-empty)
-        if (typeof field.value === 'boolean') {
-          return !field.value;
-        }
+        if (typeof field.value === 'boolean') return !field.value;
         return !field.value || field.value === '';
       });
 
-      // 3. Update progress bar
       const filled = Object.keys(profileFields).length - missingFields.length;
       const total = Object.keys(profileFields).length;
       const completion = Math.round((filled / total) * 100);
       if (completionPercent) completionPercent.innerText = completion + '%';
       if (completionFill) completionFill.style.width = completion + '%';
 
-      // 4. Render missing fields list
       if (missingFields.length > 0) {
         missingContainer.style.display = 'block';
-        missingContainer.innerHTML = '<i class="fas fa-info-circle text-warning me-1"></i> Complete these to reach 100%:';
-        const list = document.createElement('ul');
-        list.className = 'list-unstyled mt-1 mb-0';
-        missingFields.forEach(key => {
-          const field = profileFields[key];
-          const li = document.createElement('li');
-          li.className = 'small text-muted';
-          li.innerHTML = `<i class="fas ${field.icon} me-1" style="width:18px;"></i> ${field.label}`;
-          list.appendChild(li);
-        });
-        missingContainer.appendChild(list);
+        missingContainer.innerHTML = `
+          <div class="small text-warning mb-1"><i class="fas fa-info-circle me-1"></i>Complete these to reach 100%:</div>
+          <ul class="missing-fields-list">
+            ${missingFields.map(key => {
+              const field = profileFields[key];
+              return `<li><i class="fas ${field.icon}"></i> ${field.label}</li>`;
+            }).join('')}
+          </ul>
+        `;
         hint.innerText = `${missingFields.length} field${missingFields.length > 1 ? 's' : ''} left to complete.`;
       } else {
         missingContainer.style.display = 'none';
         hint.innerText = '🎉 Your profile is 100% complete – you\'re ready to connect!';
       }
 
-      // Badges – map backend badge names to FontAwesome icons and colors
+      // Badges
       const badgeIconMap = {
-        'verified': { icon: 'fa-check-circle', color: 'text-success' },
-        'trusted': { icon: 'fa-handshake', color: 'text-warning' },
-        'top_seller': { icon: 'fa-crown', color: 'text-primary' },
-        // add more as needed
+        'verified': { icon: 'fa-check-circle', color: '#2c7a5e' },
+        'trusted': { icon: 'fa-handshake', color: '#f5b042' },
+        'top_seller': { icon: 'fa-crown', color: '#0d6efd' },
+        'early_adopter': { icon: 'fa-rocket', color: '#6f42c1' },
+        'hall_verified': { icon: 'fa-home', color: '#20c997' },
       };
       badgesContainer.innerHTML = userData.badges.map(b => {
-        const mapping = badgeIconMap[b.name] || { icon: 'fa-tag', color: 'text-secondary' };
-        return `<span class="badge-custom"><i class="fas ${mapping.icon} ${mapping.color} me-1"></i> ${escapeHtml(b.name)}</span>`;
+        const mapping = badgeIconMap[b.name] || { icon: 'fa-tag', color: '#6c757d' };
+        return `<span class="badge-earned"><i class="fas ${mapping.icon}" style="color:${mapping.color};"></i> ${escapeHtml(b.name)}</span>`;
       }).join('');
 
       // Personal
@@ -790,7 +1733,7 @@
 
       // Settings
       viewNotifications.innerText = userData.notifications ? 'Enabled' : 'Disabled';
-      viewVisibility.innerText = userData.visibility ? 'Public (UI students)' : 'Private';
+      viewVisibility.innerText = userData.visibility ? 'Public (Demo University students)' : 'Private';
 
       // Trust & Reviews
       avgRatingDisplay.innerText = userData.avgRating.toFixed(1);
@@ -820,13 +1763,13 @@
         return;
       }
       reviewsListContainer.innerHTML = visible.map(r => `
-        <div class="review-item p-3 mb-3 rounded-3 border">
-          <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
-            <strong>${escapeHtml(r.from)}</strong>
-            <div class="rating-stars small">${renderStars(r.rating)}</div>
-            <small class="text-muted">${formatDate(r.date)}</small>
+        <div class="review-item">
+          <div class="review-header">
+            <span class="reviewer">${escapeHtml(r.from)}</span>
+            <span class="review-stars">${renderStars(r.rating)}</span>
+            <span class="review-date">${formatDate(r.date)}</span>
           </div>
-          <p class="small text-muted mb-0">${escapeHtml(r.comment)}</p>
+          <p class="review-comment">${escapeHtml(r.comment)}</p>
         </div>
       `).join('');
       if (end < allReviews.length) {
@@ -849,16 +1792,19 @@
       transactionsList.innerHTML = visible.map(t => {
         const isCredit = t.amount > 0;
         const sign = isCredit ? '+' : '';
-        const color = isCredit ? 'text-success' : 'text-danger';
+        const color = isCredit ? 'positive' : 'negative';
+        const icon = isCredit ? 'credit' : 'debit';
+        const iconName = isCredit ? 'fa-arrow-up' : 'fa-arrow-down';
         return `
-          <div class="history-item d-flex flex-wrap justify-content-between align-items-center">
-            <div>
-              <strong>${escapeHtml(t.description)}</strong>
-              <div class="small text-muted">${formatDate(t.date)}</div>
+          <div class="history-item d-flex align-items-center gap-3">
+            <span class="h-icon ${icon}"><i class="fas ${iconName}"></i></span>
+            <div class="h-main">
+              <div class="h-title">${escapeHtml(t.description)}</div>
+              <div class="h-meta">${formatDate(t.date)}</div>
             </div>
             <div class="text-end">
-              <span class="fw-bold ${color}">${sign}${t.amount}</span>
-              <div class="small text-muted">Balance: ${t.balance}</div>
+              <div class="h-amount ${color}">${sign}${t.amount}</div>
+              <div class="h-meta">Balance: ${t.balance}</div>
             </div>
           </div>
         `;
@@ -890,7 +1836,6 @@
       saveBtnContainer.classList.toggle('d-none', !isEdit);
 
       if (isEdit) {
-        // Populate edit fields with current userData
         editFullName.value = userData.fullName || '';
         editEmail.value = userData.email || '';
         editPhone.value = userData.phone || '';
@@ -899,9 +1844,8 @@
         editFaculty.value = userData.faculty || '';
         editLevel.value = userData.level || '';
         editNotifications.value = userData.notifications ? 'Enabled' : 'Disabled';
-        editVisibility.value = userData.visibility ? 'Public (UI students)' : 'Private';
+        editVisibility.value = userData.visibility ? 'Public (Demo University students)' : 'Private';
 
-        // Smooth scroll to the first input in edit mode (Full Name)
         const firstInput = document.getElementById('editFullName');
         if (firstInput) {
           firstInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -910,7 +1854,7 @@
       }
     }
 
-    // ─── 8. SAVE PROFILE (PUT to API) ──────────────────────
+    // ─── 8. SAVE PROFILE ──────────────────────────────────────
     async function saveProfile() {
       const saveBtn = document.getElementById('saveProfileChanges');
       if (saveBtn.disabled) return;
@@ -919,7 +1863,6 @@
       saveBtn.disabled = true;
       saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...';
 
-      // Gather data from edit fields
       const payload = {
         full_name: editFullName.value.trim(),
         phone: editPhone.value.trim(),
@@ -928,7 +1871,7 @@
         level: parseInt(editLevel.value) || null,
         matric_number: editMatric.value.trim(),
         notification: editNotifications.value === 'Enabled' ? true : false,
-        visibility: editVisibility.value === 'Public (UI students)' ? true : false
+        visibility: editVisibility.value === 'Public (Demo University students)' ? true : false
       };
 
       if (payload.level !== null && (payload.level < 1 || payload.level > 7)) {
@@ -958,9 +1901,7 @@
 
         const result = await response.json();
         if (result.is_success) {
-
           loadProfile();
-
           editModeToggle.checked = false;
           personalView.classList.remove('d-none');
           personalEdit.classList.add('d-none');
@@ -993,7 +1934,7 @@
       renderReviews();
     }
 
-    // ─── 10. LOAD PROFILE (GET from API) ──────────────────
+    // ─── 10. LOAD PROFILE ──────────────────────────────────
     async function loadProfile() {
       const skeleton = document.getElementById('skeletonLoader');
       const realContent = document.getElementById('realContent');
@@ -1024,7 +1965,6 @@
 
         const data = result.data;
 
-        // ─── Map API data to userData structure ─────────────
         userData = {
           fullName: data.full_name || '',
           email: data.email || '',
@@ -1068,7 +2008,6 @@
         realContent.style.display = 'block';
         if (typeof AOS !== 'undefined') AOS.refresh();
 
-        // Update points in cookie if different
         const pointsFromCookie = getCookie('point_bal');
         if (pointsFromCookie && parseInt(pointsFromCookie) !== userData.points) {
           setCookie('point_bal', userData.points, 3);
@@ -1102,7 +2041,7 @@
       return true;
     }
 
-    // ─── 11. OPEN CHANGE PASSWORD MODAL ────────────────────
+    // ─── 12. CHANGE PASSWORD ──────────────────────────────
     function openChangePasswordModal() {
       if (!ensureModals()) return;
 
@@ -1176,7 +2115,7 @@
       });
     }
 
-    // ─── 12. OPEN STUDENT ID UPLOAD MODAL ──────────────────
+    // ─── 13. STUDENT ID UPLOAD ──────────────────────────────
     function openStudentIdUploadModal() {
       if (!ensureModals()) return;
 
@@ -1184,10 +2123,10 @@
         title: 'Upload Student ID',
         formHtml: `
           <p class="text-muted mb-3">Upload a clear image of your student ID (JPEG, PNG, WEBP, max 2MB).</p>
-          <div class="drop-area" id="studentIdDropArea" style="border: 2px dashed rgba(44, 122, 94, 0.25); border-radius: 16px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; background: #fafcfb;">
-            <i class="fas fa-cloud-upload-alt" style="font-size: 2.5rem; color: #2c7a5e; margin-bottom: 0.5rem;"></i>
-            <p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Drag & drop your image here or click to browse</p>
-            <div class="small text-muted mt-1">JPEG, PNG, WEBP up to 2MB</div>
+          <div class="drop-area" id="studentIdDropArea">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Drag &amp; drop your image here or click to browse</p>
+            <div class="small text-muted">JPEG, PNG, WEBP up to 2MB</div>
             <input type="file" id="studentIdFileInput" accept="image/*" hidden>
           </div>
           <div id="studentIdPreview" style="margin-top: 1rem; display: none;">
@@ -1246,7 +2185,7 @@
         }
       });
 
-      // ─── Drag‑and‑drop handlers (same as lost‑and‑found) ──
+      // ─── Drag‑and‑drop handlers ───
       setTimeout(() => {
         const dropArea = document.getElementById('studentIdDropArea');
         const fileInput = document.getElementById('studentIdFileInput');
@@ -1271,17 +2210,14 @@
         dropArea.addEventListener('click', () => fileInput.click());
         dropArea.addEventListener('dragover', (e) => {
           e.preventDefault();
-          dropArea.style.borderColor = '#2c7a5e';
-          dropArea.style.background = '#eaf7f0';
+          dropArea.classList.add('drag-over');
         });
         dropArea.addEventListener('dragleave', () => {
-          dropArea.style.borderColor = 'rgba(44,122,94,0.25)';
-          dropArea.style.background = '#fafcfb';
+          dropArea.classList.remove('drag-over');
         });
         dropArea.addEventListener('drop', (e) => {
           e.preventDefault();
-          dropArea.style.borderColor = 'rgba(44,122,94,0.25)';
-          dropArea.style.background = '#fafcfb';
+          dropArea.classList.remove('drag-over');
           const file = e.dataTransfer.files[0];
           if (file) {
             fileInput.files = e.dataTransfer.files;
@@ -1297,6 +2233,7 @@
     document.getElementById('changePasswordBtn')?.addEventListener('click', openChangePasswordModal);
     document.getElementById('uploadStudentIdBtn')?.addEventListener('click', openStudentIdUploadModal);
 
+    // ─── 14. PROFILE PICTURE UPLOAD ──────────────────────
     document.getElementById('profilePicUpload')?.addEventListener('change', async function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1306,7 +2243,6 @@
         this.value = '';
         return;
       }
-      // Validate file type
       const allowed = ['image/jpeg', 'image/png', 'image/webp'];
       if (!allowed.includes(file.type)) {
         showToast('Only JPG, PNG, and WEBP images are allowed.', 'error');
@@ -1314,9 +2250,8 @@
         return;
       }
 
-      // Show spinner overlay
       const spinner = document.getElementById('avatarSpinner');
-      spinner.style.display = 'flex';
+      spinner.classList.add('active');
 
       const formData = new FormData();
       formData.append('profile_picture', file);
@@ -1342,38 +2277,37 @@
         const result = await response.json();
         if (result.is_success) {
           const profilePic = result.data.profile_picture_url || null;
-
           if (profilePic) {
             setCookie('profile_pic', profilePic, 3);
           } else {
             document.cookie = 'profile_pic=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
           }
-          // ─── Desktop avatar ──────────────────────────────────────
-            const desktopImg = document.getElementById('desktopAvatarImg');
-            const desktopIcon = document.getElementById('desktopAvatarIcon');
-            if (profilePic && desktopImg) {
-              desktopImg.src = profilePic;
-              desktopImg.style.display = 'inline-block';
-              if (desktopIcon) desktopIcon.style.display = 'none';
-            } else {
-              if (desktopImg) desktopImg.style.display = 'none';
-              if (desktopIcon) desktopIcon.style.display = 'inline-block';
-            }
 
-            // ─── Mobile avatar ──────────────────────────────────────
-            const mobileImg = document.getElementById('mobileAvatarImg');
-            const mobileIcon = document.getElementById('mobileAvatarIcon');
-            if (profilePic && mobileImg) {
-              mobileImg.src = profilePic;
-              mobileImg.style.display = 'block';
-              if (mobileIcon) mobileIcon.style.display = 'none';
-            } else {
-              if (mobileImg) mobileImg.style.display = 'none';
-              if (mobileIcon) mobileIcon.style.display = 'block';
-            }
+          // Update desktop avatar
+          const desktopImg = document.getElementById('desktopAvatarImg');
+          const desktopIcon = document.getElementById('desktopAvatarIcon');
+          if (profilePic && desktopImg) {
+            desktopImg.src = profilePic;
+            desktopImg.style.display = 'inline-block';
+            if (desktopIcon) desktopIcon.style.display = 'none';
+          } else {
+            if (desktopImg) desktopImg.style.display = 'none';
+            if (desktopIcon) desktopIcon.style.display = 'inline-block';
+          }
+
+          // Update mobile avatar
+          const mobileImg = document.getElementById('mobileAvatarImg');
+          const mobileIcon = document.getElementById('mobileAvatarIcon');
+          if (profilePic && mobileImg) {
+            mobileImg.src = profilePic;
+            mobileImg.style.display = 'block';
+            if (mobileIcon) mobileIcon.style.display = 'none';
+          } else {
+            if (mobileImg) mobileImg.style.display = 'none';
+            if (mobileIcon) mobileIcon.style.display = 'block';
+          }
 
           loadProfile();
-
           showToast('Profile picture updated!', 'success');
         } else {
           throw new Error(result.message || 'Upload failed');
@@ -1382,15 +2316,15 @@
         console.error('Upload error:', err);
         showToast('Failed to upload: ' + err.message, 'error');
       } finally {
-        spinner.style.display = 'none';
-        this.value = ''; // reset input
+        spinner.classList.remove('active');
+        this.value = '';
       }
     });
 
     loadMoreTransactionsBtn.addEventListener('click', loadMoreTransactions);
     loadMoreReviewsBtn.addEventListener('click', loadMoreReviews);
 
-    // ─── 12. START ──────────────────────────────────────────
+    // ─── 15. START ──────────────────────────────────────────
     loadProfile();
   })();
 </script>

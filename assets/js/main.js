@@ -1,8 +1,8 @@
 // ========== UTILITIES (always safe) ==========
-const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
-const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
-const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
-const REFRESH_URL = 'http://127.0.0.1:8000/user/api/';
+const AUTH_URL = 'http://127.0.0.1:8001/user/api/auth/';
+const REPORT_URL = 'http://127.0.0.1:8001/user/api/report/';
+const CAMPUS_URL = 'http://127.0.0.1:8001/campus/api/campus/';
+const REFRESH_URL = 'http://127.0.0.1:8001/user/api/';
 
 
 // ─── Global Refresh Spinner (injected dynamically) ──────────────
@@ -1145,10 +1145,10 @@ function injectNavigation() {
     <header class="site-header fixed-top" id="mainNav">
       <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
         <div class="container header-inner">
-          <a class="site-brand" href="main.html" aria-label="CampusConnect UI home" data-bs-toggle="tooltip" title="Go to dashboard">
-            <img src="../assets/img/icon.jpg" alt="CampusConnect UI logo" class="site-brand-logo">
+          <a class="site-brand" href="main.html" aria-label="CampusConnect Demo University home" data-bs-toggle="tooltip" title="Go to dashboard">
+            <img src="../assets/img/icon.jpg" alt="CampusConnect Demo University logo" class="site-brand-logo">
             <span class="site-brand-name">
-              <span class="brand-full">CampusConnect UI</span>
+              <span class="brand-full">CampusConnect Demo University</span>
               <span class="brand-short">CampusConnect</span>
             </span>
           </a>

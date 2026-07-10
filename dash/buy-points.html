@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CampusConnect UI · Points & Transactions</title>
+  <title>CampusConnect Demo University · Points & Transactions</title>
   <!-- Bootstrap + Icons + Fonts + AOS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -13,7 +13,757 @@
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/modal.css">
   <style>
-    /* ─── Skeleton Loader ─── */
+    /* ──────────────────────────────────────────────────────────────
+       ROOT & RESET OVERRIDES
+       ────────────────────────────────────────────────────────────── */
+    :root {
+      --accent: #2c7a5e;
+      --accent-light: #eaf7f0;
+      --accent-dark: #1f5e48;
+      --accent-glow: rgba(44, 122, 94, 0.18);
+      --card-radius: 20px;
+      --shadow-card: 0 12px 40px rgba(31, 94, 72, 0.07);
+      --shadow-card-hover: 0 20px 56px rgba(31, 94, 72, 0.13);
+      --transition-smooth: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    body {
+      background: #f6f9f8;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       DASHBOARD CARD – ENHANCED
+       ────────────────────────────────────────────────────────────── */
+    .dashboard-card {
+      background: #ffffff;
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(44, 122, 94, 0.06);
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #4aa882, var(--accent));
+      opacity: 0.5;
+    }
+
+    .dashboard-card:hover {
+      box-shadow: var(--shadow-card-hover);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       BADGE & HEADER
+       ────────────────────────────────────────────────────────────── */
+    .badge-verify {
+      background: rgba(44, 122, 94, 0.10);
+      color: var(--accent-dark);
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      display: inline-block;
+      border: 1px solid rgba(44, 122, 94, 0.08);
+      backdrop-filter: blur(4px);
+    }
+
+    .badge-verify i {
+      margin-right: 6px;
+    }
+
+    .page-headline h1 {
+      font-weight: 800;
+      font-size: 2rem;
+      letter-spacing: -0.02em;
+      color: #14211f;
+    }
+
+    .page-headline p {
+      color: #5f7775;
+      font-size: 0.95rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       POINTS BALANCE CARD – ENHANCED
+       ────────────────────────────────────────────────────────────── */
+    .points-balance-card {
+      background: linear-gradient(145deg, #1a5e47, #2c7a5e);
+      border-radius: 1.5rem;
+      color: white;
+      padding: 1.75rem 2.25rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(44, 122, 94, 0.25);
+      transition: var(--transition-smooth);
+    }
+
+    .points-balance-card::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+    }
+
+    .points-balance-card::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -5%;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
+      pointer-events: none;
+    }
+
+    .points-balance-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(44, 122, 94, 0.30);
+    }
+
+    .points-balance-card .balance-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      opacity: 0.7;
+    }
+
+    .points-balance-card .balance-number {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      transition: var(--transition-smooth);
+    }
+
+    .points-balance-card .balance-number.pulse {
+      animation: pointsPulse 0.45s ease;
+    }
+
+    @keyframes pointsPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); color: #b8e6d4; }
+    }
+
+    .points-balance-card .balance-sub {
+      font-size: 0.85rem;
+      opacity: 0.75;
+    }
+
+    .points-balance-card .action-btns {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .points-balance-card .action-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .points-balance-card .action-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.30);
+      transform: translateY(-2px);
+    }
+
+    .points-balance-card .action-btn:active {
+      transform: translateY(0);
+    }
+
+    .points-balance-card .action-btn i {
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 576px) {
+      .points-balance-card {
+        padding: 1.25rem 1.5rem;
+      }
+      .points-balance-card .balance-number {
+        font-size: 2.2rem;
+      }
+      .points-balance-card .action-btn {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.7rem;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       PACKAGE CARDS – ENHANCED
+       ────────────────────────────────────────────────────────────── */
+    .package-card {
+      background: #ffffff;
+      border-radius: var(--card-radius);
+      border: 1.5px solid rgba(44, 122, 94, 0.06);
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .package-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(44, 122, 94, 0.02), transparent);
+      pointer-events: none;
+      opacity: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .package-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(44, 122, 94, 0.15);
+    }
+
+    .package-card:hover::before {
+      opacity: 1;
+    }
+
+    .package-card:active {
+      transform: translateY(-4px) scale(0.98);
+    }
+
+    .package-card .card-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--accent-light), rgba(44, 122, 94, 0.08));
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      transition: var(--transition-smooth);
+    }
+
+    .package-card:hover .card-icon {
+      transform: scale(1.05) rotate(-2deg);
+      background: linear-gradient(135deg, rgba(44, 122, 94, 0.15), rgba(44, 122, 94, 0.04));
+    }
+
+    .package-card .package-points {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #14211f;
+      letter-spacing: -0.02em;
+    }
+
+    .package-card .package-points span {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #5f7775;
+    }
+
+    .package-card .package-price {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0.25rem 0 0.1rem;
+    }
+
+    .package-card .per-point {
+      font-size: 0.75rem;
+      color: #7a9490;
+      font-weight: 500;
+    }
+
+    .package-card .package-description {
+      font-size: 0.75rem;
+      color: #7a9490;
+      margin-top: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .package-card .badge-best {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, #f5b042, #e8942a);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 12px rgba(245, 176, 66, 0.30);
+    }
+
+    .package-card .badge-popular {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 12px rgba(238, 90, 36, 0.25);
+    }
+
+    .package-card .card-hover-arrow {
+      position: absolute;
+      bottom: 1rem;
+      right: 1.25rem;
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: var(--transition-smooth);
+      color: var(--accent);
+      font-size: 0.8rem;
+    }
+
+    .package-card:hover .card-hover-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    @media (max-width: 576px) {
+      .package-card {
+        padding: 1rem 0.75rem;
+      }
+      .package-card .package-points {
+        font-size: 1.4rem;
+      }
+      .package-card .package-price {
+        font-size: 1.1rem;
+      }
+      .package-card .card-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TABS – ENHANCED
+       ────────────────────────────────────────────────────────────── */
+    .nav-pills.dashboard-pills .nav-link {
+      border-radius: 40px;
+      padding: 0.6rem 1.8rem;
+      font-weight: 600;
+      color: #5f7775;
+      transition: var(--transition-smooth);
+      border: 1px solid transparent;
+      font-size: 0.9rem;
+    }
+
+    .nav-pills.dashboard-pills .nav-link i {
+      margin-right: 0.4rem;
+    }
+
+    .nav-pills.dashboard-pills .nav-link.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 16px rgba(44, 122, 94, 0.20);
+      border-color: var(--accent);
+    }
+
+    .nav-pills.dashboard-pills .nav-link:hover:not(.active) {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      border-color: rgba(44, 122, 94, 0.10);
+      transform: translateY(-2px);
+    }
+
+    .nav-pills.dashboard-pills .nav-link:active {
+      transform: scale(0.97);
+    }
+
+    @media (max-width: 576px) {
+      .nav-pills.dashboard-pills .nav-link {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       HISTORY ITEMS – ENHANCED
+       ────────────────────────────────────────────────────────────── */
+    .history-item {
+      border-bottom: 1px solid rgba(44, 122, 94, 0.06);
+      padding: 0.85rem 0.5rem;
+      transition: var(--transition-smooth);
+      border-radius: 12px;
+      margin: 0 -0.25rem;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item:hover {
+      background: rgba(44, 122, 94, 0.03);
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+
+    .history-item .history-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .history-item .history-icon.purchase {
+      background: rgba(44, 122, 94, 0.10);
+      color: var(--accent);
+    }
+
+    .history-item .history-icon.transaction {
+      background: rgba(44, 122, 94, 0.08);
+      color: var(--accent-dark);
+    }
+
+    .history-item .history-icon.credit {
+      background: #e3f5ec;
+      color: #1e7b4a;
+    }
+
+    .history-item .history-icon.debit {
+      background: #ffe6e5;
+      color: #c23d2e;
+    }
+
+    .history-item .history-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .history-item .history-title {
+      font-weight: 600;
+      color: #14211f;
+      font-size: 0.9rem;
+    }
+
+    .history-item .history-meta {
+      font-size: 0.75rem;
+      color: #7a9490;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.75rem;
+    }
+
+    .history-item .history-meta i {
+      margin-right: 2px;
+      font-size: 0.65rem;
+    }
+
+    .history-item .history-amount {
+      font-weight: 700;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .history-item .history-amount.positive {
+      color: var(--accent);
+    }
+
+    .history-item .history-amount.negative {
+      color: #dc3545;
+    }
+
+    .history-item .badge-status {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      text-transform: capitalize;
+    }
+
+    .badge-completed { background: #e3f5ec; color: #1e7b4a; }
+    .badge-pending { background: #fff3cd; color: #856404; }
+    .badge-failed { background: #ffe6e5; color: #c23d2e; }
+
+    .history-item .retry-btn {
+      background: transparent;
+      border: 1px solid rgba(220, 53, 69, 0.25);
+      color: #dc3545;
+      border-radius: 30px;
+      padding: 0.15rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+    }
+
+    .history-item .retry-btn:hover {
+      background: #dc3545;
+      color: white;
+      border-color: #dc3545;
+    }
+
+    @media (max-width: 576px) {
+      .history-item {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .history-item .history-amount {
+        font-size: 0.85rem;
+      }
+      .history-item .history-meta {
+        font-size: 0.7rem;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       DATE FILTER – ENHANCED
+       ────────────────────────────────────────────────────────────── */
+    .filter-toggle-btn {
+      border: 1px solid rgba(44, 122, 94, 0.12);
+      border-radius: 40px;
+      background: white;
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #5f7775;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .filter-toggle-btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent-dark);
+    }
+
+    .filter-toggle-btn i {
+      margin-right: 0.3rem;
+    }
+
+    .date-filter-group {
+      display: none;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: #f6faf8;
+      border-radius: 14px;
+      border: 1px solid rgba(44, 122, 94, 0.06);
+    }
+
+    .date-filter-group.show {
+      display: flex;
+    }
+
+    .date-filter-group input[type="date"] {
+      border: 1px solid rgba(44, 122, 94, 0.12);
+      border-radius: 40px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      background: white;
+      max-width: 140px;
+      transition: var(--transition-smooth);
+    }
+
+    .date-filter-group input[type="date"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.08);
+      outline: none;
+    }
+
+    .date-filter-group .btn-sm {
+      border-radius: 40px;
+      padding: 0.3rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .date-filter-group .btn-outline-custom {
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+    }
+
+    .date-filter-group .btn-outline-custom:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .date-filter-group .btn-outline-danger {
+      border: 1.5px solid rgba(220, 53, 69, 0.20);
+      color: #dc3545;
+      background: transparent;
+    }
+
+    .date-filter-group .btn-outline-danger:hover {
+      background: #dc3545;
+      color: white;
+    }
+
+    @media (max-width: 576px) {
+      .date-filter-group input[type="date"] {
+        max-width: 100px;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+      }
+      .date-filter-group .btn-sm {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.8rem;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       PAGINATION – ENHANCED
+       ────────────────────────────────────────────────────────────── */
+    .pagination-controls .btn {
+      border-radius: 40px;
+      padding: 0.3rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid rgba(44, 122, 94, 0.12);
+      background: white;
+      color: #5f7775;
+      transition: var(--transition-smooth);
+    }
+
+    .pagination-controls .btn:hover:not(:disabled) {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent-dark);
+    }
+
+    .pagination-controls .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .pagination-controls .btn i {
+      font-size: 0.7rem;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       MODAL – PAYMENT OPTIONS ENHANCED
+       ────────────────────────────────────────────────────────────── */
+    .payment-option {
+      border: 1.5px solid rgba(44, 122, 94, 0.08);
+      border-radius: 14px;
+      padding: 0.9rem 1.2rem;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: white;
+    }
+
+    .payment-option:hover {
+      background: #f6faf8;
+      border-color: rgba(44, 122, 94, 0.20);
+      transform: translateX(4px);
+    }
+
+    .payment-option.selected {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.08);
+    }
+
+    .payment-option .payment-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--accent);
+      background: rgba(44, 122, 94, 0.06);
+      flex-shrink: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .payment-option.selected .payment-icon {
+      background: rgba(44, 122, 94, 0.12);
+    }
+
+    .payment-option .payment-info strong {
+      color: #14211f;
+      font-size: 0.95rem;
+    }
+
+    .payment-option .payment-info .small {
+      color: #7a9490;
+      font-size: 0.75rem;
+    }
+
+    .payment-option .check-mark {
+      margin-left: auto;
+      color: var(--accent);
+      font-size: 1.2rem;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: var(--transition-smooth);
+    }
+
+    .payment-option.selected .check-mark {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .package-summary {
+      background: linear-gradient(135deg, #f6faf8, #edf5f1);
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      display: inline-block;
+      font-weight: 600;
+      color: #14211f;
+      font-size: 0.9rem;
+      border: 1px solid rgba(44, 122, 94, 0.06);
+    }
+
+    .package-summary strong {
+      color: var(--accent-dark);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SKELETON – ENHANCED
+       ────────────────────────────────────────────────────────────── */
     .skeleton-card {
       border-radius: 1.5rem;
       overflow: hidden;
@@ -53,226 +803,174 @@
       100% { background-position: -200% 0; }
     }
 
-    /* ─── Package cards ─── */
-    .package-card {
-      transition: all 0.25s ease;
-      border-radius: 1.5rem;
-      border: 2px solid transparent;
-      background: white;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-    }
-    .package-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 35px rgba(44, 122, 94, 0.12);
-      border-color: rgba(44, 122, 94, 0.2);
-    }
-    .package-card .card-icon {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, var(--accent-light), rgba(44,122,94,0.1));
-      border-radius: 20px;
+    /* ──────────────────────────────────────────────────────────────
+       SCROLL TO TOP – refined
+       ────────────────────────────────────────────────────────────── */
+    .scroll-top-btn {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 1080;
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
-      color: var(--accent);
-      margin-bottom: 1rem;
-    }
-    .package-points {
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: var(--text-dark);
-    }
-    .package-price {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-    .per-point {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-    .badge-best {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: #f5b042;
-      color: white;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 0.25rem 0.7rem;
-      border-radius: 30px;
-    }
-
-    /* ─── Points balance card ─── */
-    .points-balance-card {
-      background: linear-gradient(135deg, #1f5e48, #2c7a5e);
-      border-radius: 1.5rem;
-      color: white;
-      padding: 1.5rem 2rem;
-    }
-    .points-balance-card .balance-number {
-      font-size: 2.8rem;
-      font-weight: 800;
-    }
-    .points-balance-card .share-btn {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: white;
-      border-radius: 40px;
-      padding: 0.5rem 1.2rem;
-      transition: all 0.2s;
-      text-decoration: none;
-      font-size: 0.9rem;
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px);
+      transition: var(--transition-smooth);
       cursor: pointer;
     }
-    .points-balance-card .share-btn:hover {
-      background: rgba(255,255,255,0.25);
-      color: white;
+
+    .scroll-top-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(10px) scale(1.05);
+      box-shadow: 0 12px 36px rgba(44, 122, 94, 0.30);
     }
 
-    /* ─── Tabs ─── */
-    .nav-pills .nav-link {
-      border-radius: 40px;
-      padding: 0.5rem 1.5rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      transition: all 0.2s;
+    .scroll-top-btn.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
-    .nav-pills .nav-link.active {
+
+    .scroll-top-btn i {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    @media (max-width: 768px) {
+      .scroll-top-btn {
+        right: 1rem;
+        bottom: 5.5rem;
+        width: 44px;
+        height: 44px;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       EXTRA POLISH
+       ────────────────────────────────────────────────────────────── */
+    .text-accent {
+      color: var(--accent);
+    }
+    .bg-accent-soft {
+      background: var(--accent-light);
+    }
+
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .hover-lift {
+      transition: var(--transition-smooth);
+    }
+    .hover-lift:hover {
+      transform: translateY(-2px);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       BREADCRUMB – preserve
+       ────────────────────────────────────────────────────────────── */
+    #breadcrumb-placeholder nav {
+      background: transparent !important;
+      padding: 0.75rem 0 0.25rem 0 !important;
+    }
+    #breadcrumb-placeholder .breadcrumb {
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      font-size: 0.8rem;
+    }
+    #breadcrumb-placeholder .breadcrumb-item a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    #breadcrumb-placeholder .breadcrumb-item a:hover {
+      color: var(--accent-dark);
+      text-decoration: underline;
+    }
+    #breadcrumb-placeholder .breadcrumb-item.active {
+      color: #5f7775;
+      font-weight: 500;
+    }
+    #breadcrumb-placeholder .breadcrumb-item+.breadcrumb-item::before {
+      color: #b0c6c0;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TOOLTIP OVERRIDE
+       ────────────────────────────────────────────────────────────── */
+    .tooltip-inner {
+      background: #14211f;
+      font-weight: 500;
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+    }
+    .tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+    .tooltip.bs-tooltip-top .tooltip-arrow::before {
+      border-top-color: #14211f;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       DASHBOARD CARD ANIMATION
+       ────────────────────────────────────────────────────────────── */
+    @keyframes cardFloatIn {
+      0% { opacity: 0; transform: translateY(24px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .dashboard-card {
+      animation: cardFloatIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    /* ─── Mobile nav tweaks ─── */
+    .dashboard-mobile-actions .action-link.active {
       background: var(--accent);
       color: white;
     }
-    .nav-pills .nav-link:hover:not(.active) {
-      background: var(--accent-light);
-      color: var(--accent-dark);
+    .dashboard-mobile-actions .action-link.active i {
+      color: white;
     }
 
-    /* ─── History rows ─── */
-    .history-item {
-      border-bottom: 1px solid #eef2f0;
-      padding: 0.75rem 0;
-      transition: background 0.15s;
+    /* ─── Stats mini row ─── */
+    .stat-mini {
+      background: white;
+      border-radius: 14px;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(44, 122, 94, 0.06);
+      text-align: center;
+      transition: var(--transition-smooth);
     }
-    .history-item:last-child {
-      border-bottom: none;
+    .stat-mini:hover {
+      border-color: rgba(44, 122, 94, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.02);
     }
-    .history-item:hover {
-      background: #fafcfb;
-      margin: 0 -0.75rem;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-      border-radius: 0.75rem;
+    .stat-mini .stat-number {
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #14211f;
     }
-    .history-item .badge-status {
+    .stat-mini .stat-label {
       font-size: 0.7rem;
-      padding: 0.2rem 0.7rem;
-      border-radius: 30px;
-    }
-    .badge-completed { background: #e3f5ec; color: #1e7b4a; }
-    .badge-pending { background: #fff3cd; color: #856404; }
-    .badge-failed { background: #ffe6e5; color: #c23d2e; }
-
-    /* ─── Badge-verify ─── */
-    .badge-verify {
-      background: rgba(44, 122, 94, 0.12);
-      color: var(--accent-dark);
-      padding: 0.4rem 1.2rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: inline-block;
+      color: #7a9490;
+      font-weight: 500;
+      text-transform: uppercase;
       letter-spacing: 0.3px;
-    }
-
-    /* ─── Date filter toggle ─── */
-    .date-filter-group {
-      display: none;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-top: 0.5rem;
-    }
-    .date-filter-group.show {
-      display: flex;
-    }
-    .date-filter-group input[type="date"] {
-      border: 1px solid #eef2f0;
-      border-radius: 40px;
-      padding: 0.3rem 0.8rem;
-      font-size: 0.85rem;
-      background: white;
-      max-width: 140px;
-    }
-    .date-filter-group .btn {
-      border-radius: 40px;
-      padding: 0.3rem 1.2rem;
-      font-size: 0.85rem;
-    }
-
-    .pagination-controls .btn {
-      border-radius: 40px;
-      padding: 0.3rem 1.2rem;
-      font-size: 0.85rem;
-    }
-
-    /* ─── Toggle button ─── */
-    .filter-toggle-btn {
-      border: 1px solid #eef2f0;
-      border-radius: 40px;
-      background: white;
-      padding: 0.25rem 0.8rem;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      transition: all 0.2s;
-    }
-    .filter-toggle-btn:hover {
-      background: var(--accent-light);
-      border-color: var(--accent);
-      color: var(--accent-dark);
-    }
-
-    @media (max-width: 576px) {
-      .points-balance-card .balance-number { font-size: 2rem; }
-      .points-balance-card { padding: 1rem 1.25rem; }
-      .nav-pills .nav-link { padding: 0.4rem 1rem; font-size: 0.85rem; }
-      .date-filter-group input[type="date"] { max-width: 100px; }
-    }
-
-    /* ─── Payment options in modal ─── */
-    .payment-option {
-      border: 1px solid #eef2f0;
-      border-radius: 1rem;
-      padding: 1rem;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-    .payment-option:hover {
-      background: #f9fbf8;
-      border-color: var(--accent);
-      transform: translateX(4px);
-    }
-    .payment-option.selected {
-      background: var(--accent-light);
-      border-color: var(--accent);
-    }
-    .payment-icon {
-      width: 48px;
-      height: 48px;
-      background: #f1f3f2;
-      border-radius: 1rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: var(--accent);
-    }
-    .package-summary {
-      background: #f8f9fa;
-      padding: 0.75rem 1.5rem;
-      border-radius: 40px;
     }
   </style>
 </head>
@@ -282,7 +980,7 @@
 <div id="nav-placeholder"></div>
 <div id="breadcrumb-placeholder"></div>
 
-<main class="">
+<main>
   <div class="container py-4">
 
     <!-- SKELETON LOADER -->
@@ -316,27 +1014,42 @@
       <!-- Header -->
       <div class="text-center mb-4" data-aos="fade-up">
         <span class="badge-verify mb-2"><i class="fas fa-coins me-1"></i> Points & Transactions</span>
-        <h1 class="fw-bold">Manage your points</h1>
-        <p class="text-muted col-lg-7 mx-auto">Buy points to post more listings, track your purchases, and see your full transaction history.</p>
+        <div class="page-headline">
+          <h1>Manage your points</h1>
+          <p>Buy points to post more listings, track your purchases, and see your full transaction history.</p>
+        </div>
       </div>
 
-      <!-- Points Balance + Share -->
-      <div class="row justify-content-center mb-5" data-aos="fade-up" data-aos-delay="100">
-        <div class="col-lg-8">
+      <!-- Points Balance + Stats -->
+      <div class="row g-4 mb-5" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-lg-7">
           <div class="points-balance-card d-flex flex-wrap align-items-center justify-content-between">
             <div>
-              <div class="small text-white-50"><i class="fas fa-coins me-1"></i> Your balance</div>
+              <div class="balance-label"><i class="fas fa-coins me-1"></i> Your balance</div>
               <div class="balance-number" id="pointsBalanceDisplay">0</div>
+              <div class="balance-sub mt-1">Available for listings &amp; promotions</div>
             </div>
-            <!-- <div class="d-flex gap-2 mt-2 mt-sm-0">
-              <button class="share-btn" id="sharePointsBtn"><i class="fas fa-share-alt me-2"></i>Share points</button>
-            </div> -->
-            <button class="points-balance-card d-flex flex-wrap align-items-center justify-content-between position-relative"
-                    id="refreshPointsBtn"
-                    title="Refresh your point balance"
-                    data-bs-toggle="tooltip">
-              <i class="fas fa-sync-alt fs-5 text-white" style="opacity:0.7;"></i>
-            </button>
+            <div class="action-btns mt-2 mt-sm-0">
+              <button class="action-btn" id="refreshPointsBtn" data-bs-toggle="tooltip" title="Refresh balance">
+                <i class="fas fa-sync-alt"></i> Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="row g-2 h-100">
+            <div class="col-6">
+              <div class="stat-mini h-100 d-flex flex-column justify-content-center">
+                <div class="stat-number" id="statTotalPurchases">0</div>
+                <div class="stat-label"><i class="fas fa-shopping-cart me-1"></i>Purchases</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-mini h-100 d-flex flex-column justify-content-center">
+                <div class="stat-number" id="statTotalTransactions">0</div>
+                <div class="stat-label"><i class="fas fa-exchange-alt me-1"></i>Transactions</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -349,12 +1062,12 @@
         <ul class="nav nav-pills dashboard-pills mb-4 justify-content-center" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="purchases-tab" data-bs-toggle="pill" data-bs-target="#purchases" type="button" role="tab" aria-controls="purchases" aria-selected="true" data-tooltip="true" title="View purchases">
-              <i class="fas fa-shopping-cart me-1"></i> Purchases
+              <i class="fas fa-shopping-cart"></i> Purchases
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="transactions-tab" data-bs-toggle="pill" data-bs-target="#transactions" type="button" role="tab" aria-controls="transactions" aria-selected="false" data-tooltip="true" title="View transactions">
-              <i class="fas fa-exchange-alt me-1"></i> Transactions
+              <i class="fas fa-exchange-alt"></i> Transactions
             </button>
           </li>
         </ul>
@@ -364,26 +1077,24 @@
           <div class="tab-pane fade show active" id="purchases" role="tabpanel" aria-labelledby="purchases-tab">
             <div class="dashboard-card shadow-sm rounded-4 p-4">
               <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-                <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Purchase history</h5>
-                <div class="d-flex align-items-center gap-2">
-                  <button class="filter-toggle-btn" id="purchaseFilterToggle" data-bs-toggle="tooltip" title="Filter purchases">
-                    <i class="fas fa-calendar-alt me-1"></i> Filter by date
-                  </button>
-                </div>
+                <h5 class="mb-0 fw-bold"><i class="fas fa-receipt me-2 text-accent"></i>Purchase history</h5>
+                <button class="filter-toggle-btn" id="purchaseFilterToggle" data-bs-toggle="tooltip" title="Filter by date">
+                  <i class="fas fa-calendar-alt"></i> Filter
+                </button>
               </div>
               <div class="date-filter-group" id="purchaseDateFilter">
                 <input type="date" id="purchaseDateFrom" class="form-control form-control-sm">
-                <span class="text-muted small">to</span>
+                <span class="text-muted small">→</span>
                 <input type="date" id="purchaseDateTo" class="form-control form-control-sm">
-                <button class="btn btn-sm btn-outline-custom" id="purchaseFilterBtn" data-bs-toggle="tooltip" title="Apply date filter">Apply</button>
-                <button class="btn btn-sm btn-outline-danger" id="purchaseClearFilterBtn" data-bs-toggle="tooltip" title="Clear date filter">Clear</button>
+                <button class="btn btn-sm btn-outline-custom" id="purchaseFilterBtn" data-bs-toggle="tooltip" title="Apply filter">Apply</button>
+                <button class="btn btn-sm btn-outline-danger" id="purchaseClearFilterBtn" data-bs-toggle="tooltip" title="Clear filter">Clear</button>
               </div>
-              <div id="purchaseList" class="mt-3"><div class="text-center text-muted py-3">Loading purchases...</div></div>
-              <div class="d-flex justify-content-between align-items-center mt-3">
+              <div id="purchaseList" class="mt-3"><div class="text-center text-muted py-3"><i class="fas fa-spinner fa-spin me-2"></i>Loading purchases...</div></div>
+              <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
                 <span class="text-muted small" id="purchaseCount">0 purchases</span>
                 <div class="pagination-controls d-flex gap-2">
-                  <button class="btn btn-sm btn-outline-custom" id="purchasePrevBtn" disabled data-bs-toggle="tooltip" title="Previous purchases"><i class="fas fa-chevron-left"></i> Prev</button>
-                  <button class="btn btn-sm btn-outline-custom" id="purchaseNextBtn" data-bs-toggle="tooltip" title="Next purchases">Next <i class="fas fa-chevron-right"></i></button>
+                  <button class="btn" id="purchasePrevBtn" disabled data-bs-toggle="tooltip" title="Previous"><i class="fas fa-chevron-left"></i> Prev</button>
+                  <button class="btn" id="purchaseNextBtn" data-bs-toggle="tooltip" title="Next">Next <i class="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             </div>
@@ -393,26 +1104,24 @@
           <div class="tab-pane fade" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
             <div class="dashboard-card shadow-sm rounded-4 p-4">
               <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-                <h5 class="mb-0"><i class="fas fa-list-ul me-2"></i>Transaction history</h5>
-                <div class="d-flex align-items-center gap-2">
-                  <button class="filter-toggle-btn" id="transactionFilterToggle" data-bs-toggle="tooltip" title="Filter transactions">
-                    <i class="fas fa-calendar-alt me-1"></i> Filter by date
-                  </button>
-                </div>
+                <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2 text-accent"></i>Transaction history</h5>
+                <button class="filter-toggle-btn" id="transactionFilterToggle" data-bs-toggle="tooltip" title="Filter by date">
+                  <i class="fas fa-calendar-alt"></i> Filter
+                </button>
               </div>
               <div class="date-filter-group" id="transactionDateFilter">
                 <input type="date" id="transactionDateFrom" class="form-control form-control-sm">
-                <span class="text-muted small">to</span>
+                <span class="text-muted small">→</span>
                 <input type="date" id="transactionDateTo" class="form-control form-control-sm">
-                <button class="btn btn-sm btn-outline-custom" id="transactionFilterBtn" data-bs-toggle="tooltip" title="Apply date filter">Apply</button>
-                <button class="btn btn-sm btn-outline-danger" id="transactionClearFilterBtn" data-bs-toggle="tooltip" title="Clear date filter">Clear</button>
+                <button class="btn btn-sm btn-outline-custom" id="transactionFilterBtn" data-bs-toggle="tooltip" title="Apply filter">Apply</button>
+                <button class="btn btn-sm btn-outline-danger" id="transactionClearFilterBtn" data-bs-toggle="tooltip" title="Clear filter">Clear</button>
               </div>
-              <div id="transactionList" class="mt-3"><div class="text-center text-muted py-3">Loading transactions...</div></div>
-              <div class="d-flex justify-content-between align-items-center mt-3">
+              <div id="transactionList" class="mt-3"><div class="text-center text-muted py-3"><i class="fas fa-spinner fa-spin me-2"></i>Loading transactions...</div></div>
+              <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
                 <span class="text-muted small" id="transactionCount">0 transactions</span>
                 <div class="pagination-controls d-flex gap-2">
-                  <button class="btn btn-sm btn-outline-custom" id="transactionPrevBtn" disabled data-bs-toggle="tooltip" title="Previous transactions"><i class="fas fa-chevron-left"></i> Prev</button>
-                  <button class="btn btn-sm btn-outline-custom" id="transactionNextBtn" data-bs-toggle="tooltip" title="Next transactions">Next <i class="fas fa-chevron-right"></i></button>
+                  <button class="btn" id="transactionPrevBtn" disabled data-bs-toggle="tooltip" title="Previous"><i class="fas fa-chevron-left"></i> Prev</button>
+                  <button class="btn" id="transactionNextBtn" data-bs-toggle="tooltip" title="Next">Next <i class="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             </div>
@@ -420,12 +1129,12 @@
         </div>
       </div>
 
-      <!-- Extra info -->
+      <!-- Footer info -->
       <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="300">
         <div class="d-flex justify-content-center gap-4 flex-wrap text-muted small">
-          <span><i class="fas fa-lock text-success me-1"></i> Secure</span>
-          <span><i class="fas fa-clock text-success me-1"></i> Instant credit</span>
-          <span><i class="fas fa-headset text-success me-1"></i> 24/7 support</span>
+          <span><i class="fas fa-lock text-accent me-1"></i> Secure payments</span>
+          <span><i class="fas fa-clock text-accent me-1"></i> Instant credit</span>
+          <span><i class="fas fa-headset text-accent me-1"></i> 24/7 support</span>
         </div>
       </div>
     </div>
@@ -463,7 +1172,6 @@
     <div class="modal-footer" id="confirmModalFooter"></div>
   </div>
 </div>
-
 
 <button class="scroll-top-btn" data-scroll-top data-bs-toggle="tooltip" title="Scroll to top"><i class="fas fa-arrow-up"></i></button>
 
@@ -508,172 +1216,174 @@
     });
   }
 
+  function updateStats(purchases, transactions) {
+    const pEl = document.getElementById('statTotalPurchases');
+    const tEl = document.getElementById('statTotalTransactions');
+    if (pEl) pEl.textContent = purchases || 0;
+    if (tEl) tEl.textContent = transactions || 0;
+  }
+
   // ─── Render packages ────────────────────────────────────────
   function renderPackages() {
     const container = document.getElementById('packagesGrid');
     if (!packages.length) {
-      container.innerHTML = '<div class="col-12 text-center text-muted">No packages available.</div>';
+      container.innerHTML = '<div class="col-12 text-center text-muted py-4">No packages available.</div>';
       return;
     }
     container.innerHTML = packages.map(pkg => {
       const perPoint = pkg.price / pkg.points;
+      let badgeHtml = '';
+      if (pkg.is_popular) {
+        badgeHtml = `<div class="badge-popular">🔥 Popular</div>`;
+      } else if (pkg.is_best_value) {
+        badgeHtml = `<div class="badge-best">⭐ Best value</div>`;
+      }
       const iconClass = pkg.is_popular ? 'fa-fire' : (pkg.is_best_value ? 'fa-gem' : 'fa-coins');
       return `
         <div class="col-6 col-lg-3">
-          <div class="package-card p-4 text-center" data-package-id="${pkg.id}" data-points="${pkg.points}" data-price="${pkg.price}" data-description="${pkg.description || ''}" data-bs-toggle="tooltip" title="Buy points">
-            <div class="card-icon mx-auto"><i class="fas ${iconClass}"></i></div>
-            <div class="package-points">${pkg.points} points</div>
+          <div class="package-card" data-package-id="${pkg.id}" data-points="${pkg.points}" data-price="${pkg.price}" data-description="${pkg.description || ''}" data-bs-toggle="tooltip" title="Click to buy">
+            ${badgeHtml}
+            <div class="card-icon"><i class="fas ${iconClass}"></i></div>
+            <div class="package-points">${pkg.points} <span>pts</span></div>
             <div class="package-price">₦${pkg.price.toLocaleString()}</div>
             <div class="per-point">₦${perPoint.toFixed(2)} / point</div>
-            ${pkg.is_popular ? '<div class="badge-best">🔥 Popular</div>' : ''}
-            ${pkg.description ? `<div class="mt-2 small text-muted"><i class="fas fa-info-circle text-success me-1"></i> ${pkg.description}</div>` : ''}
+            ${pkg.description ? `<div class="package-description"><i class="fas fa-info-circle text-accent me-1"></i>${pkg.description}</div>` : ''}
+            <div class="card-hover-arrow"><i class="fas fa-arrow-right"></i></div>
           </div>
         </div>
       `;
     }).join('');
 
-    // Re-attach click listeners to new cards
     document.querySelectorAll('.package-card').forEach(card => {
       card.addEventListener('click', onPackageClick);
     });
     setTimeout(initTooltips, 100);
   }
 
-// ─── Package click (opens payment modal) ──────────────────
-function onPackageClick(e) {
-  const card = e.currentTarget;
-  const packageId = parseInt(card.getAttribute('data-package-id'), 10);
-  const pkg = packages.find(p => p.id === packageId);
-  if (!pkg) {
-    showToast('Package not found.', 'error');
-    return;
-  }
-
-  const packageName = pkg.description || `${pkg.points} Points`;
-  const points = pkg.points;
-  const price = pkg.price;
-
-  if (!formModal) {
-    showToast('Modal system not ready. Please refresh.', 'error');
-    return;
-  }
-
-  formModal.open({
-    title: `Buy ${packageName}`,
-    formHtml: `
-      <div class="text-center mb-4">
-        <div class="package-summary bg-light p-3 rounded-4 d-inline-block">
-          <strong>${packageName}</strong> · ${points} points · <strong class="text-success">₦${price.toLocaleString()}</strong>
-        </div>
-        <p class="mt-3 text-muted small">🔒 Secure payment – points are added instantly.</p>
-      </div>
-      <p class="mb-3">Choose your preferred payment gateway:</p>
-      <div class="payment-option d-flex align-items-center gap-3 mb-3" data-gateway="paystack" data-bs-toggle="tooltip" title="Pay with Paystack">
-        <div class="payment-icon"><i class="fab fa-paystack fa-2x"></i></div>
-        <div>
-          <strong>Paystack</strong>
-          <div class="small text-muted">Card, Bank Transfer, USSD, QR – instant activation</div>
-        </div>
-        <i class="fas fa-check-circle ms-auto text-success" style="opacity:0;"></i>
-      </div>
-      <div class="payment-option d-flex align-items-center gap-3 mb-3" data-gateway="monnify" data-bs-toggle="tooltip" title="Pay with Monnify">
-        <div class="payment-icon"><i class="fas fa-building fa-2x"></i></div>
-        <div>
-          <strong>Monnify</strong>
-          <div class="small text-muted">Bank transfer, card – secure & reliable</div>
-        </div>
-        <i class="fas fa-check-circle ms-auto text-success" style="opacity:0;"></i>
-      </div>
-      <div class="payment-option d-flex align-items-center gap-3 mb-3" data-gateway="flutterwave" data-bs-toggle="tooltip" title="Pay with Flutterwave">
-        <div class="payment-icon"><i class="fab fa-flutterwave fa-2x"></i></div>
-        <div>
-          <strong>Flutterwave</strong>
-          <div class="small text-muted">Card, mobile money, bank – international</div>
-        </div>
-        <i class="fas fa-check-circle ms-auto text-success" style="opacity:0;"></i>
-      </div>
-      <div class="form-note mt-3 small text-muted">
-        <i class="fas fa-lock me-1"></i> All gateways are PCI‑compliant. Your points will be added immediately after successful payment.
-      </div>
-    `,
-    submitLabel: `Pay ₦${price.toLocaleString()} now`,
-    cancelLabel: 'Cancel',
-    onSubmit: async (form, submitBtn) => {
-      // 1. Validate gateway selection
-      const selected = document.querySelector('.payment-option.selected');
-      if (!selected) {
-        showToast('Please select a payment gateway.', 'error');
-        return;
-      }
-      const gateway = selected.getAttribute('data-gateway');
-
-      // 2. Show spinner and disable button
-      const originalText = submitBtn.innerHTML;
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
-
-      try {
-        // 3. Build the payload
-        const payload = {
-          package_id: packageId,
-          points: points,
-          amount: price,
-          gateway: gateway
-        };
-
-        console.log(payload)
-
-        const response = await fetchWithAuth(AUTH_URL + 'buy-points-initial', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...getAuthHeaders()
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.message || 'Payment initiation failed.');
-        }
-
-        // 5. Handle success – e.g., redirect to payment page or open modal
-        if (result.is_success && result.data.checkout_url) {
-          confirmModal.open({
-            title: '✅ Payment Initiated',
-            message: result.message || 'Your payment has been initiated. Please complete the payment on the gateway.',
-            confirmText: 'OK, Procced',
-            onConfirm: () => {
-              window.open(result.data.checkout_url, '_blank');
-            }
-          });
-        } else {
-          showToast(result.message || 'Something went wrong.', 'error');
-        } 
-      } catch (err) {
-        console.error('Payment error:', err);
-        showToast(err.message || 'Payment failed. Please try again.', 'error');
-      } finally {
-        // 6. Restore button
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-      }
+  // ─── Package click ──────────────────────────────────────────
+  function onPackageClick(e) {
+    const card = e.currentTarget;
+    const packageId = parseInt(card.getAttribute('data-package-id'), 10);
+    const pkg = packages.find(p => p.id === packageId);
+    if (!pkg) {
+      showToast('Package not found.', 'error');
+      return;
     }
-  });
-    // Attach listeners after modal is rendered
+
+    const packageName = pkg.description || `${pkg.points} Points`;
+    const points = pkg.points;
+    const price = pkg.price;
+
+    if (!formModal) {
+      showToast('Modal system not ready. Please refresh.', 'error');
+      return;
+    }
+
+    formModal.open({
+      title: `Buy ${packageName}`,
+      formHtml: `
+        <div class="text-center mb-4">
+          <div class="package-summary">
+            <i class="fas fa-coins text-accent me-2"></i>
+            <strong>${packageName}</strong> · ${points} points · <strong class="text-accent">₦${price.toLocaleString()}</strong>
+          </div>
+          <p class="mt-3 text-muted small"><i class="fas fa-lock me-1"></i> Secure payment – points are added instantly.</p>
+        </div>
+        <p class="mb-3 fw-600">Choose your preferred payment gateway:</p>
+        <div class="payment-option" data-gateway="paystack" data-bs-toggle="tooltip" title="Pay with Paystack">
+          <div class="payment-icon"><i class="fab fa-paystack"></i></div>
+          <div class="payment-info">
+            <strong>Paystack</strong>
+            <div class="small">Card, Bank Transfer, USSD, QR – instant</div>
+          </div>
+          <span class="check-mark"><i class="fas fa-check-circle"></i></span>
+        </div>
+        <div class="payment-option" data-gateway="monnify" data-bs-toggle="tooltip" title="Pay with Monnify">
+          <div class="payment-icon"><i class="fas fa-building"></i></div>
+          <div class="payment-info">
+            <strong>Monnify</strong>
+            <div class="small">Bank transfer, card – secure & reliable</div>
+          </div>
+          <span class="check-mark"><i class="fas fa-check-circle"></i></span>
+        </div>
+        <div class="payment-option" data-gateway="flutterwave" data-bs-toggle="tooltip" title="Pay with Flutterwave">
+          <div class="payment-icon"><i class="fab fa-flutterwave"></i></div>
+          <div class="payment-info">
+            <strong>Flutterwave</strong>
+            <div class="small">Card, mobile money, bank – international</div>
+          </div>
+          <span class="check-mark"><i class="fas fa-check-circle"></i></span>
+        </div>
+        <div class="mt-3 small text-muted">
+          <i class="fas fa-shield-alt text-accent me-1"></i> All gateways are PCI‑compliant. Points are added immediately after successful payment.
+        </div>
+      `,
+      submitLabel: `Pay ₦${price.toLocaleString()}`,
+      cancelLabel: 'Cancel',
+      onSubmit: async (form, submitBtn) => {
+        const selected = document.querySelector('.payment-option.selected');
+        if (!selected) {
+          showToast('Please select a payment gateway.', 'error');
+          return;
+        }
+        const gateway = selected.getAttribute('data-gateway');
+
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
+
+        try {
+          const payload = { package_id: packageId, points, amount: price, gateway };
+          const response = await fetchWithAuth(AUTH_URL + 'buy-points-initial', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+            body: JSON.stringify(payload)
+          });
+          const result = await response.json();
+
+          if (!response.ok) throw new Error(result.message || 'Payment initiation failed.');
+
+          if (result.is_success && result.data.checkout_url) {
+            confirmModal.open({
+              title: '✅ Payment Initiated',
+              message: result.message || 'Your payment has been initiated. Please complete the payment on the gateway.',
+              confirmText: 'Proceed to Payment',
+              onConfirm: () => {
+                window.open(result.data.checkout_url, '_blank');
+              }
+            });
+          } else {
+            showToast(result.message || 'Something went wrong.', 'error');
+          }
+        } catch (err) {
+          console.error('Payment error:', err);
+          showToast(err.message || 'Payment failed. Please try again.', 'error');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+      }
+    });
+
     setTimeout(() => {
       const options = document.querySelectorAll('.payment-option');
       options.forEach(opt => {
         opt.addEventListener('click', function() {
           options.forEach(o => {
             o.classList.remove('selected');
-            o.querySelector('.fa-check-circle').style.opacity = '0';
+            o.querySelector('.check-mark').style.opacity = '0';
+            o.querySelector('.check-mark').style.transform = 'scale(0.5)';
           });
           this.classList.add('selected');
-          this.querySelector('.fa-check-circle').style.opacity = '1';
+          const mark = this.querySelector('.check-mark');
+          mark.style.opacity = '1';
+          mark.style.transform = 'scale(1)';
         });
       });
+      // Auto-select first
+      if (options.length) {
+        options[0].click();
+      }
     }, 200);
   }
 
@@ -694,54 +1404,55 @@ function onPackageClick(e) {
     return result.data;
   }
 
-  // ─── Render functions for purchases/transactions ──────────
+  // ─── Render functions ──────────────────────────────────────
   function renderPurchases() {
     const container = document.getElementById('purchaseList');
     const countEl = document.getElementById('purchaseCount');
     const filtered = filterItemsByDate(purchaseState.items, purchaseState.dateFrom, purchaseState.dateTo);
     if (filtered.length === 0) {
-      container.innerHTML = `<div class="text-center text-muted py-3"><i class="fas fa-inbox me-2"></i>No purchases match your filters.</div>`;
+      container.innerHTML = `<div class="text-center text-muted py-4"><i class="fas fa-inbox me-2" style="font-size:1.5rem; opacity:0.3; display:block; margin-bottom:0.5rem;"></i>No purchases match your filters.</div>`;
       countEl.textContent = '0 purchases';
     } else {
       container.innerHTML = filtered.map(p => {
-      // Show gateway if available
-      const gatewayHtml = p.gateway ? `<div class="small text-muted"><i class="fas fa-credit-card me-1"></i>${p.gateway}</div>` : '';
-      // Retry button for failed/pending
-      let retryButton = '';
-      if (p.status === 'failed' || p.status === 'pending') {
-        retryButton = `<button class="btn btn-sm btn-outline-danger retry-purchase mt-1" data-id="${p.id}" data-status="${p.status}" data-bs-toggle="tooltip" title="Retry payment"><i class="fas fa-redo"></i> Retry</button>`;
-      }
-      return `
-        <div class="history-item d-flex flex-wrap justify-content-between align-items-center">
-          <div>
-            <strong>${p.package.description || p.package.points + ' pts'}</strong>
-            <span class="badge bg-light text-dark ms-2">${p.points_awarded} pts</span>
-            <div class="small text-muted">${formatDate(p.created_at)}</div>
-            ${gatewayHtml}
+        const gatewayHtml = p.gateway ? `<span class="text-muted"><i class="fas fa-credit-card me-1"></i>${p.gateway}</span>` : '';
+        let retryHtml = '';
+        if (p.status === 'failed' || p.status === 'pending') {
+          retryHtml = `<button class="retry-btn retry-purchase" data-id="${p.id}" data-status="${p.status}" data-bs-toggle="tooltip" title="Retry payment"><i class="fas fa-redo me-1"></i>Retry</button>`;
+        }
+        const iconClass = p.status === 'completed' ? 'purchase' : (p.status === 'pending' ? 'transaction' : 'debit');
+        const iconIcon = p.status === 'completed' ? 'fa-check-circle' : (p.status === 'pending' ? 'fa-clock' : 'fa-times-circle');
+        return `
+          <div class="history-item d-flex align-items-center gap-3">
+            <div class="history-icon ${iconClass}"><i class="fas ${iconIcon}"></i></div>
+            <div class="history-main">
+              <div class="history-title">${p.package.description || p.package.points + ' pts'}</div>
+              <div class="history-meta">
+                <span><i class="far fa-calendar-alt"></i> ${formatDate(p.created_at)}</span>
+                <span><i class="fas fa-coins"></i> ${p.points_awarded} pts</span>
+                ${gatewayHtml ? `<span>${gatewayHtml}</span>` : ''}
+              </div>
+            </div>
+            <div class="text-end">
+              <div class="history-amount positive">₦${p.amount_paid.toLocaleString()}</div>
+              <span class="badge-status ${statusBadgeClass(p.status)} d-inline-block mt-1">${p.status}</span>
+              ${retryHtml ? `<div class="mt-1">${retryHtml}</div>` : ''}
+            </div>
           </div>
-          <div class="text-end">
-            <span class="fw-bold text-success">₦${p.amount_paid.toLocaleString()}</span>
-            <span class="badge-status ${statusBadgeClass(p.status)} d-block mt-1">${p.status}</span>
-            ${retryButton}
-          </div>
-        </div>
-      `;
-    }).join('');
+        `;
+      }).join('');
 
-    document.querySelectorAll('.retry-purchase').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const purchaseId = this.getAttribute('data-id');
-        const status = this.getAttribute('data-status');
-        retryPurchase(purchaseId, status);
+      document.querySelectorAll('.retry-purchase').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const purchaseId = this.getAttribute('data-id');
+          const status = this.getAttribute('data-status');
+          retryPurchase(purchaseId, status);
+        });
       });
-    });
-    setTimeout(initTooltips, 100);
-
+      setTimeout(initTooltips, 100);
       countEl.textContent = `${filtered.length} purchases (filtered from ${purchaseState.items.length})`;
     }
     updatePaginationButtons('purchase');
-    setTimeout(initTooltips, 100);
   }
 
   function renderTransactions() {
@@ -749,22 +1460,27 @@ function onPackageClick(e) {
     const countEl = document.getElementById('transactionCount');
     const filtered = filterItemsByDate(transactionState.items, transactionState.dateFrom, transactionState.dateTo);
     if (filtered.length === 0) {
-      container.innerHTML = `<div class="text-center text-muted py-3"><i class="fas fa-inbox me-2"></i>No transactions match your filters.</div>`;
+      container.innerHTML = `<div class="text-center text-muted py-4"><i class="fas fa-inbox me-2" style="font-size:1.5rem; opacity:0.3; display:block; margin-bottom:0.5rem;"></i>No transactions match your filters.</div>`;
       countEl.textContent = '0 transactions';
     } else {
       container.innerHTML = filtered.map(t => {
         const isPositive = t.amount > 0;
-        const colorClass = isPositive ? 'text-success' : 'text-danger';
+        const iconClass = isPositive ? 'credit' : 'debit';
+        const iconIcon = isPositive ? 'fa-arrow-up' : 'fa-arrow-down';
         const sign = isPositive ? '+' : '';
         return `
-          <div class="history-item d-flex flex-wrap justify-content-between align-items-center">
-            <div>
-              <strong>${t.transaction_type_display || t.transaction_type}</strong>
-              <div class="small text-muted">${t.description || t.reference || 'No description'}</div>
-              <div class="small text-muted">${formatDate(t.created_at)}</div>
+          <div class="history-item d-flex align-items-center gap-3">
+            <div class="history-icon ${iconClass}"><i class="fas ${iconIcon}"></i></div>
+            <div class="history-main">
+              <div class="history-title">${t.transaction_type_display || t.transaction_type}</div>
+              <div class="history-meta">
+                <span><i class="far fa-calendar-alt"></i> ${formatDate(t.created_at)}</span>
+                ${t.description ? `<span><i class="fas fa-tag"></i> ${t.description}</span>` : ''}
+                ${t.reference ? `<span><i class="fas fa-hashtag"></i> ${t.reference}</span>` : ''}
+              </div>
             </div>
             <div class="text-end">
-              <span class="fw-bold ${colorClass}">${sign}${t.amount}</span>
+              <div class="history-amount ${isPositive ? 'positive' : 'negative'}">${sign}${t.amount}</div>
               <div class="small text-muted">Balance: ${t.balance_after}</div>
             </div>
           </div>
@@ -773,73 +1489,61 @@ function onPackageClick(e) {
       countEl.textContent = `${filtered.length} transactions (filtered from ${transactionState.items.length})`;
     }
     updatePaginationButtons('transaction');
-    setTimeout(initTooltips, 100);
   }
 
   async function retryPurchase(purchaseId, currentStatus) {
-  if (!confirmModal) {
-    showToast('Modal not available. Please refresh the page.', 'error');
-    return;
-  }
-
-  confirmModal.open({
-    title: '🔄 Retry Payment',
-    message: `You are about to retry this ${currentStatus} purchase. Do you want to proceed?`,
-    confirmText: 'Yes, Retry',
-    onConfirm: async () => {
-      // 1. Locate the confirm button inside the modal
-      const modalElement = document.getElementById('confirmModal');
-      let confirmBtn = modalElement?.querySelector('.modal-footer .btn-primary');
-      // Fallback: if .btn-primary isn't used, pick the last button (usually confirm)
-      if (!confirmBtn) {
-        const allBtns = modalElement?.querySelectorAll('.modal-footer button');
-        if (allBtns && allBtns.length > 1) {
-          confirmBtn = allBtns[allBtns.length - 1];
-        }
-      }
-
-      // 2. Save original text and show spinner
-      const originalText = confirmBtn ? confirmBtn.innerHTML : 'Yes, Retry';
-      if (confirmBtn) {
-        confirmBtn.disabled = true;
-        confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
-      }
-
-      try {
-        const response = await fetchWithAuth(AUTH_URL + 'retry-purchase', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...getAuthHeaders()
-          },
-          body: JSON.stringify({ purchase_id: purchaseId })
-        });
-        const result = await response.json();
-
-        if (!response.ok) throw new Error(result.message || 'Retry failed.');
-
-        if (result.is_success) {
-          showToast(result.message || 'Retry initiated. Please complete the payment.', 'success');
-          // Close modal and reload purchases
-          if (confirmModal.close) confirmModal.close();
-          loadTab('purchase', purchaseState.page);
-        } else {
-          throw new Error(result.message || 'Retry request failed.');
-        }
-      } catch (err) {
-        showToast(err.message || 'Failed to retry purchase.', 'error');
-      } finally {
-        // 3. Restore button state
-        if (confirmBtn) {
-          confirmBtn.disabled = false;
-          confirmBtn.innerHTML = originalText;
-        }
-      }
+    if (!confirmModal) {
+      showToast('Modal not available. Please refresh the page.', 'error');
+      return;
     }
-  });
-}
 
+    confirmModal.open({
+      title: '🔄 Retry Payment',
+      message: `You are about to retry this ${currentStatus} purchase. Do you want to proceed?`,
+      confirmText: 'Yes, Retry',
+      onConfirm: async () => {
+        const modalElement = document.getElementById('confirmModal');
+        let confirmBtn = modalElement?.querySelector('.modal-footer .btn-primary');
+        if (!confirmBtn) {
+          const allBtns = modalElement?.querySelectorAll('.modal-footer button');
+          if (allBtns && allBtns.length > 1) {
+            confirmBtn = allBtns[allBtns.length - 1];
+          }
+        }
+        const originalText = confirmBtn ? confirmBtn.innerHTML : 'Yes, Retry';
+        if (confirmBtn) {
+          confirmBtn.disabled = true;
+          confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
+        }
 
+        try {
+          const response = await fetchWithAuth(AUTH_URL + 'retry-purchase', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+            body: JSON.stringify({ purchase_id: purchaseId })
+          });
+          const result = await response.json();
+
+          if (!response.ok) throw new Error(result.message || 'Retry failed.');
+
+          if (result.is_success) {
+            showToast(result.message || 'Retry initiated. Please complete the payment.', 'success');
+            if (confirmModal.close) confirmModal.close();
+            loadTab('purchase', purchaseState.page);
+          } else {
+            throw new Error(result.message || 'Retry request failed.');
+          }
+        } catch (err) {
+          showToast(err.message || 'Failed to retry purchase.', 'error');
+        } finally {
+          if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = originalText;
+          }
+        }
+      }
+    });
+  }
 
   function updatePaginationButtons(type) {
     const state = type === 'purchase' ? purchaseState : transactionState;
@@ -865,6 +1569,13 @@ function onPackageClick(e) {
       state.page = pagination.page || page;
       state.totalPages = pagination.total_pages || 1;
       state.perPage = pagination.per_page || state.perPage;
+
+      // Update stats
+      if (type === 'purchase') {
+        updateStats(pagination.total_count || items.length, transactionState.items.length);
+      } else {
+        updateStats(purchaseState.items.length, pagination.total_count || items.length);
+      }
 
       if (type === 'purchase') renderPurchases();
       else renderTransactions();
@@ -913,26 +1624,40 @@ function onPackageClick(e) {
     applyFilter(type);
   }
 
-  // ─── Share points ──────────────────────────────────────────
-  // function sharePoints() {
-  //   const points = document.getElementById('pointsBalanceDisplay').textContent;
-  //   if (typeof confirmModal !== 'undefined' && confirmModal) {
-  //     confirmModal.open({
-  //       title: 'Share your points balance',
-  //       message: `You have ${points} points. Share this with your friends!`,
-  //       confirmText: 'Copy to clipboard',
-  //       onConfirm: () => {
-  //         navigator.clipboard.writeText(`I have ${points} points on CampusConnect! 🎉`).then(() => {
-  //           showToast('Copied to clipboard!', 'success');
-  //         }).catch(() => {
-  //           showToast('Share: ' + `I have ${points} points on CampusConnect! 🎉`, 'info');
-  //         });
-  //       }
-  //     });
-  //   } else {
-  //     alert(`You have ${points} points.`);
-  //   }
-  // }
+  // ─── Refresh points ──────────────────────────────────────────
+  async function refreshPointBalance() {
+    const btn = document.getElementById('refreshPointsBtn');
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    btn.disabled = true;
+
+    try {
+      const response = await fetchWithAuth(AUTH_URL + 'refresh-points', {
+        method: 'GET',
+        headers: { 'Accept': 'application/json', ...getAuthHeaders() }
+      });
+      if (!response.ok) throw new Error('Failed to refresh');
+      const result = await response.json();
+      if (result.is_success && result.data) {
+        const points = result.data.point_bal || result.data.balance || 0;
+        document.cookie = `point_bal=${points}; path=/`;
+        const display = document.getElementById('pointsBalanceDisplay');
+        display.textContent = points;
+        display.classList.remove('pulse');
+        void display.offsetWidth;
+        display.classList.add('pulse');
+        showToast(`Balance updated: ${points} points`, 'success');
+      } else {
+        throw new Error(result.message || 'Could not refresh');
+      }
+    } catch (err) {
+      console.error('Refresh error:', err);
+      showToast('Failed to refresh balance. Please reload.', 'error');
+    } finally {
+      btn.innerHTML = originalHtml;
+      btn.disabled = false;
+    }
+  }
 
   // ─── Load page ──────────────────────────────────────────────
   async function loadPage() {
@@ -960,8 +1685,6 @@ function onPackageClick(e) {
       // 2. Set points balance
       const points = getCookie('point_bal') || '0';
       document.getElementById('pointsBalanceDisplay').textContent = points;
-      const mobilePoints = document.getElementById('mobilePointsBalance');
-      if (mobilePoints) mobilePoints.textContent = points;
 
       // 3. Load initial purchases
       await loadTab('purchase', 1);
@@ -970,7 +1693,7 @@ function onPackageClick(e) {
       realContent.style.display = 'block';
 
       // ─── Bind events ──────────────────────────────────────────
-      // document.getElementById('sharePointsBtn').addEventListener('click', sharePoints);
+      document.getElementById('refreshPointsBtn').addEventListener('click', refreshPointBalance);
 
       document.getElementById('purchasePrevBtn').addEventListener('click', () => changePage('purchase', -1));
       document.getElementById('purchaseNextBtn').addEventListener('click', () => changePage('purchase', 1));
@@ -1009,8 +1732,6 @@ function onPackageClick(e) {
   }
 
   injectBreadcrumb('Points & Transactions');
-
-  document.getElementById('refreshPointsBtn')?.addEventListener('click', refreshPointBalance);
 
   document.addEventListener('DOMContentLoaded', loadPage);
 </script>

@@ -66,13 +66,13 @@ forgotForm.addEventListener('submit', async (e) => {
   const email = document.getElementById('resetEmail').value.trim();
 
   if (!email) {
-    showToast('Please enter your UI email address.', 'error');
+    showToast('Please enter your Demo University email address.', 'error');
     return;
   }
 
-  // Optional: basic UI domain hint (backend will validate anyway)
-  // if (!email.endsWith('@ui.edu.ng') && !email.endsWith('@stu.ui.edu.ng')) {
-  //   showToast('Please use a valid @ui.edu.ng or @stu.ui.edu.ng email.', 'error');
+  // Optional: basic Demo University domain hint (backend will validate anyway)
+  // if (!email.endsWith('@Demo University.edu.ng') && !email.endsWith('@stu.Demo University.edu.ng')) {
+  //   showToast('Please use a valid @Demo University.edu.ng or @stu.Demo University.edu.ng email.', 'error');
   //   return;
   // }
 
