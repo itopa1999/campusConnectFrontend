@@ -13,27 +13,7 @@
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/modal.css">
   <style>
-    /* ──────────────────────────────────────────────────────────────
-       ROOT & RESET OVERRIDES
-       ────────────────────────────────────────────────────────────── */
-    :root {
-      --accent: #2c7a5e;
-      --accent-light: #eaf7f0;
-      --accent-dark: #1f5e48;
-      --accent-glow: rgba(44, 122, 94, 0.18);
-      --card-radius: 20px;
-      --shadow-card: 0 12px 40px rgba(31, 94, 72, 0.07);
-      --shadow-card-hover: 0 20px 56px rgba(31, 94, 72, 0.13);
-      --transition-smooth: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
 
-    body {
-      background: #f6f9f8;
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       DASHBOARD CARD – ENHANCED
-       ────────────────────────────────────────────────────────────── */
     .dashboard-card {
       background: #ffffff;
       border-radius: var(--card-radius);
@@ -1349,6 +1329,7 @@
               message: result.message || 'Your payment has been initiated. Please complete the payment on the gateway.',
               confirmText: 'Proceed to Payment',
               onConfirm: () => {
+                confirmModal.close();
                 window.open(result.data.checkout_url, '_blank');
               }
             });
@@ -1624,41 +1605,6 @@
     applyFilter(type);
   }
 
-  // ─── Refresh points ──────────────────────────────────────────
-  async function refreshPointBalance() {
-    const btn = document.getElementById('refreshPointsBtn');
-    const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    btn.disabled = true;
-
-    try {
-      const response = await fetchWithAuth(AUTH_URL + 'refresh-points', {
-        method: 'GET',
-        headers: { 'Accept': 'application/json', ...getAuthHeaders() }
-      });
-      if (!response.ok) throw new Error('Failed to refresh');
-      const result = await response.json();
-      if (result.is_success && result.data) {
-        const points = result.data.point_bal || result.data.balance || 0;
-        document.cookie = `point_bal=${points}; path=/`;
-        const display = document.getElementById('pointsBalanceDisplay');
-        display.textContent = points;
-        display.classList.remove('pulse');
-        void display.offsetWidth;
-        display.classList.add('pulse');
-        showToast(`Balance updated: ${points} points`, 'success');
-      } else {
-        throw new Error(result.message || 'Could not refresh');
-      }
-    } catch (err) {
-      console.error('Refresh error:', err);
-      showToast('Failed to refresh balance. Please reload.', 'error');
-    } finally {
-      btn.innerHTML = originalHtml;
-      btn.disabled = false;
-    }
-  }
-
   // ─── Load page ──────────────────────────────────────────────
   async function loadPage() {
     const skeleton = document.getElementById('skeletonLoader');
@@ -1693,7 +1639,7 @@
       realContent.style.display = 'block';
 
       // ─── Bind events ──────────────────────────────────────────
-      document.getElementById('refreshPointsBtn').addEventListener('click', refreshPointBalance);
+      document.getElementById('refreshPointsBtn')?.addEventListener('click', refreshPointBalance);
 
       document.getElementById('purchasePrevBtn').addEventListener('click', () => changePage('purchase', -1));
       document.getElementById('purchaseNextBtn').addEventListener('click', () => changePage('purchase', 1));

@@ -1,0 +1,2231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>CampusConnect · Moderator Dashboard</title>
+
+  <!-- Bootstrap 5 + Icons + Fonts + AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/modal.css" />
+
+  <style>
+
+
+    /* ──────────────────────────────────────────────────────────────
+       LAYOUT – SIDEBAR + MAIN
+       ────────────────────────────────────────────────────────────── */
+    .moderator-layout {
+      display: flex;
+      min-height: 100vh;
+      padding-top: 72px;
+    }
+
+    /* ─── SIDEBAR ─── */
+    .mod-sidebar {
+      width: 260px;
+      background: #ffffff;
+      border-right: 1px solid rgba(44, 122, 94, 0.06);
+      padding: 1.5rem 1rem;
+      flex-shrink: 0;
+      position: fixed;
+      top: 72px;
+      bottom: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: var(--transition-smooth);
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.02);
+    }
+
+    .mod-sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .mod-sidebar::-webkit-scrollbar-track {
+      background: #f1f3f2;
+    }
+    .mod-sidebar::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
+    }
+
+    .mod-sidebar .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0 0.5rem 1.5rem 0.5rem;
+      border-bottom: 1px solid rgba(44, 122, 94, 0.06);
+      margin-bottom: 1.5rem;
+    }
+
+    .mod-sidebar .sidebar-brand img {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .mod-sidebar .sidebar-brand span {
+      font-weight: 800;
+      font-size: 1rem;
+      color: #14211f;
+      letter-spacing: -0.01em;
+    }
+
+    .mod-sidebar .sidebar-brand small {
+      display: block;
+      font-weight: 500;
+      font-size: 0.65rem;
+      color: #7a9490;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .mod-sidebar .nav-item {
+      margin-bottom: 0.15rem;
+    }
+
+    .mod-sidebar .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #5f7775;
+      transition: var(--transition-smooth);
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    .mod-sidebar .nav-link i {
+      width: 20px;
+      font-size: 1rem;
+      color: #7a9490;
+      transition: var(--transition-smooth);
+    }
+
+    .mod-sidebar .nav-link:hover {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+    }
+
+    .mod-sidebar .nav-link:hover i {
+      color: var(--accent);
+    }
+
+    .mod-sidebar .nav-link.active {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+
+    .mod-sidebar .nav-link.active i {
+      color: var(--accent);
+    }
+
+    .mod-sidebar .nav-link .badge {
+      margin-left: auto;
+      background: #dc3545;
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 30px;
+    }
+
+    .mod-sidebar .nav-link .badge.warning {
+      background: #f5b042;
+    }
+
+    .mod-sidebar .nav-divider {
+      height: 1px;
+      background: rgba(44, 122, 94, 0.06);
+      margin: 0.75rem 0.5rem;
+    }
+
+    .mod-sidebar .sidebar-footer {
+      padding: 0.5rem;
+      margin-top: 1rem;
+      border-top: 1px solid rgba(44, 122, 94, 0.06);
+      padding-top: 1rem;
+    }
+
+    .mod-sidebar .sidebar-footer .nav-link {
+      font-size: 0.85rem;
+      color: #7a9490;
+    }
+
+    .mod-sidebar .sidebar-footer .nav-link i {
+      color: #7a9490;
+    }
+
+    .mod-sidebar .sidebar-footer .nav-link:hover {
+      color: #dc3545;
+    }
+
+    .mod-sidebar .sidebar-footer .nav-link:hover i {
+      color: #dc3545;
+    }
+
+    /* ─── MAIN CONTENT ─── */
+    .mod-main {
+      flex: 1;
+      margin-left: 260px;
+      padding: 2rem 2rem 4rem;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       HEADER BAR
+       ────────────────────────────────────────────────────────────── */
+    .mod-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .mod-header h1 {
+      font-weight: 800;
+      font-size: 1.6rem;
+      color: #14211f;
+      letter-spacing: -0.02em;
+    }
+
+    .mod-header h1 small {
+      font-weight: 400;
+      font-size: 0.85rem;
+      color: #7a9490;
+      display: block;
+      margin-top: 0.1rem;
+    }
+
+    .mod-header .mod-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .mod-header .mod-actions .btn {
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .mod-header .mod-actions .btn-outline-custom {
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+    }
+
+    .mod-header .mod-actions .btn-outline-custom:hover {
+      background: var(--accent-light);
+    }
+
+    .mod-header .mod-actions .btn-danger-outline {
+      border: 1.5px solid #dc3545;
+      color: #dc3545;
+      background: transparent;
+    }
+
+    .mod-header .mod-actions .btn-danger-outline:hover {
+      background: #dc3545;
+      color: white;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       STAT CARDS
+       ────────────────────────────────────────────────────────────── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card-mod {
+      background: #ffffff;
+      border-radius: var(--card-radius);
+      padding: 1.25rem 1.25rem 1rem;
+      border: 1px solid rgba(44, 122, 94, 0.04);
+      box-shadow: var(--shadow-soft);
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card-mod::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #4aa882);
+      opacity: 0.3;
+    }
+
+    .stat-card-mod:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .stat-card-mod .stat-icon {
+      font-size: 1.4rem;
+      color: var(--accent);
+      opacity: 0.5;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-card-mod .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #14211f;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .stat-card-mod .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #7a9490;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .stat-card-mod .stat-change {
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-top: 0.2rem;
+      display: inline-block;
+    }
+
+    .stat-card-mod .stat-change.up {
+      color: var(--accent);
+    }
+
+    .stat-card-mod .stat-change.down {
+      color: #dc3545;
+    }
+
+    .stat-card-mod.danger::before {
+      background: linear-gradient(90deg, #dc3545, #ff6b6b);
+    }
+
+    .stat-card-mod.warning::before {
+      background: linear-gradient(90deg, #f5b042, #f7c948);
+    }
+
+    .stat-card-mod.info::before {
+      background: linear-gradient(90deg, #4a90d9, #6fb3e0);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SECTION CARD
+       ────────────────────────────────────────────────────────────── */
+    .section-card {
+      background: #ffffff;
+      border-radius: var(--card-radius);
+      border: 1px solid rgba(44, 122, 94, 0.04);
+      box-shadow: var(--shadow-soft);
+      padding: 1.5rem 1.5rem 1.5rem;
+      margin-bottom: 2rem;
+      transition: var(--transition-smooth);
+    }
+
+    .section-card:hover {
+      box-shadow: var(--shadow-card);
+    }
+
+    .section-card .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-card .section-header h5 {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #14211f;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-card .section-header h5 i {
+      color: var(--accent);
+      font-size: 1rem;
+    }
+
+    .section-card .section-header .badge {
+      font-weight: 600;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 30px;
+    }
+
+    .section-card .section-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .section-card .section-actions .btn-sm {
+      border-radius: 30px;
+      font-size: 0.75rem;
+      padding: 0.25rem 1rem;
+      font-weight: 600;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TABLES
+       ────────────────────────────────────────────────────────────── */
+    .mod-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .mod-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .mod-table th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #7a9490;
+      border-bottom: 1.5px solid rgba(44, 122, 94, 0.06);
+      white-space: nowrap;
+    }
+
+    .mod-table td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+      color: #2d403d;
+      vertical-align: middle;
+    }
+
+    .mod-table tr {
+      transition: var(--transition-smooth);
+    }
+
+    .mod-table tr:hover {
+      background: rgba(44, 122, 94, 0.01);
+    }
+
+    .mod-table .status-badge {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 30px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .status-active { background: #e3f5ec; color: #1e7b4a; }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-reported { background: #ffe6e5; color: #c23d2e; }
+    .status-flagged { background: #f8d7da; color: #721c24; }
+    .status-resolved { background: #e9ecef; color: #5a6268; }
+    .status-banned { background: #dc3545; color: white; }
+
+    .mod-table .action-btn {
+      background: transparent;
+      border: none;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      color: #7a9490;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .mod-table .action-btn:hover {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    .mod-table .action-btn.danger:hover {
+      background: #ffe6e5;
+      color: #dc3545;
+    }
+
+    .mod-table .action-btn.success:hover {
+      background: #e3f5ec;
+      color: var(--accent);
+    }
+
+    .mod-table .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .mod-table .user-cell img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #f1f3f2;
+    }
+
+    .mod-table .user-cell .user-name {
+      font-weight: 600;
+      color: #14211f;
+    }
+
+    .mod-table .user-cell .user-email {
+      font-size: 0.7rem;
+      color: #7a9490;
+      display: block;
+    }
+
+    .mod-table .listing-title {
+      font-weight: 600;
+      color: #14211f;
+    }
+
+    .mod-table .listing-title small {
+      font-weight: 400;
+      color: #7a9490;
+      font-size: 0.7rem;
+      display: block;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       EMPTY STATE
+       ────────────────────────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: #7a9490;
+    }
+
+    .empty-state i {
+      font-size: 2.5rem;
+      opacity: 0.15;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .empty-state h6 {
+      color: #14211f;
+      font-weight: 600;
+    }
+
+    .empty-state p {
+      font-size: 0.85rem;
+      margin: 0;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TOAST OVERRIDE
+       ────────────────────────────────────────────────────────────── */
+    .toast-container {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 360px;
+      width: calc(100% - 40px);
+      pointer-events: none;
+    }
+
+    .toast-message {
+      background: white;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 4px solid;
+      pointer-events: auto;
+      animation: slideDownFadeIn 0.3s ease forwards;
+    }
+
+    .toast-message.success {
+      border-left-color: #2c7a5e;
+      background: #f0f9f4;
+      color: #1e5e48;
+    }
+    .toast-message.success i {
+      color: #2c7a5e;
+    }
+
+    .toast-message.error {
+      border-left-color: #dc3545;
+      background: #fff5f5;
+      color: #a71d2a;
+    }
+    .toast-message.error i {
+      color: #dc3545;
+    }
+
+    .toast-message i {
+      font-size: 1.1rem;
+      width: 22px;
+      text-align: center;
+    }
+
+    @keyframes slideDownFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .toast-message.fade-out {
+      animation: fadeOutUp 0.3s ease forwards;
+    }
+
+    @keyframes fadeOutUp {
+      to {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       MODAL OVERRIDES
+       ────────────────────────────────────────────────────────────── */
+    .modal-overlay .modal-container {
+      max-width: 520px;
+      border-radius: var(--card-radius);
+    }
+
+    .modal-overlay .modal-container .modal-body {
+      padding: 1.5rem 1.5rem 1rem;
+    }
+
+    .modal-overlay .modal-container .modal-footer {
+      padding: 0.75rem 1.5rem 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      border-top: 1px solid rgba(44, 122, 94, 0.04);
+    }
+
+    .modal-overlay .modal-container .modal-footer .btn {
+      border-radius: 40px;
+      padding: 0.5rem 1.5rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .modal-overlay .modal-container .modal-footer .btn-primary {
+      background: var(--accent);
+      border: none;
+      color: white;
+    }
+
+    .modal-overlay .modal-container .modal-footer .btn-primary:hover {
+      background: var(--accent-dark);
+    }
+
+    .modal-overlay .modal-container .modal-footer .btn-danger {
+      background: #dc3545;
+      border: none;
+      color: white;
+    }
+
+    .modal-overlay .modal-container .modal-footer .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .modal-overlay .modal-container .modal-footer .btn-outline-secondary {
+      border: 1.5px solid #d1d5db;
+      background: transparent;
+      color: #5f7775;
+    }
+
+    .modal-overlay .modal-container .modal-footer .btn-outline-secondary:hover {
+      background: #f1f3f2;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       RESPONSIVE
+       ────────────────────────────────────────────────────────────── */
+    @media (max-width: 992px) {
+      .mod-sidebar {
+        width: 220px;
+      }
+      .mod-main {
+        margin-left: 220px;
+        padding: 1.5rem 1.5rem 3rem;
+      }
+      .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .moderator-layout {
+        flex-direction: column;
+        padding-top: 64px;
+      }
+
+      .mod-sidebar {
+        position: fixed;
+        top: 64px;
+        left: -280px;
+        width: 280px;
+        bottom: 0;
+        padding: 1rem 0.75rem;
+        box-shadow: 4px 0 30px rgba(0, 0, 0, 0.06);
+        transition: var(--transition-smooth);
+        z-index: 200;
+      }
+
+      .mod-sidebar.open {
+        left: 0;
+      }
+
+      .mod-sidebar .sidebar-brand {
+        padding: 0 0.5rem 1rem 0.5rem;
+      }
+
+      .mod-main {
+        margin-left: 0;
+        padding: 1rem 1rem 4rem;
+      }
+
+      .mod-header h1 {
+        font-size: 1.3rem;
+      }
+
+      .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+
+      .stat-card-mod .stat-number {
+        font-size: 1.4rem;
+      }
+
+      .section-card {
+        padding: 1rem 1rem 1rem;
+      }
+
+      .mod-table {
+        font-size: 0.75rem;
+      }
+
+      .mod-table th,
+      .mod-table td {
+        padding: 0.4rem 0.5rem;
+      }
+
+      .mod-table .user-cell img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .mod-table .user-cell .user-email {
+        font-size: 0.6rem;
+      }
+
+      .mod-table .listing-title small {
+        font-size: 0.6rem;
+      }
+
+      .mod-header .mod-actions .btn {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.9rem;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 150;
+        display: none;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+      }
+
+      .toast-container {
+        top: 72px;
+        right: 10px;
+        max-width: 320px;
+      }
+
+      .mod-sidebar .nav-link {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+
+      .stat-card-mod {
+        padding: 0.75rem 0.75rem 0.6rem;
+      }
+
+      .stat-card-mod .stat-number {
+        font-size: 1.2rem;
+      }
+
+      .stat-card-mod .stat-label {
+        font-size: 0.65rem;
+      }
+
+      .stat-card-mod .stat-icon {
+        font-size: 1.1rem;
+      }
+
+      .section-card .section-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SCROLL TOP
+       ────────────────────────────────────────────────────────────── */
+    .scroll-top-btn {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 1080;
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px);
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .scroll-top-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(10px) scale(1.05);
+      box-shadow: 0 12px 36px rgba(44, 122, 94, 0.30);
+    }
+
+    .scroll-top-btn.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .scroll-top-btn {
+        right: 1rem;
+        bottom: 5.5rem;
+        width: 42px;
+        height: 42px;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SIDEBAR TOGGLE (mobile)
+       ────────────────────────────────────────────────────────────── */
+    .sidebar-toggle {
+      display: none;
+      background: transparent;
+      border: none;
+      font-size: 1.3rem;
+      color: #14211f;
+      padding: 0.25rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .sidebar-toggle:hover {
+      color: var(--accent);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar-toggle {
+        display: block;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       DROPDOWN – profile
+       ────────────────────────────────────────────────────────────── */
+    .mod-profile-dropdown {
+      position: relative;
+    }
+
+    .mod-profile-dropdown .dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .mod-profile-dropdown .dropdown-toggle:hover {
+      background: var(--accent-light);
+    }
+
+    .mod-profile-dropdown .dropdown-toggle img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #f1f3f2;
+    }
+
+    .mod-profile-dropdown .dropdown-toggle .name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #14211f;
+    }
+
+    .mod-profile-dropdown .dropdown-toggle i {
+      color: #7a9490;
+      font-size: 0.8rem;
+    }
+
+    .mod-profile-dropdown .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(44, 122, 94, 0.06);
+      padding: 0.5rem 0;
+      min-width: 200px;
+      display: none;
+      z-index: 300;
+    }
+
+    .mod-profile-dropdown .dropdown-menu.open {
+      display: block;
+    }
+
+    .mod-profile-dropdown .dropdown-menu .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #2d403d;
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    .mod-profile-dropdown .dropdown-menu .dropdown-item:hover {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+    }
+
+    .mod-profile-dropdown .dropdown-menu .dropdown-item i {
+      width: 18px;
+      color: #7a9490;
+    }
+
+    .mod-profile-dropdown .dropdown-menu .dropdown-item.text-danger {
+      color: #dc3545;
+    }
+
+    .mod-profile-dropdown .dropdown-menu .dropdown-item.text-danger i {
+      color: #dc3545;
+    }
+
+    .mod-profile-dropdown .dropdown-menu .dropdown-item.text-danger:hover {
+      background: #ffe6e5;
+    }
+
+    .mod-profile-dropdown .dropdown-menu .dropdown-divider {
+      height: 1px;
+      background: rgba(44, 122, 94, 0.06);
+      margin: 0.25rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .mod-profile-dropdown .dropdown-toggle .name {
+        display: none;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       RESPONSIVE TABLE – card view on small screens
+       ────────────────────────────────────────────────────────────── */
+    @media (max-width: 576px) {
+      .mod-table thead {
+        display: none;
+      }
+
+      .mod-table tbody tr {
+        display: block;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(44, 122, 94, 0.06);
+      }
+
+      .mod-table tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      .mod-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.3rem 0;
+        border-bottom: none;
+        font-size: 0.8rem;
+      }
+
+      .mod-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #7a9490;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+
+      .mod-table tbody td:last-child {
+        border-bottom: none;
+      }
+
+      .mod-table tbody td .user-cell {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .mod-table tbody td .action-btn {
+        padding: 0.3rem 0.5rem;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TOOLTIP OVERRIDE
+       ────────────────────────────────────────────────────────────── */
+    .tooltip-inner {
+      background: #14211f;
+      font-weight: 500;
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+    }
+
+    .tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+    .tooltip.bs-tooltip-top .tooltip-arrow::before {
+      border-top-color: #14211f;
+    }
+  </style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<!-- ==================== HEADER (site header) ==================== -->
+<header class="site-header fixed-top">
+  <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
+    <div class="container header-inner">
+      <a class="site-brand" href="#" aria-label="CampusConnect Demo University home">
+        <img src="../assets/img/icon.jpg" alt="CampusConnect Demo University logo" class="site-brand-logo" />
+        <span class="site-brand-name">
+          <span class="brand-full">CampusConnect · Moderator</span>
+          <span class="brand-short">Moderator</span>
+        </span>
+      </a>
+
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <!-- Profile dropdown -->
+        <div class="mod-profile-dropdown" id="profileDropdown">
+          <button class="dropdown-toggle" id="profileToggle" aria-label="Profile menu">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Moderator" />
+            <span class="name">Moderator</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu" id="profileMenu">
+            <a class="dropdown-item" href="#"><i class="fas fa-user"></i> My Profile</a>
+            <a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- ==================== SIDEBAR OVERLAY (mobile) ==================== -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ==================== MODERATOR LAYOUT ==================== -->
+<div class="moderator-layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="mod-sidebar" id="modSidebar">
+    <div class="sidebar-brand">
+      <img src="../assets/img/icon.jpg" alt="CampusConnect" />
+      <div>
+        <span>Moderator Panel</span>
+        <small>Demo University</small>
+      </div>
+    </div>
+
+    <nav>
+      <div class="nav-item">
+        <button class="nav-link active" data-section="overview" data-bs-toggle="tooltip" title="Dashboard overview">
+          <i class="fas fa-th-large"></i> Overview
+        </button>
+      </div>
+      <div class="nav-item">
+        <button class="nav-link" data-section="listings" data-bs-toggle="tooltip" title="Manage listings">
+          <i class="fas fa-store"></i> Listings
+          <span class="badge" id="reportedListingsBadge">3</span>
+        </button>
+      </div>
+      <div class="nav-item">
+        <button class="nav-link" data-section="users" data-bs-toggle="tooltip" title="Manage users">
+          <i class="fas fa-users"></i> Users
+          <span class="badge warning" id="flaggedUsersBadge">2</span>
+        </button>
+      </div>
+      <div class="nav-item">
+        <button class="nav-link" data-section="reports" data-bs-toggle="tooltip" title="View reports">
+          <i class="fas fa-flag"></i> Reports
+          <span class="badge" id="pendingReportsBadge">5</span>
+        </button>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-item">
+        <button class="nav-link" data-section="announcements" data-bs-toggle="tooltip" title="Post announcements">
+          <i class="fas fa-bullhorn"></i> Announcements
+        </button>
+      </div>
+      <div class="nav-item">
+        <button class="nav-link" data-section="activity" data-bs-toggle="tooltip" title="View activity log">
+          <i class="fas fa-clock"></i> Activity Log
+        </button>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-item">
+        <button class="nav-link" data-section="settings" data-bs-toggle="tooltip" title="Moderator settings">
+          <i class="fas fa-cog"></i> Settings
+        </button>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="nav-link" id="logoutSidebarBtn" data-bs-toggle="tooltip" title="Logout">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="mod-main" id="modMain">
+
+    <!-- Header -->
+    <div class="mod-header">
+      <div>
+        <h1>
+          <span id="pageTitle">Overview</span>
+          <small id="pageSubtitle">Welcome back, Moderator — here's what's happening on CampusConnect</small>
+        </h1>
+      </div>
+      <div class="mod-actions">
+        <button class="btn btn-outline-custom" id="refreshBtn" data-bs-toggle="tooltip" title="Refresh data">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+        <button class="btn btn-outline-custom" id="exportBtn" data-bs-toggle="tooltip" title="Export report">
+          <i class="fas fa-file-export"></i> Export
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== SECTION: OVERVIEW ===== -->
+    <div id="section-overview" class="section-content">
+      <!-- Stats -->
+      <div class="stat-grid">
+        <div class="stat-card-mod">
+          <div class="stat-icon"><i class="fas fa-store"></i></div>
+          <div class="stat-number" id="totalListings">0</div>
+          <div class="stat-label">Total Listings</div>
+          <span class="stat-change up"><i class="fas fa-arrow-up"></i> 12% this week</span>
+        </div>
+        <div class="stat-card-mod danger">
+          <div class="stat-icon"><i class="fas fa-flag"></i></div>
+          <div class="stat-number" id="reportedListings">0</div>
+          <div class="stat-label">Reported Listings</div>
+          <span class="stat-change down"><i class="fas fa-arrow-up"></i> 3 new</span>
+        </div>
+        <div class="stat-card-mod warning">
+          <div class="stat-icon"><i class="fas fa-users"></i></div>
+          <div class="stat-number" id="totalUsers">0</div>
+          <div class="stat-label">Total Users</div>
+          <span class="stat-change up"><i class="fas fa-arrow-up"></i> 8% this month</span>
+        </div>
+        <div class="stat-card-mod info">
+          <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-number" id="resolvedReports">0</div>
+          <div class="stat-label">Resolved Reports</div>
+          <span class="stat-change up"><i class="fas fa-arrow-up"></i> 92% resolution rate</span>
+        </div>
+        <div class="stat-card-mod">
+          <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+          <div class="stat-number" id="pendingActions">0</div>
+          <div class="stat-label">Pending Actions</div>
+          <span class="stat-change down"><i class="fas fa-clock"></i> Needs attention</span>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="section-card">
+        <div class="section-header">
+          <h5><i class="fas fa-clock"></i> Recent Activity</h5>
+          <span class="badge bg-light text-dark">Live</span>
+        </div>
+        <div id="recentActivityList" class="mod-table-wrap">
+          <table class="mod-table">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Details</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="recentActivityBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="section-card">
+        <div class="section-header">
+          <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-primary-custom" style="padding:0.5rem 1.5rem; font-size:0.85rem;" data-bs-toggle="tooltip" title="Post announcement">
+            <i class="fas fa-bullhorn me-2"></i>Post Announcement
+          </button>
+          <button class="btn btn-outline-custom" style="padding:0.5rem 1.5rem; font-size:0.85rem;" data-bs-toggle="tooltip" title="Review reported listings">
+            <i class="fas fa-flag me-2"></i>Review Reports
+          </button>
+          <button class="btn btn-outline-custom" style="padding:0.5rem 1.5rem; font-size:0.85rem;" data-bs-toggle="tooltip" title="View all users">
+            <i class="fas fa-users me-2"></i>Manage Users
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION: LISTINGS ===== -->
+    <div id="section-listings" class="section-content" style="display:none;">
+      <div class="section-card">
+        <div class="section-header">
+          <h5><i class="fas fa-store"></i> All Listings</h5>
+          <div class="section-actions">
+            <select class="form-select form-select-sm" id="listingFilter" style="width:auto; border-radius:30px; font-size:0.8rem; padding:0.25rem 1.5rem 0.25rem 1rem;">
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="reported">Reported</option>
+              <option value="flagged">Flagged</option>
+              <option value="sold">Sold</option>
+            </select>
+            <button class="btn btn-sm btn-outline-custom" data-bs-toggle="tooltip" title="Refresh listings">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        <div class="mod-table-wrap">
+          <table class="mod-table">
+            <thead>
+              <tr>
+                <th>Listing</th>
+                <th>Seller</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="listingsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION: USERS ===== -->
+    <div id="section-users" class="section-content" style="display:none;">
+      <div class="section-card">
+        <div class="section-header">
+          <h5><i class="fas fa-users"></i> Users</h5>
+          <div class="section-actions">
+            <select class="form-select form-select-sm" id="userFilter" style="width:auto; border-radius:30px; font-size:0.8rem; padding:0.25rem 1.5rem 0.25rem 1rem;">
+              <option value="all">All</option>
+              <option value="verified">Verified</option>
+              <option value="unverified">Unverified</option>
+              <option value="flagged">Flagged</option>
+              <option value="banned">Banned</option>
+            </select>
+            <button class="btn btn-sm btn-outline-custom" data-bs-toggle="tooltip" title="Refresh users">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        <div class="mod-table-wrap">
+          <table class="mod-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Listings</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION: REPORTS ===== -->
+    <div id="section-reports" class="section-content" style="display:none;">
+      <div class="section-card">
+        <div class="section-header">
+          <h5><i class="fas fa-flag"></i> Reports</h5>
+          <div class="section-actions">
+            <select class="form-select form-select-sm" id="reportFilter" style="width:auto; border-radius:30px; font-size:0.8rem; padding:0.25rem 1.5rem 0.25rem 1rem;">
+              <option value="all">All</option>
+              <option value="pending">Pending</option>
+              <option value="resolved">Resolved</option>
+              <option value="dismissed">Dismissed</option>
+            </select>
+          </div>
+        </div>
+        <div class="mod-table-wrap">
+          <table class="mod-table">
+            <thead>
+              <tr>
+                <th>Reported Item</th>
+                <th>Reported By</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="reportsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION: ANNOUNCEMENTS ===== -->
+    <div id="section-announcements" class="section-content" style="display:none;">
+      <div class="section-card">
+        <div class="section-header">
+          <h5><i class="fas fa-bullhorn"></i> Announcements</h5>
+          <button class="btn btn-primary-custom btn-sm" id="newAnnouncementBtn" style="padding:0.3rem 1.2rem; font-size:0.8rem;">
+            <i class="fas fa-plus me-1"></i> New
+          </button>
+        </div>
+        <div id="announcementsList"></div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION: ACTIVITY LOG ===== -->
+    <div id="section-activity" class="section-content" style="display:none;">
+      <div class="section-card">
+        <div class="section-header">
+          <h5><i class="fas fa-clock"></i> Activity Log</h5>
+          <span class="badge bg-light text-dark">Last 30 days</span>
+        </div>
+        <div class="mod-table-wrap">
+          <table class="mod-table">
+            <thead>
+              <tr>
+                <th>Admin</th>
+                <th>Action</th>
+                <th>Target</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="activityLogBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION: SETTINGS ===== -->
+    <div id="section-settings" class="section-content" style="display:none;">
+      <div class="section-card">
+        <div class="section-header">
+          <h5><i class="fas fa-cog"></i> Moderator Settings</h5>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="form-floating-label">
+              <input type="text" class="form-control" id="modDisplayName" placeholder=" " value="Moderator" />
+              <label class="form-label" for="modDisplayName">Display Name</label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating-label">
+              <input type="email" class="form-control" id="modEmail" placeholder=" " value="moderator@campusconnect.edu.ng" />
+              <label class="form-label" for="modEmail">Email Address</label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating-label">
+              <select class="form-select" id="modTheme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="system">System Default</option>
+              </select>
+              <label class="form-label" for="modTheme">Theme Preference</label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating-label">
+              <select class="form-select" id="modNotifications">
+                <option value="all">All Notifications</option>
+                <option value="important">Important Only</option>
+                <option value="none">None</option>
+              </select>
+              <label class="form-label" for="modNotifications">Notification Level</label>
+            </div>
+          </div>
+          <div class="col-12">
+            <hr />
+            <div class="d-flex gap-3">
+              <button class="btn btn-primary-custom" style="padding:0.5rem 2rem;">Save Settings</button>
+              <button class="btn btn-outline-danger" style="padding:0.5rem 2rem;">Reset to Default</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ====== MODALS ====== -->
+<div id="formModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 id="formModalTitle">Form Title</h3>
+      <button class="modal-close" id="closeFormModalBtn" data-bs-toggle="tooltip" title="Close form">&times;</button>
+    </div>
+    <div class="modal-body" id="formModalBody"></div>
+    <div class="modal-footer" id="formModalFooter"></div>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container confirm-modal-container">
+    <div class="modal-header">
+      <h3 id="confirmModalTitle">Confirm Action</h3>
+      <button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
+    </div>
+    <div class="modal-body" id="confirmModalBody">
+      <p id="confirmMessage"></p>
+    </div>
+    <div class="modal-footer" id="confirmModalFooter"></div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ====== SCROLL TO TOP ====== -->
+<button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top" data-bs-toggle="tooltip" title="Scroll to top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- ====== SCRIPTS ====== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="../assets/js/main.js"></script>
+
+<script>
+  // ──────────────────────────────────────────────────────────────
+  //  GLOBALS
+  // ──────────────────────────────────────────────────────────────
+  const sections = {
+    overview: 'section-overview',
+    listings: 'section-listings',
+    users: 'section-users',
+    reports: 'section-reports',
+    announcements: 'section-announcements',
+    activity: 'section-activity',
+    settings: 'section-settings'
+  };
+
+  let currentSection = 'overview';
+
+  // ──────────────────────────────────────────────────────────────
+  //  MOCK DATA
+  // ──────────────────────────────────────────────────────────────
+  const mockListings = [
+    { id: 1, title: 'HP Laptop 15"', seller: 'John Doe', price: 350000, status: 'active', reported: false },
+    { id: 2, title: 'ECO 211 Textbook', seller: 'Jane Smith', price: 4500, status: 'reported', reported: true },
+    { id: 3, title: 'Study Desk', seller: 'Mike Johnson', price: 25000, status: 'active', reported: false },
+    { id: 4, title: 'iPhone 13 Pro', seller: 'Sarah Williams', price: 480000, status: 'flagged', reported: true },
+    { id: 5, title: 'Calculus Past Questions', seller: 'David Brown', price: 2000, status: 'sold', reported: false },
+    { id: 6, title: 'Mini Fridge', seller: 'Emily Davis', price: 65000, status: 'active', reported: false },
+    { id: 7, title: 'Bluetooth Speaker', seller: 'Chris Wilson', price: 15000, status: 'reported', reported: true },
+    { id: 8, title: 'Bicycle', seller: 'Amanda Taylor', price: 85000, status: 'active', reported: false },
+  ];
+
+  const mockUsers = [
+    { id: 1, name: 'John Doe', email: 'john@stu.edu.ng', status: 'verified', listings: 3 },
+    { id: 2, name: 'Jane Smith', email: 'jane@stu.edu.ng', status: 'verified', listings: 2 },
+    { id: 3, name: 'Mike Johnson', email: 'mike@stu.edu.ng', status: 'unverified', listings: 1 },
+    { id: 4, name: 'Sarah Williams', email: 'sarah@stu.edu.ng', status: 'flagged', listings: 4 },
+    { id: 5, name: 'David Brown', email: 'david@stu.edu.ng', status: 'verified', listings: 0 },
+    { id: 6, name: 'Emily Davis', email: 'emily@stu.edu.ng', status: 'banned', listings: 2 },
+  ];
+
+  const mockReports = [
+    { id: 1, item: 'ECO 211 Textbook', reportedBy: 'Alice', reason: 'Scam attempt', status: 'pending' },
+    { id: 2, item: 'iPhone 13 Pro', reportedBy: 'Bob', reason: 'Fake listing', status: 'pending' },
+    { id: 3, item: 'Bluetooth Speaker', reportedBy: 'Carol', reason: 'Suspicious seller', status: 'pending' },
+    { id: 4, item: 'HP Laptop', reportedBy: 'Dave', reason: 'Wrong description', status: 'resolved' },
+    { id: 5, item: 'Study Desk', reportedBy: 'Eve', reason: 'Spam', status: 'dismissed' },
+  ];
+
+  const mockActivity = [
+    { admin: 'Moderator', action: 'Removed listing "iPhone 13 Pro"', target: 'Listing #4', time: '2 hours ago' },
+    { admin: 'Moderator', action: 'Verified user "Jane Smith"', target: 'User #2', time: '3 hours ago' },
+    { admin: 'Moderator', action: 'Resolved report on "ECO 211 Textbook"', target: 'Report #1', time: '5 hours ago' },
+    { admin: 'Moderator', action: 'Flagged user "Sarah Williams"', target: 'User #4', time: '1 day ago' },
+    { admin: 'Moderator', action: 'Posted announcement "Welcome new students!"', target: 'Announcement', time: '2 days ago' },
+    { admin: 'Moderator', action: 'Banned user "Emily Davis"', target: 'User #6', time: '3 days ago' },
+  ];
+
+  const mockAnnouncements = [
+    { id: 1, title: 'Welcome new students!', content: 'Welcome to the new semester. Remember to verify your hall for extra trust.', date: '2 days ago', pinned: true },
+    { id: 2, title: 'Update: Hall verification now live', content: 'You can now verify your hall residence to earn a trust badge.', date: '1 week ago', pinned: false },
+    { id: 3, title: 'Safety tips for meetups', content: 'Always meet in public areas with CCTV like the library or cafeteria.', date: '2 weeks ago', pinned: false },
+  ];
+
+  // ──────────────────────────────────────────────────────────────
+  //  HELPERS
+  // ──────────────────────────────────────────────────────────────
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+  }
+
+  function getStatusBadge(status) {
+    const map = {
+      'active': 'status-active',
+      'pending': 'status-pending',
+      'reported': 'status-reported',
+      'flagged': 'status-flagged',
+      'resolved': 'status-resolved',
+      'banned': 'status-banned',
+      'sold': 'status-resolved',
+      'dismissed': 'status-resolved',
+      'verified': 'status-active',
+      'unverified': 'status-pending'
+    };
+    return map[status] || 'status-pending';
+  }
+
+  function showToast(message, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast-message ${type}`;
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+    toast.innerHTML = `<i class="fas ${icon}"></i> ${escapeHtml(message)}`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('fade-out');
+      setTimeout(() => toast.remove(), 400);
+    }, 4000);
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  RENDER FUNCTIONS
+  // ──────────────────────────────────────────────────────────────
+  function updateStats() {
+    const total = mockListings.length;
+    const reported = mockListings.filter(l => l.reported).length;
+    const users = mockUsers.length;
+    const resolved = mockReports.filter(r => r.status === 'resolved' || r.status === 'dismissed').length;
+    const pending = mockReports.filter(r => r.status === 'pending').length;
+
+    document.getElementById('totalListings').textContent = total;
+    document.getElementById('reportedListings').textContent = reported;
+    document.getElementById('totalUsers').textContent = users;
+    document.getElementById('resolvedReports').textContent = resolved;
+    document.getElementById('pendingActions').textContent = pending + mockUsers.filter(u => u.status === 'flagged' || u.status === 'banned').length;
+
+    document.getElementById('reportedListingsBadge').textContent = reported;
+    document.getElementById('flaggedUsersBadge').textContent = mockUsers.filter(u => u.status === 'flagged').length;
+    document.getElementById('pendingReportsBadge').textContent = pending;
+  }
+
+  function renderRecentActivity() {
+    const tbody = document.getElementById('recentActivityBody');
+    if (!tbody) return;
+
+    const recent = mockActivity.slice(0, 5);
+    tbody.innerHTML = recent.map(a => `
+      <tr>
+        <td><span class="fw-medium">${escapeHtml(a.action)}</span></td>
+        <td>${escapeHtml(a.target)}</td>
+        <td><span class="text-muted small">${escapeHtml(a.time)}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  function renderListings(filter = 'all') {
+    const tbody = document.getElementById('listingsTableBody');
+    if (!tbody) return;
+
+    let filtered = mockListings;
+    if (filter === 'active') filtered = mockListings.filter(l => l.status === 'active' && !l.reported);
+    else if (filter === 'reported') filtered = mockListings.filter(l => l.reported && l.status !== 'sold');
+    else if (filter === 'flagged') filtered = mockListings.filter(l => l.status === 'flagged');
+    else if (filter === 'sold') filtered = mockListings.filter(l => l.status === 'sold');
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <h6>No listings found</h6>
+              <p>No listings match the current filter.</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(l => `
+      <tr>
+        <td>
+          <div class="listing-title">
+            ${escapeHtml(l.title)}
+            <small>ID: #${l.id}</small>
+          </div>
+        </td>
+        <td>${escapeHtml(l.seller)}</td>
+        <td><span class="fw-bold text-success">${formatCurrency(l.price)}</span></td>
+        <td><span class="status-badge ${getStatusBadge(l.status)}">${escapeHtml(l.status)}</span></td>
+        <td>
+          <button class="action-btn" data-action="view" data-id="${l.id}" data-bs-toggle="tooltip" title="View details"><i class="fas fa-eye"></i></button>
+          ${l.reported ? `<button class="action-btn warning" data-action="resolve" data-id="${l.id}" data-bs-toggle="tooltip" title="Resolve report"><i class="fas fa-check"></i></button>` : ''}
+          <button class="action-btn danger" data-action="remove" data-id="${l.id}" data-bs-toggle="tooltip" title="Remove listing"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>
+    `).join('');
+
+    // Attach click events
+    tbody.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const action = this.dataset.action;
+        const id = this.dataset.id;
+        handleListingAction(action, id);
+      });
+    });
+  }
+
+  function renderUsers(filter = 'all') {
+    const tbody = document.getElementById('usersTableBody');
+    if (!tbody) return;
+
+    let filtered = mockUsers;
+    if (filter === 'verified') filtered = mockUsers.filter(u => u.status === 'verified');
+    else if (filter === 'unverified') filtered = mockUsers.filter(u => u.status === 'unverified');
+    else if (filter === 'flagged') filtered = mockUsers.filter(u => u.status === 'flagged');
+    else if (filter === 'banned') filtered = mockUsers.filter(u => u.status === 'banned');
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <i class="fas fa-users"></i>
+              <h6>No users found</h6>
+              <p>No users match the current filter.</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(u => `
+      <tr>
+        <td>
+          <div class="user-cell">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="${escapeHtml(u.name)}" />
+            <div>
+              <span class="user-name">${escapeHtml(u.name)}</span>
+              <span class="user-email">${escapeHtml(u.email)}</span>
+            </div>
+          </div>
+        </td>
+        <td>${escapeHtml(u.email)}</td>
+        <td><span class="status-badge ${getStatusBadge(u.status)}">${escapeHtml(u.status)}</span></td>
+        <td>${u.listings}</td>
+        <td>
+          <button class="action-btn" data-action="view-user" data-id="${u.id}" data-bs-toggle="tooltip" title="View profile"><i class="fas fa-user"></i></button>
+          ${u.status === 'verified' ? `<button class="action-btn warning" data-action="unverify" data-id="${u.id}" data-bs-toggle="tooltip" title="Unverify user"><i class="fas fa-times-circle"></i></button>` : `<button class="action-btn success" data-action="verify" data-id="${u.id}" data-bs-toggle="tooltip" title="Verify user"><i class="fas fa-check-circle"></i></button>`}
+          ${u.status !== 'banned' ? `<button class="action-btn danger" data-action="ban" data-id="${u.id}" data-bs-toggle="tooltip" title="Ban user"><i class="fas fa-ban"></i></button>` : `<button class="action-btn success" data-action="unban" data-id="${u.id}" data-bs-toggle="tooltip" title="Unban user"><i class="fas fa-undo"></i></button>`}
+        </td>
+      </tr>
+    `).join('');
+
+    tbody.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const action = this.dataset.action;
+        const id = this.dataset.id;
+        handleUserAction(action, id);
+      });
+    });
+  }
+
+  function renderReports(filter = 'all') {
+    const tbody = document.getElementById('reportsTableBody');
+    if (!tbody) return;
+
+    let filtered = mockReports;
+    if (filter === 'pending') filtered = mockReports.filter(r => r.status === 'pending');
+    else if (filter === 'resolved') filtered = mockReports.filter(r => r.status === 'resolved');
+    else if (filter === 'dismissed') filtered = mockReports.filter(r => r.status === 'dismissed');
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <i class="fas fa-flag"></i>
+              <h6>No reports found</h6>
+              <p>No reports match the current filter.</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(r => `
+      <tr>
+        <td><strong>${escapeHtml(r.item)}</strong></td>
+        <td>${escapeHtml(r.reportedBy)}</td>
+        <td>${escapeHtml(r.reason)}</td>
+        <td><span class="status-badge ${getStatusBadge(r.status)}">${escapeHtml(r.status)}</span></td>
+        <td>
+          ${r.status === 'pending' ? `
+            <button class="action-btn success" data-action="resolve-report" data-id="${r.id}" data-bs-toggle="tooltip" title="Resolve report"><i class="fas fa-check"></i></button>
+            <button class="action-btn" data-action="dismiss-report" data-id="${r.id}" data-bs-toggle="tooltip" title="Dismiss report"><i class="fas fa-times"></i></button>
+          ` : ''}
+          <button class="action-btn" data-action="view-report" data-id="${r.id}" data-bs-toggle="tooltip" title="View details"><i class="fas fa-eye"></i></button>
+        </td>
+      </tr>
+    `).join('');
+
+    tbody.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const action = this.dataset.action;
+        const id = this.dataset.id;
+        handleReportAction(action, id);
+      });
+    });
+  }
+
+  function renderAnnouncements() {
+    const container = document.getElementById('announcementsList');
+    if (!container) return;
+
+    if (mockAnnouncements.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-bullhorn"></i>
+          <h6>No announcements</h6>
+          <p>Post your first announcement to keep the community informed.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = mockAnnouncements.map(a => `
+      <div class="py-3 border-bottom ${a.pinned ? 'bg-accent-light' : ''}" style="${a.pinned ? 'background:#eaf7f0; border-radius:12px; padding:0.75rem 1rem; margin-bottom:0.5rem;' : ''}">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <strong>${escapeHtml(a.title)}</strong>
+            ${a.pinned ? '<span class="badge bg-warning text-dark ms-2">Pinned</span>' : ''}
+            <p class="text-muted small mb-0">${escapeHtml(a.content)}</p>
+            <span class="text-muted small">${escapeHtml(a.date)}</span>
+          </div>
+          <div>
+            <button class="action-btn" data-action="edit-announcement" data-id="${a.id}" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></button>
+            <button class="action-btn danger" data-action="delete-announcement" data-id="${a.id}" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    container.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const action = this.dataset.action;
+        const id = this.dataset.id;
+        if (action === 'edit-announcement') showToast('Edit announcement feature coming soon.', 'info');
+        else if (action === 'delete-announcement') {
+          if (confirm('Delete this announcement?')) {
+            showToast('Announcement deleted.', 'success');
+          }
+        }
+      });
+    });
+  }
+
+  function renderActivityLog() {
+    const tbody = document.getElementById('activityLogBody');
+    if (!tbody) return;
+
+    if (mockActivity.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4">
+            <div class="empty-state">
+              <i class="fas fa-clock"></i>
+              <h6>No activity recorded</h6>
+              <p>Moderator actions will appear here.</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = mockActivity.map(a => `
+      <tr>
+        <td><span class="fw-medium">${escapeHtml(a.admin)}</span></td>
+        <td>${escapeHtml(a.action)}</td>
+        <td>${escapeHtml(a.target)}</td>
+        <td><span class="text-muted small">${escapeHtml(a.time)}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  ACTION HANDLERS
+  // ──────────────────────────────────────────────────────────────
+  function handleListingAction(action, id) {
+    const listing = mockListings.find(l => l.id == id);
+    if (!listing) return;
+
+    switch(action) {
+      case 'view':
+        showToast(`Viewing listing: ${listing.title}`, 'info');
+        break;
+      case 'resolve':
+        listing.reported = false;
+        listing.status = 'active';
+        renderListings(document.getElementById('listingFilter').value);
+        updateStats();
+        showToast(`Report resolved for "${listing.title}"`, 'success');
+        break;
+      case 'remove':
+        if (confirm(`Remove listing "${listing.title}"?`)) {
+          const idx = mockListings.indexOf(listing);
+          if (idx > -1) mockListings.splice(idx, 1);
+          renderListings(document.getElementById('listingFilter').value);
+          updateStats();
+          showToast(`Listing "${listing.title}" removed.`, 'success');
+        }
+        break;
+    }
+  }
+
+  function handleUserAction(action, id) {
+    const user = mockUsers.find(u => u.id == id);
+    if (!user) return;
+
+    switch(action) {
+      case 'view-user':
+        showToast(`Viewing user: ${user.name}`, 'info');
+        break;
+      case 'verify':
+        user.status = 'verified';
+        renderUsers(document.getElementById('userFilter').value);
+        updateStats();
+        showToast(`${user.name} verified.`, 'success');
+        break;
+      case 'unverify':
+        user.status = 'unverified';
+        renderUsers(document.getElementById('userFilter').value);
+        updateStats();
+        showToast(`${user.name} unverified.`, 'warning');
+        break;
+      case 'ban':
+        if (confirm(`Ban user "${user.name}"?`)) {
+          user.status = 'banned';
+          renderUsers(document.getElementById('userFilter').value);
+          updateStats();
+          showToast(`${user.name} banned.`, 'error');
+        }
+        break;
+      case 'unban':
+        user.status = 'verified';
+        renderUsers(document.getElementById('userFilter').value);
+        updateStats();
+        showToast(`${user.name} unbanned.`, 'success');
+        break;
+    }
+  }
+
+  function handleReportAction(action, id) {
+    const report = mockReports.find(r => r.id == id);
+    if (!report) return;
+
+    switch(action) {
+      case 'resolve-report':
+        report.status = 'resolved';
+        renderReports(document.getElementById('reportFilter').value);
+        updateStats();
+        showToast(`Report on "${report.item}" resolved.`, 'success');
+        break;
+      case 'dismiss-report':
+        report.status = 'dismissed';
+        renderReports(document.getElementById('reportFilter').value);
+        updateStats();
+        showToast(`Report on "${report.item}" dismissed.`, 'warning');
+        break;
+      case 'view-report':
+        showToast(`Report details: ${report.reason}`, 'info');
+        break;
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  NAVIGATION
+  // ──────────────────────────────────────────────────────────────
+  function navigateTo(section) {
+    // Hide all sections
+    Object.values(sections).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+
+    // Show target
+    const target = document.getElementById(sections[section]);
+    if (target) target.style.display = 'block';
+
+    // Update active nav
+    document.querySelectorAll('.mod-sidebar .nav-link').forEach(link => {
+      link.classList.toggle('active', link.dataset.section === section);
+    });
+
+    // Update header
+    const titles = {
+      overview: ['Overview', 'Welcome back, Moderator — here\'s what\'s happening on CampusConnect'],
+      listings: ['Listings', 'Manage all listings, review reported items, and take action'],
+      users: ['Users', 'View and manage all CampusConnect users'],
+      reports: ['Reports', 'Review and resolve user reports'],
+      announcements: ['Announcements', 'Post and manage announcements for the community'],
+      activity: ['Activity Log', 'View all moderator actions and system events'],
+      settings: ['Settings', 'Configure your moderator preferences']
+    };
+
+    document.getElementById('pageTitle').textContent = titles[section]?.[0] || 'Overview';
+    document.getElementById('pageSubtitle').textContent = titles[section]?.[1] || '';
+
+    currentSection = section;
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  SIDEBAR TOGGLE (mobile)
+  // ──────────────────────────────────────────────────────────────
+  function toggleSidebar() {
+    const sidebar = document.getElementById('modSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  PROFILE DROPDOWN
+  // ──────────────────────────────────────────────────────────────
+  function toggleProfileDropdown() {
+    const menu = document.getElementById('profileMenu');
+    menu.classList.toggle('open');
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  NEW ANNOUNCEMENT MODAL
+  // ──────────────────────────────────────────────────────────────
+  function openAnnouncementModal() {
+    if (typeof formModal === 'undefined' || !formModal) {
+      showToast('Modal system not ready.', 'error');
+      return;
+    }
+
+    formModal.open({
+      title: 'New Announcement',
+      formHtml: `
+        <div class="form-floating-label">
+          <input type="text" class="form-control" id="announcementTitle" placeholder=" " required />
+          <label class="form-label required" for="announcementTitle">Title</label>
+        </div>
+        <div class="form-floating-label">
+          <textarea class="form-control" id="announcementContent" rows="4" placeholder=" " required></textarea>
+          <label class="form-label required" for="announcementContent">Content</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="announcementPinned" />
+          <label class="form-check-label" for="announcementPinned">Pin this announcement</label>
+        </div>
+      `,
+      submitLabel: 'Post Announcement',
+      onSubmit: (form, submitBtn) => {
+        const title = document.getElementById('announcementTitle').value.trim();
+        const content = document.getElementById('announcementContent').value.trim();
+        const pinned = document.getElementById('announcementPinned').checked;
+
+        if (!title || !content) {
+          showToast('Please fill in all fields.', 'error');
+          return;
+        }
+
+        mockAnnouncements.unshift({
+          id: mockAnnouncements.length + 1,
+          title: title,
+          content: content,
+          date: 'Just now',
+          pinned: pinned
+        });
+
+        renderAnnouncements();
+        formModal.close();
+        showToast('Announcement posted successfully!', 'success');
+      }
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  //  INIT
+  // ──────────────────────────────────────────────────────────────
+  function init() {
+    // Particles
+    if (document.getElementById('particles-js')) {
+      particlesJS('particles-js', {
+        particles: {
+          number: { value: 40, density: { enable: true, value_area: 800 } },
+          color: { value: '#2c7a5e' },
+          shape: { type: 'circle' },
+          opacity: { value: 0.12, random: true },
+          size: { value: 3, random: true },
+          line_linked: { enable: true, distance: 150, color: '#2c7a5e', opacity: 0.06, width: 1 },
+          move: { enable: true, speed: 1.5, direction: 'none', random: true, straight: false, out_mode: 'out' }
+        },
+        interactivity: {
+          detect_on: 'canvas',
+          events: {
+            onhover: { enable: true, mode: 'repulse' },
+            onclick: { enable: true, mode: 'push' }
+          }
+        },
+        retina_detect: true
+      });
+    }
+
+    // Render all sections
+    updateStats();
+    renderRecentActivity();
+    renderListings('all');
+    renderUsers('all');
+    renderReports('all');
+    renderAnnouncements();
+    renderActivityLog();
+
+    // ─── Navigation ─────────────────────────────────────────────
+    document.querySelectorAll('.mod-sidebar .nav-link').forEach(link => {
+      link.addEventListener('click', function() {
+        const section = this.dataset.section;
+        navigateTo(section);
+        // Close sidebar on mobile
+        if (window.innerWidth <= 768) {
+          toggleSidebar();
+        }
+      });
+    });
+
+    // ─── Sidebar toggle ─────────────────────────────────────────
+    document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
+    document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
+
+    // ─── Profile dropdown ───────────────────────────────────────
+    document.getElementById('profileToggle').addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleProfileDropdown();
+    });
+
+    document.addEventListener('click', function(e) {
+      const dropdown = document.getElementById('profileDropdown');
+      if (dropdown && !dropdown.contains(e.target)) {
+        document.getElementById('profileMenu').classList.remove('open');
+      }
+    });
+
+    // ─── Logout ──────────────────────────────────────────────────
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Are you sure you want to logout?')) {
+        showToast('Logging out...', 'info');
+        setTimeout(() => {
+          window.location.href = '../index.html';
+        }, 1000);
+      }
+    });
+
+    document.getElementById('logoutSidebarBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Are you sure you want to logout?')) {
+        showToast('Logging out...', 'info');
+        setTimeout(() => {
+          window.location.href = '../index.html';
+        }, 1000);
+      }
+    });
+
+    // ─── Refresh ─────────────────────────────────────────────────
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+      showToast('Refreshing data...', 'info');
+      setTimeout(() => {
+        updateStats();
+        renderRecentActivity();
+        renderListings(document.getElementById('listingFilter').value);
+        renderUsers(document.getElementById('userFilter').value);
+        renderReports(document.getElementById('reportFilter').value);
+        renderAnnouncements();
+        renderActivityLog();
+        showToast('Data refreshed!', 'success');
+      }, 500);
+    });
+
+    // ─── Export ──────────────────────────────────────────────────
+    document.getElementById('exportBtn').addEventListener('click', function() {
+      showToast('Exporting report... (demo)', 'info');
+    });
+
+    // ─── Filters ─────────────────────────────────────────────────
+    document.getElementById('listingFilter').addEventListener('change', function() {
+      renderListings(this.value);
+    });
+
+    document.getElementById('userFilter').addEventListener('change', function() {
+      renderUsers(this.value);
+    });
+
+    document.getElementById('reportFilter').addEventListener('change', function() {
+      renderReports(this.value);
+    });
+
+    // ─── New Announcement ────────────────────────────────────────
+    document.getElementById('newAnnouncementBtn').addEventListener('click', openAnnouncementModal);
+
+    // ─── Quick action buttons ────────────────────────────────────
+    document.querySelectorAll('.section-card .btn-primary-custom, .section-card .btn-outline-custom').forEach(btn => {
+      if (btn.textContent.includes('Post Announcement')) {
+        btn.addEventListener('click', openAnnouncementModal);
+      }
+      if (btn.textContent.includes('Review Reports')) {
+        btn.addEventListener('click', function() {
+          navigateTo('reports');
+        });
+      }
+      if (btn.textContent.includes('Manage Users')) {
+        btn.addEventListener('click', function() {
+          navigateTo('users');
+        });
+      }
+    });
+
+    // ─── AOS ──────────────────────────────────────────────────────
+    if (typeof AOS !== 'undefined') {
+      AOS.init({ duration: 600, once: true, offset: 40 });
+    }
+
+    // ─── Show welcome toast ──────────────────────────────────────
+    setTimeout(() => {
+      showToast('Welcome back, Moderator! 👋', 'success');
+    }, 500);
+  }
+
+  // ─── Start ──────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

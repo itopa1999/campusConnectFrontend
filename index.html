@@ -16,31 +16,13 @@
   <link rel="stylesheet" href="assets/css/modal.css" />
 
   <style>
-    /* ──────────────────────────────────────────────────────────────
-       ROOT & GLOBAL
-       ────────────────────────────────────────────────────────────── */
-    :root {
-      --accent: #2c7a5e;
-      --accent-light: #eaf7f0;
-      --accent-dark: #1f5e48;
-      --accent-glow: rgba(44, 122, 94, 0.18);
-      --card-radius: 24px;
-      --shadow-card: 0 20px 60px rgba(31, 94, 72, 0.08);
-      --shadow-card-hover: 0 30px 80px rgba(31, 94, 72, 0.15);
-      --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
 
     body {
-      background: #f6f9f8;
-      font-family: 'Inter', sans-serif;
       overflow-x: hidden;
     }
 
     h1, h2, h3, h4, h5, .fw-bold, .fw-semibold {
       color: #14211f;
-    }
-    .text-muted {
-      color: #5f7775 !important;
     }
 
     /* ──────────────────────────────────────────────────────────────
@@ -852,7 +834,7 @@
       document.cookie = cookie;
     }
 
-    const AUTHENTICATE_URL = 'http://127.0.0.1:8001/user/api/auth/';
+    const AUTHENTICATE_URL = 'http://127.0.0.1:8000/user/api/auth/';
     const refreshToken = getCookie('refresh_token');
 
     if (refreshToken) {

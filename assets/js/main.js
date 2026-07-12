@@ -1,8 +1,8 @@
 // ========== UTILITIES (always safe) ==========
-const AUTH_URL = 'http://127.0.0.1:8001/user/api/auth/';
-const REPORT_URL = 'http://127.0.0.1:8001/user/api/report/';
-const CAMPUS_URL = 'http://127.0.0.1:8001/campus/api/campus/';
-const REFRESH_URL = 'http://127.0.0.1:8001/user/api/';
+const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
+const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
+const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
+const REFRESH_URL = 'http://127.0.0.1:8000/user/api/';
 
 
 // ─── Global Refresh Spinner (injected dynamically) ──────────────
@@ -1173,6 +1173,7 @@ function injectNavigation() {
                   <li><a class="dropdown-item" href="create-listing.html" data-bs-toggle="tooltip" title="Post listing"><i class="fas fa-plus-circle me-2"></i>Post a Listing</a></li>
                   <li><a class="dropdown-item" href="listings.html" data-bs-toggle="tooltip" title="Browse listings"><i class="fas fa-list me-2"></i>Browse Listings</a></li>
                   <li><a class="dropdown-item" href="buy-points.html" data-bs-toggle="tooltip" title="Buy points"><i class="fas fa-bolt me-2"></i>Buy Points</a></li>
+                  <li><a class="dropdown-item" href="main.html#listings" data-bs-toggle="tooltip" title="My listings"><i class="fas fa-box-open me-2"></i>My Listings</a></li>
                   <li><a class="dropdown-item" href="../t/report-issue.html" data-bs-toggle="tooltip" title="Report issue"><i class="fas fa-flag me-2"></i>Report Issue</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item text-danger" href="#" onclick="logout(); return false;" data-bs-toggle="tooltip" title="Sign out"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
@@ -1209,6 +1210,7 @@ function injectNavigation() {
                 <li class="nav-item"><a class="nav-link py-2" href="profile.html" data-bs-toggle="tooltip" title="View profile"><i class="fas fa-id-card me-2"></i> My Profile</a></li>
                 <li class="nav-item"><a class="nav-link py-2" href="create-listing.html" data-bs-toggle="tooltip" title="Post listing"><i class="fas fa-plus-circle me-2"></i> Post a Listing</a></li>
                 <li class="nav-item"><a class="nav-link py-2" href="listings.html" data-bs-toggle="tooltip" title="Browse listings"><i class="fas fa-list me-2"></i> Browse Listings</a></li>
+                <li class="nav-item"><a class="nav-link py-2" href="main.html#listings" data-bs-toggle="tooltip" title="My listings"><i class="fas fa-box-open me-2"></i> My Listings</a></li>
                 <li class="nav-item"><a class="nav-link py-2" href="buy-points.html" data-bs-toggle="tooltip" title="Buy points"><i class="fas fa-bolt me-2"></i> Buy Points</a></li>
                 <li class="nav-item"><a class="nav-link py-2" href="../t/report-issue.html" data-bs-toggle="tooltip" title="Report issue"><i class="fas fa-flag me-2"></i> Report Issue</a></li>
                 <li><hr class="my-2"></li>

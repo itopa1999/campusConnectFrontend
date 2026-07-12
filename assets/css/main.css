@@ -65,9 +65,16 @@ button,
     --accent-light: #eaf7f0;
     --accent-dark: #1f5e48;
     --warm-gray: #f8f9fa;
+    --accent-glow: rgba(44, 122, 94, 0.18);
     --card-border: #eef2f0;
     --text-dark: #1e2a2c;
     --text-muted: #5a6e6f;
+    --card-radius: 20px;
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
+    --transition-smooth: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --shadow-card: 0 12px 40px rgba(31, 94, 72, 0.07);
+    --shadow-card-hover: 0 20px 56px rgba(31, 94, 72, 0.12);
 }
 
 /* ------------------------------
@@ -92,6 +99,11 @@ button,
 .footer {
     background-color: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(0px);
+}
+
+
+.text-muted {
+    color: #5f7775 !important;
 }
 
 section,
