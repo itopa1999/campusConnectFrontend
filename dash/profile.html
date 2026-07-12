@@ -1633,6 +1633,8 @@
       emailVerifiedStatus.className = userData.emailVerified ? 'verified' : 'unverified';
       studentIdStatus.innerText = userData.studentIdVerified ? 'Verified ✓' : 'Pending verification';
       studentIdStatus.className = userData.studentIdVerified ? 'verified' : 'pending';
+      if (userData.studentIdVerified)
+        document.getElementById('uploadStudentIdBtn').style.display = 'none';
       hallVerifiedStatus.innerText = userData.hallVerified ? 'Verified ✓' : 'Not verified';
       hallVerifiedStatus.className = userData.hallVerified ? 'verified' : 'unverified';
 
@@ -1747,7 +1749,7 @@
           <div class="review-header">
             <span class="reviewer">${escapeHtml(r.from)}</span>
             <span class="review-stars">${renderStars(r.rating)}</span>
-            <span class="review-date">${formatDate(r.date)}</span>
+            <span class="review-date">${r.date}</span>
           </div>
           <p class="review-comment">${escapeHtml(r.comment)}</p>
         </div>
@@ -1882,6 +1884,7 @@
         const result = await response.json();
         if (result.is_success) {
           loadProfile();
+          fetchAndRenderNotifications();
           editModeToggle.checked = false;
           personalView.classList.remove('d-none');
           personalEdit.classList.add('d-none');
@@ -2082,7 +2085,7 @@
             if (!response.ok || !result.is_success) {
               throw new Error(result.message || 'Failed to change password');
             }
-
+            fetchAndRenderNotifications();
             showToast('Password changed successfully!', 'success');
             formModal.close();
           } catch (err) {
@@ -2152,7 +2155,7 @@
             if (!response.ok || !result.is_success) {
               throw new Error(result.message || 'Upload failed');
             }
-
+            fetchAndRenderNotifications();
             showToast(result.message || 'Student ID uploaded successfully!', 'success');
             await loadProfile();
             formModal.close();

@@ -2117,6 +2117,7 @@
                     showToast(result.message || 'Your item has been posted successfully. It will appear in the marketplace within a few minutes.', 'success');
                     updatePointsDisplay();
                     resetForm();
+                    fetchAndRenderNotifications();
                     return;
                 } else {
                     const errors = result.data?.errors || {};

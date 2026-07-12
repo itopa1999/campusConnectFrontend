@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Notifications · CampusConnect</title>
+
+    <!-- Bootstrap 5 + Icons + Fonts + AOS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="../assets/css/modal.css">
+
+    <style>
+        /* ─── Base ────────────────────────────────────────────────── */
+        :root {
+            --accent: #2c7a5e;
+            --accent-light: #eaf7f0;
+            --accent-dark: #1f5e48;
+            --card-radius: 20px;
+            --shadow-card: 0 8px 28px rgba(31, 94, 72, 0.06);
+            --shadow-card-hover: 0 16px 48px rgba(31, 94, 72, 0.10);
+            --transition-smooth: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .dashboard-card {
+            background: #ffffff;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(44, 122, 94, 0.04);
+            transition: var(--transition-smooth);
+            overflow: hidden;
+        }
+
+        .dashboard-card:hover {
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .dashboard-card .card-header-custom {
+            padding: 1rem 1.25rem 0.5rem;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .dashboard-card .card-header-custom h6 {
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #5f7775;
+            margin: 0;
+        }
+
+        .dashboard-card .card-header-custom i {
+            color: var(--accent);
+            opacity: 0.7;
+        }
+
+        /* ─── Notification list ──────────────────────────────────── */
+        .notification-item {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item:hover {
+            background: #f9fbfa;
+        }
+
+        .notification-item.unread {
+            background: rgba(44, 122, 94, 0.02);
+            border-left: 3px solid var(--accent);
+        }
+
+        .notification-item .notif-icon {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #fff;
+            background: var(--accent);
+        }
+
+        .notification-item .notif-icon.listing { background: #0d6efd; }
+        .notification-item .notif-icon.account { background: #6f42c1; }
+        .notification-item .notif-icon.system { background: #fd7e14; }
+        .notification-item .notif-icon.other { background: #6c757d; }
+
+        .notification-item .notif-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-item .notif-body .title {
+            font-weight: 600;
+            color: #14211f;
+            margin-bottom: 0.15rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .notification-item .notif-body .message {
+            color: #5f7775;
+            font-size: 0.9rem;
+            margin: 0;
+            line-height: 1.5;
+            overflow: visible;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .notification-item .notif-body .meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.3rem;
+            font-size: 0.7rem;
+            color: #a0b8b0;
+        }
+
+        .notification-item .notif-body .meta i {
+            font-size: 0.6rem;
+        }
+
+        .notification-item .notif-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .notification-item .notif-actions .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: #adb5bd;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .notification-item .notif-actions .btn-icon:hover {
+            background: rgba(220, 53, 69, 0.08);
+            color: #dc3545;
+        }
+
+        .notification-item .notif-actions .btn-icon.delete:hover {
+            background: rgba(220, 53, 69, 0.12);
+            color: #dc3545;
+        }
+
+        .notification-item .notif-actions .btn-icon.mark-read:hover {
+            background: rgba(44, 122, 94, 0.10);
+            color: var(--accent);
+        }
+
+        .notification-item .notif-checkbox {
+            margin-top: 0.2rem;
+        }
+
+        /* ─── Top bar ────────────────────────────────────────────── */
+        .notif-top-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            background: #fafcfb;
+            border-radius: var(--card-radius) var(--card-radius) 0 0;
+            border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+        }
+
+        .notif-top-bar .search-wrapper {
+            flex: 1;
+            min-width: 180px;
+            position: relative;
+        }
+
+        .notif-top-bar .search-wrapper input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.4rem;
+            border-radius: 40px;
+            border: 1px solid rgba(44, 122, 94, 0.10);
+            background: white;
+            font-size: 0.85rem;
+            transition: var(--transition-smooth);
+        }
+
+        .notif-top-bar .search-wrapper input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.06);
+        }
+
+        .notif-top-bar .search-wrapper i {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+            font-size: 0.85rem;
+        }
+
+        .notif-top-bar .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .notif-top-bar .action-btns .btn-sm {
+            border-radius: 40px;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.8rem;
+            transition: var(--transition-smooth);
+        }
+
+        .notif-top-bar .action-btns .btn-outline-custom {
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            background: transparent;
+        }
+
+        .notif-top-bar .action-btns .btn-outline-custom:hover {
+            background: var(--accent-light);
+            border-color: var(--accent-dark);
+            color: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .notif-top-bar .action-btns .btn-danger-outline {
+            border: 1.5px solid #dc3545;
+            color: #dc3545;
+            background: transparent;
+        }
+
+        .notif-top-bar .action-btns .btn-danger-outline:hover {
+            background: #ffe6e5;
+            border-color: #c82333;
+            color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .notif-top-bar .select-all-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .notif-top-bar .select-all-wrap .form-check-input {
+            margin-top: 0;
+            cursor: pointer;
+        }
+        .notif-top-bar .select-all-wrap label {
+            font-size: 0.8rem;
+            color: #5f7775;
+            cursor: pointer;
+            margin: 0;
+            user-select: none;
+        }
+
+        /* ─── Pagination ──────────────────────────────────────────── */
+        .pagination-wrapper {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid rgba(44, 122, 94, 0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .pagination-wrapper .page-info {
+            font-size: 0.8rem;
+            color: #7a9490;
+        }
+
+        .pagination-wrapper .pagination-btns {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .pagination-wrapper .pagination-btns .btn {
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid rgba(44, 122, 94, 0.10);
+            color: #5f7775;
+            background: white;
+            transition: var(--transition-smooth);
+        }
+
+        .pagination-wrapper .pagination-btns .btn:hover:not(:disabled) {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+
+        .pagination-wrapper .pagination-btns .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ─── Empty state ────────────────────────────────────────── */
+        .empty-state {
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #dce0dd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h5 {
+            font-weight: 700;
+            color: #14211f;
+        }
+
+        .empty-state p {
+            color: #7a9490;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* ─── Selection counter ──────────────────────────────────── */
+        .selection-counter {
+            font-size: 0.75rem;
+            color: #5f7775;
+            background: #f0f4f2;
+            padding: 0.15rem 0.75rem;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        /* ─── Animations ──────────────────────────────────────────── */
+        .notification-item {
+            animation: slideFadeIn 0.35s ease forwards;
+            opacity: 0;
+            transform: translateY(-12px);
+        }
+
+        @keyframes slideFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-item:nth-child(1) { animation-delay: 0.02s; }
+        .notification-item:nth-child(2) { animation-delay: 0.04s; }
+        .notification-item:nth-child(3) { animation-delay: 0.06s; }
+        .notification-item:nth-child(4) { animation-delay: 0.08s; }
+        .notification-item:nth-child(5) { animation-delay: 0.10s; }
+        .notification-item:nth-child(6) { animation-delay: 0.12s; }
+        .notification-item:nth-child(7) { animation-delay: 0.14s; }
+        .notification-item:nth-child(8) { animation-delay: 0.16s; }
+        .notification-item:nth-child(9) { animation-delay: 0.18s; }
+        .notification-item:nth-child(10) { animation-delay: 0.20s; }
+
+        /* Skeleton */
+        .skeleton-notif {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .skeleton-notif .skeleton-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+
+        .skeleton-notif .skeleton-body {
+            flex: 1;
+        }
+
+        .skeleton-notif .skeleton-body .line {
+            height: 12px;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+
+        .skeleton-notif .skeleton-body .line.short { width: 30%; }
+        .skeleton-notif .skeleton-body .line.medium { width: 60%; }
+        .skeleton-notif .skeleton-body .line.long { width: 80%; }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ─── Responsive ──────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .notif-top-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+            .notif-top-bar .action-btns {
+                justify-content: flex-start;
+            }
+            .notification-item {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .notification-item .notif-body .title {
+                font-size: 0.95rem;
+            }
+            .pagination-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .notification-item .notif-actions .btn-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+            .notification-item .notif-body .meta {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <!-- Navigation & Breadcrumb -->
+    <div id="nav-placeholder"></div>
+    <div id="breadcrumb-placeholder"></div>
+
+    <main>
+        <div class="container py-4 mb-5">
+
+            <!-- ─── SKELETON ─── -->
+            <div id="skeletonLoader">
+                <div class="dashboard-card">
+                    <div class="notif-top-bar" style="background:transparent; border-bottom: none;">
+                        <div class="search-wrapper">
+                            <div class="skeleton" style="height:40px; border-radius:40px;"></div>
+                        </div>
+                        <div class="action-btns">
+                            <div class="skeleton" style="width:100px; height:34px; border-radius:40px;"></div>
+                            <div class="skeleton" style="width:100px; height:34px; border-radius:40px;"></div>
+                        </div>
+                    </div>
+                    <div class="notif-list">
+                        <div class="skeleton-notif"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="line long"></div><div class="line medium"></div><div class="line short"></div></div></div>
+                        <div class="skeleton-notif"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="line long"></div><div class="line medium"></div><div class="line short"></div></div></div>
+                        <div class="skeleton-notif"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="line long"></div><div class="line medium"></div><div class="line short"></div></div></div>
+                        <div class="skeleton-notif"><div class="skeleton-icon"></div><div class="skeleton-body"><div class="line long"></div><div class="line medium"></div><div class="line short"></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── MAIN CONTENT ─── -->
+            <div id="notificationContent" style="display: none;">
+                <div class="dashboard-card">
+
+                    <!-- Top Bar -->
+                    <div class="notif-top-bar">
+                        <div class="search-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search notifications…" />
+                        </div>
+                        <div class="action-btns">
+                            <!-- Select all checkbox -->
+                            <div class="select-all-wrap">
+                                <input class="form-check-input" type="checkbox" id="selectAllCheckbox" />
+                                <label class="form-check-label" for="selectAllCheckbox">All</label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-custom" id="markAllReadBtn" data-bs-toggle="tooltip" title="Mark all as read">
+                                <i class="fas fa-check-double me-1"></i>Mark all read
+                            </button>
+                            <button class="btn btn-sm btn-danger-outline" id="deleteAllBtn" data-bs-toggle="tooltip" title="Delete all notifications">
+                                <i class="fas fa-trash-alt me-1"></i>Delete all
+                            </button>
+                            <button class="btn btn-sm btn-danger-outline" id="deleteSelectedBtn" data-bs-toggle="tooltip" title="Delete selected">
+                                <i class="fas fa-trash me-1"></i>Delete selected
+                            </button>
+                            <span class="selection-counter" id="selectionCounter">0 selected</span>
+                        </div>
+                    </div>
+
+                    <!-- Notification List -->
+                    <div id="notificationList" class="notif-list">
+                        <!-- populated by JS -->
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-wrapper" id="paginationWrapper">
+                        <span class="page-info" id="pageInfo">Page 1 of 1</span>
+                        <div class="pagination-btns">
+                            <button class="btn" id="prevPageBtn" disabled><i class="fas fa-chevron-left me-1"></i>Previous</button>
+                            <button class="btn" id="nextPageBtn">Next<i class="fas fa-chevron-right ms-1"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Mobile actions -->
+    <div class="dashboard-mobile-actions d-md-none mt-5">
+        <a href="main.html" class="action-link" data-bs-toggle="tooltip" title="Go to dashboard">
+            <i class="fas fa-home"></i><span>Dashboard</span>
+        </a>
+        <a href="create-listing.html" class="action-link" data-bs-toggle="tooltip" title="Post listing">
+            <i class="fas fa-plus-circle"></i><span>Post</span>
+        </a>
+        <a href="listings.html" class="action-link active" data-bs-toggle="tooltip" title="View listings">
+            <i class="fas fa-list"></i><span>Listings</span>
+        </a>
+    </div>
+
+    <!-- Modals -->
+    <div id="formModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="formModalTitle">Form</h3>
+                <button class="modal-close" id="closeFormModalBtn" data-bs-toggle="tooltip" title="Close form">&times;</button>
+            </div>
+            <div class="modal-body" id="formModalBody"></div>
+            <div class="modal-footer" id="formModalFooter"></div>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container confirm-modal-container">
+            <div class="modal-header">
+                <h3 id="confirmModalTitle">Confirm Action</h3>
+                <button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
+            </div>
+            <div class="modal-body" id="confirmModalBody">
+                <p id="confirmMessage"></p>
+            </div>
+            <div class="modal-footer" id="confirmModalFooter"></div>
+        </div>
+    </div>
+
+    <button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top" data-bs-toggle="tooltip" title="Scroll to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="../assets/js/main.js"></script>
+
+    <script>
+        // ──────────────────────────────────────────────────────────────
+        // 0. SAFE TOOLTIP WRAPPER (fixes "Cannot convert undefined or null to object")
+        // ──────────────────────────────────────────────────────────────
+        (function safeTooltips() {
+            const original = window.initTooltips;
+            if (typeof original === 'function') {
+                window.initTooltips = function() {
+                    try {
+                        original.call(this);
+                    } catch (e) {
+                        if (e.message && e.message.includes('Cannot convert undefined or null to object')) {
+                            console.warn('Tooltip init skipped (invalid element).', e);
+                        } else {
+                            console.warn('Tooltip init error:', e);
+                        }
+                    }
+                };
+            } else {
+                window.initTooltips = function() {
+                    console.warn('initTooltips not defined – skipping.');
+                };
+            }
+        })();
+
+        // ──────────────────────────────────────────────────────────────
+        // 1. Authentication & breadcrumb
+        // ──────────────────────────────────────────────────────────────
+        isAuthenticated();
+        injectBreadcrumb('Notifications');
+
+        // ──────────────────────────────────────────────────────────────
+        // 2. Config
+        // ──────────────────────────────────────────────────────────────
+        const NOTIFICATIONS_LIST_URL = NOTIFICATIONS_URL;
+        const PAGE_SIZE = 10;
+
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalCount = 0;
+        let allNotifications = [];
+        let filteredNotifications = [];
+        let selectedIds = new Set();
+
+        // ──────────────────────────────────────────────────────────────
+        // 3. DOM refs
+        // ──────────────────────────────────────────────────────────────
+        const skeleton = document.getElementById('skeletonLoader');
+        const content = document.getElementById('notificationContent');
+        const listEl = document.getElementById('notificationList');
+        const searchInput = document.getElementById('searchInput');
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        const markAllBtn = document.getElementById('markAllReadBtn');
+        const deleteAllBtn = document.getElementById('deleteAllBtn');
+        const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+        const selectionCounter = document.getElementById('selectionCounter');
+        const pageInfo = document.getElementById('pageInfo');
+        const prevBtn = document.getElementById('prevPageBtn');
+        const nextBtn = document.getElementById('nextPageBtn');
+
+        // ──────────────────────────────────────────────────────────────
+        // 4. Helpers
+        // ──────────────────────────────────────────────────────────────
+        function getNotificationIcon(type) {
+            const map = {
+                'listing': 'fa-tag',
+                'account': 'fa-user',
+                'system': 'fa-cog',
+                'other': 'fa-bell'
+            };
+            return map[type] || 'fa-bell';
+        }
+
+        function getNotificationClass(type) {
+            const map = {
+                'listing': 'listing',
+                'account': 'account',
+                'system': 'system',
+                'other': 'other'
+            };
+            return map[type] || 'other';
+        }
+
+        function updateSelectionCounter() {
+            const count = selectedIds.size;
+            selectionCounter.textContent = count + ' selected';
+            deleteSelectedBtn.disabled = count === 0;
+            deleteSelectedBtn.style.opacity = count === 0 ? '0.5' : '1';
+
+            // Update "select all" checkbox state
+            const checkboxes = document.querySelectorAll('.notif-checkbox input[type="checkbox"]');
+            const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            if (checkboxes.length === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+                return;
+            }
+            if (checkedCount === checkboxes.length) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = true;
+            } else if (checkedCount === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+            } else {
+                selectAllCheckbox.indeterminate = true;
+                selectAllCheckbox.checked = false;
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 5. Render notifications
+        // ──────────────────────────────────────────────────────────────
+        function renderNotifications(notifs) {
+            const items = notifs || [];
+
+            if (!items.length) {
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-bell-slash"></i>
+                        <h5>No notifications found</h5>
+                        <p>${searchInput.value.trim() ? 'Try adjusting your search terms.' : 'You\'re all caught up!'}</p>
+                    </div>
+                `;
+                document.getElementById('paginationWrapper').style.display = 'none';
+                // Clear selection when empty
+                selectedIds.clear();
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+                updateSelectionCounter();
+                return;
+            }
+
+            document.getElementById('paginationWrapper').style.display = 'flex';
+
+            let html = '';
+            items.forEach((n, index) => {
+                const iconClass = getNotificationClass(n.notification_type);
+                const icon = getNotificationIcon(n.notification_type);
+                const isUnread = !n.is_read;
+                const actionUrl = n.action_url || '#';
+                const isChecked = selectedIds.has(n.id);
+
+                html += `
+                    <div class="notification-item ${isUnread ? 'unread' : ''}" data-id="${n.id}" style="animation-delay: ${index * 0.03}s;">
+                        <div class="notif-checkbox">
+                            <input type="checkbox" class="form-check-input" data-id="${n.id}" ${isChecked ? 'checked' : ''} />
+                        </div>
+                        <div class="notif-icon ${iconClass}">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="notif-body">
+                            <div class="title">
+                                <span>${escapeHtml(n.title)}</span>
+                                ${isUnread ? '<span class="badge bg-success rounded-pill" style="font-size:0.55rem;">New</span>' : ''}
+                            </div>
+                            <p class="message">${escapeHtml(n.message)}</p>
+                            <div class="meta">
+                                <span><i class="far fa-clock me-1"></i>${escapeHtml(n.created_at)}</span>
+                                ${n.notification_type ? `<span class="badge bg-light text-muted" style="font-weight:400;">${escapeHtml(n.notification_type)}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="notif-actions">
+                            ${!isUnread ? '' : `<button class="btn-icon mark-read" data-id="${n.id}" data-bs-toggle="tooltip" title="Mark as read"><i class="fas fa-check"></i></button>`}
+                            <button class="btn-icon delete" data-id="${n.id}" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                            ${actionUrl !== '#' ? `<a href="${escapeHtml(actionUrl)}" class="btn-icon" data-bs-toggle="tooltip" title="Open"><i class="fas fa-arrow-right"></i></a>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            listEl.innerHTML = html;
+
+            // Update pagination info
+            const displayTotal = items.length;
+            pageInfo.textContent = `Showing ${displayTotal} of ${totalCount} · Page ${currentPage} of ${totalPages}`;
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+
+            // Bind events
+            bindCheckboxEvents();
+            bindActionEvents();
+
+            // Re-init tooltips safely
+            if (typeof window.initTooltips === 'function') {
+                setTimeout(() => {
+                    try {
+                        window.initTooltips();
+                    } catch (e) {
+                        console.warn('Tooltip re-init error:', e);
+                    }
+                }, 150);
+            }
+
+            updateSelectionCounter();
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 6. Event binding helpers
+        // ──────────────────────────────────────────────────────────────
+        function bindCheckboxEvents() {
+            document.querySelectorAll('.notif-checkbox input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const id = parseInt(this.dataset.id);
+                    if (this.checked) selectedIds.add(id);
+                    else selectedIds.delete(id);
+                    updateSelectionCounter();
+                });
+            });
+        }
+
+        function bindActionEvents() {
+            // Mark as read
+            document.querySelectorAll('.btn-icon.mark-read').forEach(btn => {
+                btn.addEventListener('click', async function(e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    await markSingleRead(id);
+                });
+            });
+
+            // Delete single
+            document.querySelectorAll('.btn-icon.delete').forEach(btn => {
+                btn.addEventListener('click', async function(e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    const notif = allNotifications.find(n => n.id == id) || filteredNotifications.find(n => n.id == id);
+                    if (!notif) return;
+                    confirmModal.open({
+                        title: 'Delete notification',
+                        message: `Are you sure you want to delete "${notif.title}"?`,
+                        confirmText: 'Delete',
+                        onConfirm: async () => {
+                            await deleteNotification(id);
+                            await loadNotifications(currentPage);
+                        }
+                    });
+                });
+            });
+
+            // Click on notification body to open action URL
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (e.target.closest('.notif-actions') || e.target.closest('.notif-checkbox')) return;
+                    const url = this.querySelector('.notif-actions a')?.href;
+                    if (url && url !== '#') {
+                        window.location.href = url;
+                    }
+                });
+            });
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 7. API calls
+        // ──────────────────────────────────────────────────────────────
+        async function loadNotifications(page = 1) {
+            const query = new URLSearchParams({
+                page: page,
+                page_size: PAGE_SIZE
+            });
+            const url = NOTIFICATIONS_LIST_URL + '?' + query.toString();
+
+            skeleton.style.display = 'block';
+            content.style.display = 'none';
+            selectedIds.clear();
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+
+            try {
+                const response = await fetchWithAuth(url, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const result = await response.json();
+                if (!result.is_success) throw new Error(result.message || 'Error');
+
+                const data = result.data;
+                allNotifications = data.notifications || [];
+                totalCount = data.total_count || 0;
+                totalPages = data.total_pages || 1;
+                currentPage = data.page || 1;
+
+                // Apply client-side search filter
+                const term = searchInput.value.trim().toLowerCase();
+                if (term) {
+                    filteredNotifications = allNotifications.filter(n =>
+                        n.title.toLowerCase().includes(term) ||
+                        n.message.toLowerCase().includes(term) ||
+                        (n.notification_type && n.notification_type.toLowerCase().includes(term))
+                    );
+                } else {
+                    filteredNotifications = [...allNotifications];
+                }
+
+                renderNotifications(filteredNotifications);
+                skeleton.style.display = 'none';
+                content.style.display = 'block';
+            } catch (err) {
+                console.error('Load error:', err);
+                skeleton.style.display = 'none';
+                if (err.message.includes('Failed to fetch') || 
+                    err.name === 'TypeError' || 
+                    err.message.includes('NetworkError') ||
+                    err.message.includes('network')) {
+                    showNetworkError();
+                } else {
+                    realContent.style.display = 'block';
+                    showToast('Unable to load dashboard data', 'error');
+                }
+            }
+        }
+
+        async function markSingleRead(id) {
+            try {
+                const response = await fetchWithAuth(`${NOTIFICATIONS_URL}mark-read/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const result = await response.json();
+                if (result.is_success) {
+                    showToast('Marked as read', 'success');
+                    await loadNotifications(currentPage);
+                } else {
+                    showToast(result.message || 'Failed to mark as read', 'error');
+                }
+            } catch (err) {
+                showToast('Error marking as read', 'error');
+                console.error(err);
+            }
+        }
+
+        async function deleteNotification(id) {
+            try {
+                const response = await fetchWithAuth(`${NOTIFICATIONS_URL}delete/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const result = await response.json();
+                if (result.is_success) {
+                    showToast('Notification deleted', 'success');
+                } else {
+                    showToast(result.message || 'Delete failed', 'error');
+                }
+            } catch (err) {
+                showToast('Error deleting notification', 'error');
+                console.error(err);
+            }
+        }
+
+        async function deleteAllNotifications() {
+            confirmModal.open({
+                title: 'Delete all notifications',
+                message: 'Are you sure you want to delete ALL notifications? This cannot be undone.',
+                confirmText: 'Delete all',
+                onConfirm: async () => {
+                    try {
+                        const response = await fetchWithAuth(`${NOTIFICATIONS_URL}delete-all`, {
+                            method: 'DELETE',
+                            headers: { 'Accept': 'application/json' }
+                        });
+                        const result = await response.json();
+                        if (result.is_success) {
+                            showToast('All notifications deleted', 'success');
+                            await loadNotifications(1);
+                        } else {
+                            showToast(result.message || 'Delete all failed', 'error');
+                        }
+                    } catch (err) {
+                        showToast('Error deleting all', 'error');
+                        console.error(err);
+                    }
+                }
+            });
+        }
+
+        async function deleteSelected() {
+            const ids = Array.from(selectedIds);
+            if (!ids.length) {
+                showToast('No notifications selected', 'info');
+                return;
+            }
+
+            confirmModal.open({
+                title: `Delete ${ids.length} notification(s)`,
+                message: `Are you sure you want to delete ${ids.length} selected notification(s)?`,
+                confirmText: 'Delete selected',
+                onConfirm: async () => {
+                    let successCount = 0;
+                    let failCount = 0;
+                    for (const id of ids) {
+                        try {
+                            const resp = await fetchWithAuth(`${NOTIFICATIONS_URL}delete/${id}`, {
+                                method: 'DELETE',
+                                headers: { 'Accept': 'application/json' }
+                            });
+                            const res = await resp.json();
+                            if (res.is_success) successCount++;
+                            else failCount++;
+                        } catch (e) {
+                            failCount++;
+                        }
+                    }
+                    if (failCount === 0) {
+                        showToast(`Deleted ${successCount} notification(s)`, 'success');
+                    } else {
+                        showToast(`Deleted ${successCount}, ${failCount} failed`, 'error');
+                    }
+                    selectedIds.clear();
+                    await loadNotifications(currentPage);
+                }
+            });
+        }
+
+        async function markAllRead() {
+            try {
+                const response = await fetchWithAuth(`${NOTIFICATIONS_URL}all-mark-read`, {
+                    method: 'PUT',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const result = await response.json();
+                if (result.is_success) {
+                    showToast('All notifications marked as read', 'success');
+                    await loadNotifications(currentPage);
+                } else {
+                    showToast(result.message || 'Mark all read failed', 'error');
+                }
+            } catch (err) {
+                showToast('Error marking all as read', 'error');
+                console.error(err);
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 8. Event listeners
+        // ──────────────────────────────────────────────────────────────
+        // Search with debounce
+        let searchTimeout = null;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const term = this.value.trim().toLowerCase();
+                if (term) {
+                    filteredNotifications = allNotifications.filter(n =>
+                        n.title.toLowerCase().includes(term) ||
+                        n.message.toLowerCase().includes(term) ||
+                        (n.notification_type && n.notification_type.toLowerCase().includes(term))
+                    );
+                } else {
+                    filteredNotifications = [...allNotifications];
+                }
+                renderNotifications(filteredNotifications);
+                const url = new URL(window.location);
+                if (term) url.searchParams.set('search', this.value.trim());
+                else url.searchParams.delete('search');
+                window.history.replaceState({}, '', url);
+            }, 300);
+        });
+
+        // Load search from URL
+        (function initSearchFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const q = params.get('search');
+            if (q) {
+                searchInput.value = q;
+            }
+        })();
+
+        // Select all / deselect all
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.notif-checkbox input[type="checkbox"]');
+            const shouldCheck = this.checked;
+            checkboxes.forEach(cb => {
+                cb.checked = shouldCheck;
+                const id = parseInt(cb.dataset.id);
+                if (shouldCheck) selectedIds.add(id);
+                else selectedIds.delete(id);
+            });
+            updateSelectionCounter();
+        });
+
+        markAllBtn.addEventListener('click', markAllRead);
+        deleteAllBtn.addEventListener('click', deleteAllNotifications);
+        deleteSelectedBtn.addEventListener('click', deleteSelected);
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) loadNotifications(currentPage - 1);
+        });
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) loadNotifications(currentPage + 1);
+        });
+
+        // ──────────────────────────────────────────────────────────────
+        // 9. Bootstrap
+        // ──────────────────────────────────────────────────────────────
+        loadNotifications(1);
+    </script>
+</body>
+</html>

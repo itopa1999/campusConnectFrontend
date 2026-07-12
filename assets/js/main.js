@@ -3,7 +3,7 @@ const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
 const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
 const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
 const REFRESH_URL = 'http://127.0.0.1:8000/user/api/';
-
+NOTIFICATIONS_URL = 'http://127.0.0.1:8000/user/api/notifications/';
 
 // ─── Global Refresh Spinner (injected dynamically) ──────────────
 function createRefreshOverlay() {
@@ -1133,6 +1133,114 @@ async function fetchWithAuth(url, options = {}) {
 
 
 // ========== NAVIGATION INJECTION ==========
+// ─── Inject notification styles (only once) ──────────────────
+if (!document.getElementById('notification-styles')) {
+  const style = document.createElement('style');
+  style.id = 'notification-styles';
+  style.textContent = `
+    .notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -6px;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    min-width: 1.4rem;
+    border-radius: 999px;
+    background: #dc3545;
+    color: #fff;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .notification-badge.has-unread {
+    animation: pulse-badge 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-badge {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  .nav-item.notification-item-nav {
+    margin-right: 0.75rem;
+  }
+
+
+  .notification-link {
+  display: block;
+  cursor: pointer;
+  padding: 0.25rem 0;
+}
+.notification-link:hover {
+  background-color: #f8faf9;
+  border-radius: 0.5rem;
+}
+
+    /* Dropdown menu styling */
+    #notificationDropdownMenu {
+      max-height: 420px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      min-width: 340px;
+    }
+    .notification-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f0f2f0;
+      transition: background 0.15s;
+    }
+    .notification-item:hover {
+      background: #f8faf9;
+    }
+    .notification-item.unread {
+      border-left: 3px solid var(--accent, #2c7a5e);
+    }
+    .notification-item .delete-notif-btn {
+      opacity: 0.5;
+      transition: opacity 0.2s;
+      padding: 0.2rem 0.4rem;
+      background: transparent;
+      border: none;
+      color: #dc3545;
+    }
+    .notification-item .delete-notif-btn:hover {
+      opacity: 1;
+    }
+    .dropdown-item-text.fw-semibold {
+      padding: 0.5rem 1rem;
+    }
+
+    /* Mobile notification dropdown – full width */
+    #mobileNotificationDropdownMenu {
+      position: fixed !important;
+      top: 60px !important;              /* adjust to your header height */
+      left: 0 !important;
+      right: 0 !important;
+      width: 100vw !important;
+      max-width: 100vw !important;
+      border-radius: 0 !important;
+      padding: 0.5rem 0 !important;
+      max-height: 70vh;
+      overflow-y: auto;
+      transform: none !important;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+/* On very small screens, we can center it */
+@media (max-width: 420px) {
+  #mobileNotificationDropdownMenu {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    min-width: 90vw !important;
+  }
+}
+  `;
+  document.head.appendChild(style);
+}
+
 function injectNavigation() {
   // Avoid duplicate injection
   if (document.getElementById('mainNav')) return;
@@ -1148,10 +1256,27 @@ function injectNavigation() {
           <a class="site-brand" href="main.html" aria-label="CampusConnect Demo University home" data-bs-toggle="tooltip" title="Go to dashboard">
             <img src="../assets/img/icon.jpg" alt="CampusConnect Demo University logo" class="site-brand-logo">
             <span class="site-brand-name">
-              <span class="brand-full">CampusConnect Demo University</span>
-              <span class="brand-short">CampusConnect</span>
+              <span class="brand-full d-none d-md-inline">CampusConnect Demo University</span>
+              <span class="brand-short d-inline d-md-none">CampusConnect</span>
             </span>
           </a>
+
+          <!-- Mobile Notification Dropdown -->
+          <li class="nav-item dropdown d-md-none">
+            <a class="nav-link position-relative" href="#" id="mobileNotificationDropdown" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" ...>
+              <i class="fas fa-bell fa-2x"></i>
+              <span id="mobileNotificationBadge" class="notification-badge" style="display: none;">0</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-start shadow-sm border-0 rounded-3 mt-2" 
+              id="mobileNotificationDropdownMenu" 
+              style="min-width: 280px; max-width: calc(100vw - 1.5rem); max-height: 400px; overflow-y: auto;">
+              <li><span class="dropdown-item-text fw-semibold">Notifications</span></li>
+              <li><hr class="dropdown-divider"></li>
+              <div id="mobileNotificationItems">
+                <!-- will be populated by JS -->
+              </div>
+            </ul>
+          </li>
           
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation" data-tooltip="true" title="Open menu">
             <span class="navbar-toggler-icon"></span>
@@ -1160,6 +1285,20 @@ function injectNavigation() {
           <div class="collapse navbar-collapse" id="navbarMain">
             <!-- Desktop dropdown -->
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center d-none d-md-flex">
+              <!-- Notification Bell -->
+              <li class="nav-item dropdown notification-item-nav">
+                <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" title="Notifications">
+                  <i class="fas fa-bell fa-2x"></i>
+                  <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 mt-2" id="notificationDropdownMenu" style="min-width: 320px; max-height: 400px; overflow-y: auto;">
+                  <li><span class="dropdown-item-text fw-semibold">Notifications</span></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <div id="notificationItems">
+                    <!-- will be populated by JS -->
+                  </div>
+                </ul>
+              </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-tooltip="true" title="Open account menu">
                   <span id="desktopAvatarWrapper">
@@ -1370,6 +1509,142 @@ function initTooltips() {
 }
 
 
+async function fetchAndRenderNotifications() {
+  const bellBadge = document.getElementById('notificationBadge');
+  const mobileBadge = document.getElementById('mobileNotificationBadge');
+  const dropdownMenu = document.getElementById('notificationDropdownMenu');
+  const mobileDropdownMenu = document.getElementById('mobileNotificationDropdownMenu');
+  if (!bellBadge || !dropdownMenu || !mobileBadge || !mobileDropdownMenu) return;
+
+  try {
+    const response = await fetchWithAuth(NOTIFICATIONS_URL + 'header', {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!response.ok) throw new Error('Failed to fetch notifications');
+    const result = await response.json();
+    if (!result.is_success) throw new Error(result.message || 'Error');
+
+    const notifications = result.data.notifications || [];
+    const unreadCount = result.data.unread_messages_counts ?? 0;
+
+    // Update both badges
+    bellBadge.textContent = unreadCount;
+    bellBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+    bellBadge.classList.toggle('has-unread', unreadCount > 0);
+
+    mobileBadge.textContent = unreadCount;
+    mobileBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+    mobileBadge.classList.toggle('has-unread', unreadCount > 0);
+
+    // Build the HTML once
+    let itemsHtml = '';
+    if (notifications.length === 0) {
+      itemsHtml = `
+        <div class="dropdown-item text-muted text-center py-3">
+          <i class="fas fa-bell-slash me-2"></i> No notifications
+        </div>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-center" href="notifications.html">View All</a></li>
+      `;
+    } else {
+      itemsHtml = notifications.map(n => {
+        const actionUrl = n.action_url || '#';
+        return `
+          <div class="dropdown-item notification-item ${n.is_read ? 'read' : 'unread'}" data-id="${n.id}">
+            <div class="d-flex justify-content-between align-items-start">
+              <a href="${escapeHtml(actionUrl)}" onclick="MarkAllNotifications();" class="notification-link text-decoration-none text-dark flex-grow-1 me-2" ${actionUrl === '#' ? 'style="cursor:default;"' : ''}>
+                <div class="fw-semibold">${escapeHtml(n.title)}</div>
+                <small class="text-muted">${escapeHtml(n.message)}</small>
+                <div class="text-muted small">${escapeHtml(n.created_at)}</div>
+              </a>
+              <button class="btn btn-sm btn-outline-danger delete-notif-btn" data-id="${n.id}" data-bs-toggle="tooltip" title="Delete">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+            ${!n.is_read ? '<span class="badge bg-success rounded-pill ms-2">New</span>' : ''}
+          </div>
+        `;
+      }).join('');
+
+      // Add "View All" at the bottom
+      itemsHtml += `
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-center" href="notifications.html">View All</a></li>
+      `;
+    }
+
+    // Populate both dropdowns
+    dropdownMenu.innerHTML = itemsHtml;
+    mobileDropdownMenu.innerHTML = itemsHtml;
+
+    // Attach delete events to all delete buttons in both menus
+    document.querySelectorAll('.delete-notif-btn').forEach(btn => {
+      btn.addEventListener('click', async function(e) {
+        e.stopPropagation();
+        const id = this.dataset.id;
+        await deleteNotification(id);
+      });
+    });
+
+    // Re-init tooltips
+    if (typeof initTooltips === 'function') setTimeout(initTooltips, 100);
+
+  } catch (err) {
+    console.error('Notification error:', err);
+    const errorHtml = `
+      <div class="dropdown-item text-danger text-center py-3">
+        <i class="fas fa-exclamation-triangle me-2"></i> Could not load notifications
+      </div>
+    `;
+    dropdownMenu.innerHTML = errorHtml;
+    mobileDropdownMenu.innerHTML = errorHtml;
+  }
+}
+
+
+async function deleteNotification(notificationId) {
+  try {
+    const response = await fetchWithAuth(`${NOTIFICATIONS_URL}delete/${notificationId}`, {
+      method: 'DELETE',
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!response.ok) throw new Error('Delete failed');
+    const result = await response.json();
+    if (result.is_success) {
+      showToast('Notification deleted', 'success');
+      // Refresh the list
+      await fetchAndRenderNotifications();
+    } else {
+      throw new Error(result.message || 'Delete error');
+    }
+  } catch (err) {
+    console.error('Delete error:', err);
+    showToast('Failed to delete notification', 'error');
+  }
+}
+
+
+async function MarkAllNotifications() {
+  try {
+    const response = await fetchWithAuth(`${NOTIFICATIONS_URL}all-mark-read`, {
+      method: 'PUT',
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!response.ok) throw new Error('Delete failed');
+    const result = await response.json();
+    if (result.is_success) {
+      await fetchAndRenderNotifications();
+    } else {
+      throw new Error(result.message || 'Delete error');
+    }
+  } catch (err) {
+    console.error('Delete error:', err);
+    showToast('Failed to delete notification', 'error');
+  }
+}
+
+
 
 // ========== START EVERYTHING AFTER DOM READY ==========
 function initAll() {
@@ -1381,6 +1656,7 @@ function initAll() {
   initReportLostFeature();
   initTooltips();
   ensureToastContainer();
+  fetchAndRenderNotifications();
 
 
   if (!formModal && document.getElementById('formModal')) {

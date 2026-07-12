@@ -1244,7 +1244,7 @@
           <div class="review-header">
             <span class="reviewer">${escapeHtml(r.from_user)}</span>
             <span class="review-stars">${renderStars(r.rating)}</span>
-            <span class="review-date">${new Date(r.created_at).toLocaleDateString()}</span>
+            <span class="review-date">${r.created_at}</span>
           </div>
           <p class="review-comment">${escapeHtml(r.comment)}</p>
         </div>
@@ -1271,7 +1271,7 @@
     badgesContainer.innerHTML = badgesHtml;
 
     document.getElementById('listingIdBadge').innerText = listingData.id || '--';
-    document.getElementById('createdDate').innerText = listingData.created_at ? new Date(listingData.created_at).toLocaleDateString() : '--';
+    document.getElementById('createdDate').innerText = listingData.created_at ? listingData.created_at: '--';
 
     // Status
     const status = listingData.status || 'expired';
@@ -1515,6 +1515,7 @@
       if (result.is_success) {
         showToast('Listing updated successfully!');
         await fetchListingData(listingData.id);
+        fetchAndRenderNotifications();
         renderViewMode();
         if (document.getElementById('editModeToggle').checked) {
           populateEditFields();
@@ -1544,6 +1545,7 @@
       });
       const result = await response.json();
       if (result.is_success) {
+        fetchAndRenderNotifications();
         showToast('Listing marked as sold.');
         await fetchListingData(listingData.id);
         renderViewMode();
@@ -1594,6 +1596,7 @@
         document.cookie = `point_bal=${newPoints}; path=/`;
         userPoints = newPoints;
         document.getElementById('userPoints').innerText = userPoints;
+        fetchAndRenderNotifications();
         showToast('Listing reactivated!');
         await fetchListingData(listingData.id);
         renderViewMode();
@@ -1642,6 +1645,7 @@
       });
       const result = await response.json();
       if (result.is_success) {
+        fetchAndRenderNotifications();
         showToast('Listing deleted. Redirecting...');
         setTimeout(() => window.location.href = 'main.html', 1500);
       } else {
@@ -1812,6 +1816,7 @@
 
         const result = await response.json();
         if (result.is_success) {
+          fetchAndRenderNotifications();
           showToast(`${label} ${newState ? 'enabled' : 'disabled'} successfully!`, 'success');
           await fetchListingData(listingData.id);
           renderViewMode();
@@ -1930,6 +1935,7 @@
 
       const result = await response.json();
       if (result.is_success) {
+        fetchAndRenderNotifications();
         showToast(`Auto-reactivation ${newState ? 'enabled' : 'disabled'} successfully!`, 'success');
         await fetchListingData(listingData.id);
         renderViewMode();

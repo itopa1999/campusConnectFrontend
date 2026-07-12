@@ -431,12 +431,12 @@
               <p class="card-text small text-muted">${escapeHtml((item.description || '').substring(0, 100))}${(item.description || '').length > 100 ? '…' : ''}</p>
               <div class="mt-2 small text-muted">
                 <i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}<br>
-                <i class="far fa-calendar-alt me-1"></i> ${formatDate(item.date_found)}
+                <i class="far fa-calendar-alt me-1"></i>Date Found: ${formatDate(item.date_found)}
               </div>
             </div>
             <div class="card-footer bg-transparent border-0 pb-3">
               <button class="btn btn-sm btn-outline-custom w-100 claim-btn" data-id="${item.id}" data-bs-toggle="tooltip" title="Claim item">
-                <i class="fas fa-hand-holding-heart me-1"></i> I found this / Claim
+                <i class="fas fa-hand-holding-heart me-1"></i>Claim this item
               </button>
             </div>
           </div>

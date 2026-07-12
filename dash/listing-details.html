@@ -1594,9 +1594,7 @@
 
             // ── Meta ──
             document.getElementById('listingIdMeta').innerText = data.id || '—';
-            document.getElementById('createdDateMeta').innerText = data.created_at ?
-                new Date(data.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) :
-                '—';
+            document.getElementById('createdDateMeta').innerText = data.created_at ?data.created_at : '—';
 
             // ── Promotion badges ──
             const promoContainer = document.getElementById('promotionBadges');
@@ -1811,8 +1809,7 @@
                     const from = r.from || 'Anonymous';
                     const rating = r.rating || 0;
                     const comment = r.comment || '';
-                    const date = r.date ? new Date(r.date).toLocaleDateString('en-GB', { day: 'numeric',
-                        month: 'short', year: 'numeric' }) : '—';
+                    const date = r.date ? r.date : '—';
                     const shortComment = comment.length > 120 ? comment.slice(0, 120) + '…' : comment;
                     const hasMore = comment.length > 120;
                     return `
