@@ -8,802 +8,335 @@
     <!-- Bootstrap 5 + Icons + Fonts + AOS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
     <link rel="stylesheet" href="../assets/css/main.css" />
 
     <style>
-
-        .dashboard-card {
-            background: #ffffff;
-            border-radius: var(--card-radius);
-            box-shadow: var(--shadow-card);
-            border: 1px solid rgba(44, 122, 94, 0.05);
-            transition: var(--transition-smooth);
-            position: relative;
+        /* ── Listing detail custom styles ── */
+        .listing-image-carousel {
+            background: #f1f3f2;
+            border-radius: 1.5rem;
             overflow: hidden;
-        }
-
-        .dashboard-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), #4aa882, var(--accent));
-            opacity: 0.4;
-        }
-
-        .dashboard-card:hover {
-            box-shadow: var(--shadow-card-hover);
-        }
-
-        .dashboard-card .card-header-custom {
-            padding: 1rem 1.25rem 0.5rem;
-            border-bottom: none;
+            aspect-ratio: 4 / 3;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-        }
-
-        .dashboard-card .card-header-custom h6 {
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #5f7775;
-            margin: 0;
-        }
-
-        .dashboard-card .card-header-custom i {
-            color: var(--accent);
-            opacity: 0.7;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           IMAGE CAROUSEL – ENHANCED
-           ────────────────────────────────────────────────────────────── */
-        .listing-image-wrapper {
+            justify-content: center;
+            color: #adb5bd;
             position: relative;
-            border-radius: var(--card-radius);
-            overflow: hidden;
-            background: #f1f3f2;
-            aspect-ratio: 4 / 3;
             cursor: pointer;
-            transition: var(--transition-smooth);
-            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
-        .listing-image-wrapper:hover {
-            transform: scale(1.008);
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+        .listing-image-carousel:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
-
-        .listing-image-wrapper img {
+        .listing-image-carousel img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
-            transition: var(--transition-smooth);
         }
-
-        .listing-image-wrapper .image-overlay {
+        .listing-image-carousel .click-hint {
             position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.15));
+            bottom: 12px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.55);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
             pointer-events: none;
             opacity: 0;
-            transition: var(--transition-smooth);
+            transition: opacity 0.3s ease;
         }
-
-        .listing-image-wrapper:hover .image-overlay {
+        .listing-image-carousel:hover .click-hint {
             opacity: 1;
         }
 
-        .listing-image-wrapper .image-actions {
-            position: absolute;
-            bottom: 1rem;
-            right: 1rem;
-            display: flex;
-            gap: 0.5rem;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: var(--transition-smooth);
-        }
-
-        .listing-image-wrapper:hover .image-actions {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .listing-image-wrapper .image-actions .btn-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(8px);
-            border: none;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            transition: var(--transition-smooth);
+        .seller-card .seller-avatar-wrapper {
             cursor: pointer;
-        }
-
-        .listing-image-wrapper .image-actions .btn-icon:hover {
-            background: var(--accent);
-            transform: scale(1.08);
-        }
-
-        .listing-image-wrapper .image-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #adb5bd;
-        }
-
-        .listing-image-wrapper .image-placeholder i {
-            font-size: 3.5rem;
-            opacity: 0.3;
-            margin-bottom: 0.5rem;
-        }
-
-        .listing-image-wrapper .image-placeholder p {
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           BADGES & TAGS
-           ────────────────────────────────────────────────────────────── */
-        .tag-badge {
-            border-radius: 50px;
-            padding: 0.3rem 1rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            transition: var(--transition-smooth);
-            border: 1px solid transparent;
-        }
-
-        .tag-badge:hover {
-            transform: translateY(-2px);
-        }
-
-        .tag-badge.category {
-            background: #f0f4f2;
-            color: #2d403d;
-            border-color: rgba(44, 122, 94, 0.08);
-        }
-
-        .tag-badge.badge-tag {
-            background: #fef7e0;
-            color: #b87c00;
-            border-color: rgba(184, 124, 0, 0.12);
-        }
-
-        .tag-badge.type-sell {
-            background: #e3f5ec;
-            color: #1e7b4a;
-        }
-        .tag-badge.type-wanted {
-            background: #fff3e0;
-            color: #b87c00;
-        }
-        .tag-badge.type-freebie {
-            background: #e3f0ff;
-            color: #0d6efd;
-        }
-        .tag-badge.type-service {
-            background: #f3e8ff;
-            color: #6f42c1;
-        }
-
-        .tag-badge.status-active {
-            background: #e3f5ec;
-            color: #1e7b4a;
-        }
-        .tag-badge.status-sold {
-            background: #f0f0f0;
-            color: #5a6268;
-        }
-        .tag-badge.status-expired {
-            background: #ffe6e5;
-            color: #c23d2e;
-        }
-
-        .promo-badge {
-            border-radius: 50px;
-            padding: 0.2rem 0.8rem;
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-        .promo-badge.hot {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-        }
-        .promo-badge.banner {
-            background: linear-gradient(135deg, #4a90d9, #357abd);
-            color: white;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           PRICE DISPLAY
-           ────────────────────────────────────────────────────────────── */
-        .price-display {
-            display: flex;
-            align-items: baseline;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .price-display .amount {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent-dark);
-            letter-spacing: -0.02em;
-        }
-
-        .price-display .sub {
-            font-size: 0.8rem;
-            color: #7a9490;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           SELLER CARD – REDESIGNED
-           ────────────────────────────────────────────────────────────── */
-        .seller-card {
-            background: #ffffff;
-            border-radius: var(--card-radius);
-            border: 1px solid rgba(44, 122, 94, 0.06);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-soft);
-            transition: var(--transition-smooth);
             position: relative;
-            overflow: hidden;
-        }
-
-        .seller-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), #4aa882);
-            opacity: 0.3;
-        }
-
-        .seller-card:hover {
-            box-shadow: var(--shadow-card-hover);
-            transform: translateY(-2px);
-        }
-
-        .seller-card .seller-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .seller-card .seller-avatar {
-            width: 64px;
-            height: 64px;
+            transition: transform 0.2s ease;
             border-radius: 50%;
-            object-fit: cover;
-            background: #f1f3f2;
-            border: 2.5px solid var(--accent-light);
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            flex-shrink: 0;
         }
-
-        .seller-card .seller-avatar:hover {
+        .seller-card .seller-avatar-wrapper:hover {
             transform: scale(1.05);
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.10);
         }
-
-        .seller-card .seller-avatar.fallback {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            color: #adb5bd;
-            background: #f1f3f2;
-        }
-
-        .seller-card .seller-name {
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: #14211f;
-            margin: 0;
-        }
-
-        .seller-card .seller-dept {
-            font-size: 0.8rem;
-            color: #7a9490;
-        }
-
-        .seller-card .seller-verified {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: var(--accent);
-            background: var(--accent-light);
-            padding: 0.15rem 0.6rem;
+        .seller-card .seller-avatar-wrapper .avatar-hint {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 0.5rem;
+            padding: 0.1rem 0.4rem;
             border-radius: 50px;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+        .seller-card .seller-avatar-wrapper:hover .avatar-hint {
+            opacity: 1;
         }
 
-        .seller-card .seller-verified.unverified {
-            color: #dc3545;
-            background: #ffe6e5;
-        }
-
-        .seller-card .seller-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin: 1rem 0;
-            padding: 0.75rem 0;
-            border-top: 1px solid rgba(44, 122, 94, 0.06);
-            border-bottom: 1px solid rgba(44, 122, 94, 0.06);
-        }
-
-        .seller-card .seller-stats .stat {
-            text-align: center;
-        }
-
-        .seller-card .seller-stats .stat .number {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #14211f;
-        }
-
-        .seller-card .seller-stats .stat .label {
-            font-size: 0.65rem;
-            color: #7a9490;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .seller-card .seller-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.3rem;
-            margin: 0.75rem 0;
-        }
-
-        .seller-card .seller-badges .badge-item {
-            background: #f0f7f3;
-            color: var(--accent-dark);
-            border-radius: 50px;
-            padding: 0.15rem 0.7rem;
-            font-size: 0.65rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.2rem;
-        }
-
-        .seller-card .seller-contact-toggle {
-            background: transparent;
-            border: none;
-            color: var(--accent);
-            font-weight: 600;
-            font-size: 0.8rem;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-        }
-
-        .seller-card .seller-contact-toggle:hover {
-            color: var(--accent-dark);
-            gap: 0.6rem;
-        }
-
-        .seller-card .seller-contact-info {
-            background: #f8faf9;
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            margin-top: 0.75rem;
-            display: none;
-            animation: slideDown 0.3s ease forwards;
-        }
-
-        .seller-card .seller-contact-info.open {
-            display: block;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .seller-card .seller-contact-info .row-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.2rem 0;
-            font-size: 0.82rem;
-            color: #2d403d;
-        }
-
-        .seller-card .seller-contact-info .row-item i {
-            width: 18px;
-            color: var(--accent);
-            font-size: 0.8rem;
-        }
-
-        .seller-card .seller-contact-info .row-item .label {
-            font-weight: 500;
-            color: #5f7775;
-            margin-right: 0.2rem;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           TRUST METER – ENHANCED
-           ────────────────────────────────────────────────────────────── */
-        .trust-meter {
-            background: #f8faf9;
-            border-radius: 14px;
-            padding: 1rem 1.25rem;
-            border: 1px solid rgba(44, 122, 94, 0.06);
-        }
-
-        .trust-meter .meter-bar {
-            height: 6px;
-            background: #eef2f0;
-            border-radius: 50px;
-            overflow: hidden;
-            margin: 0.5rem 0;
-        }
-
-        .trust-meter .meter-bar .fill {
-            height: 100%;
-            border-radius: 50px;
-            background: linear-gradient(90deg, var(--accent), #4aa882);
-            transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            width: 0%;
-        }
-
-        .trust-meter .meter-label {
-            font-size: 0.75rem;
-            color: #5f7775;
-            font-weight: 500;
-        }
-
-        .trust-meter .meter-score {
-            font-weight: 700;
-            color: var(--accent-dark);
-            font-size: 0.85rem;
-        }
-
-        .trust-items {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.3rem 1rem;
-            margin-top: 0.75rem;
-        }
-
-        .trust-items .item {
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            color: #2d403d;
-            padding: 0.15rem 0;
-        }
-
-        .trust-items .item i {
-            width: 16px;
-            font-size: 0.7rem;
-        }
-
-        .trust-items .item.verified i {
-            color: var(--accent);
-        }
-
-        .trust-items .item.unverified i {
-            color: #adb5bd;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           REVIEWS – ENHANCED
-           ────────────────────────────────────────────────────────────── */
-        .review-item {
-            padding: 0.75rem 0.25rem;
-            border-bottom: 1px solid rgba(44, 122, 94, 0.04);
-            transition: var(--transition-smooth);
-            border-radius: 10px;
-            margin: 0 -0.25rem;
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
-        }
-
-        .review-item:last-child {
-            border-bottom: none;
-        }
-
-        .review-item:hover {
-            background: rgba(44, 122, 94, 0.02);
-            transform: translateX(3px);
-        }
-
-        .review-item .review-header {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-            margin-bottom: 0.15rem;
-        }
-
-        .review-item .review-header .reviewer {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #14211f;
-        }
-
-        .review-item .review-header .review-date {
-            font-size: 0.65rem;
-            color: #7a9490;
-        }
-
-        .review-item .review-header .review-stars {
-            display: inline-flex;
-            gap: 1px;
-            font-size: 0.7rem;
-        }
-
-        .review-item .review-header .review-stars i {
-            color: #f5b042;
-        }
-
-        .review-item .review-header .review-stars i.empty {
-            color: #dce0dd;
-        }
-
-        .review-item .review-comment {
-            font-size: 0.85rem;
-            color: #2d403d;
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        .review-item .review-comment .read-more {
-            color: var(--accent);
-            font-weight: 500;
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           HOTSPOTS – ENHANCED
-           ────────────────────────────────────────────────────────────── */
-        .hotspot-chip {
-            background: var(--accent-light);
-            color: var(--accent-dark);
-            border-radius: 50px;
-            padding: 0.4rem 1rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            border: 1px solid rgba(44, 122, 94, 0.06);
-            transition: var(--transition-smooth);
-        }
-
-        .hotspot-chip:hover {
-            background: #d4ece2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(44, 122, 94, 0.08);
-        }
-
-        .hotspot-chip i {
-            color: var(--accent);
-            font-size: 0.7rem;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           BUTTONS – ENHANCED
-           ────────────────────────────────────────────────────────────── */
-        .btn-primary-custom {
-            background: var(--accent);
-            border: none;
-            padding: 0.7rem 1.8rem;
-            font-weight: 700;
-            border-radius: 40px;
-            transition: var(--transition-smooth);
-            color: white;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 16px rgba(44, 122, 94, 0.18);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            letter-spacing: 0.2px;
-            width: 100%;
-        }
-
-        .btn-primary-custom:hover {
-            background: var(--accent-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
-            color: white;
-        }
-
-        .btn-primary-custom:active {
-            transform: translateY(0);
-        }
-
-        .btn-outline-custom {
-            background: transparent;
-            border: 1.5px solid var(--accent);
-            color: var(--accent);
-            padding: 0.6rem 1.5rem;
-            border-radius: 40px;
-            font-weight: 600;
-            transition: var(--transition-smooth);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .btn-outline-custom:hover {
-            background: var(--accent-light);
-            transform: translateY(-2px);
-            border-color: var(--accent-dark);
-            color: var(--accent-dark);
-        }
-
-        .btn-outline-custom:active {
-            transform: translateY(0);
-        }
-
-        .btn-manage {
-            background: var(--accent);
-            color: white;
-            border-radius: 40px;
-            padding: 0.6rem 1.2rem;
-            font-weight: 600;
-            transition: var(--transition-smooth);
-            border: none;
-            width: 100%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-manage:hover {
-            background: var(--accent-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(44, 122, 94, 0.2);
-            color: white;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           LIGHTBOX – ENHANCED
-           ────────────────────────────────────────────────────────────── */
+        /* ── Lightbox / Image Viewer ── */
         .image-lightbox {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.88);
-            backdrop-filter: blur(20px);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
             z-index: 9999;
             display: none;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.35s ease;
             padding: 2rem;
             cursor: pointer;
         }
-
         .image-lightbox.active {
             display: flex;
             opacity: 1;
         }
-
         .image-lightbox .lightbox-content {
-            max-width: 92vw;
+            max-width: 90vw;
             max-height: 85vh;
             border-radius: 1.25rem;
             overflow: hidden;
-            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
-            transform: scale(0.92) translateY(12px);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+            transform: scale(0.92);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: default;
             position: relative;
             background: #111;
-            opacity: 0;
         }
-
         .image-lightbox.active .lightbox-content {
-            transform: scale(1) translateY(0);
-            opacity: 1;
+            transform: scale(1);
         }
-
         .image-lightbox .lightbox-content img {
             display: block;
-            max-width: 92vw;
-            max-height: 85vh;
-            object-fit: contain;
             width: auto;
             height: auto;
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
         }
-
         .image-lightbox .lightbox-close {
             position: absolute;
-            top: 16px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.10);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            top: 20px;
+            right: 28px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
             color: #fff;
-            font-size: 1.5rem;
-            width: 44px;
-            height: 44px;
+            font-size: 2rem;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: var(--transition-smooth);
-            backdrop-filter: blur(8px);
+            transition: background 0.2s ease, transform 0.2s ease;
+            backdrop-filter: blur(4px);
             z-index: 10;
         }
-
         .image-lightbox .lightbox-close:hover {
-            background: rgba(255, 255, 255, 0.20);
+            background: rgba(255, 255, 255, 0.3);
             transform: rotate(90deg);
         }
-
         .image-lightbox .lightbox-caption {
             position: absolute;
-            bottom: 20px;
+            bottom: 24px;
             left: 0;
             right: 0;
             text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
             pointer-events: none;
-            padding: 0 1.5rem;
-            font-weight: 400;
+            padding: 0 1rem;
         }
 
-        /* ──────────────────────────────────────────────────────────────
-           SKELETON – ENHANCED
-           ────────────────────────────────────────────────────────────── */
+        .seller-card {
+            border: 1px solid rgba(44, 122, 94, 0.12);
+            border-radius: 1.25rem;
+            transition: all 0.2s;
+        }
+        .seller-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        .badge-trust {
+            background: #fef7e0;
+            color: #b87c00;
+            border-radius: 50px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .review-item {
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .review-item:hover {
+            border-left-color: var(--accent);
+            background: #fefcf8;
+            transform: translateX(3px);
+        }
+
+        .hotspot-badge {
+            background: var(--accent-light);
+            color: var(--accent-dark);
+            border-radius: 50px;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .rating-stars i {
+            color: #f5b042;
+            margin-right: 2px;
+        }
+
+        .listing-type-badge {
+            border-radius: 50px;
+            padding: 0.25rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .listing-type-sell {
+            background: #e3f5ec;
+            color: #1e7b4a;
+        }
+        .listing-type-wanted {
+            background: #fff3e0;
+            color: #b87c00;
+        }
+        .listing-type-freebie {
+            background: #e3f0ff;
+            color: #0d6efd;
+        }
+        .listing-type-service {
+            background: #f3e8ff;
+            color: #6f42c1;
+        }
+
+        .badge-status-detail {
+            border-radius: 50px;
+            padding: 0.25rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .badge-active {
+            background: #e3f5ec;
+            color: #1e7b4a;
+        }
+        .badge-sold {
+            background: #f0f0f0;
+            color: #5a6268;
+        }
+        .badge-expired {
+            background: #ffe6e5;
+            color: #c23d2e;
+        }
+
+        .seller-badge-item {
+            background: #f0f7f3;
+            color: var(--accent-dark);
+            border-radius: 50px;
+            padding: 0.15rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-right: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .progress-bar-custom {
+            background: #eef2f0;
+            border-radius: 50px;
+            height: 8px;
+            overflow: hidden;
+        }
+        .progress-bar-custom .progress-fill {
+            height: 100%;
+            border-radius: 50px;
+            background: var(--accent);
+            transition: width 0.6s ease;
+        }
+
+        .trust-item {
+            font-size: 0.85rem;
+        }
+        .trust-item .fas {
+            width: 18px;
+        }
+
+        /* ── Owner action button ── */
+        #ownerActions .btn-manage {
+            background: var(--accent);
+            color: white;
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            width: 100%;
+        }
+        #ownerActions .btn-manage:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(44, 122, 94, 0.2);
+        }
+
+        /* ── Seller contact info ── */
+        .seller-contact-info {
+            background: #f8faf9;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+        }
+        .seller-contact-info .info-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.15rem 0;
+        }
+        .seller-contact-info .info-row i {
+            width: 18px;
+            color: var(--accent);
+        }
+        .seller-contact-info .info-row .label {
+            font-weight: 500;
+            margin-right: 0.25rem;
+        }
+        .visibility-hidden-note {
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 0.3rem;
+        }
+
+        /* ── Skeleton Loader ── */
         .skeleton {
             background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
             background-size: 200% 100%;
             animation: shimmer 1.4s infinite;
             border-radius: 8px;
         }
-
         @keyframes shimmer {
             0% {
                 background-position: 200% 0;
@@ -812,19 +345,18 @@
                 background-position: -200% 0;
             }
         }
-
         .skeleton-image {
             width: 100%;
             aspect-ratio: 4 / 3;
-            border-radius: var(--card-radius);
+            border-radius: 1.5rem;
         }
         .skeleton-title {
-            height: 30px;
-            width: 70%;
+            height: 28px;
+            width: 60%;
             margin-bottom: 1rem;
         }
         .skeleton-text {
-            height: 14px;
+            height: 16px;
             margin-bottom: 0.5rem;
         }
         .skeleton-text.short {
@@ -834,101 +366,31 @@
             width: 80%;
         }
         .skeleton-price {
-            height: 38px;
+            height: 36px;
             width: 40%;
             margin-bottom: 1rem;
         }
         .skeleton-seller {
-            height: 120px;
-            border-radius: var(--card-radius);
+            height: 80px;
+            border-radius: 1.25rem;
             margin-bottom: 1rem;
         }
         .skeleton-badge {
-            height: 26px;
+            height: 24px;
             width: 80px;
             border-radius: 50px;
             display: inline-block;
-            margin-right: 0.4rem;
+            margin-right: 0.5rem;
         }
         .skeleton-review {
-            height: 72px;
-            border-radius: 10px;
+            height: 80px;
+            border-radius: 0.75rem;
             margin-bottom: 0.5rem;
         }
-        .skeleton-chip {
-            height: 30px;
-            width: 100px;
-            border-radius: 50px;
-            display: inline-block;
-            margin-right: 0.3rem;
-            margin-bottom: 0.3rem;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           SCROLL TOP
-           ────────────────────────────────────────────────────────────── */
-        .scroll-top-btn {
-            position: fixed;
-            right: 1.5rem;
-            bottom: 1.5rem;
-            z-index: 1080;
-            width: 52px;
-            height: 52px;
-            border: none;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--accent);
-            color: #ffffff;
-            box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(14px);
-            transition: var(--transition-smooth);
-            cursor: pointer;
-        }
-
-        .scroll-top-btn:hover {
-            background: var(--accent-dark);
-            transform: translateY(10px) scale(1.05);
-            box-shadow: 0 12px 36px rgba(44, 122, 94, 0.30);
-        }
-
-        .scroll-top-btn.is-visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
 
         @media (max-width: 768px) {
-            .scroll-top-btn {
-                right: 1rem;
-                bottom: 5.5rem;
-                width: 44px;
-                height: 44px;
-            }
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           RESPONSIVE
-           ────────────────────────────────────────────────────────────── */
-        @media (max-width: 992px) {
             .listing-detail-sidebar {
                 margin-top: 2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .price-display .amount {
-                font-size: 1.5rem;
-            }
-            .seller-card .seller-stats {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.25rem;
-            }
-            .trust-items {
-                grid-template-columns: 1fr;
             }
             .image-lightbox {
                 padding: 1rem;
@@ -942,156 +404,18 @@
                 max-height: 80vh;
             }
             .image-lightbox .lightbox-close {
-                top: 10px;
-                right: 12px;
-                width: 36px;
-                height: 36px;
-                font-size: 1.2rem;
-            }
-            .listing-image-wrapper .image-actions {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            .listing-image-wrapper .image-actions .btn-icon {
-                width: 34px;
-                height: 34px;
-                font-size: 0.7rem;
+                top: 12px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
             }
         }
 
-        @media (max-width: 576px) {
-            .seller-card .seller-header {
-                flex-wrap: wrap;
-            }
-            .seller-card .seller-stats .stat .number {
-                font-size: 0.9rem;
-            }
-            .review-item .review-header {
-                gap: 0.3rem;
-            }
-            .review-item .review-header .reviewer {
-                font-size: 0.8rem;
-            }
-            .dashboard-card {
-                border-radius: 16px;
-                padding: 0.75rem !important;
-            }
-            .listing-image-wrapper {
-                aspect-ratio: 4 / 3;
-            }
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           BREADCRUMB – preserve
-           ────────────────────────────────────────────────────────────── */
-        #breadcrumb-placeholder nav {
-            background: transparent !important;
-            padding: 0.75rem 0 0.25rem 0 !important;
-        }
-        #breadcrumb-placeholder .breadcrumb {
-            background: transparent;
-            padding: 0;
-            margin: 0;
-            font-size: 0.8rem;
-        }
-        #breadcrumb-placeholder .breadcrumb-item a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        #breadcrumb-placeholder .breadcrumb-item a:hover {
-            color: var(--accent-dark);
-            text-decoration: underline;
-        }
-        #breadcrumb-placeholder .breadcrumb-item.active {
-            color: #5f7775;
-            font-weight: 500;
-        }
-        #breadcrumb-placeholder .breadcrumb-item+.breadcrumb-item::before {
-            color: #b0c6c0;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           TOOLTIP
-           ────────────────────────────────────────────────────────────── */
-        .tooltip-inner {
-            background: #14211f;
-            font-weight: 500;
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-        }
-        .tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
-        .tooltip.bs-tooltip-top .tooltip-arrow::before {
-            border-top-color: #14211f;
-        }
-
-        /* ──────────────────────────────────────────────────────────────
-           MISC
-           ────────────────────────────────────────────────────────────── */
-        .text-accent {
-            color: var(--accent);
-        }
-
-        .fw-700 {
-            font-weight: 700;
-        }
-
-        .gap-1 {
-            gap: 0.25rem;
-        }
-        .gap-2 {
-            gap: 0.5rem;
-        }
-        .gap-3 {
-            gap: 1rem;
-        }
-
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-4px);
-            }
-        }
-
+        /* ── Error state ── */
         .error-icon {
             font-size: 4rem;
             color: #f5b042;
-        }
-
-        .divider-dash {
-            border: none;
-            border-top: 1.5px dashed rgba(44, 122, 94, 0.10);
-            margin: 1rem 0;
-        }
-
-        .badge-verify {
-            background: rgba(44, 122, 94, 0.10);
-            color: var(--accent-dark);
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.4px;
-            text-transform: uppercase;
-            display: inline-block;
-            border: 1px solid rgba(44, 122, 94, 0.08);
-            backdrop-filter: blur(4px);
-        }
-
-        /* ─── Mobile nav tweaks ─── */
-        .dashboard-mobile-actions .action-link.active {
-            background: var(--accent);
-            color: white;
-        }
-        .dashboard-mobile-actions .action-link.active i {
-            color: white;
         }
     </style>
 </head>
@@ -1109,12 +433,12 @@
             <!-- ═══ SKELETON LOADER ═══ -->
             <div id="skeletonLoader">
                 <div class="row g-4">
+                    <!-- Left column skeleton -->
                     <div class="col-lg-7">
                         <div class="skeleton skeleton-image"></div>
                         <div class="dashboard-card p-4 mt-3">
                             <div class="skeleton skeleton-title"></div>
-                            <div class="d-flex gap-2 mb-3 flex-wrap">
-                                <div class="skeleton skeleton-badge"></div>
+                            <div class="d-flex gap-2 mb-3">
                                 <div class="skeleton skeleton-badge"></div>
                                 <div class="skeleton skeleton-badge"></div>
                                 <div class="skeleton skeleton-badge"></div>
@@ -1124,17 +448,18 @@
                             <div class="skeleton skeleton-text"></div>
                             <div class="skeleton skeleton-text"></div>
                             <hr />
-                            <div class="skeleton skeleton-text short"></div>
-                            <div class="d-flex gap-2 mt-2 flex-wrap">
-                                <div class="skeleton skeleton-chip"></div>
-                                <div class="skeleton skeleton-chip"></div>
-                                <div class="skeleton skeleton-chip"></div>
+                            <div class="skeleton skeleton-text" style="width:40%;"></div>
+                            <div class="d-flex gap-2 mt-2">
+                                <div class="skeleton skeleton-badge"></div>
+                                <div class="skeleton skeleton-badge"></div>
+                                <div class="skeleton skeleton-badge"></div>
                             </div>
                         </div>
                     </div>
+                    <!-- Right column skeleton -->
                     <div class="col-lg-5 listing-detail-sidebar">
                         <div class="skeleton skeleton-seller"></div>
-                        <div class="dashboard-card p-4 mt-3">
+                        <div class="dashboard-card p-4">
                             <div class="skeleton skeleton-text" style="width:40%;"></div>
                             <div class="skeleton skeleton-text"></div>
                             <div class="skeleton skeleton-text"></div>
@@ -1153,7 +478,7 @@
                     <i class="fas fa-exclamation-triangle error-icon mb-4"></i>
                     <h3>Listing not found</h3>
                     <p class="text-muted" id="errorMessage">The listing you are looking for does not exist or you don't have permission to view it.</p>
-                    <a href="main.html" class="btn btn-primary-custom mt-3" style="width:auto; padding:0.6rem 2rem;">
+                    <a href="main.html" class="btn btn-primary-custom mt-3" data-bs-toggle="tooltip" title="Go to dashboard">
                         <i class="fas fa-arrow-left me-2"></i>Go to Dashboard
                     </a>
                 </div>
@@ -1165,75 +490,67 @@
 
                     <!-- ─── LEFT COLUMN ─── -->
                     <div class="col-lg-7">
-
                         <!-- Image -->
-                        <div class="listing-image-wrapper" id="listingImageContainer" role="button" tabindex="0" aria-label="View listing image full size">
+                        <div class="listing-image-carousel mb-4" id="listingImageContainer" role="button" tabindex="0" aria-label="View listing image full size">
                             <img id="listingImage" src="" alt="Listing image" style="display: none;" />
-                            <div id="imagePlaceholder" class="image-placeholder">
-                                <i class="fas fa-image"></i>
+                            <div id="imagePlaceholder" class="text-muted text-center p-4">
+                                <i class="fas fa-image fa-3x mb-2"></i>
                                 <p>No image uploaded</p>
                             </div>
-                            <div class="image-overlay"></div>
-                            <div class="image-actions">
-                                <button class="btn-icon" id="expandImageBtn" data-bs-toggle="tooltip" title="View full size">
-                                    <i class="fas fa-expand"></i>
-                                </button>
-                            </div>
+                            <span class="click-hint"><i class="fas fa-expand me-1"></i>Click to enlarge</span>
                         </div>
 
                         <!-- Details card -->
-                        <div class="dashboard-card p-4 mt-4">
-
-                            <!-- Title & promo badges -->
+                        <div class="dashboard-card p-4 mb-4">
+                            <!-- Title & badges -->
                             <div class="d-flex flex-wrap align-items-start justify-content-between gap-2 mb-3">
-                                <h2 id="listingTitle" class="fw-bold mb-0" style="font-size:1.5rem; color:#14211f;">Loading...</h2>
-                                <div id="promotionBadges" class="d-flex gap-1 flex-wrap"></div>
+                                <h2 id="listingTitle" class="fw-bold mb-0">Loading...</h2>
+                                <div class="d-flex gap-1 flex-wrap" id="promotionBadges"></div>
                             </div>
 
-                            <!-- Tags -->
+                            <!-- Category + Badge + Type + Status -->
                             <div class="d-flex flex-wrap gap-2 mb-3">
-                                <span class="tag-badge category" id="listingCategory">
+                                <span class="badge bg-white text-dark border px-3 py-2 rounded-pill" id="listingCategory">
                                     <i class="fas fa-tag me-1"></i> <span>Loading…</span>
                                 </span>
-                                <span class="tag-badge badge-tag" id="listingBadgeDisplay">
+                                <span class="badge bg-white text-dark border px-3 py-2 rounded-pill" id="listingBadgeDisplay">
                                     <i class="fas fa-medal me-1"></i> <span>—</span>
                                 </span>
-                                <span class="tag-badge" id="listingTypeBadge">—</span>
-                                <span class="tag-badge" id="statusBadgeDetail">—</span>
+                                <span class="listing-type-badge" id="listingTypeBadge">—</span>
+                                <span class="badge-status-detail" id="statusBadgeDetail">—</span>
                             </div>
 
                             <!-- Price -->
-                            <div class="price-display mb-4">
-                                <span class="amount" id="listingPrice">—</span>
-                                <span class="sub"><i class="fas fa-handshake me-1"></i>Cash or transfer at meetup</span>
+                            <div class="mb-4">
+                                <div class="display-6 fw-bold text-success" id="listingPrice">—</div>
+                                <div class="small text-muted">Cash or transfer at meetup</div>
                             </div>
 
                             <!-- Owner action (Manage Listing) -->
                             <div id="ownerActions" style="display: none;" class="mb-3"></div>
 
                             <!-- Description -->
-                            <h5 class="fw-bold" style="font-size:0.9rem; color:#14211f;"><i class="fas fa-align-left me-2 text-accent"></i>Description</h5>
-                            <p class="text-muted" id="listingDescription" style="white-space: pre-wrap; font-size:0.9rem; line-height:1.7;"></p>
+                            <h5 class="fw-semibold">Description</h5>
+                            <p class="text-muted" id="listingDescription" style="white-space: pre-wrap;"></p>
 
-                            <hr class="divider-dash" />
+                            <hr />
 
                             <!-- Hotspots -->
-                            <h5 class="fw-bold" style="font-size:0.9rem; color:#14211f;"><i class="fas fa-map-pin me-2 text-accent"></i>Safe meeting spots</h5>
+                            <h5 class="fw-semibold"><i class="fas fa-map-pin me-2"></i>Safe meeting spots</h5>
                             <div id="hotspotsList" class="d-flex flex-wrap gap-2 mt-2"></div>
 
                             <!-- Location -->
                             <div class="mt-3 small text-muted">
-                                <i class="fas fa-map-marker-alt me-1 text-accent"></i>
-                                Location: <span id="listingLocation">—</span>
+                                <i class="fas fa-map-marker-alt me-1"></i> Location: <span id="listingLocation">—</span>
                             </div>
 
-                            <div class="alert alert-light border mt-3 small" style="border-radius:12px; background:#f8faf9; border-color:rgba(44,122,94,0.06) !important;">
-                                <i class="fas fa-shield-alt text-accent me-2"></i>
+                            <div class="alert alert-light border mt-3 small">
+                                <i class="fas fa-shield-alt text-success me-2"></i>
                                 <strong>Campus safety tip:</strong> Always meet in a public, well‑lit area like those listed above. Bring a friend if possible.
                             </div>
 
                             <!-- Meta info -->
-                            <div class="text-muted small mt-2" style="font-size:0.7rem;">
+                            <div class="text-muted small mt-2">
                                 Listing ID: <span id="listingIdMeta">—</span> &middot; Created: <span id="createdDateMeta">—</span>
                             </div>
                         </div>
@@ -1243,119 +560,100 @@
                     <div class="col-lg-5 listing-detail-sidebar">
 
                         <!-- Seller card -->
-                        <div class="seller-card" id="sellerCard">
-
-                            <div class="seller-header">
-                                <img id="sellerAvatar" src="" alt="Seller avatar" class="seller-avatar" style="display: none;" />
-                                <div id="sellerAvatarFallback" class="seller-avatar fallback" style="display: flex;">
-                                    <i class="fas fa-user"></i>
+                        <div class="seller-card p-4 mb-4">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="flex-shrink-0 seller-avatar-wrapper" role="button" tabindex="0" aria-label="View seller profile picture full size">
+                                    <img id="sellerAvatar" src="" alt="Seller avatar"
+                                    style="width:56px; height:56px; border-radius:50%; object-fit:cover; background:#f1f3f2; display:none;" />
+                                    <i id="sellerAvatarFallback" class="fas fa-user-circle fa-3x text-secondary" style="border-radius:50%;"></i>
+                                    <span class="avatar-hint"><i class="fas fa-expand"></i></span>
                                 </div>
                                 <div>
-                                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        <div class="seller-name" id="sellerName">—</div>
-                                        <span class="seller-verified" id="sellerVerifiedBadge">
-                                            <i class="fas fa-check-circle"></i> Verified
-                                        </span>
+                                    <h5 class="fw-bold mb-0" id="sellerName">—</h5>
+                                    <div class="small text-muted" id="sellerDepartment">—</div>
+                                </div>
+                            </div>
+
+                            <!-- Seller contact info (hidden if visibility false) -->
+                            <div id="sellerContactInfo" style="display: none;">
+                                <div class="seller-contact-info">
+                                    <div class="info-row">
+                                        <i class="fas fa-envelope"></i>
+                                        <span><span class="label">Email:</span> <span id="sellerEmail">—</span></span>
                                     </div>
-                                    <div class="seller-dept" id="sellerDepartment">—</div>
+                                    <div class="info-row">
+                                        <i class="fas fa-phone"></i>
+                                        <span><span class="label">Phone:</span> <span id="sellerPhone">—</span></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        <span><span class="label">Level:</span> <span id="sellerLevel">—</span></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <i class="fas fa-id-card"></i>
+                                        <span><span class="label">Matric:</span> <span id="sellerMatric">—</span></span>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- Stats -->
-                            <div class="seller-stats">
-                                <div class="stat">
-                                    <div class="number" id="sellerRating">0.0</div>
-                                    <div class="label">Rating</div>
-                                </div>
-                                <div class="stat">
-                                    <div class="number" id="sellerTotalReviews">0</div>
-                                    <div class="label">Reviews</div>
-                                </div>
-                                <div class="stat">
-                                    <div class="number" id="memberSince">—</div>
-                                    <div class="label">Member</div>
-                                </div>
-                            </div>
-
-                            <!-- Seller badges -->
-                            <div class="seller-badges" id="sellerBadgesContainer"></div>
-
-                            <!-- Contact toggle -->
-                            <button class="seller-contact-toggle" id="contactToggleBtn">
-                                <i class="fas fa-chevron-right" id="contactToggleIcon"></i>
-                                <span id="contactToggleLabel">Show contact info</span>
-                            </button>
-
-                            <!-- Contact info -->
-                            <div class="seller-contact-info" id="sellerContactInfo">
-                                
-                                <div class="row-item">
-                                    <i class="fas fa-phone"></i>
-                                    <span><span class="label">Phone:</span> <span id="sellerPhone">—</span></span>
-                                </div>
-                                <div class="row-item">
-                                    <i class="fas fa-graduation-cap"></i>
-                                    <span><span class="label">Level:</span> <span id="sellerLevel">—</span></span>
-                                </div>
-                                <div class="row-item">
-                                    <i class="fas fa-id-card"></i>
-                                    <span><span class="label">Matric:</span> <span id="sellerMatric">—</span></span>
-                                </div>
-                            </div>
-
-                            <div id="visibilityNote" class="text-muted small mt-2" style="display: none; font-style:italic;">
+                            <div id="visibilityNote" class="visibility-hidden-note" style="display: none;">
                                 <i class="fas fa-eye-slash me-1"></i> Contact info hidden by seller.
                             </div>
 
-                            <!-- Action buttons -->
-                            <div class="mt-3 d-flex flex-column gap-2">
-                                <button id="contactSellerBtn" class="btn-primary-custom" data-bs-toggle="tooltip" title="Contact seller">
-                                    <i class="fas fa-envelope me-2"></i>Contact seller
-                                </button>
+                            <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+                                <div>
+                                    <span class="fw-bold" id="sellerRating">0.0</span> <span class="text-muted">/5</span>
+                                    <div class="rating-stars d-inline-block ms-2" id="sellerStars"></div>
+                                </div>
+                                <span class="badge-trust" id="sellerVerifiedBadge">✓ Verified student</span>
                             </div>
+
+                            <div class="mb-3">
+                                <div class="small text-muted">Member since <span id="memberSince">—</span></div>
+                                <div class="small text-muted">
+                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                    <span id="sellerTotalReviews">0</span> reviews
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="sellerBadgesContainer">
+                                <!-- dynamic badges -->
+                            </div>
+
+                            <button id="contactSellerBtn" class="btn btn-primary-custom w-100" data-bs-toggle="tooltip" title="Contact seller">
+                                <i class="fas fa-envelope me-2"></i>Contact seller
+                            </button>
                         </div>
 
-                        <!-- Trust meter -->
-                        <div class="dashboard-card p-4 mt-4">
-                            <div class="card-header-custom">
-                                <i class="fas fa-shield-alt"></i>
-                                <h6>Trust &amp; credibility</h6>
+                        <!-- Trust summary -->
+                        <div class="dashboard-card p-4 mb-4">
+                            <h6 class="fw-bold"><i class="fas fa-shield-alt me-2"></i>Trust &amp; credibility</h6>
+                            <div class="progress-bar-custom mt-2 mb-2">
+                                <div class="progress-fill" id="trustMeterFill" style="width: 0%;"></div>
                             </div>
-                            <div class="trust-meter">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="meter-label">Trust score</span>
-                                    <span class="meter-score" id="trustScoreDisplay">0%</span>
-                                </div>
-                                <div class="meter-bar">
-                                    <div class="fill" id="trustMeterFill" style="width: 0%;"></div>
-                                </div>
-                                <p class="meter-label mt-1" id="trustMessage">Based on verification and reviews</p>
-                            </div>
-                            <div class="trust-items" id="trustItemsContainer">
-                                <div class="item" id="emailVerifiedItem">
-                                    <i class="fas fa-envelope"></i> Email verified
-                                </div>
-                                <div class="item" id="hallVerifiedItem">
-                                    <i class="fas fa-building"></i> Hall pending
-                                </div>
-                                <div class="item" id="studentIdItem">
-                                    <i class="fas fa-id-card"></i> ID pending
-                                </div>
-                            </div>
+                            <p class="small text-muted" id="trustMessage">Based on verification and reviews</p>
+                            <ul class="list-unstyled mt-3">
+                                <li class="trust-item mb-2" id="emailVerifiedItem">
+                                    <i class="fas fa-envelope text-success me-2"></i> Email verified
+                                </li>
+                                <li class="trust-item mb-2" id="hallVerifiedItem">
+                                    <i class="fas fa-building text-muted me-2"></i> Hall verification pending
+                                </li>
+                                <li class="trust-item mb-2" id="studentIdItem">
+                                    <i class="fas fa-id-card text-muted me-2"></i> Student ID not yet verified
+                                </li>
+                            </ul>
                         </div>
 
-                        <!-- Reviews -->
-                        <div class="dashboard-card p-4 mt-4">
-                            <div class="card-header-custom">
-                                <i class="fas fa-star" style="color:#f5b042;"></i>
-                                <h6>Reviews <span class="text-muted fw-normal" id="reviewCountLabel">(0)</span></h6>
+                        <!-- Reviews section -->
+                        <div class="dashboard-card p-4">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-star me-2" style="color: #f5b042;"></i>
+                                Reviews <span class="text-muted fw-normal" id="reviewCountLabel">(0)</span>
+                            </h6>
+                            <div id="reviewsList">
+                                <div class="text-muted text-center py-3">Loading reviews…</div>
                             </div>
-                            <div id="reviewsList" class="mt-2">
-                                <div class="text-center text-muted py-3" style="font-size:0.85rem;">
-                                    <i class="fas fa-spinner fa-spin me-2"></i>Loading reviews…
-                                </div>
-                            </div>
-                        </div> <br><br>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1462,7 +760,7 @@
             let html = '';
             for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
             if (half) html += '<i class="fas fa-star-half-alt"></i>';
-            for (let i = full + (half ? 1 : 0); i < 5; i++) html += '<i class="far fa-star empty"></i>';
+            for (let i = full + (half ? 1 : 0); i < 5; i++) html += '<i class="far fa-star"></i>';
             return html;
         }
 
@@ -1472,13 +770,14 @@
         }
 
         function getListingTypeClass(type) {
-            const map = { sell: 'type-sell', wanted: 'type-wanted', freebie: 'type-freebie', service: 'type-service' };
+            const map = { sell: 'listing-type-sell', wanted: 'listing-type-wanted', freebie: 'listing-type-freebie',
+                service: 'listing-type-service' };
             return map[type] || '';
         }
 
         function getStatusClass(status) {
-            const map = { active: 'status-active', sold: 'status-sold', expired: 'status-expired' };
-            return map[status] || 'status-active';
+            const map = { active: 'badge-active', sold: 'badge-sold', expired: 'badge-expired' };
+            return map[status] || 'badge-active';
         }
 
         function getStatusLabel(status) {
@@ -1501,7 +800,7 @@
         function mapSellerBadge(code) {
             const map = {
                 'verified': '✓ Verified',
-                'trusted': '🤝 Trusted',
+                'trusted': 'Trusted Member',
                 'top_seller': '⭐ Top Seller',
                 'early_adopter': '🚀 Early Adopter',
                 'hall_verified': '🏠 Hall Verified'
@@ -1541,14 +840,17 @@
             lightboxOpen = false;
         }
 
+        // Click on overlay closes
         lightbox.addEventListener('click', function(e) {
             if (e.target === lightbox) {
                 closeLightbox();
             }
         });
 
+        // Close button
         document.getElementById('lightboxCloseBtn').addEventListener('click', closeLightbox);
 
+        // Keyboard: ESC to close
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && lightboxOpen) {
                 closeLightbox();
@@ -1559,51 +861,53 @@
         // 5.  Render main view
         // ──────────────────────────────────────────────────────────────
         function renderListing(data) {
-            // ── Title ──
+            // ── Basic info ──
             document.getElementById('listingTitle').innerText = data.title || 'Untitled';
 
-            // ── Category ──
+            // Category
             const catEl = document.getElementById('listingCategory');
             catEl.innerHTML = `<i class="fas fa-tag me-1"></i> ${escapeHtml(data.category || 'Uncategorized')}`;
 
-            // ── Badge ──
+            // Badge
             const badgeEl = document.getElementById('listingBadgeDisplay');
             const badgeLabel = mapBadgeDisplay(data.badge);
             badgeEl.innerHTML = `<i class="fas fa-medal me-1"></i> ${escapeHtml(badgeLabel)}`;
 
-            // ── Listing type ──
+            // Listing type
             const typeEl = document.getElementById('listingTypeBadge');
             const typeLabel = getListingTypeLabel(data.listing_type);
-            typeEl.className = `tag-badge ${getListingTypeClass(data.listing_type)}`;
+            typeEl.className = `listing-type-badge ${getListingTypeClass(data.listing_type)}`;
             typeEl.innerText = typeLabel;
 
-            // ── Status ──
+            // Status
             const statusEl = document.getElementById('statusBadgeDetail');
             const status = data.status || 'active';
-            statusEl.className = `tag-badge ${getStatusClass(status)}`;
+            statusEl.className = `badge-status-detail ${getStatusClass(status)}`;
             statusEl.innerText = getStatusLabel(status);
 
-            // ── Price ──
+            // Price
             document.getElementById('listingPrice').innerHTML = formatCurrency(data.price);
 
-            // ── Description ──
+            // Description
             document.getElementById('listingDescription').innerText = data.description || 'No description provided.';
 
-            // ── Location ──
+            // Location
             document.getElementById('listingLocation').innerText = data.location || 'Campus meetup';
 
-            // ── Meta ──
+            // Meta
             document.getElementById('listingIdMeta').innerText = data.id || '—';
-            document.getElementById('createdDateMeta').innerText = data.created_at ?data.created_at : '—';
+            document.getElementById('createdDateMeta').innerText = data.created_at ?
+                new Date(data.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) :
+                '—';
 
             // ── Promotion badges ──
             const promoContainer = document.getElementById('promotionBadges');
             let promoHtml = '';
             if (data.is_hot_sale) {
-                promoHtml += '<span class="promo-badge hot"><i class="fas fa-fire me-1"></i>Hot Sale</span> ';
+                promoHtml += '<span class="badge bg-danger"><i class="fas fa-fire me-1"></i>Hot Sale</span> ';
             }
             if (data.is_ads_banner) {
-                promoHtml += '<span class="promo-badge banner"><i class="fas fa-bullhorn me-1"></i>Banner</span>';
+                promoHtml += '<span class="badge bg-primary"><i class="fas fa-bullhorn me-1"></i>Banner</span>';
             }
             promoContainer.innerHTML = promoHtml;
 
@@ -1611,7 +915,6 @@
             const imgEl = document.getElementById('listingImage');
             const placeholder = document.getElementById('imagePlaceholder');
             const imageContainer = document.getElementById('listingImageContainer');
-            const expandBtn = document.getElementById('expandImageBtn');
             let imageSrc = null;
 
             if (data.image) {
@@ -1625,33 +928,33 @@
                 imageSrc = null;
             }
 
-            const openImageLightbox = function() {
+            // Click on image container opens lightbox
+            imageContainer.onclick = function() {
                 if (imageSrc) {
                     openLightbox(imageSrc, data.title || 'Listing image');
                 }
             };
-
-            imageContainer.onclick = openImageLightbox;
+            // Also allow keyboard enter/space
             imageContainer.onkeydown = function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    openImageLightbox();
+                    if (imageSrc) {
+                        openLightbox(imageSrc, data.title || 'Listing image');
+                    }
                 }
-            };
-            expandBtn.onclick = function(e) {
-                e.stopPropagation();
-                openImageLightbox();
             };
 
             // ── Hotspots ──
             const hotspotsList = document.getElementById('hotspotsList');
             if (data.hotspots && data.hotspots.length) {
                 hotspotsList.innerHTML = data.hotspots.map(function(h) {
-                    return `<span class="hotspot-chip"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(h)}</span>`;
+                    return `<span class="hotspot-badge"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(h)}</span>`;
                 }).join('');
             } else {
-                hotspotsList.innerHTML = '<span class="text-muted" style="font-size:0.85rem;">No meeting spots listed.</span>';
+                hotspotsList.innerHTML = '<span class="text-muted">No meeting spots listed.</span>';
             }
+
+            
 
             // ── Seller ──
             const seller = data.seller || {};
@@ -1663,112 +966,101 @@
 
             // ── Owner action (Manage Listing) ──
             const ownerActions = document.getElementById('ownerActions');
-
+            
             if (seller.is_owner === true) {
                 document.getElementById('contactSellerBtn').style.display = 'none';
                 ownerActions.style.display = 'block';
                 ownerActions.innerHTML = `
-                    <a href="my-listing-details.html?id=${data.id}&title=${encodeURIComponent(data.title)}" class="btn-manage">
+                    <a href="my-listing-details.html?id=${data.id}&title=${encodeURIComponent(data.title)}" class="btn btn-manage">
                         <i class="fas fa-edit me-2"></i>Manage Listing
                     </a>
                 `;
             } else {
                 ownerActions.style.display = 'none';
                 ownerActions.innerHTML = '';
-                document.getElementById('contactSellerBtn').style.display = 'flex';
             }
 
-            // ── Contact info ──
+            // Contact info – show only if visibility is true
             const contactInfo = document.getElementById('sellerContactInfo');
             const visibilityNote = document.getElementById('visibilityNote');
             const isVisible = seller.visibility === true;
 
             if (isVisible) {
-                contactInfo.classList.remove('open');
                 contactInfo.style.display = 'block';
                 visibilityNote.style.display = 'none';
+                document.getElementById('sellerEmail').innerText = seller.email || '—';
                 document.getElementById('sellerPhone').innerText = seller.phone || '—';
                 document.getElementById('sellerLevel').innerText = seller.level != null ? seller.level : '—';
                 document.getElementById('sellerMatric').innerText = seller.matric_no || '—';
             } else {
                 contactInfo.style.display = 'none';
-                contactInfo.classList.remove('open');
                 visibilityNote.style.display = 'block';
             }
 
-            // ── Avatar ──
+            // Avatar – click to enlarge
+            const avatarWrapper = document.querySelector('.seller-avatar-wrapper');
             const avatarImg = document.getElementById('sellerAvatar');
-            const fallback = document.getElementById('sellerAvatarFallback');
+            const fallbackIcon = document.getElementById('sellerAvatarFallback');
             let avatarSrc = null;
 
             if (seller.profile_picture) {
+                console.log(seller.profile_picture)
                 avatarImg.src = seller.profile_picture;
                 avatarImg.style.display = 'block';
-                fallback.style.display = 'none';
+                fallbackIcon.style.display = 'none';
                 avatarSrc = seller.profile_picture;
             } else {
                 avatarImg.style.display = 'none';
-                fallback.style.display = 'flex';
+                fallbackIcon.style.display = 'block';
                 avatarSrc = null;
             }
 
-            // Click avatar to enlarge
-            const avatarWrapper = document.querySelector('.seller-avatar');
-            if (avatarWrapper) {
-                avatarWrapper.onclick = function() {
+            avatarWrapper.onclick = function() {
+                if (avatarSrc) {
+                    openLightbox(avatarSrc, sellerName + ' — profile picture');
+                }
+            };
+            avatarWrapper.onkeydown = function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
                     if (avatarSrc) {
                         openLightbox(avatarSrc, sellerName + ' — profile picture');
                     }
-                };
-                avatarWrapper.onkeydown = function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        if (avatarSrc) {
-                            openLightbox(avatarSrc, sellerName + ' — profile picture');
-                        }
-                    }
-                };
-            }
+                }
+            };
 
-            // ── Rating ──
+            // Rating
             const avgRating = seller.average_rating || 0;
             document.getElementById('sellerRating').innerText = avgRating.toFixed(1);
+            document.getElementById('sellerStars').innerHTML = renderStars(avgRating);
 
-            // ── Member since ──
+            // Member since
             const memberSince = seller.member_since || '—';
             document.getElementById('memberSince').innerText = memberSince;
 
-            // ── Total reviews ──
+            // Total reviews (seller's total)
             const totalRev = seller.total_reviews || 0;
             document.getElementById('sellerTotalReviews').innerText = totalRev;
 
-            // ── Seller badges ──
+            // Seller badges
             const badgesContainer = document.getElementById('sellerBadgesContainer');
             if (seller.badges && seller.badges.length) {
                 badgesContainer.innerHTML = seller.badges.map(function(b) {
-                    return `<span class="badge-item">${escapeHtml(mapSellerBadge(b))}</span>`;
+                    return `<span class="seller-badge-item">${escapeHtml(mapSellerBadge(b))}</span>`;
                 }).join('');
             } else {
-                badgesContainer.innerHTML = '<span class="badge-item" style="background:#f1f3f2;color:#7a9490;">No badges</span>';
+                badgesContainer.innerHTML = '<span class="text-muted small">No badges yet.</span>';
             }
 
-            // ── Verified badge ──
+            // Verified badge
             const verifiedBadge = document.getElementById('sellerVerifiedBadge');
             const isVerified = seller.email_verified && seller.student_id_verified;
-            if (isVerified) {
-                verifiedBadge.className = 'seller-verified';
-                verifiedBadge.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
-            } else {
-                verifiedBadge.className = 'seller-verified unverified';
-                verifiedBadge.innerHTML = '<i class="fas fa-exclamation-circle"></i> Unverified';
-            }
+            verifiedBadge.innerText = isVerified ? 'Student ID: ✓ Verified student' : 'Student ID: ⚠️ Unverified';
+            verifiedBadge.className = 'badge-trust ' + (isVerified ? '' : 'bg-light text-danger');
 
             // ── Trust ──
             const trustScore = seller.trust_score || 0;
-            const fill = document.getElementById('trustMeterFill');
-            fill.style.width = Math.min(trustScore, 100) + '%';
-            document.getElementById('trustScoreDisplay').innerText = Math.min(trustScore, 100) + '%';
-
+            document.getElementById('trustMeterFill').style.width = Math.min(trustScore, 100) + '%';
             let trustMsg = 'Based on verification and reviews';
             if (trustScore >= 90) trustMsg = '⭐ Excellent reputation – highly trusted seller';
             else if (trustScore >= 70) trustMsg = '👍 Good standing – reliable seller';
@@ -1776,24 +1068,21 @@
             else trustMsg = '⚠️ Exercise caution – low trust score';
             document.getElementById('trustMessage').innerText = trustMsg;
 
-            // ── Trust items ──
+            // Trust items
             const emailItem = document.getElementById('emailVerifiedItem');
-            emailItem.className = 'item' + (seller.email_verified ? ' verified' : ' unverified');
             emailItem.innerHTML = seller.email_verified ?
-                '<i class="fas fa-envelope"></i> Email verified' :
-                '<i class="fas fa-envelope"></i> Email not verified';
+                '<i class="fas fa-envelope text-success me-2"></i> Email verified' :
+                '<i class="fas fa-envelope text-muted me-2"></i> Email not verified';
 
             const hallItem = document.getElementById('hallVerifiedItem');
-            hallItem.className = 'item' + (seller.hall_verified ? ' verified' : ' unverified');
             hallItem.innerHTML = seller.hall_verified ?
-                '<i class="fas fa-building"></i> Hall verified' :
-                '<i class="fas fa-building"></i> Hall pending';
+                '<i class="fas fa-building text-success me-2"></i> Hall verified' :
+                '<i class="fas fa-building text-muted me-2"></i> Hall verification pending';
 
             const studentItem = document.getElementById('studentIdItem');
-            studentItem.className = 'item' + (seller.student_id_verified ? ' verified' : ' unverified');
             studentItem.innerHTML = seller.student_id_verified ?
-                '<i class="fas fa-id-card"></i> Student ID verified' :
-                '<i class="fas fa-id-card"></i> ID pending';
+                '<i class="fas fa-id-card text-success me-2"></i> Student ID verified' :
+                '<i class="fas fa-id-card text-muted me-2"></i> Student ID not yet verified';
 
             // ── Reviews ──
             const reviews = data.reviews || [];
@@ -1802,145 +1091,25 @@
 
             const reviewsContainer = document.getElementById('reviewsList');
             if (!reviews.length) {
-                reviewsContainer.innerHTML =
-                    '<div class="text-muted text-center py-3" style="font-size:0.85rem;"><i class="fas fa-comment-slash me-2" style="opacity:0.3;"></i>No reviews yet.</div>';
+                reviewsContainer.innerHTML = '<div class="text-muted text-center py-3">No reviews yet. Be the first to leave a review!</div>';
             } else {
                 reviewsContainer.innerHTML = reviews.map(function(r) {
                     const from = r.from || 'Anonymous';
                     const rating = r.rating || 0;
                     const comment = r.comment || '';
-                    const date = r.date ? r.date : '—';
-                    const shortComment = comment.length > 120 ? comment.slice(0, 120) + '…' : comment;
-                    const hasMore = comment.length > 120;
+                    const date = r.date ? new Date(r.date).toLocaleDateString('en-GB', { day: 'numeric',
+                        month: 'short', year: 'numeric' }) : '—';
                     return `
-                        <div class="review-item">
-                            <div class="review-header">
-                                <span class="reviewer">${escapeHtml(from)}</span>
-                                <span class="review-stars">${renderStars(rating)}</span>
-                                <span class="review-date">${date}</span>
+                        <div class="review-item p-3 mb-2 rounded-3 border">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
+                                <strong>${escapeHtml(from)}</strong>
+                                <div class="rating-stars small">${renderStars(rating)}</div>
+                                <small class="text-muted">${date}</small>
                             </div>
-                            <p class="review-comment">
-                                ${escapeHtml(shortComment)}
-                                ${hasMore ? `<span class="read-more" data-full="${escapeHtml(comment)}">Read more</span>` : ''}
-                            </p>
+                            <p class="small text-muted mb-0">${escapeHtml(comment)}</p>
                         </div>
                     `;
                 }).join('');
-
-                // Read more toggle
-                reviewsContainer.querySelectorAll('.read-more').forEach(function(el) {
-                    el.addEventListener('click', function() {
-                        const full = this.getAttribute('data-full');
-                        const parent = this.closest('.review-comment');
-                        if (parent) {
-                            parent.innerHTML = escapeHtml(full) +
-                                ' <span class="read-more" style="cursor:pointer;">Show less</span>';
-                            const newToggle = parent.querySelector('.read-more');
-                            if (newToggle) {
-                                newToggle.addEventListener('click', function() {
-                                    const p = this.closest('.review-comment');
-                                    const orig = p.getAttribute('data-original') ||
-                                        escapeHtml(shortComment);
-                                    const hasMoreOrig = orig.length > 120;
-                                    p.innerHTML = escapeHtml(hasMoreOrig ? orig.slice(0, 120) + '…' :
-                                        orig) +
-                                        (hasMoreOrig ?
-                                            ` <span class="read-more" data-full="${escapeHtml(orig)}">Read more</span>` :
-                                            '');
-                                    // Re-bind
-                                    const newRm = p.querySelector('.read-more');
-                                    if (newRm) {
-                                        newRm.addEventListener('click', function() {
-                                            const fullText = this.getAttribute(
-                                            'data-full');
-                                            const par = this.closest('.review-comment');
-                                            par.innerHTML = escapeHtml(fullText) +
-                                                ' <span class="read-more" style="cursor:pointer;">Show less</span>';
-                                            const sl = par.querySelector('.read-more');
-                                            if (sl) {
-                                                sl.addEventListener('click', function() {
-                                                    const pp = this.closest(
-                                                    '.review-comment');
-                                                    const origText = pp
-                                                        .getAttribute(
-                                                        'data-original') ||
-                                                        escapeHtml(shortComment);
-                                                    pp.innerHTML = escapeHtml(
-                                                        origText.length > 120 ?
-                                                        origText.slice(0, 120) +
-                                                        '…' : origText) +
-                                                        (origText.length > 120 ?
-                                                            ` <span class="read-more" data-full="${escapeHtml(origText)}">Read more</span>` :
-                                                            '');
-                                                    const rm2 = pp.querySelector(
-                                                        '.read-more');
-                                                    if (rm2) {
-                                                        rm2.addEventListener(
-                                                            'click', function() {
-                                                                const ft = this
-                                                                    .getAttribute(
-                                                                    'data-full');
-                                                                const p2 = this
-                                                                    .closest(
-                                                                    '.review-comment'
-                                                                    );
-                                                                p2.innerHTML =
-                                                                    escapeHtml(
-                                                                        ft) +
-                                                                    ' <span class="read-more" style="cursor:pointer;">Show less</span>';
-                                                                const sl2 = p2
-                                                                    .querySelector(
-                                                                    '.read-more');
-                                                                if (sl2) {
-                                                                    sl2.addEventListener(
-                                                                        'click',
-                                                                        function() {
-                                                                            const p3 =
-                                                                                this
-                                                                                .closest(
-                                                                                    '.review-comment'
-                                                                                    );
-                                                                            const ot =
-                                                                                p3
-                                                                                .getAttribute(
-                                                                                    'data-original'
-                                                                                    ) ||
-                                                                                escapeHtml(
-                                                                                    shortComment
-                                                                                    );
-                                                                            p3.innerHTML =
-                                                                                escapeHtml(
-                                                                                    ot
-                                                                                    .length >
-                                                                                    120 ?
-                                                                                    ot
-                                                                                    .slice(
-                                                                                        0,
-                                                                                        120
-                                                                                        ) +
-                                                                                    '…' :
-                                                                                    ot
-                                                                                    ) +
-                                                                                (ot
-                                                                                    .length >
-                                                                                    120 ?
-                                                                                    ` <span class="read-more" data-full="${escapeHtml(ot)}">Read more</span>` :
-                                                                                    '');
-                                                                        }
-                                                                    );
-                                                                }
-                                                            }
-                                                        );
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    });
-                });
             }
         }
 
@@ -1982,72 +1151,7 @@
         }
 
         // ──────────────────────────────────────────────────────────────
-        // 7.  Contact toggle
-        // ──────────────────────────────────────────────────────────────
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('contactToggleBtn');
-            const contactInfo = document.getElementById('sellerContactInfo');
-            const toggleIcon = document.getElementById('contactToggleIcon');
-            const toggleLabel = document.getElementById('contactToggleLabel');
-
-            if (toggleBtn && contactInfo) {
-                toggleBtn.addEventListener('click', function() {
-                    const isOpen = contactInfo.classList.contains('open');
-                    if (isOpen) {
-                        contactInfo.classList.remove('open');
-                        toggleIcon.className = 'fas fa-chevron-right';
-                        toggleLabel.innerText = 'Show contact info';
-                    } else {
-                        contactInfo.classList.add('open');
-                        toggleIcon.className = 'fas fa-chevron-down';
-                        toggleLabel.innerText = 'Hide contact info';
-                    }
-                });
-            }
-        });
-
-        // ──────────────────────────────────────────────────────────────
-        // 8.  Contact seller
-        // ──────────────────────────────────────────────────────────────
-        document.addEventListener('DOMContentLoaded', function() {
-            document.addEventListener('click', function(e) {
-                const btn = e.target.closest('#contactSellerBtn');
-                if (!btn) return;
-
-                const sellerName = document.getElementById('sellerName').innerText || 'Seller';
-                const listingTitle = document.getElementById('listingTitle').innerText || 'item';
-
-                if (typeof formModal !== 'undefined' && formModal) {
-                    formModal.open({
-                        title: `Contact ${sellerName}`,
-                        formHtml: `
-                            <p class="mb-3">Send a message about <strong>${escapeHtml(listingTitle)}</strong></p>
-                            <div class="form-floating-group mb-3">
-                                <textarea class="form-control" id="contactMessage" rows="4" placeholder="Write your message here..." style="border-radius:14px; border:1.5px solid rgba(44,122,94,0.10); padding:0.9rem 1rem; width:100%;"></textarea>
-                                <label class="form-label" for="contactMessage" style="position:absolute; top:0; left:1rem; transform:translateY(-50%); background:white; padding:0 0.5rem; font-size:0.7rem; font-weight:700; color:var(--accent);">Message</label>
-                            </div>
-                            <p class="small text-muted"><i class="fas fa-lock me-1"></i> Your message will be sent to the seller's registered email.</p>
-                        `,
-                        submitLabel: 'Send message',
-                        cancelLabel: 'Cancel',
-                        onSubmit: function(form, submitBtn) {
-                            const msg = document.getElementById('contactMessage').value.trim();
-                            if (!msg) {
-                                showToast('Please write a message.', 'error');
-                                return;
-                            }
-                            showToast(`Message sent to ${sellerName}! (Demo)`, 'success');
-                            if (formModal.close) formModal.close();
-                        }
-                    });
-                } else {
-                    alert(`Contacting ${sellerName} about "${listingTitle}" – this is a demo.`);
-                }
-            });
-        });
-
-        // ──────────────────────────────────────────────────────────────
-        // 9.  Main load
+        // 7.  Main load
         // ──────────────────────────────────────────────────────────────
         async function loadListing() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -2073,17 +1177,6 @@
                 renderListing(data);
                 skeleton.style.display = 'none';
                 content.style.display = 'block';
-                // Trigger trust meter animation
-                setTimeout(function() {
-                    const fill = document.getElementById('trustMeterFill');
-                    if (fill) {
-                        const w = fill.style.width;
-                        fill.style.width = '0%';
-                        setTimeout(function() {
-                            fill.style.width = w;
-                        }, 100);
-                    }
-                }, 300);
             } catch (err) {
                 console.error('Load error:', err);
                 skeleton.style.display = 'none';
@@ -2099,7 +1192,22 @@
         }
 
         // ──────────────────────────────────────────────────────────────
-        // 10. Bootstrap
+        // 8.  Contact seller modal
+        // ──────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('#contactSellerBtn');
+                if (!btn) return;
+
+                const sellerName = document.getElementById('sellerName').innerText || 'Seller';
+                const listingTitle = document.getElementById('listingTitle').innerText || 'item';
+
+                alert(`Contacting ${sellerName} about "${listingTitle}" is not implemented in this demo.`);
+            });
+        });
+
+        // ──────────────────────────────────────────────────────────────
+        // 9.  Bootstrap
         // ──────────────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', loadListing);
     </script>

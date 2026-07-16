@@ -535,7 +535,7 @@
                     </div>
 
                 </div>
-            </div>
+            </div> <br><br>
 
         </div>
     </main>
@@ -623,7 +623,7 @@
         // 2. Config
         // ──────────────────────────────────────────────────────────────
         const NOTIFICATIONS_LIST_URL = NOTIFICATIONS_URL;
-        const PAGE_SIZE = 10;
+        const PER_PAGE = 10;
 
         let currentPage = 1;
         let totalPages = 1;
@@ -845,7 +845,7 @@
         async function loadNotifications(page = 1) {
             const query = new URLSearchParams({
                 page: page,
-                page_size: PAGE_SIZE
+                per_page: PER_PAGE
             });
             const url = NOTIFICATIONS_LIST_URL + '?' + query.toString();
 

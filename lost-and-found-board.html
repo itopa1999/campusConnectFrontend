@@ -359,7 +359,7 @@
   let allItems = [];
   let filteredItems = [];
   let currentPage = 1;
-  const pageSize = 10;
+  const perPage = 10;
   let totalPages = 0;
   let isLoading = false;
   let searchTerm = '';
@@ -489,7 +489,7 @@
         renderSkeleton(); // shows skeleton while fetching
       }
 
-      const url = `${LOST_AND_FOUND_URL}?page=${page}&page_size=${pageSize}`;
+      const url = `${LOST_AND_FOUND_URL}?page=${page}&per_page=${perPage}`;
       const response = await fetch(url, {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
