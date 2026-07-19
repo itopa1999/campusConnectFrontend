@@ -1282,7 +1282,7 @@
             <!-- Edit mode -->
             <div id="personalEdit" class="edit-section d-none">
               <div class="form-floating-label">
-                <input type="text" class="form-control" id="editFullName" placeholder=" " />
+                <input type="text" class="form-control" id="editFullName" disabled placeholder=" " />
                 <label class="form-label required" for="editFullName">Full name</label>
               </div>
               <div class="form-floating-label">
@@ -1631,7 +1631,7 @@
 
       emailVerifiedStatus.innerText = userData.emailVerified ? 'Verified ✓' : 'Not verified';
       emailVerifiedStatus.className = userData.emailVerified ? 'verified' : 'unverified';
-      studentIdStatus.innerText = userData.studentIdVerified ? 'Verified ✓' : 'Pending verification';
+      studentIdStatus.innerText = userData.studentIdVerified ? 'Verified ✓' : 'Not verified ';
       studentIdStatus.className = userData.studentIdVerified ? 'verified' : 'pending';
       if (userData.studentIdVerified)
         document.getElementById('uploadStudentIdBtn').style.display = 'none';
@@ -1864,14 +1864,10 @@
       }
 
       try {
-        const token = getCookie('access_token');
-        if (!token) throw new Error('Not authenticated');
-
         const response = await fetchWithAuth(PROFILE_URL, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(payload)
         });
@@ -1923,14 +1919,10 @@
       const realContent = document.getElementById('realContent');
 
       try {
-        const token = getCookie('access_token');
-        if (!token) throw new Error('Not authenticated');
-
         const response = await fetchWithAuth(PROFILE_URL, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'Authorization': `Bearer ${token}`
           }
         });
 
@@ -1990,11 +1982,6 @@
         skeleton.style.display = 'none';
         realContent.style.display = 'block';
         if (typeof AOS !== 'undefined') AOS.refresh();
-
-        const pointsFromCookie = getCookie('point_bal');
-        if (pointsFromCookie && parseInt(pointsFromCookie) !== userData.points) {
-          setCookie('point_bal', userData.points, 3);
-        }
 
       } catch (err) {
         console.error('Profile load error:', err);
@@ -2068,12 +2055,10 @@
           submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Updating...';
 
           try {
-            const token = getCookie('access_token');
             const response = await fetchWithAuth(AUTH_URL + 'change-password', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
               },
               body: JSON.stringify({
                 current_password: oldPassword,
@@ -2142,12 +2127,8 @@
           formData.append('student_id', file);
 
           try {
-            const token = getCookie('access_token');
             const response = await fetchWithAuth(AUTH_URL + 'upload-student-id', {
               method: 'PATCH',
-              headers: {
-                'Authorization': `Bearer ${token}`
-              },
               body: formData
             });
 
@@ -2240,15 +2221,9 @@
       formData.append('profile_picture', file);
 
       try {
-        const token = getCookie('access_token');
-        if (!token) throw new Error('Not authenticated');
-
         const uploadUrl = AUTH_URL + 'profile-picture';
         const response = await fetchWithAuth(uploadUrl, {
           method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
           body: formData
         });
 

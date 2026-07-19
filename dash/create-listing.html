@@ -1668,7 +1668,8 @@
 
         // ---- Get current points balance from cookie ----
         function getPointsBalance() {
-            return parseInt(getCookie('point_bal') || '0', 10);
+            const user = getUser();
+            return parseInt(user?.point_bal || '0', 10);
         }
 
         // ---- Calculate total points needed (base + promotions) ----
@@ -2102,12 +2103,8 @@
             formData.append('total_points_cost', totalPoints);
 
             try {
-                const token = getCookie('access_token');
                 const response = await fetchWithAuth(CAMPUS_URL + 'create-listing', {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
                     body: formData,
                 });
 
@@ -2198,7 +2195,6 @@
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
-                        ...getAuthHeaders()
                     }
                 });
 

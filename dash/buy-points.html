@@ -1315,7 +1315,7 @@
           const payload = { package_id: packageId, points, amount: price, gateway };
           const response = await fetchWithAuth(AUTH_URL + 'buy-points-initial', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
           const result = await response.json();
@@ -1373,7 +1373,7 @@
     const url = `${POINT_PACKAGES_URL}?${param}&page=${page}&per_page=${perPage}`;
     const response = await fetchWithAuth(url, {
       method: 'GET',
-      headers: { 'Accept': 'application/json', ...getAuthHeaders() }
+      headers: { 'Accept': 'application/json'}
     });
     if (!response.ok) {
       const err = await response.json();
@@ -1499,7 +1499,7 @@
         try {
           const response = await fetchWithAuth(AUTH_URL + 'retry-purchase', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+            headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({ purchase_id: purchaseId })
           });
           const result = await response.json();
@@ -1616,7 +1616,7 @@
       // 1. Fetch packages
       const packagesResponse = await fetchWithAuth(POINT_PACKAGES_URL, {
         method: 'GET',
-        headers: { 'Accept': 'application/json', ...getAuthHeaders() }
+        headers: { 'Accept': 'application/json'}
       });
       if (!packagesResponse.ok) {
         const err = await packagesResponse.json();
@@ -1628,7 +1628,8 @@
       renderPackages();
 
       // 2. Set points balance
-      const points = getCookie('point_bal') || '0';
+      const user = getUser();
+      const points = user?.point_bal || '0';
       document.getElementById('pointsBalanceDisplay').textContent = points;
 
       // 3. Load initial purchases

@@ -249,6 +249,7 @@
     .badge-active { background: #e3f5ec; color: #1e7b4a; }
     .badge-sold   { background: #f0f0f0; color: #5a6268; }
     .badge-expired{ background: #ffe6e5; color: #c23d2e; }
+    .badge-pending { background: #eef2f0; color: #697ce7; }
 
     /* ──────────────────────────────────────────────────────────────
        VIEW MODE – LABEL & VALUE
@@ -1114,7 +1115,7 @@
 
   isAuthenticated();
   injectBreadcrumb('Manage Listing');
-
+  const user = getUser();
   const LOOKUP_URL = CAMPUS_URL + 'get-lookup';
   const LISTING_DETAIL_URL = CAMPUS_URL + 'listing';
   const AUTO_REACTIVATE_URL = CAMPUS_URL + 'listing-auto-reactivate';
@@ -1219,7 +1220,7 @@
     const selected = container.querySelectorAll('input[type="checkbox"]:checked');
     let total = 0;
     selected.forEach(cb => total += parseInt(cb.dataset.points, 10));
-    const points = parseInt(getCookie('point_bal') || '0', 10);
+    const points = parseInt(user?.point_bal || '0', 10);
     if (total > 0) {
       info.textContent = `Selected promotions will deduct ${total} point(s) from your balance. You have ${points} points.`;
       info.style.color = total > points ? '#dc3545' : '#2c7a5e';
@@ -1277,7 +1278,7 @@
     const status = listingData.status || 'expired';
     const statusEl = document.getElementById('statusBadge');
     statusEl.className = `badge-status badge-${status}`;
-    statusEl.innerText = { active:'Active', sold:'Sold', expired:'Expired' }[status] || status;
+    statusEl.innerText = { active:'Active', sold:'Sold', expired:'Expired', pending:'Pending' }[status] || status;
 
     // Status action button
     const actionBtn = document.getElementById('statusActionBtn');
@@ -1289,6 +1290,9 @@
       actionBtn.innerText = 'Reactivate (cost 1 point)';
       actionBtn.className = 'btn btn-outline-warning';
       actionBtn.onclick = reactivateListing;
+    } else if (status === 'pending') {
+      actionBtn.innerText = 'Awaiting approval';
+      actionBtn.className = 'btn btn-outline-secondary';
     } else {
       actionBtn.style.display = 'none';
     }
@@ -1348,7 +1352,7 @@
     };
 
     // Points
-    userPoints = parseInt(getCookie('point_bal') || '0', 10);
+    userPoints = parseInt(user?.point_bal || '0', 10);
     document.getElementById('userPoints').innerText = userPoints;
 
     setupPromotionToggles();
@@ -1495,12 +1499,10 @@
     };
 
     try {
-      const token = getCookie('access_token');
       const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + listingData.id, {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
@@ -1534,12 +1536,10 @@
 
   async function performMarkAsSold() {
     try {
-      const token = getCookie('access_token');
       const response = await fetchWithAuth(CAMPUS_URL + 'mark-sold' + '/' + listingData.id, {
         method: 'PATCH',
         headers: {
           'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -1580,12 +1580,10 @@
 
   async function performReactivate() {
     try {
-      const token = getCookie('access_token');
       const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + listingData.id, {
         method: 'PATCH',
         headers: {
           'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ status: 'active' })
@@ -1635,12 +1633,10 @@
 
   async function performdeleteListing() {
     try {
-      const token = getCookie('access_token');
       const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + listingData.id, {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
       });
       const result = await response.json();
@@ -1675,14 +1671,10 @@
 
   // ─── Fetch listing data ─────────────────────────────────────
   async function fetchListingData(id) {
-    const token = getCookie('access_token');
-    if (!token) throw new Error('Not authenticated');
-
     const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + id, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`,
       }
     });
 
@@ -1706,7 +1698,7 @@
     listingData.is_ads_banner = listingData.is_ads_banner || false;
     listingData.auto_reactivate = listingData.auto_reactivate || false;
     listingData.editing_period_day = listingData.editing_period_day || 0;
-    userPoints = parseInt(getCookie('point_bal') || '0', 10);
+    userPoints = parseInt(user?.point_bal || '0', 10);
   }
 
   // ─── Promotion toggles ──────────────────────────────────────
@@ -1768,7 +1760,7 @@
     if (newState) {
       const advert = allAdvertTypes.find(a => a.value === type);
       const cost = advert ? advert.points : 0;
-      const points = parseInt(getCookie('point_bal') || '0', 10);
+      const points = parseInt(user?.point_bal || '0', 10);
       if (points < cost) {
         showToast(`Not enough points. You need ${cost} points for ${type}.`, 'error');
         toggle.checked = oldState;
@@ -1797,13 +1789,10 @@
         const payload = {};
         if (type === 'banner') payload.is_ads_banner = newState;
         else if (type === 'hot_sale') payload.is_hot_sales = newState;
-
-        const token = getCookie('access_token');
         const response = await fetchWithAuth(CAMPUS_URL + 'listing-update-ads/' + listingData.id, {
           method: 'PATCH',
           headers: {
             'Accept': 'application/json',
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(payload),
@@ -1821,7 +1810,7 @@
           await fetchListingData(listingData.id);
           renderViewMode();
           if (newState) {
-            const newPoints = parseInt(getCookie('point_bal') || '0', 10) - cost;
+            const newPoints = parseInt(user?.point_bal || '0', 10) - cost;
             setCookie('point_bal', newPoints, 3);
             document.getElementById('userPoints').innerText = newPoints;
             userPoints = newPoints;
@@ -1916,13 +1905,11 @@
     }
 
     try {
-      const token = getCookie('access_token');
       const payload = { auto_reactivate: newState };
       const response = await fetchWithAuth(`${AUTO_REACTIVATE_URL}/${listingData.id}`, {
         method: 'PATCH',
         headers: {
           'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
@@ -1988,12 +1975,9 @@
       try {
         const formData = new FormData();
         formData.append('image', file);
-
-        const token = getCookie('access_token');
         const uploadUrl = CAMPUS_URL + 'listing-upload-image/' + listingData.id;
         const response = await fetchWithAuth(uploadUrl, {
           method: 'PATCH',
-          headers: { 'Authorization': `Bearer ${token}` },
           body: formData,
         });
 
@@ -2055,16 +2039,10 @@
     content.style.display = 'none';
 
     try {
-      const token = getCookie('access_token');
-      if (!token) {
-        window.location.href = '../index.html';
-        return;
-      }
-
       // Fetch lookup data
       const lookupRes = await fetchWithAuth(LOOKUP_URL, {
         method: 'GET',
-        headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` }
+        headers: { 'Accept': 'application/json' }
       });
       if (!lookupRes.ok) throw new Error('Failed to fetch lookup');
       const lookupData = await lookupRes.json();

@@ -56,6 +56,7 @@
     .status-active { background: #eaf7f0; color: #2c7a5e; }
     .status-expired { background: #fff5f5; color: #dc3545; }
     .status-sold { background: #eef2f0; color: #5a6e6f; }
+    .status-pending { background: #eef2f0; color: #697ce7; }
     .review-item {
       border-left: 3px solid transparent;
       transition: all 0.2s;
@@ -190,6 +191,16 @@
         </div>
       </div>
 
+      <div class="col-6 col-md-3">
+        <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
+          <div class="stat-label">
+            <i class="fas fa-hourglass-half me-1"></i> Pending Listings
+          </div>
+          <div class="stat-value" id="pendingListingsCount">0</div>
+          <small class="text-muted">Awaiting approval</small>
+        </div>
+      </div>
+
       <!-- Listings Marked Sold -->
       <div class="col-6 col-md-3">
         <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4">
@@ -235,7 +246,7 @@
       </div>
 
       <!-- Points Balance -->
-      <div class="col-6 col-md-3">
+      <div class="col-12 col-md-3">
         <div class="dashboard-stat-card shadow-sm rounded-4 p-3 p-md-4 position-relative">
           <div class="stat-label">
             <i class="fas fa-coins me-1"></i> Points Balance
@@ -395,19 +406,11 @@
 
     skeleton.style.display = 'block';
     realContent.style.display = 'none';
-
-    const token = getCookie('access_token');  // from main.js
-    if (!token) {
-      window.location.href = '../index.html';
-      return;
-    }
-
     try {
       const response = await fetchWithAuth(CAMPUS_URL + 'dashboard', {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          ...getAuthHeaders()
         }
       });
 
@@ -423,12 +426,13 @@
       if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
 
       const data = result.data;
-
-      userPoints = parseInt(getCookie('point_bal') || '0', 10);
+      const user = getUser();
+      userPoints = parseInt(user?.point_bal || '0', 10);
 
       // --- Stats & overview ---
       document.getElementById('dashboardUserName').innerText = data.first_name || data.user || 'Student';
       document.getElementById('activeListingsCount').innerText = data.total_active;
+      document.getElementById('pendingListingsCount').innerText = data.total_pending;
       document.getElementById('MarkedsoldListings').innerText = data.total_marked_sold;
       document.getElementById('expiredListingsCount').innerText = data.total_expired;
       document.getElementById('soldListingsCount').innerText = data.total_sold;
@@ -479,6 +483,7 @@
         if (item.status === 'active') { statusClass = 'status-active'; statusText = 'Active'; }
         else if (item.status === 'expired') { statusClass = 'status-expired'; statusText = 'Expired'; }
         else if (item.status === 'sold') { statusClass = 'status-sold'; statusText = 'Sold'; }
+        else if (item.status === 'pending') { statusClass = 'status-pending'; statusText = 'Pending'; }
         
         let promotionBadges = '';
         if (item.is_hot_sale) {

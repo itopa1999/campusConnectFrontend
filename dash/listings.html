@@ -611,13 +611,11 @@
 
   // ─── API fetch for a specific section ──────────────────────
   async function fetchSection(section, page = 1, perPage = 8) {
-    const token = getCookie('access_token');
     const url = `${CAMPUS_URL}listings/categorized?section=${section}&page=${page}&per_page=${perPage}`;
     const response = await fetchWithAuth(url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`
       }
     });
     if (!response.ok) {
