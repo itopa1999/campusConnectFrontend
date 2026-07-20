@@ -790,6 +790,17 @@
     .dashboard-mobile-actions .action-link.active i {
       color: white;
     }
+
+    .expires-soon {
+      color: #dc3545;
+      font-weight: 600;
+    }
+    .expires-soon i {
+      color: #dc3545;
+    }
+    .expires-normal {
+      color: #5f7775;
+    }
   </style>
 </head>
 <body>
@@ -917,7 +928,9 @@
                   </div>
                   <span class="badge-status" id="statusBadge">Active</span>
                 </div>
-                <div class="text-muted small mb-3">Listing ID: <span id="listingIdBadge">--</span> · Created: <span id="createdDate">--</span></div>
+                <div class="text-muted small mb-3">Listing ID: <span id="listingIdBadge">--</span> · Created: <span id="createdDate">--</span>
+                <span>· Expires: <span id="expiresDate">--</span></span>
+                <span id="expiresIcon" class="ms-1"></span></div>
                 <div class="mt-3 d-flex flex-wrap gap-2">
                   <button id="statusActionBtn" class="btn btn-outline-custom" data-bs-toggle="tooltip" title="Update status">Mark as sold</button>
                   <button id="deleteListingBtn" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Delete listing">Delete listing</button>
@@ -1273,6 +1286,35 @@
 
     document.getElementById('listingIdBadge').innerText = listingData.id || '--';
     document.getElementById('createdDate').innerText = listingData.created_at ? listingData.created_at: '--';
+    
+    // ─── Expiration ────────────────────────────────────────────────
+    const expiresDateEl = document.getElementById('expiresDate');
+    const expiresIconEl = document.getElementById('expiresIcon');
+    if (listingData.expires_at) {
+      const expiresDate = new Date(listingData.expires_at);
+      const now = new Date();
+      const diffDays = Math.ceil((expiresDate - now) / (1000 * 60 * 60 * 24));
+      
+      // Format date
+      const dateStr = expiresDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      expiresDateEl.textContent = dateStr;
+
+      // Apply style and icon
+      if (diffDays <= 3) {
+        expiresDateEl.className = 'expires-soon';
+        expiresIconEl.innerHTML = '<i class="fas fa-exclamation-triangle" title="Expiring soon!"></i>';
+      } else {
+        expiresDateEl.className = 'expires-normal';
+        expiresIconEl.innerHTML = '<i class="far fa-clock" title="Expiration date"></i>';
+      }
+    } else {
+      expiresDateEl.textContent = 'No expiry';
+      expiresIconEl.innerHTML = '';
+    }
 
     // Status
     const status = listingData.status || 'expired';

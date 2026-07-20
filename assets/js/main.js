@@ -424,10 +424,13 @@ async function refreshAccessToken() {
   return true;
 }
 
-// ─── Rate Limit Modal ──────────────────────────────────────
-function showRateLimitModal(message = "Too many requests. Please wait a moment and try again.") {
+// ─── Rate Limit Modal with Countdown ────────────────────────────
+function showRateLimitModal(message, retryAfter = 60) {
+  // Remove any existing modal
   const existing = document.getElementById('rateLimitModal');
   if (existing) existing.remove();
+
+  // Create overlay
   const overlay = document.createElement('div');
   overlay.id = 'rateLimitModal';
   overlay.style.cssText = `
@@ -446,9 +449,11 @@ function showRateLimitModal(message = "Too many requests. Please wait a moment a
     padding: 1.5rem;
     animation: fadeIn 0.3s ease;
   `;
+
+  // Create modal container
   const modal = document.createElement('div');
   modal.style.cssText = `
-    max-width: 420px;
+    max-width: 440px;
     width: 100%;
     background: white;
     border-radius: 1.5rem;
@@ -457,39 +462,97 @@ function showRateLimitModal(message = "Too many requests. Please wait a moment a
     box-shadow: 0 24px 48px rgba(0,0,0,0.15);
     animation: slideUp 0.4s ease;
   `;
+
+  // Build initial HTML with a placeholder for the countdown
   modal.innerHTML = `
     <div style="font-size: 3rem; color: #f5b042; margin-bottom: 1rem;">
       <i class="fas fa-exclamation-triangle"></i>
     </div>
     <h2 style="font-weight: 700; font-size: 1.5rem; color: #1e2a2c; margin-bottom: 0.75rem;">Rate Limit Reached</h2>
-    <p style="color: #5a6e6f; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-      ${escapeHtml(message)}
+    <p style="color: #5a6e6f; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.5rem;">
+      Too many requests. Please try again in:  
     </p>
-    <button id="rateLimitRetryBtn" class="btn btn-primary-custom" style="min-width: 140px; padding: 0.6rem 1.5rem; border-radius: 40px; font-weight: 600; border: none; cursor: pointer;">
-      <i class="fas fa-check-circle me-2"></i> Okay
+    <p id="countdownDisplay" style="font-size: 1.1rem; font-weight: 600; color: #2c7a5e; margin-bottom: 1.5rem;">
+      Retry in ${formatTime(retryAfter)}
+    </p>
+    <button id="rateLimitRetryBtn" class="btn btn-primary-custom" style="min-width: 140px; padding: 0.6rem 1.5rem; border-radius: 40px; font-weight: 600; border: none; cursor: pointer;" disabled>
+      <i class="fas fa-hourglass-half me-2"></i> Wait ${formatTime(retryAfter)}
     </button>
   `;
+
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
+
+  // Inject styles (if not already present)
   if (!document.getElementById('rate-limit-styles')) {
     const style = document.createElement('style');
     style.id = 'rate-limit-styles';
     style.textContent = `
       @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+      #rateLimitModal .btn-primary-custom:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: #8faa9f;
+      }
     `;
     document.head.appendChild(style);
   }
+
+  // ─── Countdown logic ──────────────────────────────────────────
+  let remaining = retryAfter;
+  const countdownEl = document.getElementById('countdownDisplay');
   const retryBtn = document.getElementById('rateLimitRetryBtn');
-  if (retryBtn) {
-    retryBtn.addEventListener('click', function () {
-      overlay.remove();
-    });
+
+  function updateDisplay() {
+    const timeStr = formatTime(remaining);
+    countdownEl.textContent = `Retry in ${timeStr}`;
+    retryBtn.innerHTML = `<i class="fas fa-hourglass-half me-2"></i> Wait ${timeStr}`;
   }
+
+  const interval = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(interval);
+      countdownEl.textContent = 'You may try again now.';
+      retryBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i> Retry';
+      retryBtn.disabled = false;
+    } else {
+      updateDisplay();
+    }
+  }, 1000);
+
+  // ─── Button click handler ─────────────────────────────────────
+  retryBtn.addEventListener('click', function () {
+    if (this.disabled) return;
+    overlay.remove();
+    // Optionally reload or retry the request
+    location.reload(); // or you can call the original function again
+  });
+
+  // Close when clicking outside
   overlay.addEventListener('click', function (e) {
     if (e.target === overlay) overlay.remove();
   });
 }
+
+// ─── Human‑readable time formatter ──────────────────────────────
+function formatTime(seconds) {
+  if (seconds < 60) {
+    return `${seconds} second${seconds !== 1 ? 's' : ''}`;
+  }
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  let parts = [];
+  if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+  if (minutes > 0) parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+  if (secs > 0 && hours === 0) parts.push(`${secs} second${secs > 1 ? 's' : ''}`);
+  // If only seconds remain, show them (covered above)
+  return parts.join(' ');
+}
+
 
 // ─── Core fetch ─────────────────────────────────────────────
 async function fetchWithAuth(url, options = {}) {
@@ -500,7 +563,9 @@ async function fetchWithAuth(url, options = {}) {
   let response = await fetch(url, options);
 
   if (response.status === 429) {
-    showRateLimitModal();
+    const errorData = await response.json();
+    const retryAfter = errorData.retry_after || 60;
+    showRateLimitModal(errorData.message, retryAfter);
     throw new Error('Rate limit exceeded');
   }
 
@@ -1088,9 +1153,9 @@ async function performLogout() {
   }
 
   deleteAuthCookies();
-  setTimeout(() => {
-    window.location.href = '../index.html';
-  }, 3000);
+  // setTimeout(() => {
+  //   window.location.href = '../index.html';
+  // }, 3000);
 }
 
 // =========================================================================
