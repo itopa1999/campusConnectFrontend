@@ -15,11 +15,11 @@
             --bg-card: #ffffff;
             --bg-input: #f3f4f6;
             --bg-cat: #f3f4f6;
-            --bg-cat-active: #1a1a1a;
             --bg-banner: #1a1a1a;
             --bg-nav: rgba(255, 255, 255, 0.92);
             --bg-featured: #ffffff;
             --bg-img-placeholder: #f0f2f5;
+            --bg-sidebar: #ffffff;
 
             --text-primary: #1a1a1a;
             --text-secondary: #4a4a4a;
@@ -54,11 +54,11 @@
             --bg-card: #1e1e1e;
             --bg-input: #2a2a2a;
             --bg-cat: #2a2a2a;
-            --bg-cat-active: #f5f5f5;
             --bg-banner: #1a1a1a;
             --bg-nav: rgba(18, 18, 18, 0.92);
             --bg-featured: #1e1e1e;
             --bg-img-placeholder: #2a2a2a;
+            --bg-sidebar: #1e1e1e;
 
             --text-primary: #f0f0f0;
             --text-secondary: #c0c0c0;
@@ -94,6 +94,7 @@
             color: var(--text-primary);
             padding: 0 0 80px 0;
             transition: background var(--transition), color var(--transition);
+            overflow-x: hidden;
         }
 
         .app-container {
@@ -103,6 +104,7 @@
             min-height: 100vh;
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.04);
             transition: background var(--transition), box-shadow var(--transition);
+            position: relative;
         }
 
         /* ===== HEADER ===== */
@@ -291,6 +293,18 @@
             white-space: nowrap;
             transition: background var(--transition), color var(--transition);
         }
+        .search-bar .search-wrap .filter-toggle {
+            font-size: 16px;
+            color: var(--text-muted2);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 20px;
+            transition: background var(--transition), color var(--transition);
+        }
+        .search-bar .search-wrap .filter-toggle:hover {
+            background: var(--border-color);
+            color: var(--green);
+        }
 
         /* ===== CATEGORIES ===== */
         .categories {
@@ -330,11 +344,11 @@
             transition: color var(--transition);
         }
         .categories .cat-item.active {
-            background: var(--bg-cat-active);
-            color: var(--text-primary);
+            background: var(--green);
+            color: #ffffff;
         }
         .categories .cat-item.active i {
-            color: var(--text-primary);
+            color: #ffffff;
         }
         .categories .cat-item:hover {
             transform: scale(0.96);
@@ -345,6 +359,75 @@
             padding: 16px 20px 80px;
             background: var(--bg-body);
             transition: background var(--transition);
+        }
+
+        /* ===== BANNER CAROUSEL ===== */
+        .banner-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-card);
+            margin-bottom: 24px;
+            height: 140px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-color);
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            color: #fff;
+        }
+        .carousel-slide .slide-content h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .carousel-slide .slide-content p {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+        .carousel-slide .slide-cta {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: default;
+            transition: background 0.2s;
+        }
+        .carousel-slide .slide-cta:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        .carousel-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .carousel-dots .dot.active {
+            background: #ffffff;
+            transform: scale(1.2);
         }
 
         /* Section Header */
@@ -693,8 +776,8 @@
             justify-content: center;
         }
         .bottom-nav .nav-item.sell-btn {
-            background: var(--bg-cat-active);
-            color: var(--text-primary);
+            background: var(--green);
+            color: #ffffff;
             padding: 6px 20px;
             border-radius: 30px;
             flex-direction: row;
@@ -707,17 +790,159 @@
         }
         .bottom-nav .nav-item.sell-btn i {
             font-size: 16px;
-            color: var(--text-primary);
+            color: #ffffff;
         }
         .bottom-nav .nav-item.sell-btn:hover {
             transform: scale(0.96);
         }
-        .dark-mode .bottom-nav .nav-item.sell-btn {
-            background: #2a2a2a;
-            color: #f0f0f0;
+
+        /* ===== FILTER SIDEBAR ===== */
+        .filter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-        .dark-mode .bottom-nav .nav-item.sell-btn i {
-            color: #f0f0f0;
+        .filter-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .filter-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 320px;
+            max-width: 85%;
+            height: 100%;
+            background: var(--bg-sidebar);
+            z-index: 2000;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border-color);
+        }
+        .filter-sidebar.active {
+            transform: translateX(0);
+        }
+
+        .filter-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .filter-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .filter-header i {
+            font-size: 20px;
+            color: var(--text-muted2);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .filter-header i:hover {
+            color: var(--red);
+        }
+
+        .filter-body {
+            padding: 24px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .filter-group {
+            margin-bottom: 24px;
+        }
+        .filter-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .filter-group .price-range,
+        .filter-group .date-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .filter-group .price-range input,
+        .filter-group .date-range input,
+        .filter-group select {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        .filter-group .price-range input:focus,
+        .filter-group .date-range input:focus,
+        .filter-group select:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.1);
+        }
+        .filter-group .price-range span,
+        .filter-group .date-range span {
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        .filter-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            cursor: default;
+        }
+
+        .filter-footer {
+            padding: 16px 24px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .filter-footer button {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-footer .btn-reset {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .filter-footer .btn-reset:hover {
+            background: var(--border-color);
+        }
+        .filter-footer .btn-apply {
+            background: var(--green);
+            color: #ffffff;
+        }
+        .filter-footer .btn-apply:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -759,6 +984,16 @@
             }
             .theme-toggle i {
                 font-size: 15px;
+            }
+            .filter-sidebar {
+                width: 100%;
+                max-width: 100%;
+            }
+            .banner-carousel {
+                height: 120px;
+            }
+            .carousel-slide .slide-content h2 {
+                font-size: 16px;
             }
         }
 
@@ -859,6 +1094,15 @@
             }
             .bottom-nav .nav-item i {
                 font-size: 22px;
+            }
+            .banner-carousel {
+                height: 180px;
+            }
+            .carousel-slide .slide-content h2 {
+                font-size: 24px;
+            }
+            .carousel-slide .slide-content p {
+                font-size: 15px;
             }
         }
 
@@ -968,6 +1212,7 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" placeholder="Search for textbooks, gadgets, food..." />
                 <span class="search-shortcut">⌘K</span>
+                <i class="fa-solid fa-sliders-h filter-toggle" id="filterToggle"></i>
             </div>
         </div>
 
@@ -986,6 +1231,34 @@
 
         <!-- ===== MAIN ===== -->
         <div class="main-content">
+
+            <!-- Banner Carousel -->
+            <div class="banner-carousel">
+                <div class="carousel-track" id="carouselTrack">
+                    <div class="carousel-slide" style="background: linear-gradient(135deg, #0d8a3e, #1a3a2a);">
+                        <div class="slide-content">
+                            <h2>📚 Textbook Exchange</h2>
+                            <p>Save up to 50% on your next textbook</p>
+                            <span class="slide-cta">Shop Now</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
+                        <div class="slide-content">
+                            <h2>💻 Tech Deals</h2>
+                            <p>Get the best gadgets on campus</p>
+                            <span class="slide-cta">Explore</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" style="background: linear-gradient(135deg, #4a0e4e, #1a0b2e);">
+                        <div class="slide-content">
+                            <h2>🍕 Food & More</h2>
+                            <p>Order from your favorite spots</p>
+                            <span class="slide-cta">Order Now</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
 
             <!-- Mini Banner -->
             <div class="mini-banner">
@@ -1201,13 +1474,63 @@
                 <span>Sell</span>
             </div>
             <div class="nav-item">
-                <i class="fa-regular fa-message"></i>
-                <span>Chats</span>
+                <i class="fa-regular fa-heart"></i>
+                <span>Favorites</span>
                 <span class="nav-badge">3</span>
             </div>
             <div class="nav-item">
                 <i class="fa-regular fa-user"></i>
                 <span>Profile</span>
+            </div>
+        </div>
+
+        <!-- ===== FILTER SIDEBAR ===== -->
+        <div class="filter-overlay" id="filterOverlay"></div>
+        <div class="filter-sidebar" id="filterSidebar">
+            <div class="filter-header">
+                <h3>Filters</h3>
+                <i class="fa-solid fa-times" id="filterClose"></i>
+            </div>
+            <div class="filter-body">
+                <div class="filter-group">
+                    <label>Price Range (₦)</label>
+                    <div class="price-range">
+                        <input type="number" placeholder="Min" min="0">
+                        <span>—</span>
+                        <input type="number" placeholder="Max" min="0">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Date Posted</label>
+                    <div class="date-range">
+                        <input type="date">
+                        <span>to</span>
+                        <input type="date">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Badge</label>
+                    <select>
+                        <option>All</option>
+                        <option>Hot</option>
+                        <option>Free</option>
+                        <option>New</option>
+                        <option>Bargain</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Listing Type</label>
+                    <select>
+                        <option>All</option>
+                        <option>Sell</option>
+                        <option>Wanted</option>
+                        <option>Free</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-footer">
+                <button class="btn-reset" id="filterReset">Reset</button>
+                <button class="btn-apply" id="filterApply">Apply Filters</button>
             </div>
         </div>
 
@@ -1218,20 +1541,19 @@
 
     </div>
 
-    <!-- ===== DARK MODE SCRIPT ===== -->
+    <!-- ===== SCRIPTS ===== -->
     <script>
         (function() {
+            // ===== DARK MODE =====
             const toggleBtn = document.getElementById('themeToggle');
             const html = document.documentElement;
 
-            // Check stored preference
             const stored = localStorage.getItem('campusHubTheme');
             if (stored === 'dark') {
                 html.classList.add('dark-mode');
             } else if (stored === 'light') {
                 html.classList.remove('dark-mode');
             } else {
-                // If no stored preference, check system preference
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 if (prefersDark) {
                     html.classList.add('dark-mode');
@@ -1241,26 +1563,139 @@
                 }
             }
 
-            // Toggle
             toggleBtn.addEventListener('click', function() {
                 const isDark = html.classList.toggle('dark-mode');
                 localStorage.setItem('campusHubTheme', isDark ? 'dark' : 'light');
             });
 
-            // Listen for system changes (optional)
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-                // Only change if user hasn't manually set a preference
-                if (!localStorage.getItem('campusHubTheme')) {
-                    if (e.matches) {
-                        html.classList.add('dark-mode');
-                    } else {
-                        html.classList.remove('dark-mode');
+            // ===== FILTER SIDEBAR =====
+            const filterToggle = document.getElementById('filterToggle');
+            const filterClose = document.getElementById('filterClose');
+            const filterOverlay = document.getElementById('filterOverlay');
+            const filterSidebar = document.getElementById('filterSidebar');
+            const filterReset = document.getElementById('filterReset');
+            const filterApply = document.getElementById('filterApply');
+
+            function openSidebar() {
+                filterSidebar.classList.add('active');
+                filterOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                filterSidebar.classList.remove('active');
+                filterOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            filterToggle.addEventListener('click', openSidebar);
+            filterClose.addEventListener('click', closeSidebar);
+            filterOverlay.addEventListener('click', closeSidebar);
+
+            filterReset.addEventListener('click', function() {
+                const inputs = filterSidebar.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    if (input.type === 'number' || input.type === 'text') {
+                        input.value = '';
+                    } else if (input.type === 'date') {
+                        input.value = '';
+                    } else if (input.tagName === 'SELECT') {
+                        input.selectedIndex = 0;
                     }
-                }
+                });
             });
 
-            // Also update the toggle icon state via CSS, so no extra JS needed.
-            // The CSS handles .fa-sun / .fa-moon visibility based on .dark-mode
+            filterApply.addEventListener('click', function() {
+                // Demo: just log and close
+                console.log('Filters applied!');
+                closeSidebar();
+                // You can add a toast notification here
+                alert('Filters applied! (This is a demo)');
+            });
+
+            // ===== BANNER CAROUSEL =====
+            const track = document.getElementById('carouselTrack');
+            const dotsContainer = document.getElementById('carouselDots');
+            const slides = track.querySelectorAll('.carousel-slide');
+            let currentIndex = 0;
+            let totalSlides = slides.length;
+            let intervalId = null;
+
+            // Create dots
+            slides.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('active');
+                dot.dataset.index = index;
+                dot.addEventListener('click', function() {
+                    goToSlide(parseInt(this.dataset.index));
+                });
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = dotsContainer.querySelectorAll('.dot');
+
+            function goToSlide(index) {
+                if (index < 0) index = totalSlides - 1;
+                if (index >= totalSlides) index = 0;
+                currentIndex = index;
+                track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentIndex);
+                });
+            }
+
+            function nextSlide() {
+                goToSlide(currentIndex + 1);
+            }
+
+            function startCarousel() {
+                if (intervalId) clearInterval(intervalId);
+                intervalId = setInterval(nextSlide, 4000);
+            }
+
+            function stopCarousel() {
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+            }
+
+            // Pause on hover
+            const carousel = document.querySelector('.banner-carousel');
+            carousel.addEventListener('mouseenter', stopCarousel);
+            carousel.addEventListener('mouseleave', startCarousel);
+            // Touch support
+            carousel.addEventListener('touchstart', stopCarousel);
+            carousel.addEventListener('touchend', startCarousel);
+
+            startCarousel();
+
+            // ===== CATEGORY CLICK (Demo) =====
+            const catItems = document.querySelectorAll('.cat-item');
+            catItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    catItems.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // ===== WISHLIST CLICK (Demo) =====
+            const wishlistBtns = document.querySelectorAll('.wishlist-btn');
+            wishlistBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fa-regular');
+                    icon.classList.toggle('fa-solid');
+                    if (icon.classList.contains('fa-solid')) {
+                        icon.style.color = '#e74c3c';
+                    } else {
+                        icon.style.color = '';
+                    }
+                });
+            });
+
         })();
     </script>
 
