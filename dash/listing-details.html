@@ -1117,17 +1117,10 @@
         // 6.  Fetch listing data
         // ──────────────────────────────────────────────────────────────
         async function fetchListingData(id) {
-            const token = getCookie('access_token');
-            if (!token) {
-                window.location.href = '../index.html';
-                return;
-            }
-
             const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + id, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': 'Bearer ' + token,
                 },
             });
 

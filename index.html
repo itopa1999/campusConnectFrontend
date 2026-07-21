@@ -815,69 +815,64 @@
   <div class="text-muted small">Please wait while we restore your session</div>
 </div>
 
+
 <script>
   (function() {
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
+    function getUser() {
+      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userStr) {
+        try { return JSON.parse(userStr); } catch(e) { return null; }
+      }
       return null;
     }
-
-    function setCookie(name, value, days) {
-      let cookie = `${name}=${encodeURIComponent(value)}; path=/`;
-      if (days) {
-        const expires = new Date();
-        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-        cookie += `; expires=${expires.toUTCString()}`;
-      }
-      document.cookie = cookie;
+    function setUser(user) {
+       if (localStorage.getItem('user')) {
+          localStorage.setItem('user', JSON.stringify(user));
+        } else {
+          sessionStorage.setItem('user', JSON.stringify(user));
+        }
     }
 
-    const AUTHENTICATE_URL = 'http://127.0.0.1:8000/user/api/auth/';
-    const refreshToken = getCookie('refresh_token');
+    const AUTHENTICATE_URL = 'http://127.0.0.1:8000/user/api/auth/refresh-token';
+    const preloader = document.getElementById('authPreloader');
 
-    if (refreshToken) {
-      const preloader = document.getElementById('authPreloader');
-      if (preloader) preloader.style.display = 'flex';
+    const existingUser = getUser();
+    if (existingUser) {
+      window.location.href = '../dash/main.html';
+      return;
+    } else {
+      return;
+    }
+    if (preloader) preloader.style.display = 'flex';
 
-      fetch(`${AUTHENTICATE_URL}refresh-token`, {
+      fetch(`${AUTHENTICATE_URL}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh_token: refreshToken })
+        credentials: 'include',
+        body: JSON.stringify({})
       })
-        .then(res => res.json())
-        .then(data => {
-          if (data.is_success === true && data.data?.access_token) {
-            const d = data.data;
-            const expiryDays = 3;
-            setCookie('access_token', d.access_token, expiryDays);
-            setCookie('refresh_token', d.refresh_token || refreshToken, expiryDays);
-            setCookie('user_id', d.user_id, expiryDays);
-            setCookie('is_email_verified', d.is_email_verified, expiryDays);
-            setCookie('is_hall_verified', d.is_hall_verified, expiryDays);
-            setCookie('first_name', d.first_name || '', expiryDays);
-            setCookie('last_name', d.last_name || '', expiryDays);
-            setCookie('user_email', d.email || '', expiryDays);
-            setCookie('profile_pic', d.profile_pic || '', expiryDays);
-            setCookie('point_bal', d.point_bal || 0, expiryDays);
-            setCookie('trusting_score', d.trusting_score || 0, expiryDays);
-            window.location.href = '../dash/main.html';
-          } else {
-            throw new Error('Session expired');
-          }
+        .then(res => {
+          if (!res.ok) throw new Error('Refresh failed');
+          return res.json();
         })
+        .then(data => {
+          if (data.is_success === true && data.data) {
+            const d = data.data;
+            const user = d.user || d;
+            if (user){
+              setUser(user);
+              window.location.href = '../dash/main.html';
+            } else {
+              throw new Error('No user data');
+            }
+          } else {
+            throw new Error(data.message || 'Refresh failed');
+          }
+          })
         .catch(err => {
           console.error('Refresh failed:', err);
-          const authCookies = [
-            'access_token', 'refresh_token', 'user_id',
-            'is_email_verified', 'is_hall_verified',
-            'first_name', 'last_name', 'user_email',
-            'profile_pic', 'point_bal', 'trusting_score', 'redirect_after_login'
-          ];
-          authCookies.forEach(name => {
-            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-          });
+          localStorage.removeItem('user');
+          sessionStorage.removeItem('user');
           if (preloader) preloader.style.display = 'none';
           const toastMsg = document.createElement('div');
           toastMsg.textContent = 'Session expired. Please log in again.';
@@ -898,7 +893,6 @@
           document.body.appendChild(toastMsg);
           setTimeout(() => toastMsg.remove(), 4000);
         });
-    }
   })();
 </script>
 

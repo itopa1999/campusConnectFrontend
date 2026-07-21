@@ -29,7 +29,7 @@ loginForm.addEventListener('submit', async (e) => {
   setButtonLoading(loginBtn, true, loginOriginalText);
 
   try {
-    const response = await fetch(LOGIN_URL, {
+    const response = await fetchWithAuth(LOGIN_URL, {
       method: 'POST',
       headers: {
         'accept': 'application/json',
@@ -42,20 +42,19 @@ loginForm.addEventListener('submit', async (e) => {
 
     if (response.ok && result.is_success === true) {
       
-      const expiryDays = rememberMe ? 3 : null;
-
-      setCookie('access_token', result.data.access_token, expiryDays);    
-      setCookie('refresh_token', result.data.refresh_token, expiryDays);    
-      setCookie('user_id', result.data.user_id, expiryDays);           
-      setCookie('is_email_verified', result.data.is_email_verified, expiryDays);
-      setCookie('is_hall_verified', result.data.is_hall_verified, expiryDays);
-
-      setCookie('first_name', result.data.first_name, expiryDays);
-      setCookie('last_name', result.data.last_name, expiryDays);
-      setCookie('user_email', result.data.email, expiryDays);
-      setCookie('profile_pic', result.data.profile_pic, expiryDays);
-      setCookie('point_bal', result.data.point_bal, expiryDays);
-      setCookie('trusting_score', result.data.trusting_score, expiryDays);
+      const user = result.data.user;
+      const storage = rememberMe ? localStorage : sessionStorage;
+      storage.setItem('user', JSON.stringify({
+        user_id: user.user_id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        profile_pic: user.profile_pic,
+        point_bal: user.point_bal,
+        trusting_score: user.trusting_score,
+        is_email_verified: user.is_email_verified,
+        is_hall_verified: user.is_hall_verified,
+      }));
 
       sessionStorage.setItem('rememberMe', rememberMe ? 'true' : 'false');
 
@@ -72,9 +71,7 @@ loginForm.addEventListener('submit', async (e) => {
         }
 
         const redirectPath = decodeURIComponent(redirectCookie);
-
         deleteCookie("redirect_after_login");
-
         window.location.href = redirectPath;
         
       }, 1000);
@@ -125,7 +122,7 @@ signupForm.addEventListener('submit', async (e) => {
   setButtonLoading(signupBtn, true, signupOriginalText);
 
   try {
-    const response = await fetch(REGISTER_URL, {
+    const response = await fetchWithAuth(REGISTER_URL, {
       method: 'POST',
       headers: {
         'accept': 'application/json',
