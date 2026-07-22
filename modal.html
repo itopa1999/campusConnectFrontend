@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CampusHub – Student Marketplace</title>
+    <title>CampusHub – Login</title>
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
@@ -92,30 +92,41 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-body);
             color: var(--text-primary);
-            padding: 0 0 80px 0;
+            padding: 0;
             transition: background var(--transition), color var(--transition);
             overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .app-container {
-            max-width: 1280px;
-            margin: 0 auto;
+            max-width: 480px;
+            width: 100%;
+            margin: 20px auto;
             background: var(--bg-app);
-            min-height: 100vh;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.04);
+            min-height: 92vh;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card-hover);
             transition: background var(--transition), box-shadow var(--transition);
             position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
         }
 
         /* ===== HEADER ===== */
         .app-header {
-            padding: 8px 20px 12px;
+            padding: 16px 24px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: var(--bg-app);
             border-bottom: 1px solid var(--border-color);
             transition: background var(--transition), border-color var(--transition);
+            flex-shrink: 0;
         }
         .app-header .logo {
             display: flex;
@@ -147,32 +158,25 @@
         }
         .header-actions {
             display: flex;
-            gap: 14px;
+            gap: 12px;
             align-items: center;
         }
-        .header-actions i {
-            font-size: 20px;
+        .header-actions .back-btn {
+            font-size: 14px;
+            font-weight: 500;
             color: var(--text-secondary);
-            cursor: pointer;
-            transition: color var(--transition), transform 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color var(--transition);
+            cursor: default;
         }
-        .header-actions i:hover {
+        .header-actions .back-btn i {
+            font-size: 16px;
+        }
+        .header-actions .back-btn:hover {
             color: var(--green);
-        }
-        .badge-dot {
-            position: relative;
-        }
-        .badge-dot::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            right: -4px;
-            width: 8px;
-            height: 8px;
-            background: var(--red);
-            border-radius: 50%;
-            border: 2px solid var(--bg-app);
-            transition: border-color var(--transition);
         }
 
         /* Dark mode toggle button */
@@ -190,6 +194,7 @@
             color: var(--text-secondary);
             transition: background var(--transition), color var(--transition), transform 0.2s;
             padding: 0;
+            flex-shrink: 0;
         }
         .theme-toggle:hover {
             transform: scale(1.05);
@@ -200,969 +205,6 @@
             color: inherit;
             pointer-events: none;
         }
-
-        /* ===== LOCATION BAR ===== */
-        .location-bar {
-            padding: 10px 20px 14px;
-            background: var(--bg-app);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid var(--border-color);
-            flex-wrap: wrap;
-            transition: background var(--transition), border-color var(--transition);
-        }
-        .location-bar i {
-            color: var(--green);
-            font-size: 14px;
-            transition: color var(--transition);
-        }
-        .location-bar .loc-text {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-primary);
-            flex: 1;
-            min-width: 150px;
-            transition: color var(--transition);
-        }
-        .location-bar .loc-text span {
-            font-weight: 400;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-        .location-bar .change-btn {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--green);
-            background: var(--green-bg);
-            padding: 4px 12px;
-            border-radius: 20px;
-            cursor: default;
-            transition: background var(--transition), color var(--transition);
-        }
-
-        /* ===== SEARCH ===== */
-        .search-bar {
-            padding: 0 20px 16px;
-            background: var(--bg-app);
-            transition: background var(--transition);
-        }
-        .search-bar .search-wrap {
-            display: flex;
-            align-items: center;
-            background: var(--bg-input);
-            border-radius: 28px;
-            padding: 8px 18px;
-            gap: 10px;
-            border: 1px solid transparent;
-            transition: all var(--transition);
-        }
-        .search-bar .search-wrap:focus-within {
-            border-color: var(--green);
-            background: var(--bg-app);
-            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.08);
-        }
-        .search-bar .search-wrap i {
-            color: var(--text-muted2);
-            transition: color var(--transition);
-        }
-        .search-bar .search-wrap input {
-            border: none;
-            background: transparent;
-            outline: none;
-            flex: 1;
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--text-primary);
-            padding: 4px 0;
-            width: 100%;
-            transition: color var(--transition);
-        }
-        .search-bar .search-wrap input::placeholder {
-            color: var(--text-muted);
-            font-weight: 400;
-            transition: color var(--transition);
-        }
-        .search-bar .search-wrap .search-shortcut {
-            font-size: 11px;
-            color: var(--text-muted2);
-            background: var(--border-color);
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-weight: 500;
-            white-space: nowrap;
-            transition: background var(--transition), color var(--transition);
-        }
-        .search-bar .search-wrap .filter-toggle {
-            font-size: 16px;
-            color: var(--text-muted2);
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 20px;
-            transition: background var(--transition), color var(--transition);
-        }
-        .search-bar .search-wrap .filter-toggle:hover {
-            background: var(--border-color);
-            color: var(--green);
-        }
-
-        /* ===== CATEGORIES ===== */
-        .categories {
-            padding: 4px 0 16px;
-            background: var(--bg-app);
-            border-bottom: 1px solid var(--border-color);
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-            transition: background var(--transition), border-color var(--transition);
-        }
-        .categories::-webkit-scrollbar {
-            display: none;
-        }
-        .categories .cat-scroll {
-            display: flex;
-            gap: 6px;
-            padding: 0 20px;
-        }
-        .categories .cat-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            background: var(--bg-cat);
-            transition: all var(--transition);
-            cursor: default;
-            flex-shrink: 0;
-        }
-        .categories .cat-item i {
-            font-size: 14px;
-            transition: color var(--transition);
-        }
-        .categories .cat-item.active {
-            background: var(--green);
-            color: #ffffff;
-        }
-        .categories .cat-item.active i {
-            color: #ffffff;
-        }
-        .categories .cat-item:hover {
-            transform: scale(0.96);
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            padding: 16px 20px 80px;
-            background: var(--bg-body);
-            transition: background var(--transition);
-        }
-
-        /* ===== BANNER CAROUSEL ===== */
-        .banner-carousel {
-            position: relative;
-            overflow: hidden;
-            border-radius: var(--radius-card);
-            margin-bottom: 24px;
-            height: 140px;
-            box-shadow: var(--shadow-card);
-            border: 1px solid var(--border-color);
-        }
-        .carousel-track {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            height: 100%;
-        }
-        .carousel-slide {
-            min-width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            color: #fff;
-        }
-        .carousel-slide .slide-content h2 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-        .carousel-slide .slide-content p {
-            font-size: 13px;
-            opacity: 0.8;
-            margin-bottom: 4px;
-        }
-        .carousel-slide .slide-cta {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 4px 16px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: default;
-            transition: background 0.2s;
-        }
-        .carousel-slide .slide-cta:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .carousel-dots {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-        }
-        .carousel-dots .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-        }
-        .carousel-dots .dot.active {
-            background: #ffffff;
-            transform: scale(1.2);
-        }
-
-        /* Section Header */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 14px;
-        }
-        .section-header h2 {
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.3px;
-            transition: color var(--transition);
-        }
-        .section-header .see-all {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted2);
-            cursor: default;
-            white-space: nowrap;
-            transition: color var(--transition);
-        }
-        .section-header .see-all:hover {
-            color: var(--green);
-        }
-
-        /* ===== PRODUCT CARDS (Grid) ===== */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 14px;
-            margin-bottom: 28px;
-        }
-
-        .product-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-card);
-            overflow: hidden;
-            box-shadow: var(--shadow-card);
-            transition: all var(--transition);
-            cursor: default;
-            border: 1px solid var(--border-card);
-        }
-        .product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-card-hover);
-        }
-
-        .product-card .img-wrap {
-            position: relative;
-            background: var(--bg-img-placeholder);
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            color: var(--text-muted2);
-            transition: background var(--transition), color var(--transition);
-        }
-        .product-card .img-wrap .tag {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
-            color: #fff;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 2px 10px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .product-card .img-wrap .tag.hot {
-            background: var(--red);
-        }
-        .product-card .img-wrap .tag.free {
-            background: var(--green);
-        }
-
-        .product-card .img-wrap .wishlist-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(4px);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            color: #555;
-            transition: all 0.2s;
-            cursor: default;
-        }
-        .dark-mode .product-card .img-wrap .wishlist-btn {
-            background: rgba(30, 30, 30, 0.85);
-            color: #aaa;
-        }
-        .product-card .img-wrap .wishlist-btn:hover {
-            background: #fff;
-            color: var(--red);
-            transform: scale(1.1);
-        }
-        .dark-mode .product-card .img-wrap .wishlist-btn:hover {
-            background: #2a2a2a;
-            color: var(--red);
-        }
-
-        .product-card .info {
-            padding: 10px 12px 12px;
-        }
-        .product-card .info .name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            transition: color var(--transition);
-        }
-        .product-card .info .price {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--green);
-            letter-spacing: -0.3px;
-            transition: color var(--transition);
-        }
-        .product-card .info .price small {
-            font-size: 11px;
-            font-weight: 400;
-            color: var(--text-muted);
-            text-decoration: line-through;
-            margin-left: 6px;
-            transition: color var(--transition);
-        }
-        .product-card .info .meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 6px;
-            font-size: 11px;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-        .product-card .info .meta .location {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .product-card .info .meta .location i {
-            font-size: 10px;
-        }
-        .product-card .info .meta .rating {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-        .product-card .info .meta .rating i {
-            color: var(--star);
-            font-size: 11px;
-            transition: color var(--transition);
-        }
-
-        /* ===== FEATURED / HORIZONTAL LIST ===== */
-        .featured-wrapper {
-            margin-bottom: 28px;
-        }
-        .featured-list {
-            display: flex;
-            gap: 14px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-        }
-        .featured-list::-webkit-scrollbar {
-            display: none;
-        }
-
-        .featured-item {
-            min-width: 200px;
-            background: var(--bg-featured);
-            border-radius: var(--radius-card);
-            overflow: hidden;
-            border: 1px solid var(--border-card);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px 10px 10px;
-            flex-shrink: 0;
-            box-shadow: var(--shadow-card);
-            transition: all var(--transition);
-            cursor: default;
-        }
-        .featured-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-card-hover);
-        }
-        .featured-item .f-img {
-            width: 56px;
-            height: 56px;
-            border-radius: 14px;
-            background: var(--bg-img-placeholder);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: var(--text-muted2);
-            flex-shrink: 0;
-            transition: background var(--transition), color var(--transition);
-        }
-        .featured-item .f-info {
-            flex: 1;
-        }
-        .featured-item .f-info .f-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            transition: color var(--transition);
-        }
-        .featured-item .f-info .f-price {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--green);
-            transition: color var(--transition);
-        }
-        .featured-item .f-info .f-meta {
-            font-size: 11px;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-
-        /* ===== MINI BANNER ===== */
-        .mini-banner {
-            background: var(--bg-banner);
-            border-radius: var(--radius-card);
-            padding: 16px 20px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #fff;
-            cursor: default;
-            transition: all var(--transition);
-            border: 1px solid var(--border-color);
-        }
-        .mini-banner:hover {
-            transform: scale(0.99);
-        }
-        .mini-banner .banner-text h3 {
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: #fff;
-        }
-        .mini-banner .banner-text p {
-            font-size: 12px;
-            opacity: 0.7;
-            margin-top: 2px;
-            color: #fff;
-        }
-        .mini-banner .banner-cta {
-            background: var(--green);
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
-            white-space: nowrap;
-            transition: background var(--transition);
-        }
-        .dark-mode .mini-banner {
-            background: #1a2a1a;
-            border-color: #2a3a2a;
-        }
-        .dark-mode .mini-banner .banner-text h3 {
-            color: #f0f0f0;
-        }
-        .dark-mode .mini-banner .banner-text p {
-            color: #c0c0c0;
-        }
-
-        /* ===== BOTTOM NAV ===== */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-nav);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 6px 0 12px;
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-            max-width: 1280px;
-            margin: 0 auto;
-            box-shadow: var(--shadow-nav);
-            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
-        }
-        .bottom-nav .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            font-size: 10px;
-            font-weight: 500;
-            color: var(--text-nav);
-            cursor: default;
-            transition: color var(--transition);
-            padding: 2px 12px;
-            position: relative;
-        }
-        .bottom-nav .nav-item i {
-            font-size: 20px;
-            transition: transform 0.2s, color var(--transition);
-            color: var(--text-nav);
-        }
-        .bottom-nav .nav-item.active {
-            color: var(--text-nav-active);
-        }
-        .bottom-nav .nav-item.active i {
-            color: var(--text-nav-active);
-            transform: scale(1.05);
-        }
-        .bottom-nav .nav-item .nav-badge {
-            position: absolute;
-            top: -2px;
-            right: 4px;
-            background: var(--red);
-            color: #fff;
-            font-size: 9px;
-            font-weight: 700;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .bottom-nav .nav-item.sell-btn {
-            background: var(--green);
-            color: #ffffff;
-            padding: 6px 20px;
-            border-radius: 30px;
-            flex-direction: row;
-            gap: 6px;
-            font-weight: 600;
-            font-size: 12px;
-            margin-top: -18px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            transition: background var(--transition), color var(--transition), box-shadow var(--transition);
-        }
-        .bottom-nav .nav-item.sell-btn i {
-            font-size: 16px;
-            color: #ffffff;
-        }
-        .bottom-nav .nav-item.sell-btn:hover {
-            transform: scale(0.96);
-        }
-
-        /* ===== FILTER SIDEBAR ===== */
-        .filter-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1999;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .filter-overlay.active {
-            display: block;
-            opacity: 1;
-        }
-
-        .filter-sidebar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 320px;
-            max-width: 85%;
-            height: 100%;
-            background: var(--bg-sidebar);
-            z-index: 2000;
-            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
-            transform: translateX(100%);
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid var(--border-color);
-        }
-        .filter-sidebar.active {
-            transform: translateX(0);
-        }
-
-        .filter-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .filter-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        .filter-header i {
-            font-size: 20px;
-            color: var(--text-muted2);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .filter-header i:hover {
-            color: var(--red);
-        }
-
-        .filter-body {
-            padding: 24px;
-            flex: 1;
-            overflow-y: auto;
-        }
-        .filter-group {
-            margin-bottom: 24px;
-        }
-        .filter-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-        .filter-group .price-range,
-        .filter-group .date-range {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .filter-group .price-range input,
-        .filter-group .date-range input,
-        .filter-group select {
-            flex: 1;
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            width: 100%;
-        }
-        .filter-group .price-range input:focus,
-        .filter-group .date-range input:focus,
-        .filter-group select:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.1);
-        }
-        .filter-group .price-range span,
-        .filter-group .date-range span {
-            color: var(--text-muted);
-            font-weight: 500;
-            flex-shrink: 0;
-        }
-        .filter-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            cursor: default;
-        }
-
-        .filter-footer {
-            padding: 16px 24px 24px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-        .filter-footer button {
-            flex: 1;
-            padding: 12px 0;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .filter-footer .btn-reset {
-            background: var(--bg-input);
-            color: var(--text-secondary);
-        }
-        .filter-footer .btn-reset:hover {
-            background: var(--border-color);
-        }
-        .filter-footer .btn-apply {
-            background: var(--green);
-            color: #ffffff;
-        }
-        .filter-footer .btn-apply:hover {
-            opacity: 0.9;
-            transform: scale(0.98);
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 480px) {
-            .app-header .logo span {
-                font-size: 17px;
-            }
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 10px;
-            }
-            .product-card .img-wrap {
-                height: 100px;
-            }
-            .product-card .info .name {
-                font-size: 12px;
-            }
-            .product-card .info .price {
-                font-size: 14px;
-            }
-            .featured-item {
-                min-width: 170px;
-            }
-            .bottom-nav .nav-item {
-                font-size: 9px;
-                padding: 2px 6px;
-            }
-            .bottom-nav .nav-item i {
-                font-size: 18px;
-            }
-            .bottom-nav .nav-item.sell-btn {
-                padding: 4px 14px;
-                font-size: 11px;
-            }
-            .theme-toggle {
-                width: 30px;
-                height: 30px;
-                font-size: 15px;
-            }
-            .theme-toggle i {
-                font-size: 15px;
-            }
-            .filter-sidebar {
-                width: 100%;
-                max-width: 100%;
-            }
-            .banner-carousel {
-                height: 120px;
-            }
-            .carousel-slide .slide-content h2 {
-                font-size: 16px;
-            }
-        }
-
-        @media (min-width: 640px) {
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-                gap: 18px;
-            }
-            .featured-item {
-                min-width: 240px;
-            }
-            .main-content {
-                padding: 20px 30px 100px;
-            }
-            .app-header {
-                padding: 12px 30px;
-            }
-            .location-bar {
-                padding: 12px 30px;
-            }
-            .search-bar {
-                padding: 0 30px 20px;
-            }
-            .categories .cat-scroll {
-                padding: 0 30px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .app-container {
-                border-radius: 0;
-                box-shadow: none;
-                background: var(--bg-body);
-            }
-            .main-content {
-                padding: 24px 40px 100px;
-            }
-            .app-header {
-                padding: 16px 40px;
-            }
-            .location-bar {
-                padding: 14px 40px;
-            }
-            .search-bar {
-                padding: 0 40px 24px;
-            }
-            .categories .cat-scroll {
-                padding: 0 40px;
-                justify-content: center;
-            }
-            .categories .cat-item {
-                padding: 10px 24px;
-                font-size: 14px;
-            }
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 24px;
-            }
-            .product-card .img-wrap {
-                height: 160px;
-                font-size: 48px;
-            }
-            .product-card .info .name {
-                font-size: 15px;
-            }
-            .product-card .info .price {
-                font-size: 18px;
-            }
-            .featured-list {
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 20px;
-            }
-            .featured-item {
-                min-width: 280px;
-                flex: 0 1 auto;
-            }
-            .mini-banner {
-                padding: 24px 32px;
-                border-radius: 24px;
-            }
-            .mini-banner .banner-text h3 {
-                font-size: 20px;
-            }
-            .mini-banner .banner-text p {
-                font-size: 14px;
-            }
-            .bottom-nav {
-                max-width: 1280px;
-                padding: 8px 0 16px;
-                border-radius: 20px 20px 0 0;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 100%;
-            }
-            .bottom-nav .nav-item {
-                font-size: 12px;
-            }
-            .bottom-nav .nav-item i {
-                font-size: 22px;
-            }
-            .banner-carousel {
-                height: 180px;
-            }
-            .carousel-slide .slide-content h2 {
-                font-size: 24px;
-            }
-            .carousel-slide .slide-content p {
-                font-size: 15px;
-            }
-        }
-
-        /* ===== ANIMATION ===== */
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .product-card,
-        .featured-item,
-        .mini-banner {
-            animation: fadeUp 0.5s ease forwards;
-        }
-        .product-card:nth-child(2) {
-            animation-delay: 0.05s;
-        }
-        .product-card:nth-child(3) {
-            animation-delay: 0.1s;
-        }
-        .product-card:nth-child(4) {
-            animation-delay: 0.15s;
-        }
-
-        /* ===== SCROLLBAR HIDE ===== */
-        ::-webkit-scrollbar {
-            width: 0;
-            height: 0;
-        }
-
-        /* ===== DEMO OVERLAY NOTE ===== */
-        .demo-note {
-            text-align: center;
-            font-size: 10px;
-            color: var(--text-muted);
-            padding: 8px 0 4px;
-            letter-spacing: 0.3px;
-            background: var(--bg-app);
-            border-top: 1px solid var(--border-color);
-            transition: background var(--transition), color var(--transition), border-color var(--transition);
-        }
-        .demo-note span {
-            font-weight: 600;
-            color: var(--green);
-            transition: color var(--transition);
-        }
-
-        /* ===== UTILITIES ===== */
-        .text-ellipsis {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* ===== TOGGLE ICON ROTATION ===== */
         .theme-toggle .fa-sun {
             display: inline;
         }
@@ -1174,6 +216,472 @@
         }
         .dark-mode .theme-toggle .fa-moon {
             display: inline;
+        }
+
+        /* ===== AUTH CONTAINER ===== */
+        .auth-container {
+            flex: 1;
+            padding: 28px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-app);
+            transition: background var(--transition);
+            overflow-y: auto;
+        }
+
+        /* ===== TOGGLE TABS ===== */
+        .auth-tabs {
+            display: flex;
+            background: var(--bg-input);
+            border-radius: 30px;
+            padding: 4px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+            flex-shrink: 0;
+        }
+        .auth-tabs .tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            border-radius: 26px;
+            font-size: 14px;
+            font-weight: 600;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: inherit;
+            letter-spacing: -0.2px;
+        }
+        .auth-tabs .tab-btn.active {
+            background: var(--green);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(13, 138, 62, 0.25);
+        }
+        .auth-tabs .tab-btn:hover:not(.active) {
+            color: var(--text-primary);
+        }
+        .dark-mode .auth-tabs .tab-btn.active {
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        /* ===== FORM WRAPPER ===== */
+        .form-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            width: 100%;
+        }
+
+        .auth-form.hidden {
+            display: none;
+        }
+
+        .auth-form .form-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+            transition: color var(--transition);
+        }
+        .auth-form .form-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            transition: color var(--transition);
+        }
+
+        /* ===== FORM GROUPS ===== */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .form-group label i {
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .form-group .input-wrap {
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border-radius: 14px;
+            padding: 0 16px;
+            gap: 12px;
+            border: 2px solid transparent;
+            transition: all var(--transition);
+            position: relative;
+        }
+        .form-group .input-wrap:focus-within {
+            border-color: var(--green);
+            background: var(--bg-app);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08);
+        }
+        .dark-mode .form-group .input-wrap:focus-within {
+            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.08);
+        }
+        .form-group .input-wrap i {
+            color: var(--text-muted2);
+            font-size: 16px;
+            transition: color var(--transition);
+            flex-shrink: 0;
+        }
+        .form-group .input-wrap:focus-within i {
+            color: var(--green);
+        }
+        .form-group .input-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-primary);
+            padding: 14px 0;
+            width: 100%;
+            font-family: inherit;
+            transition: color var(--transition);
+        }
+        .form-group .input-wrap input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            transition: color var(--transition);
+        }
+        .form-group .input-wrap .toggle-password {
+            cursor: pointer;
+            color: var(--text-muted2);
+            font-size: 16px;
+            transition: color var(--transition);
+            padding: 4px;
+            flex-shrink: 0;
+        }
+        .form-group .input-wrap .toggle-password:hover {
+            color: var(--green);
+        }
+
+        /* ===== PASSWORD STRENGTH ===== */
+        .password-strength {
+            margin-top: 4px;
+            height: 4px;
+            border-radius: 4px;
+            background: var(--bg-input);
+            overflow: hidden;
+            transition: background var(--transition);
+        }
+        .password-strength .bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.3s ease, background 0.3s ease;
+        }
+        .password-strength .bar.weak {
+            width: 33%;
+            background: var(--red);
+        }
+        .password-strength .bar.medium {
+            width: 66%;
+            background: #f5b342;
+        }
+        .password-strength .bar.strong {
+            width: 100%;
+            background: var(--green);
+        }
+        .password-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+
+        /* ===== FORM OPTIONS ===== */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2px 0 4px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .form-options .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: default;
+            transition: color var(--transition);
+        }
+        .form-options .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--green);
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .form-options .forgot-link {
+            font-size: 13px;
+            color: var(--green);
+            font-weight: 500;
+            text-decoration: none;
+            cursor: default;
+            transition: color var(--transition);
+        }
+        .form-options .forgot-link:hover {
+            opacity: 0.8;
+        }
+
+        /* ===== SUBMIT BUTTON ===== */
+        .btn-submit {
+            padding: 14px 0;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            background: var(--green);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: inherit;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.25);
+        }
+        .btn-submit:hover {
+            transform: scale(0.98);
+            opacity: 0.9;
+            box-shadow: 0 6px 24px rgba(13, 138, 62, 0.3);
+        }
+        .btn-submit:active {
+            transform: scale(0.96);
+        }
+        .btn-submit i {
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+        .btn-submit:hover i {
+            transform: translateX(2px);
+        }
+        .dark-mode .btn-submit {
+            box-shadow: 0 4px 16px rgba(46, 204, 113, 0.2);
+        }
+        .dark-mode .btn-submit:hover {
+            box-shadow: 0 6px 24px rgba(46, 204, 113, 0.3);
+        }
+
+        /* ===== DIVIDER ===== */
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 14px 0 10px;
+        }
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+            transition: background var(--transition);
+        }
+        .auth-divider span {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            white-space: nowrap;
+            transition: color var(--transition);
+        }
+
+        /* ===== SOCIAL BUTTONS ===== */
+        .social-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .social-buttons .social-btn {
+            flex: 1;
+            padding: 12px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            background: var(--bg-app);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        .social-buttons .social-btn:hover {
+            border-color: var(--green);
+            background: var(--green-bg);
+            color: var(--green);
+            transform: translateY(-1px);
+        }
+        .social-buttons .social-btn i {
+            font-size: 18px;
+        }
+        .social-buttons .social-btn .fa-google {
+            color: #ea4335;
+        }
+        .social-buttons .social-btn .fa-apple {
+            color: var(--text-secondary);
+        }
+        .dark-mode .social-buttons .social-btn .fa-apple {
+            color: #f0f0f0;
+        }
+
+        /* ===== SWITCH LINK ===== */
+        .switch-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .switch-link a {
+            color: var(--green);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: default;
+            transition: opacity var(--transition);
+        }
+        .switch-link a:hover {
+            opacity: 0.8;
+        }
+
+        /* ===== FORM SLIDE ANIMATION ===== */
+        .auth-form {
+            animation: fadeSlideUp 0.4s ease forwards;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-form.hidden {
+            display: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 500px) {
+            .app-container {
+                margin: 0;
+                min-height: 100vh;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+            }
+            .auth-container {
+                padding: 24px 18px 20px;
+            }
+            .app-header {
+                padding: 12px 18px 10px;
+            }
+            .auth-form .form-title {
+                font-size: 20px;
+            }
+            .social-buttons {
+                flex-direction: column;
+            }
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+        }
+
+        @media (min-width: 501px) and (max-width: 768px) {
+            .app-container {
+                margin: 16px auto;
+            }
+        }
+
+        /* ===== TOAST / ALERT (demo) ===== */
+        .toast-message {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 14px;
+            box-shadow: var(--shadow-card-hover);
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 2000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+            backdrop-filter: blur(12px);
+        }
+        .toast-message.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast-message i {
+            color: var(--green);
+            margin-right: 8px;
+        }
+
+        /* ===== SCROLLBAR HIDE ===== */
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+
+        /* ===== DEMO NOTE ===== */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+            flex-shrink: 0;
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
         }
     </style>
 </head>
@@ -1192,362 +700,179 @@
                     <i class="fa-regular fa-sun"></i>
                     <i class="fa-regular fa-moon"></i>
                 </button>
-                <i class="fa-regular fa-bell badge-dot"></i>
-                <i class="fa-regular fa-user-circle"></i>
             </div>
         </div>
 
-        <!-- ===== LOCATION ===== -->
-        <div class="location-bar">
-            <i class="fa-solid fa-location-dot"></i>
-            <div class="loc-text">
-                University of Benin <span>• Ugbowo</span>
+        <!-- ===== AUTH CONTAINER ===== -->
+        <div class="auth-container">
+
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login" id="tabLogin">Sign In</button>
+                <button class="tab-btn" data-tab="register" id="tabRegister">Create Account</button>
             </div>
-            <div class="change-btn">Change</div>
-        </div>
 
-        <!-- ===== SEARCH ===== -->
-        <div class="search-bar">
-            <div class="search-wrap">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search for textbooks, gadgets, food..." />
-                <span class="search-shortcut">⌘K</span>
-                <i class="fa-solid fa-sliders-h filter-toggle" id="filterToggle"></i>
-            </div>
-        </div>
+            <!-- Form Wrapper -->
+            <div class="form-wrapper">
 
-        <!-- ===== CATEGORIES ===== -->
-        <div class="categories">
-            <div class="cat-scroll">
-                <span class="cat-item active"><i class="fa-solid fa-house"></i> All</span>
-                <span class="cat-item"><i class="fa-solid fa-book"></i> Textbooks</span>
-                <span class="cat-item"><i class="fa-solid fa-laptop"></i> Gadgets</span>
-                <span class="cat-item"><i class="fa-solid fa-utensils"></i> Food</span>
-                <span class="cat-item"><i class="fa-solid fa-shirt"></i> Fashion</span>
-                <span class="cat-item"><i class="fa-solid fa-tools"></i> Services</span>
-                <span class="cat-item"><i class="fa-solid fa-futbol"></i> Sports</span>
-            </div>
-        </div>
+                <!-- ===== LOGIN FORM ===== -->
+                <form class="auth-form" id="loginForm" autocomplete="off">
+                    <div class="form-title">Welcome back 👋</div>
+                    <div class="form-subtitle">Sign in to continue your campus experience.</div>
 
-        <!-- ===== MAIN ===== -->
-        <div class="main-content">
-
-            <!-- Banner Carousel -->
-            <div class="banner-carousel">
-                <div class="carousel-track" id="carouselTrack">
-                    <div class="carousel-slide" style="background: linear-gradient(135deg, #0d8a3e, #1a3a2a);">
-                        <div class="slide-content">
-                            <h2>📚 Textbook Exchange</h2>
-                            <p>Save up to 50% on your next textbook</p>
-                            <span class="slide-cta">Shop Now</span>
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-envelope"></i> Email Address</label>
+                        <div class="input-wrap">
+                            <i class="fa-regular fa-envelope"></i>
+                            <input type="email" placeholder="you@university.edu" required />
                         </div>
                     </div>
-                    <div class="carousel-slide" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
-                        <div class="slide-content">
-                            <h2>💻 Tech Deals</h2>
-                            <p>Get the best gadgets on campus</p>
-                            <span class="slide-cta">Explore</span>
-                        </div>
-                    </div>
-                    <div class="carousel-slide" style="background: linear-gradient(135deg, #4a0e4e, #1a0b2e);">
-                        <div class="slide-content">
-                            <h2>🍕 Food & More</h2>
-                            <p>Order from your favorite spots</p>
-                            <span class="slide-cta">Order Now</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-dots" id="carouselDots"></div>
-            </div>
 
-            <!-- Mini Banner -->
-            <div class="mini-banner">
-                <div class="banner-text">
-                    <h3>🎓 Fresher's Deal</h3>
-                    <p>Get 15% off your first purchase</p>
-                </div>
-                <span class="banner-cta">Shop now</span>
-            </div>
-
-            <!-- Section: Trending -->
-            <div class="section-header">
-                <h2>🔥 Trending on campus</h2>
-                <span class="see-all">See all</span>
-            </div>
-
-            <div class="product-grid">
-                <!-- Card 1 -->
-                <div class="product-card">
-                    <div class="img-wrap" style="background:#e8f0e8;">
-                        <span>📘</span>
-                        <span class="tag hot">HOT</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Engineering Mathematics</div>
-                        <div class="price">₦3,500 <small>₦5,000</small></div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.8</span>
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-lock"></i> Password</label>
+                        <div class="input-wrap">
+                            <i class="fa-regular fa-lock"></i>
+                            <input type="password" placeholder="Enter your password" required id="loginPassword" />
+                            <span class="toggle-password" data-target="loginPassword">
+                                <i class="fa-regular fa-eye"></i>
+                            </span>
                         </div>
                     </div>
-                </div>
 
-                <!-- Card 2 -->
-                <div class="product-card">
-                    <div class="img-wrap" style="background:#f0e8e8;">
-                        <span>💻</span>
-                        <span class="tag free">LIKE NEW</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" checked /> Remember me
+                        </label>
+                        <a class="forgot-link">Forgot password?</a>
                     </div>
-                    <div class="info">
-                        <div class="name">HP Laptop 15" Core i5</div>
-                        <div class="price">₦185,000</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNILAG</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.9</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Card 3 -->
-                <div class="product-card">
-                    <div class="img-wrap" style="background:#f0f0e8;">
-                        <span>👟</span>
-                        <span class="tag">BARGAIN</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Nike Air Max 90</div>
-                        <div class="price">₦28,000 <small>₦45,000</small></div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.7</span>
-                        </div>
-                    </div>
-                </div>
+                    <button type="submit" class="btn-submit">
+                        Sign In <i class="fa-solid fa-arrow-right"></i>
+                    </button>
 
-                <!-- Card 4 -->
-                <div class="product-card">
-                    <div class="img-wrap" style="background:#e8e8f0;">
-                        <span>🍕</span>
-                        <span class="tag hot">POPULAR</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    <div class="auth-divider">
+                        <span>or continue with</span>
                     </div>
-                    <div class="info">
-                        <div class="name">Jollof Rice & Chicken</div>
-                        <div class="price">₦2,200</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.9</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Section: Featured -->
-            <div class="section-header">
-                <h2>⭐ Featured sellers</h2>
-                <span class="see-all">See all</span>
-            </div>
+                    <div class="social-buttons">
+                        <button type="button" class="social-btn"><i class="fa-brands fa-google"></i> Google</button>
+                        <button type="button" class="social-btn"><i class="fa-brands fa-apple"></i> Apple</button>
+                    </div>
 
-            <div class="featured-wrapper">
-                <div class="featured-list">
-                    <div class="featured-item">
-                        <div class="f-img" style="background:#eaf9ef;">📚</div>
-                        <div class="f-info">
-                            <div class="f-name">Bola's Bookshop</div>
-                            <div class="f-price">₦2,500+</div>
-                            <div class="f-meta">⭐ 4.9 • 230 sales</div>
-                        </div>
+                    <div class="switch-link">
+                        Don't have an account? <a id="switchToRegister">Sign up</a>
                     </div>
-                    <div class="featured-item">
-                        <div class="f-img" style="background:#fef3e8;">📱</div>
-                        <div class="f-info">
-                            <div class="f-name">Gadget Hub UNIBEN</div>
-                            <div class="f-price">₦50,000+</div>
-                            <div class="f-meta">⭐ 4.8 • 189 sales</div>
-                        </div>
-                    </div>
-                    <div class="featured-item">
-                        <div class="f-img" style="background:#f0e8f0;">👗</div>
-                        <div class="f-info">
-                            <div class="f-name">Zara's Closet</div>
-                            <div class="f-price">₦12,000+</div>
-                            <div class="f-meta">⭐ 4.7 • 142 sales</div>
-                        </div>
-                    </div>
-                    <div class="featured-item">
-                        <div class="f-img" style="background:#e8f0f0;">📖</div>
-                        <div class="f-info">
-                            <div class="f-name">Med Student Supplies</div>
-                            <div class="f-price">₦6,000+</div>
-                            <div class="f-meta">⭐ 4.6 • 98 sales</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </form>
 
-            <!-- Section: Quick Picks -->
-            <div class="section-header">
-                <h2>⚡ Quick picks</h2>
-                <span class="see-all">See all</span>
-            </div>
+                <!-- ===== REGISTER FORM ===== -->
+                <form class="auth-form hidden" id="registerForm" autocomplete="off">
+                    <div class="form-title">Create account 🎓</div>
+                    <div class="form-subtitle">Join the CampusHub community today.</div>
 
-            <div class="product-grid">
-                <div class="product-card">
-                    <div class="img-wrap" style="background:#f0f0f0;">
-                        <span>🎧</span>
-                        <span class="tag">NEW</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Wireless AirPods Pro</div>
-                        <div class="price">₦45,000</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNILAG</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.6</span>
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-user"></i> Full Name</label>
+                        <div class="input-wrap">
+                            <i class="fa-regular fa-user"></i>
+                            <input type="text" placeholder="Chidi Okonkwo" required />
                         </div>
                     </div>
-                </div>
-                <div class="product-card">
-                    <div class="img-wrap" style="background:#e8f0e8;">
-                        <span>🧴</span>
-                        <span class="tag free">FREE</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Skincare Set (unused)</div>
-                        <div class="price">₦0 <small>₦8,500</small></div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.5</span>
+
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-envelope"></i> Email Address</label>
+                        <div class="input-wrap">
+                            <i class="fa-regular fa-envelope"></i>
+                            <input type="email" placeholder="you@university.edu" required />
                         </div>
                     </div>
-                </div>
-                <div class="product-card">
-                    <div class="img-wrap" style="background:#f0e8e8;">
-                        <span>⚽</span>
-                        <span class="tag hot">DEAL</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-lock"></i> Password</label>
+                        <div class="input-wrap">
+                            <i class="fa-regular fa-lock"></i>
+                            <input type="password" placeholder="Create a strong password" required id="registerPassword" />
+                            <span class="toggle-password" data-target="registerPassword">
+                                <i class="fa-regular fa-eye"></i>
+                            </span>
+                        </div>
+                        <div class="password-strength">
+                            <div class="bar" id="passwordStrengthBar"></div>
+                        </div>
+                        <div class="password-hint" id="passwordHint">Use 8+ characters with letters &amp; numbers.</div>
                     </div>
-                    <div class="info">
-                        <div class="name">Football Jersey (Man Utd)</div>
-                        <div class="price">₦8,000</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.8</span>
+
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-lock"></i> Confirm Password</label>
+                        <div class="input-wrap">
+                            <i class="fa-regular fa-lock"></i>
+                            <input type="password" placeholder="Confirm your password" required id="confirmPassword" />
+                            <span class="toggle-password" data-target="confirmPassword">
+                                <i class="fa-regular fa-eye"></i>
+                            </span>
                         </div>
                     </div>
-                </div>
-                <div class="product-card">
-                    <div class="img-wrap" style="background:#e8e8f0;">
-                        <span>📓</span>
-                        <span class="tag">BARGAIN</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">A4 Notebooks (Set of 5)</div>
-                        <div class="price">₦1,200</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNILAG</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.4</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-        </div>
+                    <button type="submit" class="btn-submit">
+                        Create Account <i class="fa-solid fa-arrow-right"></i>
+                    </button>
 
-        <!-- ===== BOTTOM NAV ===== -->
-        <div class="bottom-nav">
-            <div class="nav-item active">
-                <i class="fa-solid fa-house"></i>
-                <span>Home</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-solid fa-compass"></i>
-                <span>Explore</span>
-            </div>
-            <div class="nav-item sell-btn">
-                <i class="fa-solid fa-plus"></i>
-                <span>Sell</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-regular fa-heart"></i>
-                <span>Favorites</span>
-                <span class="nav-badge">3</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-regular fa-user"></i>
-                <span>Profile</span>
-            </div>
-        </div>
+                    <div class="auth-divider">
+                        <span>or continue with</span>
+                    </div>
 
-        <!-- ===== FILTER SIDEBAR ===== -->
-        <div class="filter-overlay" id="filterOverlay"></div>
-        <div class="filter-sidebar" id="filterSidebar">
-            <div class="filter-header">
-                <h3>Filters</h3>
-                <i class="fa-solid fa-times" id="filterClose"></i>
-            </div>
-            <div class="filter-body">
-                <div class="filter-group">
-                    <label>Price Range (₦)</label>
-                    <div class="price-range">
-                        <input type="number" placeholder="Min" min="0">
-                        <span>—</span>
-                        <input type="number" placeholder="Max" min="0">
+                    <div class="social-buttons">
+                        <button type="button" class="social-btn"><i class="fa-brands fa-google"></i> Google</button>
+                        <button type="button" class="social-btn"><i class="fa-brands fa-apple"></i> Apple</button>
                     </div>
-                </div>
-                <div class="filter-group">
-                    <label>Date Posted</label>
-                    <div class="date-range">
-                        <input type="date">
-                        <span>to</span>
-                        <input type="date">
+
+                    <div class="switch-link">
+                        Already have an account? <a id="switchToLogin">Sign in</a>
                     </div>
-                </div>
-                <div class="filter-group">
-                    <label>Badge</label>
-                    <select>
-                        <option>All</option>
-                        <option>Hot</option>
-                        <option>Free</option>
-                        <option>New</option>
-                        <option>Bargain</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Listing Type</label>
-                    <select>
-                        <option>All</option>
-                        <option>Sell</option>
-                        <option>Wanted</option>
-                        <option>Free</option>
-                    </select>
-                </div>
-            </div>
-            <div class="filter-footer">
-                <button class="btn-reset" id="filterReset">Reset</button>
-                <button class="btn-apply" id="filterApply">Apply Filters</button>
+                </form>
+
             </div>
         </div>
 
         <!-- Demo note -->
         <div class="demo-note">
-            <span>CampusHub</span> • real-world responsive app • designed for Nigerian students
+            <span>CampusHub</span> • secure login • designed for Nigerian students
         </div>
 
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast-message" id="toastMessage">
+        <i class="fa-regular fa-circle-check"></i> <span id="toastText">Success!</span>
     </div>
 
     <!-- ===== SCRIPTS ===== -->
     <script>
         (function() {
-            // ===== DARK MODE =====
+            'use strict';
+
+            // ===== DOM REFS =====
             const toggleBtn = document.getElementById('themeToggle');
             const html = document.documentElement;
 
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const switchToRegister = document.getElementById('switchToRegister');
+            const switchToLogin = document.getElementById('switchToLogin');
+
+            const toast = document.getElementById('toastMessage');
+            const toastText = document.getElementById('toastText');
+
+            // Password toggles
+            const togglePasswordBtns = document.querySelectorAll('.toggle-password');
+
+            // Register password strength
+            const registerPassword = document.getElementById('registerPassword');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            const passwordHint = document.getElementById('passwordHint');
+
+            // ===== DARK MODE =====
             const stored = localStorage.getItem('campusHubTheme');
             if (stored === 'dark') {
                 html.classList.add('dark-mode');
@@ -1568,132 +893,187 @@
                 localStorage.setItem('campusHubTheme', isDark ? 'dark' : 'light');
             });
 
-            // ===== FILTER SIDEBAR =====
-            const filterToggle = document.getElementById('filterToggle');
-            const filterClose = document.getElementById('filterClose');
-            const filterOverlay = document.getElementById('filterOverlay');
-            const filterSidebar = document.getElementById('filterSidebar');
-            const filterReset = document.getElementById('filterReset');
-            const filterApply = document.getElementById('filterApply');
-
-            function openSidebar() {
-                filterSidebar.classList.add('active');
-                filterOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeSidebar() {
-                filterSidebar.classList.remove('active');
-                filterOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-
-            filterToggle.addEventListener('click', openSidebar);
-            filterClose.addEventListener('click', closeSidebar);
-            filterOverlay.addEventListener('click', closeSidebar);
-
-            filterReset.addEventListener('click', function() {
-                const inputs = filterSidebar.querySelectorAll('input, select');
-                inputs.forEach(input => {
-                    if (input.type === 'number' || input.type === 'text') {
-                        input.value = '';
-                    } else if (input.type === 'date') {
-                        input.value = '';
-                    } else if (input.tagName === 'SELECT') {
-                        input.selectedIndex = 0;
-                    }
-                });
-            });
-
-            filterApply.addEventListener('click', function() {
-                // Demo: just log and close
-                console.log('Filters applied!');
-                closeSidebar();
-                // You can add a toast notification here
-                alert('Filters applied! (This is a demo)');
-            });
-
-            // ===== BANNER CAROUSEL =====
-            const track = document.getElementById('carouselTrack');
-            const dotsContainer = document.getElementById('carouselDots');
-            const slides = track.querySelectorAll('.carousel-slide');
-            let currentIndex = 0;
-            let totalSlides = slides.length;
-            let intervalId = null;
-
-            // Create dots
-            slides.forEach((_, index) => {
-                const dot = document.createElement('span');
-                dot.classList.add('dot');
-                if (index === 0) dot.classList.add('active');
-                dot.dataset.index = index;
-                dot.addEventListener('click', function() {
-                    goToSlide(parseInt(this.dataset.index));
-                });
-                dotsContainer.appendChild(dot);
-            });
-
-            const dots = dotsContainer.querySelectorAll('.dot');
-
-            function goToSlide(index) {
-                if (index < 0) index = totalSlides - 1;
-                if (index >= totalSlides) index = 0;
-                currentIndex = index;
-                track.style.transform = `translateX(-${currentIndex * 100}%)`;
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === currentIndex);
-                });
-            }
-
-            function nextSlide() {
-                goToSlide(currentIndex + 1);
-            }
-
-            function startCarousel() {
-                if (intervalId) clearInterval(intervalId);
-                intervalId = setInterval(nextSlide, 4000);
-            }
-
-            function stopCarousel() {
-                if (intervalId) {
-                    clearInterval(intervalId);
-                    intervalId = null;
+            // ===== TAB SWITCHING =====
+            function switchTab(tab) {
+                if (tab === 'login') {
+                    tabLogin.classList.add('active');
+                    tabRegister.classList.remove('active');
+                    loginForm.classList.remove('hidden');
+                    registerForm.classList.add('hidden');
+                } else {
+                    tabRegister.classList.add('active');
+                    tabLogin.classList.remove('active');
+                    registerForm.classList.remove('hidden');
+                    loginForm.classList.add('hidden');
+                }
+                // Reset password strength when switching to register
+                if (tab === 'register') {
+                    strengthBar.className = 'bar';
+                    strengthBar.style.width = '0%';
+                    passwordHint.textContent = 'Use 8+ characters with letters & numbers.';
+                    passwordHint.style.color = '';
                 }
             }
 
-            // Pause on hover
-            const carousel = document.querySelector('.banner-carousel');
-            carousel.addEventListener('mouseenter', stopCarousel);
-            carousel.addEventListener('mouseleave', startCarousel);
-            // Touch support
-            carousel.addEventListener('touchstart', stopCarousel);
-            carousel.addEventListener('touchend', startCarousel);
+            tabLogin.addEventListener('click', () => switchTab('login'));
+            tabRegister.addEventListener('click', () => switchTab('register'));
+            switchToRegister.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab('register');
+            });
+            switchToLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab('login');
+            });
 
-            startCarousel();
-
-            // ===== CATEGORY CLICK (Demo) =====
-            const catItems = document.querySelectorAll('.cat-item');
-            catItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    catItems.forEach(c => c.classList.remove('active'));
-                    this.classList.add('active');
+            // ===== PASSWORD TOGGLE VISIBILITY =====
+            togglePasswordBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    const input = document.getElementById(targetId);
+                    if (!input) return;
+                    const icon = this.querySelector('i');
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.className = 'fa-regular fa-eye-slash';
+                    } else {
+                        input.type = 'password';
+                        icon.className = 'fa-regular fa-eye';
+                    }
                 });
             });
 
-            // ===== WISHLIST CLICK (Demo) =====
-            const wishlistBtns = document.querySelectorAll('.wishlist-btn');
-            wishlistBtns.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const icon = this.querySelector('i');
-                    icon.classList.toggle('fa-regular');
-                    icon.classList.toggle('fa-solid');
-                    if (icon.classList.contains('fa-solid')) {
-                        icon.style.color = '#e74c3c';
-                    } else {
-                        icon.style.color = '';
-                    }
+            // ===== PASSWORD STRENGTH (Register) =====
+            function checkPasswordStrength(password) {
+                let score = 0;
+                if (password.length >= 8) score++;
+                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+                if (/\d/.test(password)) score++;
+                if (/[^a-zA-Z0-9]/.test(password)) score++;
+                return score;
+            }
+
+            registerPassword.addEventListener('input', function() {
+                const val = this.value;
+                const score = checkPasswordStrength(val);
+                const bar = strengthBar;
+
+                if (val.length === 0) {
+                    bar.className = 'bar';
+                    bar.style.width = '0%';
+                    passwordHint.textContent = 'Use 8+ characters with letters & numbers.';
+                    passwordHint.style.color = '';
+                    return;
+                }
+
+                if (score <= 1) {
+                    bar.className = 'bar weak';
+                    bar.style.width = '33%';
+                    passwordHint.textContent = 'Weak — add more variety (uppercase, numbers, symbols).';
+                    passwordHint.style.color = 'var(--red)';
+                } else if (score === 2) {
+                    bar.className = 'bar medium';
+                    bar.style.width = '66%';
+                    passwordHint.textContent = 'Medium — add symbols or numbers for strength.';
+                    passwordHint.style.color = '#f5b342';
+                } else {
+                    bar.className = 'bar strong';
+                    bar.style.width = '100%';
+                    passwordHint.textContent = 'Strong password! 💪';
+                    passwordHint.style.color = 'var(--green)';
+                }
+            });
+
+            // ===== TOAST NOTIFICATION =====
+            function showToast(message, isError) {
+                toastText.textContent = message;
+                toast.className = 'toast-message show';
+                if (isError) {
+                    toast.querySelector('i').className = 'fa-regular fa-circle-exclamation';
+                    toast.querySelector('i').style.color = 'var(--red)';
+                } else {
+                    toast.querySelector('i').className = 'fa-regular fa-circle-check';
+                    toast.querySelector('i').style.color = '';
+                }
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // ===== FORM SUBMISSIONS =====
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value.trim();
+                const password = this.querySelector('input[type="password"]').value;
+
+                if (!email || !password) {
+                    showToast('Please fill in all fields.', true);
+                    return;
+                }
+                if (!email.includes('@') || !email.includes('.')) {
+                    showToast('Please enter a valid email address.', true);
+                    return;
+                }
+                showToast('Welcome back! Redirecting to dashboard...');
+                // Simulate redirect
+                setTimeout(() => {
+                    window.location.href = '#';
+                }, 1200);
+            });
+
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = this.querySelector('input[type="text"]').value.trim();
+                const email = this.querySelector('input[type="email"]').value.trim();
+                const pass = registerPassword.value;
+                const confirm = confirmPassword.value;
+
+                if (!name || !email || !pass || !confirm) {
+                    showToast('Please fill in all fields.', true);
+                    return;
+                }
+                if (!email.includes('@') || !email.includes('.')) {
+                    showToast('Please enter a valid email address.', true);
+                    return;
+                }
+                if (pass.length < 8) {
+                    showToast('Password must be at least 8 characters.', true);
+                    return;
+                }
+                if (pass !== confirm) {
+                    showToast('Passwords do not match.', true);
+                    return;
+                }
+                showToast('Account created successfully! 🎉');
+                // Simulate redirect
+                setTimeout(() => {
+                    switchTab('login');
+                    // Pre-fill email
+                    const loginEmail = loginForm.querySelector('input[type="email"]');
+                    if (loginEmail) loginEmail.value = email;
+                    showToast('Please sign in with your new account.');
+                }, 1200);
+            });
+
+            // ===== SOCIAL BUTTONS (Demo) =====
+            document.querySelectorAll('.social-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const provider = this.textContent.trim();
+                    showToast(`Continuing with ${provider}...`);
                 });
+            });
+
+            // ===== FORGOT PASSWORD (Demo) =====
+            document.querySelector('.forgot-link')?.addEventListener('click', function() {
+                showToast('Password reset link sent to your email.');
+            });
+
+            // ===== KEYBOARD SHORTCUT: Escape to close toast =====
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    toast.classList.remove('show');
+                }
             });
 
         })();
