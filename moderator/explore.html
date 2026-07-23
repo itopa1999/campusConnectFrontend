@@ -24,123 +24,361 @@
             background: linear-gradient(135deg, #4a0e4e, #1a0b2e);
         }
 
-        /* ---- Tabs ---- */
+        /* ============================================================
+           ENHANCED TABS
+           ============================================================ */
         .section-tabs {
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 4px;
+            gap: 6px;
+            margin-bottom: 24px;
+            padding: 4px;
+            background: var(--bg-input);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+            position: relative;
         }
         .section-tabs .tab-btn {
-            padding: 8px 20px;
+            flex: 1;
+            padding: 10px 16px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
-            border-radius: 30px;
-            transition: all 0.2s;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .section-tabs .tab-btn i {
+            font-size: 15px;
+            transition: transform 0.3s ease;
         }
         .section-tabs .tab-btn:hover {
             color: var(--text-primary);
-            background: var(--bg-input);
+            background: rgba(255, 255, 255, 0.5);
         }
         .section-tabs .tab-btn.active {
+            background: var(--bg-card);
             color: var(--green);
-            background: var(--green-bg);
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.15);
+            transform: scale(1.02);
         }
-        .section-tabs .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 20%;
-            right: 20%;
-            height: 3px;
+        .section-tabs .tab-btn.active i {
+            transform: scale(1.1);
+        }
+        .section-tabs .tab-btn .tab-badge {
             background: var(--green);
-            border-radius: 4px;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 8px;
+            border-radius: 20px;
+            margin-left: 4px;
         }
         .section-tabs.hidden {
             display: none;
         }
 
-        /* ---- Pagination ---- */
+        /* Dark mode tabs */
+        .dark-mode .section-tabs {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .section-tabs .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .dark-mode .section-tabs .tab-btn.active {
+            background: var(--bg-card);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ─── Mobile tabs ─── */
+        @media (max-width: 560px) {
+            .section-tabs {
+                gap: 4px;
+                padding: 3px;
+                border-radius: 12px;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .section-tabs::-webkit-scrollbar {
+                display: none;
+            }
+            .section-tabs .tab-btn {
+                font-size: 11px;
+                padding: 8px 12px;
+                flex: 0 0 auto;
+                gap: 5px;
+            }
+            .section-tabs .tab-btn i {
+                font-size: 13px;
+            }
+            .section-tabs .tab-btn .tab-badge {
+                font-size: 8px;
+                padding: 0 6px;
+            }
+        }
+
+        /* ============================================================
+           FILTER BAR – shows active filters
+           ============================================================ */
+        .filter-bar {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            padding: 10px 14px;
+            background: var(--green-bg);
+            border-radius: 12px;
+            border: 1px solid rgba(13, 138, 62, 0.15);
+            animation: slideDown 0.3s ease;
+        }
+        .filter-bar.visible {
+            display: flex;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .filter-bar .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-bar .filter-label i {
+            color: var(--green);
+        }
+        .filter-bar .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px 4px 14px;
+            background: var(--bg-card);
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        .filter-bar .filter-tag .remove-filter {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 2px;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+        .filter-bar .filter-tag .remove-filter:hover {
+            color: var(--red);
+        }
+        .filter-bar .filter-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+        .filter-bar .clear-all-filters {
+            background: none;
+            border: none;
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .filter-bar .clear-all-filters:hover {
+            background: rgba(231, 76, 60, 0.08);
+        }
+
+        .dark-mode .filter-bar {
+            background: var(--green-bg);
+            border-color: rgba(46, 204, 113, 0.15);
+        }
+        .dark-mode .filter-bar .filter-tag {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        /* ============================================================
+           SEARCH HEADING
+           ============================================================ */
+        .search-heading {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            animation: slideDown 0.3s ease;
+        }
+        .search-heading.visible {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .search-heading .search-icon {
+            color: var(--green);
+            font-size: 18px;
+        }
+        .search-heading .search-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+        }
+        .search-heading .search-text span {
+            color: var(--green);
+            font-weight: 700;
+        }
+        .search-heading .search-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .search-heading .clear-search {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 4px;
+            transition: color 0.2s;
+        }
+        .search-heading .clear-search:hover {
+            color: var(--red);
+        }
+
+        .dark-mode .search-heading {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        /* ============================================================
+           LISTINGS GRID – smooth transitions
+           ============================================================ */
+        .product-grid {
+            transition: opacity 0.3s ease;
+        }
+        .product-grid.loading {
+            opacity: 0.5;
+        }
+
+        /* ============================================================
+           PAGINATION
+           ============================================================ */
         .pagination-controls {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 16px;
-            margin-top: 24px;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
         }
         .pagination-controls button {
             padding: 8px 20px;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             background: var(--bg-card);
             color: var(--text-secondary);
             border-radius: 30px;
             font-weight: 600;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .pagination-controls button:hover:not(:disabled) {
             background: var(--green-bg);
             border-color: var(--green);
             color: var(--green);
+            transform: translateY(-2px);
         }
         .pagination-controls button:disabled {
-            opacity: 0.4;
+            opacity: 0.3;
             cursor: not-allowed;
+            transform: none;
         }
         .pagination-controls .page-info {
             font-size: 14px;
             color: var(--text-muted);
             font-weight: 500;
+            min-width: 80px;
+            text-align: center;
         }
 
-        /* ---- Search results heading ---- */
-        .search-heading {
-            display: none;
-            margin-bottom: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .search-heading.visible {
-            display: block;
-        }
-
-        /* ---- Empty state ---- */
+        /* ============================================================
+           EMPTY STATE
+           ============================================================ */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 48px 20px;
             color: var(--text-muted);
         }
-        .empty-state i {
-            font-size: 48px;
+        .empty-state .empty-icon {
+            font-size: 56px;
             opacity: 0.3;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             display: block;
         }
-
-        /* ---- Loading spinner inside grid ---- */
-        .grid-loading {
-            text-align: center;
-            padding: 40px;
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .empty-state p {
+            font-size: 14px;
             color: var(--text-muted);
         }
-        .grid-loading i {
-            font-size: 32px;
-            animation: spin 1s linear infinite;
+
+        /* ============================================================
+           GRID LOADING
+           ============================================================ */
+        .grid-loading {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-muted);
+        }
+        .grid-loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
+        }
+        .grid-loading p {
+            font-size: 14px;
+            font-weight: 500;
         }
 
-        /* ---- Demo note ---- */
+        /* ============================================================
+           DEMO NOTE
+           ============================================================ */
         .demo-note {
             text-align: center;
             font-size: 10px;
@@ -155,35 +393,6 @@
             font-weight: 600;
             color: var(--green);
             transition: color var(--transition);
-        }
-
-        /* ---- Product card override for dynamic images ---- */
-        .product-card .img-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .product-card .img-wrap .tag {
-            z-index: 2;
-        }
-        .product-card .img-wrap .wishlist-btn {
-            z-index: 2;
-        }
-        .product-card .img-wrap .placeholder-icon {
-            font-size: 40px;
-            color: var(--text-muted2);
-        }
-
-        /* Mobile tweaks */
-        @media (max-width: 480px) {
-            .section-tabs .tab-btn {
-                font-size: 12px;
-                padding: 6px 14px;
-            }
-            .pagination-controls button {
-                padding: 6px 14px;
-                font-size: 12px;
-            }
         }
     </style>
 </head>
@@ -211,16 +420,16 @@
             </div>
         </div>
 
-        <!-- ===== CATEGORIES (static) ===== -->
+        <!-- ===== CATEGORIES (clickable filters) ===== -->
         <div class="categories">
             <div class="cat-scroll">
-                <span class="cat-item active"><i class="fa-solid fa-house"></i> All</span>
-                <span class="cat-item"><i class="fa-solid fa-book"></i> Textbooks</span>
-                <span class="cat-item"><i class="fa-solid fa-laptop"></i> Gadgets</span>
-                <span class="cat-item"><i class="fa-solid fa-utensils"></i> Food</span>
-                <span class="cat-item"><i class="fa-solid fa-shirt"></i> Fashion</span>
-                <span class="cat-item"><i class="fa-solid fa-tools"></i> Services</span>
-                <span class="cat-item"><i class="fa-solid fa-futbol"></i> Sports</span>
+                <span class="cat-item active" data-category="all"><i class="fa-solid fa-house"></i> All</span>
+                <span class="cat-item" data-category="textbooks"><i class="fa-solid fa-book"></i> Textbooks</span>
+                <span class="cat-item" data-category="gadgets"><i class="fa-solid fa-laptop"></i> Gadgets</span>
+                <span class="cat-item" data-category="food"><i class="fa-solid fa-utensils"></i> Food</span>
+                <span class="cat-item" data-category="fashion"><i class="fa-solid fa-shirt"></i> Fashion</span>
+                <span class="cat-item" data-category="services"><i class="fa-solid fa-tools"></i> Services</span>
+                <span class="cat-item" data-category="sports"><i class="fa-solid fa-futbol"></i> Sports</span>
             </div>
         </div>
 
@@ -255,7 +464,7 @@
                 <div class="carousel-dots" id="carouselDots"></div>
             </div>
 
-            <!-- Mini Banner (optional, keep) -->
+            <!-- Mini Banner -->
             <div class="mini-banner">
                 <div class="banner-text">
                     <h3>🎓 Fresher's Deal</h3>
@@ -264,21 +473,39 @@
                 <span class="banner-cta">Shop now</span>
             </div>
 
-            <!-- ===== SECTION TABS ===== -->
+            <!-- ===== ENHANCED TABS ===== -->
             <div class="section-tabs" id="sectionTabs">
-                <button class="tab-btn active" data-section="hot_sales">🔥 Hot Sales</button>
-                <button class="tab-btn" data-section="departmental">🏛️ Departmental</button>
-                <button class="tab-btn" data-section="for_you">🎯 For You</button>
+                <button class="tab-btn active" data-section="hot_sales">
+                    <i class="fa-solid fa-fire"></i> Hot Sales
+                    <span class="tab-badge">🔥</span>
+                </button>
+                <button class="tab-btn" data-section="departmental">
+                    <i class="fa-solid fa-building-columns"></i> Departmental
+                </button>
+                <button class="tab-btn" data-section="for_you">
+                    <i class="fa-solid fa-user"></i> For You
+                </button>
             </div>
 
-            <!-- Search heading (hidden by default) -->
+            <!-- ===== FILTER BAR ===== -->
+            <div class="filter-bar" id="filterBar">
+                <span class="filter-label"><i class="fa-solid fa-sliders-h"></i> Filters:</span>
+                <div id="filterTags" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+                <span class="filter-count" id="filterCount"></span>
+                <button class="clear-all-filters" id="clearAllFilters">Clear all</button>
+            </div>
+
+            <!-- ===== SEARCH HEADING ===== -->
             <div class="search-heading" id="searchHeading">
-                <i class="fa-solid fa-search"></i> Results for "<span id="searchQueryDisplay"></span>"
+                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <span class="search-text">Results for "<span id="searchQueryDisplay"></span>"</span>
+                <span class="search-count" id="searchCount"></span>
+                <button class="clear-search" id="clearSearch" title="Clear search"><i class="fa-solid fa-times"></i></button>
             </div>
 
             <!-- Listings Grid -->
             <div id="listingsGrid" class="product-grid">
-                <!-- Will be populated by JS -->
+                <!-- Populated by JS -->
             </div>
 
             <!-- Pagination -->
@@ -290,7 +517,7 @@
 
         </main>
 
-        <!-- ===== FILTER SIDEBAR (unchanged) ===== -->
+        <!-- ===== FILTER SIDEBAR ===== -->
         <div class="filter-overlay" id="filterOverlay"></div>
         <aside class="filter-sidebar" id="filterSidebar">
             <div class="filter-header">
@@ -301,36 +528,36 @@
                 <div class="filter-group">
                     <label>Price Range (₦)</label>
                     <div class="price-range">
-                        <input type="number" placeholder="Min" min="0" />
+                        <input type="number" placeholder="Min" min="0" id="priceMin" />
                         <span>—</span>
-                        <input type="number" placeholder="Max" min="0" />
+                        <input type="number" placeholder="Max" min="0" id="priceMax" />
                     </div>
                 </div>
                 <div class="filter-group">
                     <label>Date Posted</label>
                     <div class="date-range">
-                        <input type="date" />
+                        <input type="date" id="dateFrom" />
                         <span>to</span>
-                        <input type="date" />
+                        <input type="date" id="dateTo" />
                     </div>
                 </div>
                 <div class="filter-group">
                     <label>Badge</label>
-                    <select>
-                        <option>All</option>
-                        <option>Hot</option>
-                        <option>Free</option>
-                        <option>New</option>
-                        <option>Bargain</option>
+                    <select id="badgeFilter">
+                        <option value="all">All</option>
+                        <option value="hot">Hot</option>
+                        <option value="free">Free</option>
+                        <option value="new">New</option>
+                        <option value="bargain">Bargain</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label>Listing Type</label>
-                    <select>
-                        <option>All</option>
-                        <option>Sell</option>
-                        <option>Wanted</option>
-                        <option>Free</option>
+                    <select id="listingTypeFilter">
+                        <option value="all">All</option>
+                        <option value="sell">Sell</option>
+                        <option value="wanted">Wanted</option>
+                        <option value="free">Free</option>
                     </select>
                 </div>
             </div>
@@ -362,6 +589,12 @@
             const searchInput = document.getElementById('searchInput');
             const searchHeading = document.getElementById('searchHeading');
             const searchQueryDisplay = document.getElementById('searchQueryDisplay');
+            const searchCount = document.getElementById('searchCount');
+            const clearSearchBtn = document.getElementById('clearSearch');
+            const filterBar = document.getElementById('filterBar');
+            const filterTags = document.getElementById('filterTags');
+            const filterCount = document.getElementById('filterCount');
+            const clearAllFiltersBtn = document.getElementById('clearAllFilters');
             const prevBtn = document.getElementById('prevPage');
             const nextBtn = document.getElementById('nextPage');
             const pageInfo = document.getElementById('pageInfo');
@@ -372,17 +605,17 @@
             let totalPages = 1;
             let isSearchMode = false;
             let searchQuery = '';
+            let activeFilters = {};
 
             // ─── Dummy data generator ─────────────────────────────
-            function generateDummyItems(section, page, perPage = 8, query = '') {
-                // Simulate different items per section
+            function generateDummyItems(section, page, perPage = 8, query = '', filters = {}) {
                 const categories = ['Laptops & Computers', 'Fashion & Clothing', 'Academic Services', 'Event Tickets', 'Electronics', 'Books', 'Sports', 'Food'];
                 const badges = ['sell', 'freebie', 'wanted', 'swap'];
                 const hotspots = ['Lecture Theatres Complex', 'Main Gate', 'Faculty of Engineering Block', 'Student Union Building', 'Library', 'Cafeteria'];
 
-                const items = [];
+                let items = [];
                 const start = (page - 1) * perPage;
-                const totalItems = 25; // fixed for demo
+                const totalItems = 25;
                 const count = Math.min(perPage, totalItems - start);
 
                 for (let i = 0; i < count; i++) {
@@ -393,6 +626,22 @@
                     const badge = badges[Math.floor(Math.random() * badges.length)];
                     const hotspot = hotspots[Math.floor(Math.random() * hotspots.length)];
                     const imageId = (idx % 10) + 1;
+
+                    // Apply category filter if present
+                    if (filters.category && filters.category !== 'all') {
+                        const catMap = {
+                            'textbooks': 'Books',
+                            'gadgets': 'Electronics',
+                            'food': 'Food',
+                            'fashion': 'Fashion & Clothing',
+                            'services': 'Academic Services',
+                            'sports': 'Sports'
+                        };
+                        if (catMap[filters.category] && !category.includes(catMap[filters.category])) {
+                            continue;
+                        }
+                    }
+
                     items.push({
                         id: idx,
                         title: title,
@@ -404,16 +653,35 @@
                     });
                 }
 
-                const totalPages = Math.ceil(totalItems / perPage);
+                // If no items after filtering, return empty
+                if (items.length === 0) {
+                    return {
+                        is_success: true,
+                        data: {
+                            items: [],
+                            pagination: {
+                                page: 1,
+                                per_page: perPage,
+                                total_pages: 1,
+                                total_items: 0,
+                                has_next: false,
+                                has_previous: false
+                            }
+                        }
+                    };
+                }
+
+                const actualTotal = items.length;
+                const totalPages = Math.ceil(actualTotal / perPage);
                 return {
                     is_success: true,
                     data: {
-                        items: items,
+                        items: items.slice(0, perPage),
                         pagination: {
                             page: page,
                             per_page: perPage,
                             total_pages: totalPages,
-                            total_items: totalItems,
+                            total_items: actualTotal,
                             has_next: page < totalPages,
                             has_previous: page > 1
                         }
@@ -422,20 +690,25 @@
             }
 
             // ─── Fetch listings ────────────────────────────────────
-            function fetchListings(section, page, query = '') {
+            function fetchListings(section, page, query = '', filters = {}) {
                 return new Promise((resolve) => {
-                    // Simulate network delay
                     setTimeout(() => {
-                        const data = generateDummyItems(section, page, 8, query);
+                        const data = generateDummyItems(section, page, 8, query, filters);
                         resolve(data);
-                    }, 400);
+                    }, 300);
                 });
             }
 
             // ─── Render listings ──────────────────────────────────
             function renderListings(response) {
                 if (!response.is_success) {
-                    grid.innerHTML = `<div class="empty-state"><i class="fa-regular fa-circle-xmark"></i>Failed to load data.</div>`;
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <span class="empty-icon">⚠️</span>
+                            <h3>Oops!</h3>
+                            <p>Something went wrong. Please try again.</p>
+                        </div>
+                    `;
                     return;
                 }
 
@@ -444,17 +717,21 @@
                 totalPages = pagination.total_pages || 1;
                 currentPage = pagination.page || 1;
 
-                // Update pagination UI
                 pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
                 prevBtn.disabled = !pagination.has_previous;
                 nextBtn.disabled = !pagination.has_next;
 
                 if (items.length === 0) {
-                    grid.innerHTML = `<div class="empty-state"><i class="fa-regular fa-inbox"></i>No items found.</div>`;
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <span class="empty-icon">🔍</span>
+                            <h3>No results found</h3>
+                            <p>Try adjusting your filters or search terms.</p>
+                        </div>
+                    `;
                     return;
                 }
 
-                // Build cards
                 grid.innerHTML = items.map(item => {
                     const badgeClass = item.badge === 'freebie' ? 'free' : (item.badge === 'sell' ? 'hot' : '');
                     const badgeText = item.badge ? item.badge.toUpperCase() : '';
@@ -491,58 +768,233 @@
             }
 
             // ─── Load section ──────────────────────────────────────
-            async function loadSection(section, page = 1, query = '') {
-                // Show loading state
-                grid.innerHTML = `<div class="grid-loading"><i class="fa-solid fa-spinner"></i><br>Loading…</div>`;
+            async function loadSection(section, page = 1, query = '', filters = {}) {
+                grid.classList.add('loading');
+                grid.innerHTML = `
+                    <div class="grid-loading">
+                        <div class="spinner"></div>
+                        <p>Loading amazing finds…</p>
+                    </div>
+                `;
 
                 try {
-                    const response = await fetchListings(section, page, query);
+                    const response = await fetchListings(section, page, query, filters);
                     renderListings(response);
+
+                    // Update filter count
+                    if (isSearchMode || Object.keys(activeFilters).length > 0) {
+                        const total = response.data.pagination?.total_items || 0;
+                        filterCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
+                    }
                 } catch (err) {
-                    grid.innerHTML = `<div class="empty-state"><i class="fa-regular fa-circle-xmark"></i>Error: ${err.message}</div>`;
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <span class="empty-icon">❌</span>
+                            <h3>Error</h3>
+                            <p>${err.message}</p>
+                        </div>
+                    `;
+                } finally {
+                    grid.classList.remove('loading');
+                }
+            }
+
+            // ─── Update filter bar ────────────────────────────────
+            function updateFilterBar() {
+                const tags = [];
+                let filterCount = 0;
+
+                if (isSearchMode && searchQuery) {
+                    tags.push(`
+                        <span class="filter-tag">
+                            <i class="fa-solid fa-search"></i> "${searchQuery}"
+                            <button class="remove-filter" data-type="search" title="Clear search">&times;</button>
+                        </span>
+                    `);
+                    filterCount++;
+                }
+
+                if (activeFilters.category && activeFilters.category !== 'all') {
+                    const catNames = {
+                        'textbooks': 'Textbooks',
+                        'gadgets': 'Gadgets',
+                        'food': 'Food',
+                        'fashion': 'Fashion',
+                        'services': 'Services',
+                        'sports': 'Sports'
+                    };
+                    tags.push(`
+                        <span class="filter-tag">
+                            <i class="fa-solid fa-tag"></i> ${catNames[activeFilters.category] || activeFilters.category}
+                            <button class="remove-filter" data-type="category" title="Remove category">&times;</button>
+                        </span>
+                    `);
+                    filterCount++;
+                }
+
+                if (activeFilters.priceMin || activeFilters.priceMax) {
+                    const label = activeFilters.priceMin && activeFilters.priceMax
+                        ? `₦${activeFilters.priceMin} – ₦${activeFilters.priceMax}`
+                        : activeFilters.priceMin ? `≥ ₦${activeFilters.priceMin}` : `≤ ₦${activeFilters.priceMax}`;
+                    tags.push(`
+                        <span class="filter-tag">
+                            <i class="fa-solid fa-coins"></i> ${label}
+                            <button class="remove-filter" data-type="price" title="Remove price filter">&times;</button>
+                        </span>
+                    `);
+                    filterCount++;
+                }
+
+                if (activeFilters.badge && activeFilters.badge !== 'all') {
+                    tags.push(`
+                        <span class="filter-tag">
+                            <i class="fa-solid fa-medal"></i> ${activeFilters.badge.charAt(0).toUpperCase() + activeFilters.badge.slice(1)}
+                            <button class="remove-filter" data-type="badge" title="Remove badge filter">&times;</button>
+                        </span>
+                    `);
+                    filterCount++;
+                }
+
+                if (activeFilters.listingType && activeFilters.listingType !== 'all') {
+                    tags.push(`
+                        <span class="filter-tag">
+                            <i class="fa-solid fa-list"></i> ${activeFilters.listingType.charAt(0).toUpperCase() + activeFilters.listingType.slice(1)}
+                            <button class="remove-filter" data-type="listingType" title="Remove listing type filter">&times;</button>
+                        </span>
+                    `);
+                    filterCount++;
+                }
+
+                if (filterCount > 0) {
+                    filterBar.classList.add('visible');
+                    filterTags.innerHTML = tags.join('');
+                    document.getElementById('filterCount').textContent = `${filterCount} filter${filterCount > 1 ? 's' : ''} applied`;
+                } else {
+                    filterBar.classList.remove('visible');
+                    filterTags.innerHTML = '';
+                    document.getElementById('filterCount').textContent = '';
+                }
+
+                // Bind remove buttons
+                filterTags.querySelectorAll('.remove-filter').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const type = this.dataset.type;
+                        if (type === 'search') {
+                            clearSearch();
+                        } else if (type === 'category') {
+                            activeFilters.category = 'all';
+                            document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
+                            document.querySelector('.cat-item[data-category="all"]')?.classList.add('active');
+                            applyAllFilters();
+                        } else if (type === 'price') {
+                            delete activeFilters.priceMin;
+                            delete activeFilters.priceMax;
+                            document.getElementById('priceMin').value = '';
+                            document.getElementById('priceMax').value = '';
+                            applyAllFilters();
+                        } else if (type === 'badge') {
+                            activeFilters.badge = 'all';
+                            document.getElementById('badgeFilter').value = 'all';
+                            applyAllFilters();
+                        } else if (type === 'listingType') {
+                            activeFilters.listingType = 'all';
+                            document.getElementById('listingTypeFilter').value = 'all';
+                            applyAllFilters();
+                        }
+                    });
+                });
+            }
+
+            // ─── Apply all filters ─────────────────────────────────
+            function applyAllFilters() {
+                const hasFilters = Object.keys(activeFilters).some(k => activeFilters[k] && activeFilters[k] !== 'all' && activeFilters[k] !== '');
+                const hasSearch = isSearchMode && searchQuery;
+
+                if (hasSearch || hasFilters) {
+                    tabsContainer.classList.add('hidden');
+                    searchHeading.classList.toggle('visible', isSearchMode);
+                    if (isSearchMode) {
+                        searchQueryDisplay.textContent = searchQuery;
+                    }
+                    updateFilterBar();
+                    loadSection('search', 1, searchQuery, activeFilters);
+                } else {
+                    // Back to normal tabs mode
+                    tabsContainer.classList.remove('hidden');
+                    searchHeading.classList.remove('visible');
+                    filterBar.classList.remove('visible');
+                    loadSection(currentSection, 1);
                 }
             }
 
             // ─── Switch tab ────────────────────────────────────────
             function switchTab(section) {
-                if (isSearchMode) {
-                    // Exit search mode
-                    isSearchMode = false;
-                    searchInput.value = '';
-                    searchHeading.classList.remove('visible');
-                    tabsContainer.classList.remove('hidden');
+                if (isSearchMode || Object.keys(activeFilters).length > 0) {
+                    // Clear all filters and search
+                    clearAllState();
                 }
                 currentSection = section;
                 currentPage = 1;
-                // Update active tab
+                isSearchMode = false;
+                searchQuery = '';
+                searchInput.value = '';
+                activeFilters = {};
+
                 tabBtns.forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.section === section);
                 });
+
+                tabsContainer.classList.remove('hidden');
+                searchHeading.classList.remove('visible');
+                filterBar.classList.remove('visible');
+
                 loadSection(section, 1);
+            }
+
+            // ─── Clear all state ───────────────────────────────────
+            function clearAllState() {
+                isSearchMode = false;
+                searchQuery = '';
+                searchInput.value = '';
+                activeFilters = {};
+                document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
+                document.querySelector('.cat-item[data-category="all"]')?.classList.add('active');
+                document.getElementById('priceMin').value = '';
+                document.getElementById('priceMax').value = '';
+                document.getElementById('badgeFilter').value = 'all';
+                document.getElementById('listingTypeFilter').value = 'all';
+                searchHeading.classList.remove('visible');
+                filterBar.classList.remove('visible');
+                tabsContainer.classList.remove('hidden');
+            }
+
+            // ─── Clear search ──────────────────────────────────────
+            function clearSearch() {
+                isSearchMode = false;
+                searchQuery = '';
+                searchInput.value = '';
+                searchHeading.classList.remove('visible');
+                if (Object.keys(activeFilters).some(k => activeFilters[k] && activeFilters[k] !== 'all' && activeFilters[k] !== '')) {
+                    applyAllFilters();
+                } else {
+                    tabsContainer.classList.remove('hidden');
+                    filterBar.classList.remove('visible');
+                    loadSection(currentSection, 1);
+                }
             }
 
             // ─── Handle search ─────────────────────────────────────
             async function performSearch(query) {
                 if (!query.trim()) {
-                    // If empty, go back to current section
-                    if (isSearchMode) {
-                        isSearchMode = false;
-                        searchHeading.classList.remove('visible');
-                        tabsContainer.classList.remove('hidden');
-                        loadSection(currentSection, currentPage);
-                    }
+                    clearSearch();
                     return;
                 }
 
                 isSearchMode = true;
                 searchQuery = query.trim();
                 searchQueryDisplay.textContent = searchQuery;
-                searchHeading.classList.add('visible');
-                tabsContainer.classList.add('hidden');
-
-                // Reset pagination for search
-                currentPage = 1;
-                await loadSection('search', 1, searchQuery);
+                applyAllFilters();
             }
 
             // ─── Pagination ────────────────────────────────────────
@@ -550,8 +1002,9 @@
                 const newPage = currentPage + delta;
                 if (newPage < 1 || newPage > totalPages) return;
                 currentPage = newPage;
-                if (isSearchMode) {
-                    loadSection('search', currentPage, searchQuery);
+                const hasFilters = Object.keys(activeFilters).some(k => activeFilters[k] && activeFilters[k] !== 'all' && activeFilters[k] !== '');
+                if (isSearchMode || hasFilters) {
+                    loadSection('search', currentPage, searchQuery, activeFilters);
                 } else {
                     loadSection(currentSection, currentPage);
                 }
@@ -577,7 +1030,90 @@
                 }
             });
 
-            // Optional: also search when user clicks the filter toggle? No, keep as is.
+            // Clear search button
+            clearSearchBtn.addEventListener('click', clearSearch);
+
+            // Clear all filters button
+            clearAllFiltersBtn.addEventListener('click', function() {
+                clearAllState();
+                loadSection(currentSection, 1);
+            });
+
+            // ─── Category clicks (act as filters) ──────────────────
+            const catItems = document.querySelectorAll('.cat-item');
+            catItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    catItems.forEach(function(c) { c.classList.remove('active'); });
+                    this.classList.add('active');
+
+                    const category = this.dataset.category;
+                    if (category === 'all') {
+                        delete activeFilters.category;
+                    } else {
+                        activeFilters.category = category;
+                    }
+
+                    // If we're in a tab, switch to search mode
+                    if (!isSearchMode && !tabsContainer.classList.contains('hidden')) {
+                        isSearchMode = true;
+                        tabsContainer.classList.add('hidden');
+                    }
+
+                    applyAllFilters();
+                });
+            });
+
+            // ─── Filter sidebar apply ──────────────────────────────
+            document.getElementById('filterApply').addEventListener('click', function() {
+                const priceMin = document.getElementById('priceMin').value;
+                const priceMax = document.getElementById('priceMax').value;
+                const badge = document.getElementById('badgeFilter').value;
+                const listingType = document.getElementById('listingTypeFilter').value;
+
+                // Apply filters
+                if (priceMin) activeFilters.priceMin = parseInt(priceMin);
+                else delete activeFilters.priceMin;
+
+                if (priceMax) activeFilters.priceMax = parseInt(priceMax);
+                else delete activeFilters.priceMax;
+
+                if (badge && badge !== 'all') activeFilters.badge = badge;
+                else delete activeFilters.badge;
+
+                if (listingType && listingType !== 'all') activeFilters.listingType = listingType;
+                else delete activeFilters.listingType;
+
+                // Close sidebar
+                document.getElementById('filterClose').click();
+
+                // Switch to filter mode
+                if (!isSearchMode && !tabsContainer.classList.contains('hidden')) {
+                    isSearchMode = true;
+                    tabsContainer.classList.add('hidden');
+                }
+
+                applyAllFilters();
+
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.success('Filters applied!', { duration: 2000 });
+                }
+            });
+
+            // ─── Filter sidebar reset ─────────────────────────────
+            document.getElementById('filterReset').addEventListener('click', function() {
+                document.getElementById('priceMin').value = '';
+                document.getElementById('priceMax').value = '';
+                document.getElementById('badgeFilter').value = 'all';
+                document.getElementById('listingTypeFilter').value = 'all';
+                delete activeFilters.priceMin;
+                delete activeFilters.priceMax;
+                delete activeFilters.badge;
+                delete activeFilters.listingType;
+                applyAllFilters();
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.info('Filters reset.', { duration: 1500 });
+                }
+            });
 
             // Pagination buttons
             prevBtn.addEventListener('click', () => changePage(-1));
@@ -639,15 +1175,6 @@
 
                 startCarousel();
             }
-
-            // ─── Category clicks (static) ─────────────────────────
-            const catItems = document.querySelectorAll('.cat-item');
-            catItems.forEach(function(item) {
-                item.addEventListener('click', function() {
-                    catItems.forEach(function(c) { c.classList.remove('active'); });
-                    this.classList.add('active');
-                });
-            });
 
             // ─── INIT: load hot_sales on page load ────────────────
             loadSection('hot_sales', 1);
