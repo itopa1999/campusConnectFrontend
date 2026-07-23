@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal Demo – CampusHub</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <style>
+        /* Page-specific demo styles */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .demo-btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .demo-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .demo-btn.danger { background: var(--red); }
+        .demo-btn.warning { background: var(--orange); }
+        .demo-btn.success { background: var(--green); }
+        .demo-btn.info { background: var(--blue); }
+        .demo-btn.default { background: #6c757d; }
+
+        h1 { text-align: center; margin-top: 40px; color: var(--text-primary); }
+        .subtitle { text-align: center; color: var(--text-muted); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 CampusHub Modal Demo</h1>
+    <p class="subtitle">Click any button to see the modal in action</p>
+
+    <div class="demo-grid">
+        <button class="demo-btn danger" onclick="showDeleteModal()">
+            <i class="fa-solid fa-trash"></i> Delete (Red)
+        </button>
+        <button class="demo-btn warning" onclick="showWarningModal()">
+            <i class="fa-solid fa-triangle-exclamation"></i> Warning (Orange)
+        </button>
+        <button class="demo-btn success" onclick="showConfirmModal()">
+            <i class="fa-solid fa-check"></i> Confirm (Green)
+        </button>
+        <button class="demo-btn info" onclick="showInfoModal()">
+            <i class="fa-solid fa-circle-info"></i> Info (Blue)
+        </button>
+        <button class="demo-btn default" onclick="showCustomModal()">
+            <i class="fa-solid fa-pen"></i> Custom
+        </button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/modal1.js"></script>
+    <script src="/assets/js/sweetAlert.js"></script>
+    <script>
+        // ============================================================
+        // 1. DELETE MODAL (Red / Danger)
+        //    Keywords: type: 'danger', confirmText: 'Delete'
+        // ============================================================
+        function showDeleteModal() {
+            const modal = new Modal({
+                title: 'Delete Item',
+                body: `
+                    <p style="margin-bottom:8px;">Are you sure you want to delete <strong>"Engineering Mathematics"</strong>?</p>
+                    <p style="color:var(--text-muted); font-size:13px;">This action cannot be undone. All associated data will be permanently removed.</p>
+                `,
+                type: 'danger',
+                confirmText: 'Yes, Delete It',
+                cancelText: 'Cancel',
+                onConfirm: function(instance) {
+                    // Simulate delete action
+                    showAlert.success('🗑️ Item deleted successfully!', { duration: 3000 });
+                    instance.close();
+                },
+                onCancel: function(instance) {
+                    showAlert.info('Delete cancelled.', { duration: 2000 });
+                    instance.close();
+                },
+                size: 'sm'
+            });
+            modal.open();
+        }
+
+        // ============================================================
+        // 2. WARNING MODAL (Orange / Warning)
+        //    Keywords: type: 'warning'
+        // ============================================================
+        function showWarningModal() {
+            const modal = new Modal({
+                title: '⚠️ Unverified Seller',
+                body: `
+                    <p>This seller has not been verified by CampusHub.</p>
+                    <p style="color:var(--text-muted); font-size:13px; margin-top:8px;">Transactions with unverified sellers are at your own risk. We recommend using our secure payment system.</p>
+                    <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+                        <span style="background:var(--orange); color:#fff; padding:2px 12px; border-radius:20px; font-size:12px;">⚠️ Caution</span>
+                        <span style="background:var(--bg-input); color:var(--text-secondary); padding:2px 12px; border-radius:20px; font-size:12px;">📅 Joined 2 days ago</span>
+                    </div>
+                `,
+                type: 'warning',
+                confirmText: 'Proceed Anyway',
+                cancelText: 'Go Back',
+                onConfirm: function(instance) {
+                    showAlert.warning('Proceeding with unverified seller...', { duration: 3000 });
+                    instance.close();
+                },
+                onCancel: function(instance) {
+                    instance.close();
+                },
+                size: 'md'
+            });
+            modal.open();
+        }
+
+        // ============================================================
+        // 3. CONFIRM MODAL (Green / Success)
+        //    Keywords: type: 'success' or 'default', confirmText: 'Confirm'
+        // ============================================================
+        function showConfirmModal() {
+            const modal = new Modal({
+                title: '✅ Confirm Enrollment',
+                body: `
+                    <div style="display:flex; gap:16px; align-items:center; padding:8px 0;">
+                        <span style="font-size:42px;">📘</span>
+                        <div>
+                            <h4 style="margin:0;">Engineering Mathematics</h4>
+                            <p style="color:var(--green); font-weight:700; margin:4px 0;">₦3,500</p>
+                            <p style="color:var(--text-muted); font-size:13px;">Lecturer: Dr. Adebayo • 30 spots left</p>
+                        </div>
+                    </div>
+                    <p style="margin-top:8px;">By confirming, you agree to the <a href="#" style="color:var(--green);">terms and conditions</a> of CampusHub.</p>
+                `,
+                type: 'success',
+                confirmText: 'Confirm Enrollment',
+                cancelText: 'Cancel',
+                onConfirm: function(instance) {
+                    showAlert.success('🎉 You are now enrolled in Engineering Mathematics!', { duration: 4000 });
+                    instance.close();
+                },
+                onCancel: function(instance) {
+                    showAlert.info('Enrollment cancelled.', { duration: 2000 });
+                    instance.close();
+                },
+                size: 'md'
+            });
+            modal.open();
+        }
+
+        // ============================================================
+        // 4. INFO MODAL (Blue / Info)
+        //    Keywords: type: 'info'
+        // ============================================================
+        function showInfoModal() {
+            const modal = new Modal({
+                title: '📢 Campus Update',
+                body: `
+                    <div style="background:var(--blue); color:#fff; padding:12px 16px; border-radius:12px; margin-bottom:12px;">
+                        <strong>📅 Fresher's Week</strong>
+                        <p style="margin:4px 0 0; opacity:0.9; font-size:13px;">Join us for Fresher's Week starting Monday! Free food, games, and networking.</p>
+                    </div>
+                    <p><strong>📍 Location:</strong> Main Hall, University of Benin</p>
+                    <p><strong>🕒 Time:</strong> 10:00 AM – 6:00 PM</p>
+                    <p style="color:var(--text-muted); font-size:13px; margin-top:4px;">💡 Bring your student ID for entry.</p>
+                `,
+                type: 'info',
+                confirmText: 'Got it!',
+                showCancel: false,
+                onConfirm: function(instance) {
+                    showAlert.success('See you at Fresher\'s Week! 🎉', { duration: 3000 });
+                    instance.close();
+                },
+                size: 'md'
+            });
+            modal.open();
+        }
+
+        // ============================================================
+        // 5. CUSTOM MODAL (Mixed / No predefined type)
+        //    Keywords: Custom footer, custom header
+        // ============================================================
+        function showCustomModal() {
+            const modal = new Modal({
+                title: '✏️ Edit Profile',
+                header: `
+                    <div style="padding:16px 24px; background:var(--green-bg); border-bottom:1px solid var(--border-color);">
+                        <h3 style="margin:0; color:var(--green);">✏️ Edit Your Profile</h3>
+                        <p style="margin:4px 0 0; font-size:13px; color:var(--text-muted);">Update your personal information</p>
+                    </div>
+                `,
+                body: `
+                    <form style="display:flex; flex-direction:column; gap:14px;">
+                        <div>
+                            <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Full Name</label>
+                            <input type="text" value="John Doe" style="width:100%; padding:10px 14px; border-radius:12px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-primary);" />
+                        </div>
+                        <div>
+                            <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Department</label>
+                            <select style="width:100%; padding:10px 14px; border-radius:12px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-primary);">
+                                <option>Computer Science</option>
+                                <option selected>Engineering</option>
+                                <option>Medicine</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Bio</label>
+                            <textarea rows="2" style="width:100%; padding:10px 14px; border-radius:12px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-primary); resize:vertical;">Passionate about tech and design.</textarea>
+                        </div>
+                    </form>
+                `,
+                footer: `
+                    <button class="btn-reset" onclick="this.closest('.modal-container').modalInstance.close()" style="padding:10px 24px; border-radius:30px; font-size:14px; font-weight:600; border:none; cursor:pointer; background:var(--bg-input); color:var(--text-secondary);">Cancel</button>
+                    <button class="btn-apply" onclick="saveProfile(this)" style="padding:10px 24px; border-radius:30px; font-size:14px; font-weight:600; border:none; cursor:pointer; background:var(--green); color:#fff;">Save Changes</button>
+                `,
+                size: 'md',
+                closeOnOverlay: false // Disable overlay close to prevent accidental data loss
+            });
+            modal.open();
+
+            // Store modal reference for the footer button
+            document.querySelector('.modal-container').modalInstance = modal;
+        }
+
+        function saveProfile(btn) {
+            const modal = btn.closest('.modal-container').modalInstance;
+            showAlert.success('✅ Profile updated successfully!', { duration: 3000 });
+            modal.close();
+        }
+    </script>
+
+</body>
+</html>

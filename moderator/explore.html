@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Student Marketplace</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- ===== GLOBAL STYLESHEET ===== -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- ===== PAGE-SPECIFIC STYLES ===== -->
+    <style>
+        /* ---- Banner slide gradients (page-specific) ---- */
+        .carousel-slide:nth-child(1) {
+            background: linear-gradient(135deg, #0d8a3e, #1a3a2a);
+        }
+        .carousel-slide:nth-child(2) {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+        .carousel-slide:nth-child(3) {
+            background: linear-gradient(135deg, #4a0e4e, #1a0b2e);
+        }
+
+        /* ---- Demo note (page-specific) ---- */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+
+        /* ---- Product card image background overrides ---- */
+        .product-card .img-wrap.bg-1 {
+            background: #e8f0e8;
+        }
+        .product-card .img-wrap.bg-2 {
+            background: #f0e8e8;
+        }
+        .product-card .img-wrap.bg-3 {
+            background: #f0f0e8;
+        }
+        .product-card .img-wrap.bg-4 {
+            background: #e8e8f0;
+        }
+        .product-card .img-wrap.bg-5 {
+            background: #f0f0f0;
+        }
+        .product-card .img-wrap.bg-6 {
+            background: #e8f0e8;
+        }
+        .product-card .img-wrap.bg-7 {
+            background: #f0e8e8;
+        }
+        .product-card .img-wrap.bg-8 {
+            background: #e8e8f0;
+        }
+
+        .dark-mode .product-card .img-wrap.bg-1,
+        .dark-mode .product-card .img-wrap.bg-2,
+        .dark-mode .product-card .img-wrap.bg-3,
+        .dark-mode .product-card .img-wrap.bg-4,
+        .dark-mode .product-card .img-wrap.bg-5,
+        .dark-mode .product-card .img-wrap.bg-6,
+        .dark-mode .product-card .img-wrap.bg-7,
+        .dark-mode .product-card .img-wrap.bg-8 {
+            background: var(--bg-img-placeholder);
+        }
+
+        /* ---- Featured seller image backgrounds ---- */
+        .featured-item .f-img.bg-book {
+            background: #eaf9ef;
+        }
+        .featured-item .f-img.bg-gadget {
+            background: #fef3e8;
+        }
+        .featured-item .f-img.bg-fashion {
+            background: #f0e8f0;
+        }
+        .featured-item .f-img.bg-med {
+            background: #e8f0f0;
+        }
+
+        .dark-mode .featured-item .f-img.bg-book,
+        .dark-mode .featured-item .f-img.bg-gadget,
+        .dark-mode .featured-item .f-img.bg-fashion,
+        .dark-mode .featured-item .f-img.bg-med {
+            background: var(--bg-img-placeholder);
+        }
+
+        /* ---- Small extra polish ---- */
+        .app-header .logo i {
+            background: var(--green-bg);
+        }
+
+        /* ---- Make the "Change" button look interactive ---- */
+        .location-bar .change-btn {
+            cursor: default;
+        }
+
+        /* ---- Category item icons in dark mode ---- */
+        .dark-mode .categories .cat-item i {
+            color: var(--text-muted2);
+        }
+        .dark-mode .categories .cat-item.active i {
+            color: #fff;
+        }
+
+        /* ---- Minor responsive tweaks for this page ---- */
+        @media (max-width: 480px) {
+            .demo-note {
+                font-size: 9px;
+                padding: 6px 0 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== SEARCH ===== -->
+        <div class="search-bar">
+            <div class="search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search for textbooks, gadgets, food…" />
+                <span class="search-shortcut">⌘K</span>
+                <i class="fa-solid fa-sliders-h filter-toggle" id="filterToggle"></i>
+            </div>
+        </div>
+
+        <!-- ===== CATEGORIES ===== -->
+        <div class="categories">
+            <div class="cat-scroll">
+                <span class="cat-item active"><i class="fa-solid fa-house"></i> All</span>
+                <span class="cat-item"><i class="fa-solid fa-book"></i> Textbooks</span>
+                <span class="cat-item"><i class="fa-solid fa-laptop"></i> Gadgets</span>
+                <span class="cat-item"><i class="fa-solid fa-utensils"></i> Food</span>
+                <span class="cat-item"><i class="fa-solid fa-shirt"></i> Fashion</span>
+                <span class="cat-item"><i class="fa-solid fa-tools"></i> Services</span>
+                <span class="cat-item"><i class="fa-solid fa-futbol"></i> Sports</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content">
+
+            <!-- Banner Carousel -->
+            <div class="banner-carousel">
+                <div class="carousel-track" id="carouselTrack">
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <h2>📚 Textbook Exchange</h2>
+                            <p>Save up to 50% on your next textbook</p>
+                            <span class="slide-cta">Shop Now</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <h2>💻 Tech Deals</h2>
+                            <p>Get the best gadgets on campus</p>
+                            <span class="slide-cta">Explore</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <h2>🍕 Food &amp; More</h2>
+                            <p>Order from your favorite spots</p>
+                            <span class="slide-cta">Order Now</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+
+            <!-- Mini Banner -->
+            <div class="mini-banner">
+                <div class="banner-text">
+                    <h3>🎓 Fresher's Deal</h3>
+                    <p>Get 15% off your first purchase</p>
+                </div>
+                <span class="banner-cta">Shop now</span>
+            </div>
+
+            <!-- Section: Trending -->
+            <div class="section-header">
+                <h2>🔥 Trending on campus</h2>
+                <span class="see-all">See all</span>
+            </div>
+
+            <div class="product-grid">
+                <!-- Card 1 -->
+                <div class="product-card">
+                    <div class="img-wrap bg-1">
+                        <span>📘</span>
+                        <span class="tag hot">HOT</span>
+                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    </div>
+                    <div class="info">
+                        <div class="name">Engineering Mathematics</div>
+                        <div class="price">₦3,500 <small>₦5,000</small></div>
+                        <div class="meta">
+                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
+                            <span class="rating"><i class="fa-solid fa-star"></i> 4.8</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="product-card">
+                    <div class="img-wrap bg-2">
+                        <span>💻</span>
+                        <span class="tag free">LIKE NEW</span>
+                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    </div>
+                    <div class="info">
+                        <div class="name">HP Laptop 15" Core i5</div>
+                        <div class="price">₦185,000</div>
+                        <div class="meta">
+                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNILAG</span>
+                            <span class="rating"><i class="fa-solid fa-star"></i> 4.9</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="product-card">
+                    <div class="img-wrap bg-3">
+                        <span>👟</span>
+                        <span class="tag">BARGAIN</span>
+                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    </div>
+                    <div class="info">
+                        <div class="name">Nike Air Max 90</div>
+                        <div class="price">₦28,000 <small>₦45,000</small></div>
+                        <div class="meta">
+                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
+                            <span class="rating"><i class="fa-solid fa-star"></i> 4.7</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="product-card">
+                    <div class="img-wrap bg-4">
+                        <span>🍕</span>
+                        <span class="tag hot">POPULAR</span>
+                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    </div>
+                    <div class="info">
+                        <div class="name">Jollof Rice &amp; Chicken</div>
+                        <div class="price">₦2,200</div>
+                        <div class="meta">
+                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
+                            <span class="rating"><i class="fa-solid fa-star"></i> 4.9</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Featured -->
+            <div class="section-header">
+                <h2>⭐ Featured sellers</h2>
+                <span class="see-all">See all</span>
+            </div>
+
+            <div class="featured-wrapper">
+                <div class="featured-list">
+                    <div class="featured-item">
+                        <div class="f-img bg-book">📚</div>
+                        <div class="f-info">
+                            <div class="f-name">Bola's Bookshop</div>
+                            <div class="f-price">₦2,500+</div>
+                            <div class="f-meta">⭐ 4.9 • 230 sales</div>
+                        </div>
+                    </div>
+                    <div class="featured-item">
+                        <div class="f-img bg-gadget">📱</div>
+                        <div class="f-info">
+                            <div class="f-name">Gadget Hub UNIBEN</div>
+                            <div class="f-price">₦50,000+</div>
+                            <div class="f-meta">⭐ 4.8 • 189 sales</div>
+                        </div>
+                    </div>
+                    <div class="featured-item">
+                        <div class="f-img bg-fashion">👗</div>
+                        <div class="f-info">
+                            <div class="f-name">Zara's Closet</div>
+                            <div class="f-price">₦12,000+</div>
+                            <div class="f-meta">⭐ 4.7 • 142 sales</div>
+                        </div>
+                    </div>
+                    <div class="featured-item">
+                        <div class="f-img bg-med">📖</div>
+                        <div class="f-info">
+                            <div class="f-name">Med Student Supplies</div>
+                            <div class="f-price">₦6,000+</div>
+                            <div class="f-meta">⭐ 4.6 • 98 sales</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Quick Picks -->
+            <div class="section-header">
+                <h2>⚡ Quick picks</h2>
+                <span class="see-all">See all</span>
+            </div>
+
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="img-wrap bg-5">
+                        <span>🎧</span>
+                        <span class="tag">NEW</span>
+                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    </div>
+                    <div class="info">
+                        <div class="name">Wireless AirPods Pro</div>
+                        <div class="price">₦45,000</div>
+                        <div class="meta">
+                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNILAG</span>
+                            <span class="rating"><i class="fa-solid fa-star"></i> 4.6</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="img-wrap bg-6">
+                        <span>🧴</span>
+                        <span class="tag free">FREE</span>
+                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    </div>
+                    <div class="info">
+                        <div class="name">Skincare Set (unused)</div>
+                        <div class="price">₦0 <small>₦8,500</small></div>
+                        <div class="meta">
+                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
+                            <span class="rating"><i class="fa-solid fa-star"></i> 4.5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="img-wrap bg-7">
+                        <span>⚽</span>
+                        <span class="tag hot">DEAL</span>
+                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    </div>
+                    <div class="info">
+                        <div class="name">Football Jersey (Man Utd)</div>
+                        <div class="price">₦8,000</div>
+                        <div class="meta">
+                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
+                            <span class="rating"><i class="fa-solid fa-star"></i> 4.8</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="img-wrap bg-8">
+                        <span>📓</span>
+                        <span class="tag">BARGAIN</span>
+                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                    </div>
+                    <div class="info">
+                        <div class="name">A4 Notebooks (Set of 5)</div>
+                        <div class="price">₦1,200</div>
+                        <div class="meta">
+                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNILAG</span>
+                            <span class="rating"><i class="fa-solid fa-star"></i> 4.4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+
+        <!-- ===== FILTER SIDEBAR ===== -->
+        <div class="filter-overlay" id="filterOverlay"></div>
+        <aside class="filter-sidebar" id="filterSidebar">
+            <div class="filter-header">
+                <h3>Filters</h3>
+                <i class="fa-solid fa-times" id="filterClose"></i>
+            </div>
+            <div class="filter-body">
+                <div class="filter-group">
+                    <label>Price Range (₦)</label>
+                    <div class="price-range">
+                        <input type="number" placeholder="Min" min="0" />
+                        <span>—</span>
+                        <input type="number" placeholder="Max" min="0" />
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Date Posted</label>
+                    <div class="date-range">
+                        <input type="date" />
+                        <span>to</span>
+                        <input type="date" />
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Badge</label>
+                    <select>
+                        <option>All</option>
+                        <option>Hot</option>
+                        <option>Free</option>
+                        <option>New</option>
+                        <option>Bargain</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Listing Type</label>
+                    <select>
+                        <option>All</option>
+                        <option>Sell</option>
+                        <option>Wanted</option>
+                        <option>Free</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-footer">
+                <button class="btn-reset" id="filterReset">Reset</button>
+                <button class="btn-apply" id="filterApply">Apply Filters</button>
+            </div>
+        </aside>
+
+        <!-- Demo note -->
+        <div class="demo-note">
+            <span>CampusHub</span> • real-world responsive app • designed for Nigerian students
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+     <script src="/assets/js/modal1.js"></script>
+     <script src="/assets/js/style.js"></script>
+     <script src="/assets/js/sweetAlert.js"></script>
+    <script>
+    (function() {
+        'use strict';
+
+        
+
+        // ===== BANNER CAROUSEL =====
+        const track = document.getElementById('carouselTrack');
+        const dotsContainer = document.getElementById('carouselDots');
+
+        if (track && dotsContainer) {
+            const slides = track.querySelectorAll('.carousel-slide');
+            let currentIndex = 0;
+            const totalSlides = slides.length;
+            let intervalId = null;
+
+            // Create dots
+            slides.forEach(function(_, index) {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('active');
+                dot.dataset.index = index;
+                dot.addEventListener('click', function() {
+                    goToSlide(parseInt(this.dataset.index, 10));
+                });
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = dotsContainer.querySelectorAll('.dot');
+
+            function goToSlide(index) {
+                if (index < 0) index = totalSlides - 1;
+                if (index >= totalSlides) index = 0;
+                currentIndex = index;
+                track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
+                dots.forEach(function(dot, i) {
+                    dot.classList.toggle('active', i === currentIndex);
+                });
+            }
+
+            function nextSlide() {
+                goToSlide(currentIndex + 1);
+            }
+
+            function startCarousel() {
+                if (intervalId) clearInterval(intervalId);
+                intervalId = setInterval(nextSlide, 4000);
+            }
+
+            function stopCarousel() {
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+            }
+
+            const carousel = track.closest('.banner-carousel');
+            carousel.addEventListener('mouseenter', stopCarousel);
+            carousel.addEventListener('mouseleave', startCarousel);
+            carousel.addEventListener('touchstart', stopCarousel);
+            carousel.addEventListener('touchend', startCarousel);
+
+            startCarousel();
+        }
+
+        // ===== CATEGORY CLICK =====
+        const catItems = document.querySelectorAll('.cat-item');
+        catItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                catItems.forEach(function(c) { c.classList.remove('active'); });
+                this.classList.add('active');
+            });
+        });
+
+        // ===== WISHLIST CLICK =====
+        const wishlistBtns = document.querySelectorAll('.wishlist-btn');
+        wishlistBtns.forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-regular');
+                icon.classList.toggle('fa-solid');
+                if (icon.classList.contains('fa-solid')) {
+                    icon.style.color = '#e74c3c';
+                } else {
+                    icon.style.color = '';
+                }
+            });
+        });
+
+    })();
+    </script>
+
+</body>
+</html>
