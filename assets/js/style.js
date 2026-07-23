@@ -6,6 +6,98 @@
 (function() {
     'use strict';
 
+    // ============================================================
+    // GLOBAL SPINNER & FETCH WITH AUTH
+    // ============================================================
+
+    let spinnerElement = null;
+
+    function createSpinner() {
+        if (spinnerElement) return spinnerElement;
+        const overlay = document.createElement('div');
+        overlay.className = 'spinner-overlay';
+        overlay.innerHTML = `
+            <div class="spinner-box">
+                <i class="fa-solid fa-spinner spinner-icon"></i>
+                <div class="spinner-text">Loading…</div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        spinnerElement = overlay;
+        return spinnerElement;
+    }
+
+    function showGlobalSpinner(text = 'Loading…') {
+        const spinner = createSpinner();
+        const textEl = spinner.querySelector('.spinner-text');
+        if (textEl) textEl.textContent = text;
+        spinner.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function hideGlobalSpinner() {
+        if (spinnerElement) {
+            spinnerElement.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    /**
+     * Enhanced fetch with authentication (cookies + optional spinner)
+     * @param {string} url - The endpoint URL
+     * @param {object} options - Same as fetch options, plus:
+     *   @param {boolean} options.showSpinner - Show spinner overlay (default: false)
+     *   @param {string} options.spinnerText - Custom loading text (default: 'Loading…')
+     *   @param {boolean} options.includeAuth - Add Authorization header from localStorage (optional)
+     * @returns {Promise<Response>}
+     */
+    async function fetchWithAuth(url, options = {}) {
+        // Default options
+        const opts = {
+            credentials: 'include', // send cookies
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                ...options.headers
+            },
+            ...options
+        };
+
+        // If includeAuth is true and we have a token in localStorage, add Authorization header
+        if (opts.includeAuth) {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                opts.headers['Authorization'] = `Bearer ${token}`;
+            }
+        }
+
+        // Spinner handling
+        const showSpinner = opts.showSpinner === true;
+        let spinnerText = opts.spinnerText || 'Loading…';
+
+        if (showSpinner) {
+            showGlobalSpinner(spinnerText);
+        }
+
+        try {
+            const response = await fetch(url, opts);
+            return response;
+        } catch (error) {
+            throw error;
+        } finally {
+            if (showSpinner) {
+                hideGlobalSpinner();
+            }
+        }
+    }
+
+    // Expose globally (already in window scope)
+    window.fetchWithAuth = fetchWithAuth;
+    window.showGlobalSpinner = showGlobalSpinner;
+    window.hideGlobalSpinner = hideGlobalSpinner;
+
+    // showGlobalSpinner("loading dashboard")
+
     // ===== HEADER =====
     function renderHeader() {
         if (document.querySelector('.app-header')) return;

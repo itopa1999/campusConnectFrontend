@@ -119,7 +119,7 @@ function showInfoModal() {
 }
 
 
-
+<!-- ///showAlert -->
 
 <script src="showAlert.js"></script>
 <script>
@@ -140,3 +140,193 @@ function showInfoModal() {
     // Dismiss all
     showAlert.dismissAll();
 </script>
+
+
+
+<!-- FOrm -->
+
+<form id="testForm" novalidate>
+
+    <!-- ─── Text Input ─── -->
+    <div class="form-group">
+        <label for="fullName">Full Name <span class="required-star">*</span></label>
+        <input type="text" id="fullName" class="form-input" placeholder="e.g. John Doe" required data-help-text="Enter your full name as it appears on your ID." />
+        <div class="help-text">Enter your full name as it appears on your ID.</div>
+    </div>
+
+    <!-- ─── Email Input ─── -->
+    <div class="form-group">
+        <label for="email">Email Address <span class="required-star">*</span></label>
+        <input type="email" id="email" class="form-input" placeholder="you@example.com" required data-help-text="We'll never share your email." />
+        <div class="help-text">We'll never share your email.</div>
+    </div>
+
+    <!-- ─── Phone Input (custom validation) ─── -->
+    <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" class="form-input" placeholder="+234 800 000 0000" data-validate="phone" data-help-text="Enter a valid phone number." />
+        <div class="help-text">Enter a valid phone number.</div>
+    </div>
+
+    <!-- ─── Textarea ─── -->
+    <div class="form-group">
+        <label for="bio">Short Bio</label>
+        <textarea id="bio" class="form-textarea" rows="3" placeholder="Tell us about yourself…" data-help-text="A brief introduction about you."></textarea>
+        <div class="help-text">A brief introduction about you.</div>
+    </div>
+
+    <!-- ─── Select ─── -->
+    <div class="form-group">
+        <label for="department">Department <span class="required-star">*</span></label>
+        <div class="form-select-wrap">
+            <select id="department" class="form-select" required data-help-text="Select your department.">
+                <option value="">Select a department</option>
+                <option value="cs">Computer Science</option>
+                <option value="eng">Engineering</option>
+                <option value="med">Medicine</option>
+                <option value="law">Law</option>
+                <option value="business">Business Administration</option>
+            </select>
+        </div>
+        <div class="help-text">Select your department.</div>
+    </div>
+
+    <!-- ─── Checkboxes ─── -->
+    <div class="form-group">
+        <label>Interests</label>
+        <div class="form-check-group">
+            <label class="form-check">
+                <input type="checkbox" name="interests" value="tech" />
+                <span class="checkmark"><i class="fa-solid fa-check"></i></span>
+                Technology
+            </label>
+            <label class="form-check">
+                <input type="checkbox" name="interests" value="sports" />
+                <span class="checkmark"><i class="fa-solid fa-check"></i></span>
+                Sports
+            </label>
+            <label class="form-check">
+                <input type="checkbox" name="interests" value="music" />
+                <span class="checkmark"><i class="fa-solid fa-check"></i></span>
+                Music
+            </label>
+            <label class="form-check">
+                <input type="checkbox" name="interests" value="art" />
+                <span class="checkmark"><i class="fa-solid fa-check"></i></span>
+                Art
+            </label>
+        </div>
+        <div class="help-text">Select all that apply.</div>
+    </div>
+
+    <!-- ─── Radio Buttons ─── -->
+    <div class="form-group">
+        <label>Year of Study <span class="required-star">*</span></label>
+        <div class="form-check-group">
+            <label class="form-check">
+                <input type="radio" name="year" value="100" required />
+                <span class="checkmark-radio"></span>
+                100 Level
+            </label>
+            <label class="form-check">
+                <input type="radio" name="year" value="200" required />
+                <span class="checkmark-radio"></span>
+                200 Level
+            </label>
+            <label class="form-check">
+                <input type="radio" name="year" value="300" required />
+                <span class="checkmark-radio"></span>
+                300 Level
+            </label>
+            <label class="form-check">
+                <input type="radio" name="year" value="400" required />
+                <span class="checkmark-radio"></span>
+                400 Level
+            </label>
+        </div>
+        <div class="help-text">Select your current year of study.</div>
+    </div>
+
+    <!-- ─── File Upload (Drag & Drop) ─── -->
+    <div class="form-group">
+        <label>Upload Profile Picture</label>
+        <div class="file-drop-zone" data-max-size="2097152">
+            <span class="drop-icon"><i class="fa-regular fa-image"></i></span>
+            <div class="drop-text">
+                <strong>Click to upload</strong> or drag &amp; drop
+            </div>
+            <div class="drop-hint">PNG, JPG, WebP up to 2MB</div>
+            <div class="file-preview-container"></div>
+            <div class="drop-error"></div>
+            <input type="file" accept=".png,.jpg,.jpeg,.webp,image/*" data-max-size="2097152" />
+        </div>
+        <div class="help-text">Upload a profile picture (optional).</div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- ─── Form Actions ─── -->
+    <div class="form-actions">
+        <button type="submit" class="btn-submit"><i class="fa-regular fa-paper-plane"></i> Submit</button>
+        <button type="reset" class="btn-reset"><i class="fa-regular fa-rotate-left"></i> Reset</button>
+    </div>
+
+</form>
+
+// ─── Form submission ───
+const form = document.getElementById('testForm');
+const resultEl = document.getElementById('validationResult');
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Clear previous validation
+    if (typeof CampusForms !== 'undefined') {
+        CampusForms.clearValidation(this);
+    }
+
+    // Validate
+    const result = typeof CampusForms !== 'undefined'
+        ? CampusForms.validateForm(this)
+        : { isValid: true, errors: [] };
+
+    if (!result.isValid) {
+        // Show error alert
+        if (typeof showAlert !== 'undefined') {
+            showAlert.error('Please fix the highlighted fields.', { duration: 4000 });
+        }
+        resultEl.style.display = 'block';
+        resultEl.style.background = 'rgba(231, 76, 60, 0.08)';
+        resultEl.style.border = '1px solid var(--red)';
+        resultEl.style.color = 'var(--red)';
+        resultEl.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please fix the highlighted fields.';
+        return;
+    }
+
+    // Success – show toast
+    if (typeof showAlert !== 'undefined') {
+        showAlert.success('✅ Form submitted successfully!', { duration: 4000 });
+    }
+
+    resultEl.style.display = 'block';
+    resultEl.style.background = 'rgba(13, 138, 62, 0.08)';
+    resultEl.style.border = '1px solid var(--green)';
+    resultEl.style.color = 'var(--green)';
+    resultEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Form submitted successfully!';
+});
+
+// ─── Reset ───
+form.addEventListener('reset', function() {
+    setTimeout(() => {
+        if (typeof CampusForms !== 'undefined') {
+            CampusForms.clearValidation(this);
+        }
+        resultEl.style.display = 'none';
+        // Clear file preview
+        document.querySelectorAll('.file-drop-zone').forEach(zone => {
+            zone.classList.remove('has-file');
+            const container = zone.querySelector('.file-preview-container');
+            if (container) container.innerHTML = '';
+        });
+    }, 50);
+});

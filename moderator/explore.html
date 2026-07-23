@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CampusHub – Student Marketplace</title>
+    <title>CampusHub – Explore</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <!-- ===== GLOBAL STYLESHEET ===== -->
+    <!-- Global Styles -->
     <link rel="stylesheet" href="/assets/css/style.css" />
 
-    <!-- ===== PAGE-SPECIFIC STYLES ===== -->
+    <!-- Page-Specific Styles -->
     <style>
-        /* ---- Banner slide gradients (page-specific) ---- */
+        /* ---- Banner gradients (unchanged) ---- */
         .carousel-slide:nth-child(1) {
             background: linear-gradient(135deg, #0d8a3e, #1a3a2a);
         }
@@ -24,7 +24,123 @@
             background: linear-gradient(135deg, #4a0e4e, #1a0b2e);
         }
 
-        /* ---- Demo note (page-specific) ---- */
+        /* ---- Tabs ---- */
+        .section-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 4px;
+        }
+        .section-tabs .tab-btn {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .section-tabs .tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .section-tabs .tab-btn.active {
+            color: var(--green);
+            background: var(--green-bg);
+        }
+        .section-tabs .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 20%;
+            right: 20%;
+            height: 3px;
+            background: var(--green);
+            border-radius: 4px;
+        }
+        .section-tabs.hidden {
+            display: none;
+        }
+
+        /* ---- Pagination ---- */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .pagination-controls button {
+            padding: 8px 20px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background: var(--green-bg);
+            border-color: var(--green);
+            color: var(--green);
+        }
+        .pagination-controls button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .pagination-controls .page-info {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ---- Search results heading ---- */
+        .search-heading {
+            display: none;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .search-heading.visible {
+            display: block;
+        }
+
+        /* ---- Empty state ---- */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 48px;
+            opacity: 0.3;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        /* ---- Loading spinner inside grid ---- */
+        .grid-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+        .grid-loading i {
+            font-size: 32px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ---- Demo note ---- */
         .demo-note {
             text-align: center;
             font-size: 10px;
@@ -41,87 +157,32 @@
             transition: color var(--transition);
         }
 
-        /* ---- Product card image background overrides ---- */
-        .product-card .img-wrap.bg-1 {
-            background: #e8f0e8;
+        /* ---- Product card override for dynamic images ---- */
+        .product-card .img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-        .product-card .img-wrap.bg-2 {
-            background: #f0e8e8;
+        .product-card .img-wrap .tag {
+            z-index: 2;
         }
-        .product-card .img-wrap.bg-3 {
-            background: #f0f0e8;
+        .product-card .img-wrap .wishlist-btn {
+            z-index: 2;
         }
-        .product-card .img-wrap.bg-4 {
-            background: #e8e8f0;
-        }
-        .product-card .img-wrap.bg-5 {
-            background: #f0f0f0;
-        }
-        .product-card .img-wrap.bg-6 {
-            background: #e8f0e8;
-        }
-        .product-card .img-wrap.bg-7 {
-            background: #f0e8e8;
-        }
-        .product-card .img-wrap.bg-8 {
-            background: #e8e8f0;
-        }
-
-        .dark-mode .product-card .img-wrap.bg-1,
-        .dark-mode .product-card .img-wrap.bg-2,
-        .dark-mode .product-card .img-wrap.bg-3,
-        .dark-mode .product-card .img-wrap.bg-4,
-        .dark-mode .product-card .img-wrap.bg-5,
-        .dark-mode .product-card .img-wrap.bg-6,
-        .dark-mode .product-card .img-wrap.bg-7,
-        .dark-mode .product-card .img-wrap.bg-8 {
-            background: var(--bg-img-placeholder);
-        }
-
-        /* ---- Featured seller image backgrounds ---- */
-        .featured-item .f-img.bg-book {
-            background: #eaf9ef;
-        }
-        .featured-item .f-img.bg-gadget {
-            background: #fef3e8;
-        }
-        .featured-item .f-img.bg-fashion {
-            background: #f0e8f0;
-        }
-        .featured-item .f-img.bg-med {
-            background: #e8f0f0;
-        }
-
-        .dark-mode .featured-item .f-img.bg-book,
-        .dark-mode .featured-item .f-img.bg-gadget,
-        .dark-mode .featured-item .f-img.bg-fashion,
-        .dark-mode .featured-item .f-img.bg-med {
-            background: var(--bg-img-placeholder);
-        }
-
-        /* ---- Small extra polish ---- */
-        .app-header .logo i {
-            background: var(--green-bg);
-        }
-
-        /* ---- Make the "Change" button look interactive ---- */
-        .location-bar .change-btn {
-            cursor: default;
-        }
-
-        /* ---- Category item icons in dark mode ---- */
-        .dark-mode .categories .cat-item i {
+        .product-card .img-wrap .placeholder-icon {
+            font-size: 40px;
             color: var(--text-muted2);
         }
-        .dark-mode .categories .cat-item.active i {
-            color: #fff;
-        }
 
-        /* ---- Minor responsive tweaks for this page ---- */
+        /* Mobile tweaks */
         @media (max-width: 480px) {
-            .demo-note {
-                font-size: 9px;
-                padding: 6px 0 2px;
+            .section-tabs .tab-btn {
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+            .pagination-controls button {
+                padding: 6px 14px;
+                font-size: 12px;
             }
         }
     </style>
@@ -129,6 +190,8 @@
 <body>
 
     <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -142,13 +205,13 @@
         <div class="search-bar">
             <div class="search-wrap">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search for textbooks, gadgets, food…" />
+                <input type="text" id="searchInput" placeholder="Search for textbooks, gadgets, food…" />
                 <span class="search-shortcut">⌘K</span>
                 <i class="fa-solid fa-sliders-h filter-toggle" id="filterToggle"></i>
             </div>
         </div>
 
-        <!-- ===== CATEGORIES ===== -->
+        <!-- ===== CATEGORIES (static) ===== -->
         <div class="categories">
             <div class="cat-scroll">
                 <span class="cat-item active"><i class="fa-solid fa-house"></i> All</span>
@@ -164,7 +227,7 @@
         <!-- ===== MAIN ===== -->
         <main class="main-content">
 
-            <!-- Banner Carousel -->
+            <!-- Banner Carousel (unchanged) -->
             <div class="banner-carousel">
                 <div class="carousel-track" id="carouselTrack">
                     <div class="carousel-slide">
@@ -192,7 +255,7 @@
                 <div class="carousel-dots" id="carouselDots"></div>
             </div>
 
-            <!-- Mini Banner -->
+            <!-- Mini Banner (optional, keep) -->
             <div class="mini-banner">
                 <div class="banner-text">
                     <h3>🎓 Fresher's Deal</h3>
@@ -201,198 +264,33 @@
                 <span class="banner-cta">Shop now</span>
             </div>
 
-            <!-- Section: Trending -->
-            <div class="section-header">
-                <h2>🔥 Trending on campus</h2>
-                <span class="see-all">See all</span>
+            <!-- ===== SECTION TABS ===== -->
+            <div class="section-tabs" id="sectionTabs">
+                <button class="tab-btn active" data-section="hot_sales">🔥 Hot Sales</button>
+                <button class="tab-btn" data-section="departmental">🏛️ Departmental</button>
+                <button class="tab-btn" data-section="for_you">🎯 For You</button>
             </div>
 
-            <div class="product-grid">
-                <!-- Card 1 -->
-                <div class="product-card">
-                    <div class="img-wrap bg-1">
-                        <span>📘</span>
-                        <span class="tag hot">HOT</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Engineering Mathematics</div>
-                        <div class="price">₦3,500 <small>₦5,000</small></div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.8</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="product-card">
-                    <div class="img-wrap bg-2">
-                        <span>💻</span>
-                        <span class="tag free">LIKE NEW</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">HP Laptop 15" Core i5</div>
-                        <div class="price">₦185,000</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNILAG</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.9</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="product-card">
-                    <div class="img-wrap bg-3">
-                        <span>👟</span>
-                        <span class="tag">BARGAIN</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Nike Air Max 90</div>
-                        <div class="price">₦28,000 <small>₦45,000</small></div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.7</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="product-card">
-                    <div class="img-wrap bg-4">
-                        <span>🍕</span>
-                        <span class="tag hot">POPULAR</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Jollof Rice &amp; Chicken</div>
-                        <div class="price">₦2,200</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.9</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Search heading (hidden by default) -->
+            <div class="search-heading" id="searchHeading">
+                <i class="fa-solid fa-search"></i> Results for "<span id="searchQueryDisplay"></span>"
             </div>
 
-            <!-- Section: Featured -->
-            <div class="section-header">
-                <h2>⭐ Featured sellers</h2>
-                <span class="see-all">See all</span>
+            <!-- Listings Grid -->
+            <div id="listingsGrid" class="product-grid">
+                <!-- Will be populated by JS -->
             </div>
 
-            <div class="featured-wrapper">
-                <div class="featured-list">
-                    <div class="featured-item">
-                        <div class="f-img bg-book">📚</div>
-                        <div class="f-info">
-                            <div class="f-name">Bola's Bookshop</div>
-                            <div class="f-price">₦2,500+</div>
-                            <div class="f-meta">⭐ 4.9 • 230 sales</div>
-                        </div>
-                    </div>
-                    <div class="featured-item">
-                        <div class="f-img bg-gadget">📱</div>
-                        <div class="f-info">
-                            <div class="f-name">Gadget Hub UNIBEN</div>
-                            <div class="f-price">₦50,000+</div>
-                            <div class="f-meta">⭐ 4.8 • 189 sales</div>
-                        </div>
-                    </div>
-                    <div class="featured-item">
-                        <div class="f-img bg-fashion">👗</div>
-                        <div class="f-info">
-                            <div class="f-name">Zara's Closet</div>
-                            <div class="f-price">₦12,000+</div>
-                            <div class="f-meta">⭐ 4.7 • 142 sales</div>
-                        </div>
-                    </div>
-                    <div class="featured-item">
-                        <div class="f-img bg-med">📖</div>
-                        <div class="f-info">
-                            <div class="f-name">Med Student Supplies</div>
-                            <div class="f-price">₦6,000+</div>
-                            <div class="f-meta">⭐ 4.6 • 98 sales</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section: Quick Picks -->
-            <div class="section-header">
-                <h2>⚡ Quick picks</h2>
-                <span class="see-all">See all</span>
-            </div>
-
-            <div class="product-grid">
-                <div class="product-card">
-                    <div class="img-wrap bg-5">
-                        <span>🎧</span>
-                        <span class="tag">NEW</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Wireless AirPods Pro</div>
-                        <div class="price">₦45,000</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNILAG</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.6</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="img-wrap bg-6">
-                        <span>🧴</span>
-                        <span class="tag free">FREE</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Skincare Set (unused)</div>
-                        <div class="price">₦0 <small>₦8,500</small></div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.5</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="img-wrap bg-7">
-                        <span>⚽</span>
-                        <span class="tag hot">DEAL</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">Football Jersey (Man Utd)</div>
-                        <div class="price">₦8,000</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNIBEN</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.8</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="img-wrap bg-8">
-                        <span>📓</span>
-                        <span class="tag">BARGAIN</span>
-                        <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
-                    </div>
-                    <div class="info">
-                        <div class="name">A4 Notebooks (Set of 5)</div>
-                        <div class="price">₦1,200</div>
-                        <div class="meta">
-                            <span class="location"><i class="fa-solid fa-location-dot"></i> UNILAG</span>
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.4</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Pagination -->
+            <div class="pagination-controls" id="paginationControls">
+                <button id="prevPage" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                <span class="page-info" id="pageInfo">Page 1</span>
+                <button id="nextPage">Next <i class="fa-solid fa-chevron-right"></i></button>
             </div>
 
         </main>
 
-
-        <!-- ===== FILTER SIDEBAR ===== -->
+        <!-- ===== FILTER SIDEBAR (unchanged) ===== -->
         <div class="filter-overlay" id="filterOverlay"></div>
         <aside class="filter-sidebar" id="filterSidebar">
             <div class="filter-header">
@@ -450,100 +348,311 @@
     </div>
 
     <!-- ===== SCRIPTS ===== -->
-     <script src="/assets/js/modal1.js"></script>
-     <script src="/assets/js/style.js"></script>
-     <script src="/assets/js/sweetAlert.js"></script>
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
     <script>
-    (function() {
-        'use strict';
+        (function() {
+            'use strict';
 
-        
+            // ─── DOM refs ──────────────────────────────────────────
+            const grid = document.getElementById('listingsGrid');
+            const tabsContainer = document.getElementById('sectionTabs');
+            const tabBtns = tabsContainer.querySelectorAll('.tab-btn');
+            const searchInput = document.getElementById('searchInput');
+            const searchHeading = document.getElementById('searchHeading');
+            const searchQueryDisplay = document.getElementById('searchQueryDisplay');
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+            const pageInfo = document.getElementById('pageInfo');
 
-        // ===== BANNER CAROUSEL =====
-        const track = document.getElementById('carouselTrack');
-        const dotsContainer = document.getElementById('carouselDots');
+            // ─── State ─────────────────────────────────────────────
+            let currentSection = 'hot_sales';
+            let currentPage = 1;
+            let totalPages = 1;
+            let isSearchMode = false;
+            let searchQuery = '';
 
-        if (track && dotsContainer) {
-            const slides = track.querySelectorAll('.carousel-slide');
-            let currentIndex = 0;
-            const totalSlides = slides.length;
-            let intervalId = null;
+            // ─── Dummy data generator ─────────────────────────────
+            function generateDummyItems(section, page, perPage = 8, query = '') {
+                // Simulate different items per section
+                const categories = ['Laptops & Computers', 'Fashion & Clothing', 'Academic Services', 'Event Tickets', 'Electronics', 'Books', 'Sports', 'Food'];
+                const badges = ['sell', 'freebie', 'wanted', 'swap'];
+                const hotspots = ['Lecture Theatres Complex', 'Main Gate', 'Faculty of Engineering Block', 'Student Union Building', 'Library', 'Cafeteria'];
 
-            // Create dots
-            slides.forEach(function(_, index) {
-                const dot = document.createElement('span');
-                dot.classList.add('dot');
-                if (index === 0) dot.classList.add('active');
-                dot.dataset.index = index;
-                dot.addEventListener('click', function() {
-                    goToSlide(parseInt(this.dataset.index, 10));
+                const items = [];
+                const start = (page - 1) * perPage;
+                const totalItems = 25; // fixed for demo
+                const count = Math.min(perPage, totalItems - start);
+
+                for (let i = 0; i < count; i++) {
+                    const idx = start + i + 1;
+                    const title = query ? `${query} - Item ${idx}` : `Item ${idx} (${section})`;
+                    const price = Math.floor(Math.random() * 500000) + 1000;
+                    const category = categories[Math.floor(Math.random() * categories.length)];
+                    const badge = badges[Math.floor(Math.random() * badges.length)];
+                    const hotspot = hotspots[Math.floor(Math.random() * hotspots.length)];
+                    const imageId = (idx % 10) + 1;
+                    items.push({
+                        id: idx,
+                        title: title,
+                        price: price,
+                        category: category,
+                        image: `https://picsum.photos/seed/${imageId + idx}/400/300`,
+                        badge: badge,
+                        hotspots: hotspot
+                    });
+                }
+
+                const totalPages = Math.ceil(totalItems / perPage);
+                return {
+                    is_success: true,
+                    data: {
+                        items: items,
+                        pagination: {
+                            page: page,
+                            per_page: perPage,
+                            total_pages: totalPages,
+                            total_items: totalItems,
+                            has_next: page < totalPages,
+                            has_previous: page > 1
+                        }
+                    }
+                };
+            }
+
+            // ─── Fetch listings ────────────────────────────────────
+            function fetchListings(section, page, query = '') {
+                return new Promise((resolve) => {
+                    // Simulate network delay
+                    setTimeout(() => {
+                        const data = generateDummyItems(section, page, 8, query);
+                        resolve(data);
+                    }, 400);
                 });
-                dotsContainer.appendChild(dot);
-            });
+            }
 
-            const dots = dotsContainer.querySelectorAll('.dot');
+            // ─── Render listings ──────────────────────────────────
+            function renderListings(response) {
+                if (!response.is_success) {
+                    grid.innerHTML = `<div class="empty-state"><i class="fa-regular fa-circle-xmark"></i>Failed to load data.</div>`;
+                    return;
+                }
 
-            function goToSlide(index) {
-                if (index < 0) index = totalSlides - 1;
-                if (index >= totalSlides) index = 0;
-                currentIndex = index;
-                track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
-                dots.forEach(function(dot, i) {
-                    dot.classList.toggle('active', i === currentIndex);
+                const items = response.data.items || [];
+                const pagination = response.data.pagination || { page: 1, total_pages: 1, has_next: false, has_previous: false };
+                totalPages = pagination.total_pages || 1;
+                currentPage = pagination.page || 1;
+
+                // Update pagination UI
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+                prevBtn.disabled = !pagination.has_previous;
+                nextBtn.disabled = !pagination.has_next;
+
+                if (items.length === 0) {
+                    grid.innerHTML = `<div class="empty-state"><i class="fa-regular fa-inbox"></i>No items found.</div>`;
+                    return;
+                }
+
+                // Build cards
+                grid.innerHTML = items.map(item => {
+                    const badgeClass = item.badge === 'freebie' ? 'free' : (item.badge === 'sell' ? 'hot' : '');
+                    const badgeText = item.badge ? item.badge.toUpperCase() : '';
+                    return `
+                        <div class="product-card" data-id="${item.id}">
+                            <div class="img-wrap">
+                                <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                                <div class="placeholder-icon" style="display:none; position:absolute; inset:0; align-items:center; justify-content:center; font-size:40px; color:var(--text-muted2);">📦</div>
+                                ${badgeText ? `<span class="tag ${badgeClass}">${badgeText}</span>` : ''}
+                                <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
+                            </div>
+                            <div class="info">
+                                <div class="name">${item.title}</div>
+                                <div class="price">₦${item.price.toLocaleString()}</div>
+                                <div class="meta">
+                                    <span class="location"><i class="fa-solid fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
+                                    <span class="rating"><i class="fa-solid fa-tag"></i> ${item.category}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Re-bind wishlist clicks
+                grid.querySelectorAll('.wishlist-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const icon = this.querySelector('i');
+                        icon.classList.toggle('fa-regular');
+                        icon.classList.toggle('fa-solid');
+                        icon.style.color = icon.classList.contains('fa-solid') ? '#e74c3c' : '';
+                    });
                 });
             }
 
-            function nextSlide() {
-                goToSlide(currentIndex + 1);
-            }
+            // ─── Load section ──────────────────────────────────────
+            async function loadSection(section, page = 1, query = '') {
+                // Show loading state
+                grid.innerHTML = `<div class="grid-loading"><i class="fa-solid fa-spinner"></i><br>Loading…</div>`;
 
-            function startCarousel() {
-                if (intervalId) clearInterval(intervalId);
-                intervalId = setInterval(nextSlide, 4000);
-            }
-
-            function stopCarousel() {
-                if (intervalId) {
-                    clearInterval(intervalId);
-                    intervalId = null;
+                try {
+                    const response = await fetchListings(section, page, query);
+                    renderListings(response);
+                } catch (err) {
+                    grid.innerHTML = `<div class="empty-state"><i class="fa-regular fa-circle-xmark"></i>Error: ${err.message}</div>`;
                 }
             }
 
-            const carousel = track.closest('.banner-carousel');
-            carousel.addEventListener('mouseenter', stopCarousel);
-            carousel.addEventListener('mouseleave', startCarousel);
-            carousel.addEventListener('touchstart', stopCarousel);
-            carousel.addEventListener('touchend', startCarousel);
+            // ─── Switch tab ────────────────────────────────────────
+            function switchTab(section) {
+                if (isSearchMode) {
+                    // Exit search mode
+                    isSearchMode = false;
+                    searchInput.value = '';
+                    searchHeading.classList.remove('visible');
+                    tabsContainer.classList.remove('hidden');
+                }
+                currentSection = section;
+                currentPage = 1;
+                // Update active tab
+                tabBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.section === section);
+                });
+                loadSection(section, 1);
+            }
 
-            startCarousel();
-        }
+            // ─── Handle search ─────────────────────────────────────
+            async function performSearch(query) {
+                if (!query.trim()) {
+                    // If empty, go back to current section
+                    if (isSearchMode) {
+                        isSearchMode = false;
+                        searchHeading.classList.remove('visible');
+                        tabsContainer.classList.remove('hidden');
+                        loadSection(currentSection, currentPage);
+                    }
+                    return;
+                }
 
-        // ===== CATEGORY CLICK =====
-        const catItems = document.querySelectorAll('.cat-item');
-        catItems.forEach(function(item) {
-            item.addEventListener('click', function() {
-                catItems.forEach(function(c) { c.classList.remove('active'); });
-                this.classList.add('active');
-            });
-        });
+                isSearchMode = true;
+                searchQuery = query.trim();
+                searchQueryDisplay.textContent = searchQuery;
+                searchHeading.classList.add('visible');
+                tabsContainer.classList.add('hidden');
 
-        // ===== WISHLIST CLICK =====
-        const wishlistBtns = document.querySelectorAll('.wishlist-btn');
-        wishlistBtns.forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const icon = this.querySelector('i');
-                icon.classList.toggle('fa-regular');
-                icon.classList.toggle('fa-solid');
-                if (icon.classList.contains('fa-solid')) {
-                    icon.style.color = '#e74c3c';
+                // Reset pagination for search
+                currentPage = 1;
+                await loadSection('search', 1, searchQuery);
+            }
+
+            // ─── Pagination ────────────────────────────────────────
+            function changePage(delta) {
+                const newPage = currentPage + delta;
+                if (newPage < 1 || newPage > totalPages) return;
+                currentPage = newPage;
+                if (isSearchMode) {
+                    loadSection('search', currentPage, searchQuery);
                 } else {
-                    icon.style.color = '';
+                    loadSection(currentSection, currentPage);
+                }
+            }
+
+            // ─── Event listeners ──────────────────────────────────
+
+            // Tab clicks
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const section = this.dataset.section;
+                    if (section && section !== currentSection) {
+                        switchTab(section);
+                    }
+                });
+            });
+
+            // Search input (Enter key)
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch(this.value);
                 }
             });
-        });
 
-    })();
+            // Optional: also search when user clicks the filter toggle? No, keep as is.
+
+            // Pagination buttons
+            prevBtn.addEventListener('click', () => changePage(-1));
+            nextBtn.addEventListener('click', () => changePage(1));
+
+            // ─── Carousel (unchanged) ──────────────────────────────
+            const track = document.getElementById('carouselTrack');
+            const dotsContainer = document.getElementById('carouselDots');
+            if (track && dotsContainer) {
+                const slides = track.querySelectorAll('.carousel-slide');
+                let currentIndex = 0;
+                const totalSlides = slides.length;
+                let intervalId = null;
+
+                slides.forEach(function(_, index) {
+                    const dot = document.createElement('span');
+                    dot.classList.add('dot');
+                    if (index === 0) dot.classList.add('active');
+                    dot.dataset.index = index;
+                    dot.addEventListener('click', function() {
+                        goToSlide(parseInt(this.dataset.index, 10));
+                    });
+                    dotsContainer.appendChild(dot);
+                });
+
+                const dots = dotsContainer.querySelectorAll('.dot');
+
+                function goToSlide(index) {
+                    if (index < 0) index = totalSlides - 1;
+                    if (index >= totalSlides) index = 0;
+                    currentIndex = index;
+                    track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
+                    dots.forEach(function(dot, i) {
+                        dot.classList.toggle('active', i === currentIndex);
+                    });
+                }
+
+                function nextSlide() {
+                    goToSlide(currentIndex + 1);
+                }
+
+                function startCarousel() {
+                    if (intervalId) clearInterval(intervalId);
+                    intervalId = setInterval(nextSlide, 4000);
+                }
+
+                function stopCarousel() {
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
+                }
+
+                const carousel = track.closest('.banner-carousel');
+                carousel.addEventListener('mouseenter', stopCarousel);
+                carousel.addEventListener('mouseleave', startCarousel);
+                carousel.addEventListener('touchstart', stopCarousel);
+                carousel.addEventListener('touchend', startCarousel);
+
+                startCarousel();
+            }
+
+            // ─── Category clicks (static) ─────────────────────────
+            const catItems = document.querySelectorAll('.cat-item');
+            catItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    catItems.forEach(function(c) { c.classList.remove('active'); });
+                    this.classList.add('active');
+                });
+            });
+
+            // ─── INIT: load hot_sales on page load ────────────────
+            loadSection('hot_sales', 1);
+
+        })();
     </script>
 
 </body>
