@@ -13,7 +13,7 @@
 
     <!-- Page-Specific Styles -->
     <style>
-        /* ---- Banner gradients (unchanged) ---- */
+        /* ---- Banner gradients ---- */
         .carousel-slide:nth-child(1) {
             background: linear-gradient(135deg, #0d8a3e, #1a3a2a);
         }
@@ -411,7 +411,6 @@
             padding: 0 4px;
         }
 
-        /* Dark mode price slider */
         .dark-mode .price-slider-track {
             background: var(--border-color);
         }
@@ -425,15 +424,200 @@
         }
 
         /* ============================================================
-           PRODUCT GRID & OTHER STYLES
+           PRODUCT GRID & CARD ENHANCEMENTS
            ============================================================ */
         .product-grid {
             transition: opacity 0.3s ease;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px;
+            margin-bottom: 28px;
         }
         .product-grid.loading {
             opacity: 0.5;
         }
 
+        .product-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+            cursor: default;
+            border: 1px solid var(--border-card);
+        }
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .product-card .img-wrap {
+            position: relative;
+            background: var(--bg-img-placeholder);
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: background var(--transition), color var(--transition);
+        }
+        .product-card .img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-card .img-wrap .tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+        .product-card .img-wrap .tag.hot {
+            background: var(--red);
+        }
+        .product-card .img-wrap .tag.free {
+            background: var(--green);
+        }
+
+        .product-card .img-wrap .wishlist-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: #555;
+            transition: all 0.2s;
+            cursor: default;
+            z-index: 2;
+        }
+        .dark-mode .product-card .img-wrap .wishlist-btn {
+            background: rgba(30, 30, 30, 0.85);
+            color: #aaa;
+        }
+        .product-card .img-wrap .wishlist-btn:hover {
+            background: #fff;
+            color: var(--red);
+            transform: scale(1.1);
+        }
+        .dark-mode .product-card .img-wrap .wishlist-btn:hover {
+            background: #2a2a2a;
+            color: var(--red);
+        }
+
+        .product-card .info {
+            padding: 10px 12px 12px;
+        }
+        .product-card .info .name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color var(--transition);
+        }
+        .product-card .info .price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--green);
+            letter-spacing: -0.3px;
+            transition: color var(--transition);
+        }
+        .product-card .info .price small {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            margin-left: 6px;
+            transition: color var(--transition);
+        }
+        .product-card .info .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .product-card .info .meta .location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .product-card .info .meta .location i {
+            font-size: 10px;
+        }
+        .product-card .info .meta .category-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--bg-input);
+            padding: 2px 10px;
+            border-radius: 20px;
+            transition: background var(--transition), color var(--transition);
+            white-space: nowrap;
+        }
+        .product-card .info .meta .category-tag i {
+            font-size: 10px;
+            color: var(--green);
+        }
+
+        .dark-mode .product-card .info .meta .category-tag {
+            background: var(--bg-input);
+            color: var(--text-muted2);
+        }
+        .dark-mode .product-card .info .meta .category-tag i {
+            color: var(--green);
+        }
+
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+            .product-card .img-wrap {
+                height: 110px;
+            }
+            .product-card .info .name {
+                font-size: 12px;
+            }
+            .product-card .info .price {
+                font-size: 14px;
+            }
+            .product-card .info .meta {
+                font-size: 10px;
+            }
+            .product-card .info .meta .category-tag {
+                font-size: 9px;
+                padding: 1px 8px;
+            }
+        }
+
+        /* ============================================================
+           PAGINATION
+           ============================================================ */
         .pagination-controls {
             display: flex;
             justify-content: center;
@@ -476,10 +660,15 @@
             text-align: center;
         }
 
+        /* ============================================================
+           EMPTY & LOADING STATES – CENTERED
+           ============================================================ */
         .empty-state {
             text-align: center;
             padding: 48px 20px;
             color: var(--text-muted);
+            grid-column: 1 / -1;
+            width: 100%;
         }
         .empty-state .empty-icon {
             font-size: 56px;
@@ -502,6 +691,8 @@
             text-align: center;
             padding: 48px 20px;
             color: var(--text-muted);
+            grid-column: 1 / -1;
+            width: 100%;
         }
         .grid-loading .spinner {
             width: 40px;
@@ -520,6 +711,9 @@
             font-weight: 500;
         }
 
+        /* ============================================================
+           DEMO NOTE
+           ============================================================ */
         .demo-note {
             text-align: center;
             font-size: 10px;
@@ -536,12 +730,50 @@
             transition: color var(--transition);
         }
 
-        /* ─── Filter sidebar overrides for price slider ─── */
+        /* ============================================================
+           FILTER SIDEBAR OVERRIDES
+           ============================================================ */
         .filter-group .price-slider-wrap {
             padding: 4px 0;
         }
         .filter-group .price-slider-wrap .price-display {
             margin-bottom: 8px;
+        }
+        .filter-group .date-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .filter-group .date-range input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        .filter-group .date-range input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.1);
+        }
+        .filter-group .date-range span {
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        /* Responsive fixes */
+        @media (max-width: 480px) {
+            .filter-group .date-range {
+                flex-wrap: wrap;
+            }
+            .filter-group .date-range input {
+                min-width: 100px;
+            }
         }
     </style>
 </head>
@@ -572,17 +804,17 @@
             </div>
         </div>
 
-        <!-- ===== CATEGORIES (clickable filters) ===== -->
+        <!-- ===== CATEGORIES (populated from endpoint) ===== -->
         <div class="categories">
             <div class="cat-scroll" id="categoryScroll">
-                <!-- Populated by JS from endpoint -->
+                <!-- Populated by JS -->
             </div>
         </div>
 
         <!-- ===== MAIN ===== -->
         <main class="main-content">
 
-            <!-- Banner Carousel (unchanged) -->
+            <!-- Banner Carousel -->
             <div class="banner-carousel">
                 <div class="carousel-track" id="carouselTrack">
                     <div class="carousel-slide">
@@ -733,7 +965,7 @@
     <!-- ===== SCRIPTS ===== -->
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
-    <script src="/assets/js/style.js"></script>
+    <script src="/assets/js/global.js"></script>
     <script>
         (function() {
             'use strict';
@@ -773,7 +1005,6 @@
             let activeFilters = {};
 
             // ─── Endpoint data (simulated) ────────────────────────
-            // This would come from a single API endpoint in production
             const endpointData = {
                 categories: [
                     { id: 'all', icon: 'fa-house', label: 'All' },
@@ -801,13 +1032,11 @@
 
             // ─── Populate dropdowns from endpoint ──────────────────
             function populateDropdowns() {
-                // Badges
                 const badgeSelect = document.getElementById('badgeFilter');
                 badgeSelect.innerHTML = endpointData.badges.map(b =>
                     `<option value="${b.value}">${b.label}</option>`
                 ).join('');
 
-                // Listing Types
                 const typeSelect = document.getElementById('listingTypeFilter');
                 typeSelect.innerHTML = endpointData.listingTypes.map(t =>
                     `<option value="${t.value}">${t.label}</option>`
@@ -822,7 +1051,6 @@
                     </span>`
                 ).join('');
 
-                // Re-bind category clicks
                 document.querySelectorAll('.cat-item').forEach(function(item) {
                     item.addEventListener('click', function() {
                         document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
@@ -846,8 +1074,6 @@
             }
 
             // ─── Search tooltip logic ─────────────────────────────
-            let tooltipTimeout;
-
             searchInput.addEventListener('focus', function() {
                 if (!this.value.trim()) {
                     searchTooltip.classList.add('visible');
@@ -866,8 +1092,6 @@
                 } else {
                     searchTooltip.classList.add('visible');
                 }
-                // Clear previous timeout
-                clearTimeout(tooltipTimeout);
             });
 
             // ─── Price Slider logic ───────────────────────────────
@@ -875,7 +1099,6 @@
                 const minVal = parseInt(priceMinSlider.value);
                 const maxVal = parseInt(priceMaxSlider.value);
 
-                // Ensure min ≤ max
                 if (minVal > maxVal) {
                     priceMinSlider.value = maxVal;
                 }
@@ -915,7 +1138,6 @@
                 const totalItems = 25;
                 const count = Math.min(perPage, totalItems - start);
 
-                // Apply category filter
                 const catMap = {
                     'textbooks': 'Books',
                     'gadgets': 'Electronics',
@@ -942,11 +1164,9 @@
                         }
                     }
 
-                    // Price filter
                     if (filters.priceMin && price < filters.priceMin) continue;
                     if (filters.priceMax && price > filters.priceMax) continue;
 
-                    // Badge filter
                     if (filters.badge && filters.badge !== 'all') {
                         const badgeMap = { 'hot': 'sell', 'free': 'freebie', 'new': 'sell', 'bargain': 'wanted' };
                         if (badgeMap[filters.badge] && badge !== badgeMap[filters.badge]) {
@@ -954,7 +1174,6 @@
                         }
                     }
 
-                    // Listing type filter
                     if (filters.listingType && filters.listingType !== 'all') {
                         if (badge !== filters.listingType && !(filters.listingType === 'sell' && badge === 'swap')) {
                             continue;
@@ -972,7 +1191,6 @@
                     });
                 }
 
-                // If no items after filtering, return empty
                 if (items.length === 0) {
                     return {
                         is_success: true,
@@ -1054,20 +1272,31 @@
                 grid.innerHTML = items.map(item => {
                     const badgeClass = item.badge === 'freebie' ? 'free' : (item.badge === 'sell' ? 'hot' : '');
                     const badgeText = item.badge ? item.badge.toUpperCase() : '';
+                    const categoryIcon = {
+                        'Laptops & Computers': 'fa-laptop',
+                        'Fashion & Clothing': 'fa-shirt',
+                        'Academic Services': 'fa-graduation-cap',
+                        'Event Tickets': 'fa-ticket',
+                        'Electronics': 'fa-microchip',
+                        'Books': 'fa-book',
+                        'Sports': 'fa-futbol',
+                        'Food': 'fa-utensils'
+                    } [item.category] || 'fa-tag';
+
                     return `
                         <div class="product-card" data-id="${item.id}">
                             <div class="img-wrap">
                                 <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-                                <div class="placeholder-icon" style="display:none; position:absolute; inset:0; align-items:center; justify-content:center; font-size:40px; color:var(--text-muted2);">📦</div>
+                                <div class="placeholder-icon" style="display:none; position:absolute; inset:0; align-items:center; justify-content:center; font-size:40px; color:var(--text-muted2); background:var(--bg-img-placeholder);">📦</div>
                                 ${badgeText ? `<span class="tag ${badgeClass}">${badgeText}</span>` : ''}
                                 <span class="wishlist-btn"><i class="fa-regular fa-heart"></i></span>
                             </div>
                             <div class="info">
-                                <div class="name">${item.title}</div>
+                                <div class="name" title="${item.title}">${item.title}</div>
                                 <div class="price">₦${item.price.toLocaleString()}</div>
                                 <div class="meta">
                                     <span class="location"><i class="fa-solid fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
-                                    <span class="rating"><i class="fa-solid fa-tag"></i> ${item.category}</span>
+                                    <span class="category-tag"><i class="fa-solid ${categoryIcon}"></i> ${item.category}</span>
                                 </div>
                             </div>
                         </div>
@@ -1268,7 +1497,6 @@
                 searchHeading.classList.remove('visible');
                 filterBar.classList.remove('visible');
 
-                // Reset price slider
                 priceMinSlider.value = 0;
                 priceMaxSlider.value = 500000;
                 updatePriceSlider();
@@ -1418,7 +1646,7 @@
             prevBtn.addEventListener('click', () => changePage(-1));
             nextBtn.addEventListener('click', () => changePage(1));
 
-            // ─── Carousel (unchanged) ──────────────────────────────
+            // ─── Carousel ──────────────────────────────────────────
             const track = document.getElementById('carouselTrack');
             const dotsContainer = document.getElementById('carouselDots');
             if (track && dotsContainer) {
@@ -1476,14 +1704,9 @@
             }
 
             // ─── INIT ──────────────────────────────────────────────
-            // Populate dynamic dropdowns and categories
             populateDropdowns();
             populateCategories();
-
-            // Initialize price slider
             updatePriceSlider();
-
-            // Load hot_sales on page load
             loadSection('hot_sales', 1);
 
         })();
