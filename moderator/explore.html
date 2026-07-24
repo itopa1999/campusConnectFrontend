@@ -86,7 +86,6 @@
             display: none;
         }
 
-        /* Dark mode tabs */
         .dark-mode .section-tabs {
             background: var(--bg-input);
             border-color: var(--border-color);
@@ -99,7 +98,6 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
 
-        /* ─── Mobile tabs ─── */
         @media (max-width: 560px) {
             .section-tabs {
                 gap: 4px;
@@ -129,7 +127,48 @@
         }
 
         /* ============================================================
-           FILTER BAR – shows active filters
+           SEARCH BAR WITH TOOLTIP
+           ============================================================ */
+        .search-wrap {
+            position: relative;
+        }
+        .search-tooltip {
+            position: absolute;
+            right: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-input);
+            padding: 2px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .search-tooltip.visible {
+            opacity: 1;
+        }
+        .search-tooltip i {
+            margin-right: 4px;
+            color: var(--green);
+        }
+        .dark-mode .search-tooltip {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+
+        @media (max-width: 480px) {
+            .search-tooltip {
+                display: none;
+            }
+        }
+
+        /* ============================================================
+           FILTER BAR
            ============================================================ */
         .filter-bar {
             display: none;
@@ -272,7 +311,121 @@
         }
 
         /* ============================================================
-           LISTINGS GRID – smooth transitions
+           PRICE RANGE SLIDER – CUSTOM DUAL THUMB
+           ============================================================ */
+        .price-slider-wrap {
+            padding: 8px 4px 4px;
+        }
+        .price-slider-wrap .price-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .price-slider-wrap .price-display .price-value {
+            background: var(--green-bg);
+            color: var(--green);
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .price-slider-wrap .price-display .price-value span {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .price-slider-track {
+            position: relative;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 4px;
+            margin: 0 8px;
+            cursor: pointer;
+        }
+        .price-slider-track .price-slider-fill {
+            position: absolute;
+            height: 100%;
+            background: var(--green);
+            border-radius: 4px;
+            left: 0%;
+            right: 0%;
+            transition: none;
+        }
+        .price-slider-track input[type="range"] {
+            position: absolute;
+            top: -6px;
+            left: -8px;
+            width: calc(100% + 16px);
+            height: 18px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            pointer-events: none;
+            margin: 0;
+            padding: 0;
+        }
+        .price-slider-track input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--green);
+            cursor: pointer;
+            pointer-events: auto;
+            border: 3px solid var(--bg-card);
+            box-shadow: 0 2px 8px rgba(13, 138, 62, 0.3);
+            transition: transform 0.15s ease;
+        }
+        .price-slider-track input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        .price-slider-track input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--green);
+            cursor: pointer;
+            pointer-events: auto;
+            border: 3px solid var(--bg-card);
+            box-shadow: 0 2px 8px rgba(13, 138, 62, 0.3);
+        }
+        .price-slider-track input[type="range"]:focus {
+            outline: none;
+        }
+        .price-slider-track input[type="range"]:focus::-webkit-slider-thumb {
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.2);
+        }
+
+        .price-slider-track .price-min-max {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            padding: 0 4px;
+        }
+
+        /* Dark mode price slider */
+        .dark-mode .price-slider-track {
+            background: var(--border-color);
+        }
+        .dark-mode .price-slider-track input[type="range"]::-webkit-slider-thumb {
+            border-color: var(--bg-card);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+        .dark-mode .price-slider-track input[type="range"]::-moz-range-thumb {
+            border-color: var(--bg-card);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ============================================================
+           PRODUCT GRID & OTHER STYLES
            ============================================================ */
         .product-grid {
             transition: opacity 0.3s ease;
@@ -281,9 +434,6 @@
             opacity: 0.5;
         }
 
-        /* ============================================================
-           PAGINATION
-           ============================================================ */
         .pagination-controls {
             display: flex;
             justify-content: center;
@@ -326,9 +476,6 @@
             text-align: center;
         }
 
-        /* ============================================================
-           EMPTY STATE
-           ============================================================ */
         .empty-state {
             text-align: center;
             padding: 48px 20px;
@@ -351,9 +498,6 @@
             color: var(--text-muted);
         }
 
-        /* ============================================================
-           GRID LOADING
-           ============================================================ */
         .grid-loading {
             text-align: center;
             padding: 48px 20px;
@@ -376,9 +520,6 @@
             font-weight: 500;
         }
 
-        /* ============================================================
-           DEMO NOTE
-           ============================================================ */
         .demo-note {
             text-align: center;
             font-size: 10px;
@@ -393,6 +534,14 @@
             font-weight: 600;
             color: var(--green);
             transition: color var(--transition);
+        }
+
+        /* ─── Filter sidebar overrides for price slider ─── */
+        .filter-group .price-slider-wrap {
+            padding: 4px 0;
+        }
+        .filter-group .price-slider-wrap .price-display {
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -410,11 +559,14 @@
             </div>
         </div>
 
-        <!-- ===== SEARCH ===== -->
+        <!-- ===== SEARCH with Tooltip ===== -->
         <div class="search-bar">
             <div class="search-wrap">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="searchInput" placeholder="Search for textbooks, gadgets, food…" />
+                <span class="search-tooltip" id="searchTooltip">
+                    <i class="fa-regular fa-keyboard"></i> Press Enter to search
+                </span>
                 <span class="search-shortcut">⌘K</span>
                 <i class="fa-solid fa-sliders-h filter-toggle" id="filterToggle"></i>
             </div>
@@ -422,14 +574,8 @@
 
         <!-- ===== CATEGORIES (clickable filters) ===== -->
         <div class="categories">
-            <div class="cat-scroll">
-                <span class="cat-item active" data-category="all"><i class="fa-solid fa-house"></i> All</span>
-                <span class="cat-item" data-category="textbooks"><i class="fa-solid fa-book"></i> Textbooks</span>
-                <span class="cat-item" data-category="gadgets"><i class="fa-solid fa-laptop"></i> Gadgets</span>
-                <span class="cat-item" data-category="food"><i class="fa-solid fa-utensils"></i> Food</span>
-                <span class="cat-item" data-category="fashion"><i class="fa-solid fa-shirt"></i> Fashion</span>
-                <span class="cat-item" data-category="services"><i class="fa-solid fa-tools"></i> Services</span>
-                <span class="cat-item" data-category="sports"><i class="fa-solid fa-futbol"></i> Sports</span>
+            <div class="cat-scroll" id="categoryScroll">
+                <!-- Populated by JS from endpoint -->
             </div>
         </div>
 
@@ -479,8 +625,8 @@
                     <i class="fa-solid fa-fire"></i> Hot Sales
                     <span class="tab-badge">🔥</span>
                 </button>
-                <button class="tab-btn" data-section="departmental">
-                    <i class="fa-solid fa-building-columns"></i> Departmental
+                <button class="tab-btn" data-section="department">
+                    <i class="fa-solid fa-building-columns"></i> Department
                 </button>
                 <button class="tab-btn" data-section="for_you">
                     <i class="fa-solid fa-user"></i> For You
@@ -525,40 +671,50 @@
                 <i class="fa-solid fa-times" id="filterClose"></i>
             </div>
             <div class="filter-body">
+                <!-- Price Range – Custom Slider -->
                 <div class="filter-group">
                     <label>Price Range (₦)</label>
-                    <div class="price-range">
-                        <input type="number" placeholder="Min" min="0" id="priceMin" />
-                        <span>—</span>
-                        <input type="number" placeholder="Max" min="0" id="priceMax" />
+                    <div class="price-slider-wrap">
+                        <div class="price-display">
+                            <span class="price-value" id="priceMinDisplay">₦0</span>
+                            <span class="price-value" id="priceMaxDisplay">₦500,000</span>
+                        </div>
+                        <div class="price-slider-track" id="priceSliderTrack">
+                            <div class="price-slider-fill" id="priceSliderFill"></div>
+                            <input type="range" id="priceMinSlider" min="0" max="500000" value="0" step="1000" />
+                            <input type="range" id="priceMaxSlider" min="0" max="500000" value="500000" step="1000" />
+                        </div>
                     </div>
                 </div>
+
+                <!-- Date Posted -->
                 <div class="filter-group">
                     <label>Date Posted</label>
                     <div class="date-range">
-                        <input type="date" id="dateFrom" />
+                        <input type="date" id="dateFrom" class="form-input" />
                         <span>to</span>
-                        <input type="date" id="dateTo" />
+                        <input type="date" id="dateTo" class="form-input" />
                     </div>
                 </div>
+
+                <!-- Badge – populated from endpoint -->
                 <div class="filter-group">
                     <label>Badge</label>
-                    <select id="badgeFilter">
-                        <option value="all">All</option>
-                        <option value="hot">Hot</option>
-                        <option value="free">Free</option>
-                        <option value="new">New</option>
-                        <option value="bargain">Bargain</option>
-                    </select>
+                    <div class="form-select-wrap">
+                        <select id="badgeFilter" class="form-select">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
                 </div>
+
+                <!-- Listing Type – populated from endpoint -->
                 <div class="filter-group">
                     <label>Listing Type</label>
-                    <select id="listingTypeFilter">
-                        <option value="all">All</option>
-                        <option value="sell">Sell</option>
-                        <option value="wanted">Wanted</option>
-                        <option value="free">Free</option>
-                    </select>
+                    <div class="form-select-wrap">
+                        <select id="listingTypeFilter" class="form-select">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="filter-footer">
@@ -587,6 +743,7 @@
             const tabsContainer = document.getElementById('sectionTabs');
             const tabBtns = tabsContainer.querySelectorAll('.tab-btn');
             const searchInput = document.getElementById('searchInput');
+            const searchTooltip = document.getElementById('searchTooltip');
             const searchHeading = document.getElementById('searchHeading');
             const searchQueryDisplay = document.getElementById('searchQueryDisplay');
             const searchCount = document.getElementById('searchCount');
@@ -598,6 +755,14 @@
             const prevBtn = document.getElementById('prevPage');
             const nextBtn = document.getElementById('nextPage');
             const pageInfo = document.getElementById('pageInfo');
+            const categoryScroll = document.getElementById('categoryScroll');
+
+            // Price slider elements
+            const priceMinSlider = document.getElementById('priceMinSlider');
+            const priceMaxSlider = document.getElementById('priceMaxSlider');
+            const priceMinDisplay = document.getElementById('priceMinDisplay');
+            const priceMaxDisplay = document.getElementById('priceMaxDisplay');
+            const priceSliderFill = document.getElementById('priceSliderFill');
 
             // ─── State ─────────────────────────────────────────────
             let currentSection = 'hot_sales';
@@ -606,6 +771,138 @@
             let isSearchMode = false;
             let searchQuery = '';
             let activeFilters = {};
+
+            // ─── Endpoint data (simulated) ────────────────────────
+            // This would come from a single API endpoint in production
+            const endpointData = {
+                categories: [
+                    { id: 'all', icon: 'fa-house', label: 'All' },
+                    { id: 'textbooks', icon: 'fa-book', label: 'Textbooks' },
+                    { id: 'gadgets', icon: 'fa-laptop', label: 'Gadgets' },
+                    { id: 'food', icon: 'fa-utensils', label: 'Food' },
+                    { id: 'fashion', icon: 'fa-shirt', label: 'Fashion' },
+                    { id: 'services', icon: 'fa-tools', label: 'Services' },
+                    { id: 'sports', icon: 'fa-futbol', label: 'Sports' }
+                ],
+                badges: [
+                    { value: 'all', label: 'All' },
+                    { value: 'hot', label: '🔥 Hot' },
+                    { value: 'free', label: '🆓 Free' },
+                    { value: 'new', label: '✨ New' },
+                    { value: 'bargain', label: '💰 Bargain' }
+                ],
+                listingTypes: [
+                    { value: 'all', label: 'All' },
+                    { value: 'sell', label: '🛒 Sell' },
+                    { value: 'wanted', label: '🔍 Wanted' },
+                    { value: 'free', label: '🎁 Free' }
+                ]
+            };
+
+            // ─── Populate dropdowns from endpoint ──────────────────
+            function populateDropdowns() {
+                // Badges
+                const badgeSelect = document.getElementById('badgeFilter');
+                badgeSelect.innerHTML = endpointData.badges.map(b =>
+                    `<option value="${b.value}">${b.label}</option>`
+                ).join('');
+
+                // Listing Types
+                const typeSelect = document.getElementById('listingTypeFilter');
+                typeSelect.innerHTML = endpointData.listingTypes.map(t =>
+                    `<option value="${t.value}">${t.label}</option>`
+                ).join('');
+            }
+
+            // ─── Populate category chips from endpoint ─────────────
+            function populateCategories() {
+                categoryScroll.innerHTML = endpointData.categories.map(cat =>
+                    `<span class="cat-item ${cat.id === 'all' ? 'active' : ''}" data-category="${cat.id}">
+                        <i class="fa-solid ${cat.icon}"></i> ${cat.label}
+                    </span>`
+                ).join('');
+
+                // Re-bind category clicks
+                document.querySelectorAll('.cat-item').forEach(function(item) {
+                    item.addEventListener('click', function() {
+                        document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
+                        this.classList.add('active');
+
+                        const category = this.dataset.category;
+                        if (category === 'all') {
+                            delete activeFilters.category;
+                        } else {
+                            activeFilters.category = category;
+                        }
+
+                        if (!isSearchMode && !tabsContainer.classList.contains('hidden')) {
+                            isSearchMode = true;
+                            tabsContainer.classList.add('hidden');
+                        }
+
+                        applyAllFilters();
+                    });
+                });
+            }
+
+            // ─── Search tooltip logic ─────────────────────────────
+            let tooltipTimeout;
+
+            searchInput.addEventListener('focus', function() {
+                if (!this.value.trim()) {
+                    searchTooltip.classList.add('visible');
+                }
+            });
+
+            searchInput.addEventListener('blur', function() {
+                setTimeout(() => {
+                    searchTooltip.classList.remove('visible');
+                }, 500);
+            });
+
+            searchInput.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    searchTooltip.classList.remove('visible');
+                } else {
+                    searchTooltip.classList.add('visible');
+                }
+                // Clear previous timeout
+                clearTimeout(tooltipTimeout);
+            });
+
+            // ─── Price Slider logic ───────────────────────────────
+            function updatePriceSlider() {
+                const minVal = parseInt(priceMinSlider.value);
+                const maxVal = parseInt(priceMaxSlider.value);
+
+                // Ensure min ≤ max
+                if (minVal > maxVal) {
+                    priceMinSlider.value = maxVal;
+                }
+
+                const minPercent = (parseInt(priceMinSlider.value) / 500000) * 100;
+                const maxPercent = (parseInt(priceMaxSlider.value) / 500000) * 100;
+
+                priceSliderFill.style.left = minPercent + '%';
+                priceSliderFill.style.right = (100 - maxPercent) + '%';
+
+                priceMinDisplay.textContent = '₦' + parseInt(priceMinSlider.value).toLocaleString();
+                priceMaxDisplay.textContent = '₦' + parseInt(priceMaxSlider.value).toLocaleString();
+            }
+
+            priceMinSlider.addEventListener('input', function() {
+                if (parseInt(this.value) > parseInt(priceMaxSlider.value)) {
+                    priceMaxSlider.value = this.value;
+                }
+                updatePriceSlider();
+            });
+
+            priceMaxSlider.addEventListener('input', function() {
+                if (parseInt(this.value) < parseInt(priceMinSlider.value)) {
+                    priceMinSlider.value = this.value;
+                }
+                updatePriceSlider();
+            });
 
             // ─── Dummy data generator ─────────────────────────────
             function generateDummyItems(section, page, perPage = 8, query = '', filters = {}) {
@@ -618,26 +915,48 @@
                 const totalItems = 25;
                 const count = Math.min(perPage, totalItems - start);
 
+                // Apply category filter
+                const catMap = {
+                    'textbooks': 'Books',
+                    'gadgets': 'Electronics',
+                    'food': 'Food',
+                    'fashion': 'Fashion & Clothing',
+                    'services': 'Academic Services',
+                    'sports': 'Sports'
+                };
+
                 for (let i = 0; i < count; i++) {
                     const idx = start + i + 1;
                     const title = query ? `${query} - Item ${idx}` : `Item ${idx} (${section})`;
-                    const price = Math.floor(Math.random() * 500000) + 1000;
+                    const price = Math.floor(Math.random() * 450000) + 1000;
                     const category = categories[Math.floor(Math.random() * categories.length)];
                     const badge = badges[Math.floor(Math.random() * badges.length)];
                     const hotspot = hotspots[Math.floor(Math.random() * hotspots.length)];
                     const imageId = (idx % 10) + 1;
 
-                    // Apply category filter if present
+                    // Apply filters
                     if (filters.category && filters.category !== 'all') {
-                        const catMap = {
-                            'textbooks': 'Books',
-                            'gadgets': 'Electronics',
-                            'food': 'Food',
-                            'fashion': 'Fashion & Clothing',
-                            'services': 'Academic Services',
-                            'sports': 'Sports'
-                        };
-                        if (catMap[filters.category] && !category.includes(catMap[filters.category])) {
+                        const filterCat = catMap[filters.category];
+                        if (filterCat && !category.includes(filterCat)) {
+                            continue;
+                        }
+                    }
+
+                    // Price filter
+                    if (filters.priceMin && price < filters.priceMin) continue;
+                    if (filters.priceMax && price > filters.priceMax) continue;
+
+                    // Badge filter
+                    if (filters.badge && filters.badge !== 'all') {
+                        const badgeMap = { 'hot': 'sell', 'free': 'freebie', 'new': 'sell', 'bargain': 'wanted' };
+                        if (badgeMap[filters.badge] && badge !== badgeMap[filters.badge]) {
+                            continue;
+                        }
+                    }
+
+                    // Listing type filter
+                    if (filters.listingType && filters.listingType !== 'all') {
+                        if (badge !== filters.listingType && !(filters.listingType === 'sell' && badge === 'swap')) {
                             continue;
                         }
                     }
@@ -755,7 +1074,6 @@
                     `;
                 }).join('');
 
-                // Re-bind wishlist clicks
                 grid.querySelectorAll('.wishlist-btn').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -781,10 +1099,12 @@
                     const response = await fetchListings(section, page, query, filters);
                     renderListings(response);
 
-                    // Update filter count
                     if (isSearchMode || Object.keys(activeFilters).length > 0) {
                         const total = response.data.pagination?.total_items || 0;
                         filterCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
+                        if (isSearchMode) {
+                            searchCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
+                        }
                     }
                 } catch (err) {
                     grid.innerHTML = `
@@ -802,7 +1122,7 @@
             // ─── Update filter bar ────────────────────────────────
             function updateFilterBar() {
                 const tags = [];
-                let filterCount = 0;
+                let count = 0;
 
                 if (isSearchMode && searchQuery) {
                     tags.push(`
@@ -811,11 +1131,11 @@
                             <button class="remove-filter" data-type="search" title="Clear search">&times;</button>
                         </span>
                     `);
-                    filterCount++;
+                    count++;
                 }
 
                 if (activeFilters.category && activeFilters.category !== 'all') {
-                    const catNames = {
+                    const catMap = {
                         'textbooks': 'Textbooks',
                         'gadgets': 'Gadgets',
                         'food': 'Food',
@@ -825,57 +1145,57 @@
                     };
                     tags.push(`
                         <span class="filter-tag">
-                            <i class="fa-solid fa-tag"></i> ${catNames[activeFilters.category] || activeFilters.category}
+                            <i class="fa-solid fa-tag"></i> ${catMap[activeFilters.category] || activeFilters.category}
                             <button class="remove-filter" data-type="category" title="Remove category">&times;</button>
                         </span>
                     `);
-                    filterCount++;
+                    count++;
                 }
 
                 if (activeFilters.priceMin || activeFilters.priceMax) {
-                    const label = activeFilters.priceMin && activeFilters.priceMax
-                        ? `₦${activeFilters.priceMin} – ₦${activeFilters.priceMax}`
-                        : activeFilters.priceMin ? `≥ ₦${activeFilters.priceMin}` : `≤ ₦${activeFilters.priceMax}`;
+                    const min = activeFilters.priceMin || 0;
+                    const max = activeFilters.priceMax || 500000;
                     tags.push(`
                         <span class="filter-tag">
-                            <i class="fa-solid fa-coins"></i> ${label}
+                            <i class="fa-solid fa-coins"></i> ₦${min.toLocaleString()} – ₦${max.toLocaleString()}
                             <button class="remove-filter" data-type="price" title="Remove price filter">&times;</button>
                         </span>
                     `);
-                    filterCount++;
+                    count++;
                 }
 
                 if (activeFilters.badge && activeFilters.badge !== 'all') {
+                    const badgeMap = { 'hot': '🔥 Hot', 'free': '🆓 Free', 'new': '✨ New', 'bargain': '💰 Bargain' };
                     tags.push(`
                         <span class="filter-tag">
-                            <i class="fa-solid fa-medal"></i> ${activeFilters.badge.charAt(0).toUpperCase() + activeFilters.badge.slice(1)}
+                            <i class="fa-solid fa-medal"></i> ${badgeMap[activeFilters.badge] || activeFilters.badge}
                             <button class="remove-filter" data-type="badge" title="Remove badge filter">&times;</button>
                         </span>
                     `);
-                    filterCount++;
+                    count++;
                 }
 
                 if (activeFilters.listingType && activeFilters.listingType !== 'all') {
+                    const typeMap = { 'sell': '🛒 Sell', 'wanted': '🔍 Wanted', 'free': '🎁 Free' };
                     tags.push(`
                         <span class="filter-tag">
-                            <i class="fa-solid fa-list"></i> ${activeFilters.listingType.charAt(0).toUpperCase() + activeFilters.listingType.slice(1)}
+                            <i class="fa-solid fa-list"></i> ${typeMap[activeFilters.listingType] || activeFilters.listingType}
                             <button class="remove-filter" data-type="listingType" title="Remove listing type filter">&times;</button>
                         </span>
                     `);
-                    filterCount++;
+                    count++;
                 }
 
-                if (filterCount > 0) {
+                if (count > 0) {
                     filterBar.classList.add('visible');
                     filterTags.innerHTML = tags.join('');
-                    document.getElementById('filterCount').textContent = `${filterCount} filter${filterCount > 1 ? 's' : ''} applied`;
+                    document.getElementById('filterCount').textContent = `${count} filter${count > 1 ? 's' : ''} applied`;
                 } else {
                     filterBar.classList.remove('visible');
                     filterTags.innerHTML = '';
                     document.getElementById('filterCount').textContent = '';
                 }
 
-                // Bind remove buttons
                 filterTags.querySelectorAll('.remove-filter').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -883,22 +1203,23 @@
                         if (type === 'search') {
                             clearSearch();
                         } else if (type === 'category') {
-                            activeFilters.category = 'all';
+                            delete activeFilters.category;
                             document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
                             document.querySelector('.cat-item[data-category="all"]')?.classList.add('active');
                             applyAllFilters();
                         } else if (type === 'price') {
                             delete activeFilters.priceMin;
                             delete activeFilters.priceMax;
-                            document.getElementById('priceMin').value = '';
-                            document.getElementById('priceMax').value = '';
+                            priceMinSlider.value = 0;
+                            priceMaxSlider.value = 500000;
+                            updatePriceSlider();
                             applyAllFilters();
                         } else if (type === 'badge') {
-                            activeFilters.badge = 'all';
+                            delete activeFilters.badge;
                             document.getElementById('badgeFilter').value = 'all';
                             applyAllFilters();
                         } else if (type === 'listingType') {
-                            activeFilters.listingType = 'all';
+                            delete activeFilters.listingType;
                             document.getElementById('listingTypeFilter').value = 'all';
                             applyAllFilters();
                         }
@@ -920,7 +1241,6 @@
                     updateFilterBar();
                     loadSection('search', 1, searchQuery, activeFilters);
                 } else {
-                    // Back to normal tabs mode
                     tabsContainer.classList.remove('hidden');
                     searchHeading.classList.remove('visible');
                     filterBar.classList.remove('visible');
@@ -931,7 +1251,6 @@
             // ─── Switch tab ────────────────────────────────────────
             function switchTab(section) {
                 if (isSearchMode || Object.keys(activeFilters).length > 0) {
-                    // Clear all filters and search
                     clearAllState();
                 }
                 currentSection = section;
@@ -949,6 +1268,11 @@
                 searchHeading.classList.remove('visible');
                 filterBar.classList.remove('visible');
 
+                // Reset price slider
+                priceMinSlider.value = 0;
+                priceMaxSlider.value = 500000;
+                updatePriceSlider();
+
                 loadSection(section, 1);
             }
 
@@ -960,13 +1284,14 @@
                 activeFilters = {};
                 document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
                 document.querySelector('.cat-item[data-category="all"]')?.classList.add('active');
-                document.getElementById('priceMin').value = '';
-                document.getElementById('priceMax').value = '';
                 document.getElementById('badgeFilter').value = 'all';
                 document.getElementById('listingTypeFilter').value = 'all';
                 searchHeading.classList.remove('visible');
                 filterBar.classList.remove('visible');
                 tabsContainer.classList.remove('hidden');
+                priceMinSlider.value = 0;
+                priceMaxSlider.value = 500000;
+                updatePriceSlider();
             }
 
             // ─── Clear search ──────────────────────────────────────
@@ -1039,42 +1364,17 @@
                 loadSection(currentSection, 1);
             });
 
-            // ─── Category clicks (act as filters) ──────────────────
-            const catItems = document.querySelectorAll('.cat-item');
-            catItems.forEach(function(item) {
-                item.addEventListener('click', function() {
-                    catItems.forEach(function(c) { c.classList.remove('active'); });
-                    this.classList.add('active');
-
-                    const category = this.dataset.category;
-                    if (category === 'all') {
-                        delete activeFilters.category;
-                    } else {
-                        activeFilters.category = category;
-                    }
-
-                    // If we're in a tab, switch to search mode
-                    if (!isSearchMode && !tabsContainer.classList.contains('hidden')) {
-                        isSearchMode = true;
-                        tabsContainer.classList.add('hidden');
-                    }
-
-                    applyAllFilters();
-                });
-            });
-
             // ─── Filter sidebar apply ──────────────────────────────
             document.getElementById('filterApply').addEventListener('click', function() {
-                const priceMin = document.getElementById('priceMin').value;
-                const priceMax = document.getElementById('priceMax').value;
+                const minVal = parseInt(priceMinSlider.value);
+                const maxVal = parseInt(priceMaxSlider.value);
                 const badge = document.getElementById('badgeFilter').value;
                 const listingType = document.getElementById('listingTypeFilter').value;
 
-                // Apply filters
-                if (priceMin) activeFilters.priceMin = parseInt(priceMin);
+                if (minVal > 0) activeFilters.priceMin = minVal;
                 else delete activeFilters.priceMin;
 
-                if (priceMax) activeFilters.priceMax = parseInt(priceMax);
+                if (maxVal < 500000) activeFilters.priceMax = maxVal;
                 else delete activeFilters.priceMax;
 
                 if (badge && badge !== 'all') activeFilters.badge = badge;
@@ -1083,10 +1383,8 @@
                 if (listingType && listingType !== 'all') activeFilters.listingType = listingType;
                 else delete activeFilters.listingType;
 
-                // Close sidebar
                 document.getElementById('filterClose').click();
 
-                // Switch to filter mode
                 if (!isSearchMode && !tabsContainer.classList.contains('hidden')) {
                     isSearchMode = true;
                     tabsContainer.classList.add('hidden');
@@ -1101,8 +1399,9 @@
 
             // ─── Filter sidebar reset ─────────────────────────────
             document.getElementById('filterReset').addEventListener('click', function() {
-                document.getElementById('priceMin').value = '';
-                document.getElementById('priceMax').value = '';
+                priceMinSlider.value = 0;
+                priceMaxSlider.value = 500000;
+                updatePriceSlider();
                 document.getElementById('badgeFilter').value = 'all';
                 document.getElementById('listingTypeFilter').value = 'all';
                 delete activeFilters.priceMin;
@@ -1176,7 +1475,15 @@
                 startCarousel();
             }
 
-            // ─── INIT: load hot_sales on page load ────────────────
+            // ─── INIT ──────────────────────────────────────────────
+            // Populate dynamic dropdowns and categories
+            populateDropdowns();
+            populateCategories();
+
+            // Initialize price slider
+            updatePriceSlider();
+
+            // Load hot_sales on page load
             loadSection('hot_sales', 1);
 
         })();
