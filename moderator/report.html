@@ -1,1 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Report Abuse</title>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        .report-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .report-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 24px 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .report-card .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition);
+        }
+        .report-card .card-title i {
+            color: var(--red);
+            font-size: 22px;
+        }
+        .report-card .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Form Elements (reuse global) ─── */
+        .report-card .form-group {
+            margin-bottom: 18px;
+        }
+        .report-card .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+
+        .report-card .form-check-group {
+            display: flex;
+            gap: 20px;
+            padding: 4px 0;
+        }
+        .report-card .form-check-group .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 4px 0;
+            transition: color var(--transition);
+        }
+        .report-card .form-check-group .form-check input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .report-card .form-check-group .checkmark-radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .report-card .form-check-group .checkmark-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--green);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.25s ease;
+        }
+        .report-card .form-check-group input[type="radio"]:checked + .checkmark-radio {
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .report-card .form-check-group input[type="radio"]:checked + .checkmark-radio::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .report-card .form-input,
+        .report-card .form-textarea,
+        .report-card .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.25s ease;
+            outline: none;
+        }
+        .report-card .form-input:focus,
+        .report-card .form-textarea:focus,
+        .report-card .form-select:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
+            background: var(--bg-card);
+        }
+        .report-card .form-input.error,
+        .report-card .form-textarea.error,
+        .report-card .form-select.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
+        }
+        .report-card .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+        .report-card .help-text.error {
+            color: var(--red);
+        }
+
+        /* ─── Actions ─── */
+        .report-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .report-actions button {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+        .report-actions .btn-submit {
+            background: var(--red);
+            color: #ffffff;
+        }
+        .report-actions .btn-submit:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .report-actions .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .report-actions .btn-cancel {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .report-actions .btn-cancel:hover {
+            background: var(--border-color);
+        }
+
+        .btn-submit .spinner-btn {
+            display: none;
+        }
+        .btn-submit.loading .spinner-btn {
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .btn-submit.loading .btn-text {
+            display: none;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .report-card {
+                padding: 16px 18px;
+            }
+            .report-card .card-title {
+                font-size: 17px;
+            }
+            .report-actions button {
+                min-width: 100px;
+                font-size: 13px;
+                padding: 10px 0;
+            }
+            .report-card .form-check-group {
+                gap: 12px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="report-wrapper">
+
+                <!-- ===== REPORT CARD ===== -->
+                <div class="report-card">
+                    <div class="card-title">
+                        <i class="fa-regular fa-flag"></i> Report Abuse
+                    </div>
+                    <div class="card-subtitle">Help us keep CampusHub safe. Report any inappropriate listings or users.</div>
+
+                    <form id="reportForm" autocomplete="off">
+
+                        <!-- Report Type -->
+                        <div class="form-group">
+                            <label>What would you like to report?</label>
+                            <div class="form-check-group">
+                                <label class="form-check">
+                                    <input type="radio" name="report_type" value="listing" checked />
+                                    <span class="checkmark-radio"></span> Listing
+                                </label>
+                                <label class="form-check">
+                                    <input type="radio" name="report_type" value="user" />
+                                    <span class="checkmark-radio"></span> User
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Listing Identifier -->
+                        <div class="form-group" id="listingIdGroup">
+                            <label for="listingIdentifier">Listing ID or Title <span style="color:var(--red);">*</span></label>
+                            <input type="text" id="listingIdentifier" class="form-input" placeholder="e.g., 'MacBook Pro' or ID 1234" required />
+                            <div class="help-text" id="listingHelp"></div>
+                        </div>
+
+                        <!-- User Identifier -->
+                        <div class="form-group" id="userIdGroup" style="display:none;">
+                            <label for="userIdentifier">Username or User ID <span style="color:var(--red);">*</span></label>
+                            <input type="text" id="userIdentifier" class="form-input" placeholder="e.g., @john_doe or ID 5678" />
+                            <div class="help-text" id="userHelp"></div>
+                        </div>
+
+                        <!-- Reason -->
+                        <div class="form-group">
+                            <label for="reason">Reason for Report <span style="color:var(--red);">*</span></label>
+                            <div class="form-select-wrap">
+                                <select id="reason" class="form-select" required>
+                                    <option value="">Select a reason...</option>
+                                    <option value="spam">Spam or Misleading</option>
+                                    <option value="harassment">Harassment or Bullying</option>
+                                    <option value="offensive">Offensive Content</option>
+                                    <option value="scam">Scam or Fraud</option>
+                                    <option value="counterfeit">Counterfeit or Fake Item</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="help-text" id="reasonHelp"></div>
+                        </div>
+
+                        <!-- Details -->
+                        <div class="form-group">
+                            <label for="details">Additional Details</label>
+                            <textarea id="details" class="form-textarea" rows="4" placeholder="Please provide any additional context or evidence..."></textarea>
+                            <div class="help-text" id="detailsHelp"></div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="report-actions">
+                            <button type="submit" class="btn-submit" id="submitBtn">
+                                <span class="btn-text"><i class="fa-regular fa-paper-plane"></i> Submit Report</span>
+                                <span class="spinner-btn"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                            </button>
+                            <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div><!-- /report-card -->
+
+            </div><!-- /report-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Report Abuse • dummy data for preview
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const form = document.getElementById('reportForm');
+            const listingGroup = document.getElementById('listingIdGroup');
+            const userGroup = document.getElementById('userIdGroup');
+            const listingInput = document.getElementById('listingIdentifier');
+            const userInput = document.getElementById('userIdentifier');
+            const reasonSelect = document.getElementById('reason');
+            const detailsInput = document.getElementById('details');
+
+            const listingHelp = document.getElementById('listingHelp');
+            const userHelp = document.getElementById('userHelp');
+            const reasonHelp = document.getElementById('reasonHelp');
+            const detailsHelp = document.getElementById('detailsHelp');
+
+            const submitBtn = document.getElementById('submitBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+
+            // ─── Toggle report type ──────────────────────────────────
+            document.querySelectorAll('input[name="report_type"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'listing') {
+                        listingGroup.style.display = 'block';
+                        userGroup.style.display = 'none';
+                        listingInput.required = true;
+                        userInput.required = false;
+                        listingInput.value = '';
+                        userInput.value = '';
+                        clearFieldHelp(listingHelp);
+                        clearFieldHelp(userHelp);
+                    } else {
+                        listingGroup.style.display = 'none';
+                        userGroup.style.display = 'block';
+                        listingInput.required = false;
+                        userInput.required = true;
+                        listingInput.value = '';
+                        userInput.value = '';
+                        clearFieldHelp(listingHelp);
+                        clearFieldHelp(userHelp);
+                    }
+                    validateForm();
+                });
+            });
+
+            // ─── Helpers ──────────────────────────────────────────────
+            function clearFieldHelp(el) {
+                el.textContent = '';
+                el.className = 'help-text';
+            }
+
+            function setFieldHelp(el, message, isError = true) {
+                el.textContent = message;
+                el.className = 'help-text' + (isError ? ' error' : '');
+            }
+
+            // ─── Validation ────────────────────────────────────────────
+            function validateForm() {
+                let isValid = true;
+                const reportType = document.querySelector('input[name="report_type"]:checked').value;
+
+                // Validate identifier
+                if (reportType === 'listing') {
+                    const val = listingInput.value.trim();
+                    if (!val) {
+                        setFieldHelp(listingHelp, 'Please enter a listing ID or title.');
+                        isValid = false;
+                    } else {
+                        clearFieldHelp(listingHelp);
+                    }
+                } else {
+                    const val = userInput.value.trim();
+                    if (!val) {
+                        setFieldHelp(userHelp, 'Please enter a username or user ID.');
+                        isValid = false;
+                    } else {
+                        clearFieldHelp(userHelp);
+                    }
+                }
+
+                // Validate reason
+                if (!reasonSelect.value) {
+                    setFieldHelp(reasonHelp, 'Please select a reason for the report.');
+                    isValid = false;
+                } else {
+                    clearFieldHelp(reasonHelp);
+                }
+
+                // Details are optional, but if they exceed a limit we can warn
+                if (detailsInput.value.length > 500) {
+                    setFieldHelp(detailsHelp, 'Details are too long (max 500 characters).', true);
+                    isValid = false;
+                } else {
+                    clearFieldHelp(detailsHelp);
+                }
+
+                submitBtn.disabled = !isValid;
+                return isValid;
+            }
+
+            // ─── Input events ──────────────────────────────────────────
+            listingInput.addEventListener('input', validateForm);
+            userInput.addEventListener('input', validateForm);
+            reasonSelect.addEventListener('change', validateForm);
+            detailsInput.addEventListener('input', validateForm);
+
+            // ─── Submit ─────────────────────────────────────────────────
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!validateForm()) return;
+
+                const reportType = document.querySelector('input[name="report_type"]:checked').value;
+                const identifier = reportType === 'listing' ? listingInput.value.trim() : userInput.value.trim();
+                const reason = reasonSelect.value;
+                const details = detailsInput.value.trim();
+
+                const reportData = {
+                    type: reportType,
+                    identifier: identifier,
+                    reason: reason,
+                    details: details || 'No additional details provided.',
+                };
+
+                // Confirm submission via Modal
+                const doSubmit = () => {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('loading');
+
+                    // Simulate API call
+                    setTimeout(() => {
+                        submitBtn.classList.remove('loading');
+                        submitBtn.disabled = false;
+
+                        console.log('📢 Report submitted:', reportData);
+
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.success('Report submitted! We\'ll review it shortly.', { duration: 4000 });
+                        } else {
+                            alert('Report submitted! We\'ll review it shortly.');
+                        }
+
+                        // Reset form
+                        form.reset();
+                        // Reset to default state (listing visible)
+                        document.querySelector('input[name="report_type"][value="listing"]').checked = true;
+                        listingGroup.style.display = 'block';
+                        userGroup.style.display = 'none';
+                        listingInput.required = true;
+                        userInput.required = false;
+                        clearFieldHelp(listingHelp);
+                        clearFieldHelp(userHelp);
+                        clearFieldHelp(reasonHelp);
+                        clearFieldHelp(detailsHelp);
+                        submitBtn.disabled = true;
+
+                    }, 1500);
+                };
+
+                if (typeof Modal !== 'undefined') {
+                    const modal = new Modal({
+                        title: 'Confirm Report',
+                        body: `
+                                <p>You are about to report a <strong>${reportType}</strong> for <strong>${reason}</strong>.</p>
+                                <p style="color:var(--text-muted); font-size:13px;">Please ensure your report is accurate. False reports may lead to account restrictions.</p>
+                                <p style="color:var(--text-muted); font-size:13px;"><strong>Identifier:</strong> ${identifier}</p>
+                            `,
+                        type: 'danger',
+                        confirmText: 'Submit Report',
+                        cancelText: 'Cancel',
+                        onConfirm: doSubmit
+                    });
+                    modal.open();
+                } else {
+                    if (confirm(`Submit report for ${reportType}: ${identifier}?`)) {
+                        doSubmit();
+                    }
+                }
+            });
+
+            // ─── Cancel ─────────────────────────────────────────────────
+            cancelBtn.addEventListener('click', function() {
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.info('Report discarded.', { duration: 1500 });
+                }
+                form.reset();
+                // Reset to default state
+                document.querySelector('input[name="report_type"][value="listing"]').checked = true;
+                listingGroup.style.display = 'block';
+                userGroup.style.display = 'none';
+                listingInput.required = true;
+                userInput.required = false;
+                clearFieldHelp(listingHelp);
+                clearFieldHelp(userHelp);
+                clearFieldHelp(reasonHelp);
+                clearFieldHelp(detailsHelp);
+                submitBtn.disabled = true;
+            });
+
+            // ─── Init ──────────────────────────────────────────────────
+            setTimeout(validateForm, 100);
+
+        })();
+    </script>
+
+</body>
+</html>
