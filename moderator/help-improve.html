@@ -1,1 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Help Us Improve</title>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        .feedback-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .feedback-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 24px 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .feedback-card .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition);
+        }
+        .feedback-card .card-title i {
+            color: var(--star);
+            font-size: 22px;
+        }
+        .feedback-card .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Form Elements ─── */
+        .feedback-card .form-group {
+            margin-bottom: 18px;
+        }
+        .feedback-card .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .feedback-card .form-group label .required-star {
+            color: var(--red);
+            margin-left: 2px;
+        }
+
+        .feedback-card .form-input,
+        .feedback-card .form-textarea,
+        .feedback-card .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.25s ease;
+            outline: none;
+        }
+        .feedback-card .form-input:focus,
+        .feedback-card .form-textarea:focus,
+        .feedback-card .form-select:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
+            background: var(--bg-card);
+        }
+        .feedback-card .form-input.error,
+        .feedback-card .form-textarea.error,
+        .feedback-card .form-select.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
+        }
+        .feedback-card .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+        .feedback-card .help-text.error {
+            color: var(--red);
+        }
+        .feedback-card .help-text.success {
+            color: var(--green);
+        }
+
+        /* ─── Character Counter ─── */
+        .char-counter {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+        .char-counter.warning {
+            color: #e67e22;
+        }
+        .char-counter.danger {
+            color: var(--red);
+        }
+
+        /* ─── File Drop Zone (reuse from form-helpers) ─── */
+        .file-drop-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 24px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-input);
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .file-drop-zone:hover {
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .file-drop-zone.dragover {
+            border-color: var(--green);
+            background: var(--green-bg);
+            transform: scale(1.01);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08);
+        }
+        .file-drop-zone.has-file {
+            border-color: var(--green);
+            background: var(--green-bg);
+            border-style: solid;
+        }
+        .file-drop-zone .drop-icon {
+            font-size: 32px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .file-drop-zone:hover .drop-icon {
+            color: var(--green);
+        }
+        .file-drop-zone .drop-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+        .file-drop-zone .drop-text strong {
+            color: var(--green);
+            cursor: pointer;
+        }
+        .file-drop-zone .drop-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .file-drop-zone .file-preview-container {
+            width: 100%;
+            max-width: 320px;
+            margin-top: 4px;
+        }
+        .file-drop-zone .file-preview {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+        }
+        .file-drop-zone .file-preview-image {
+            flex-direction: column;
+            padding: 12px;
+        }
+        .file-drop-zone .file-preview-image img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .file-drop-zone .file-preview .file-icon {
+            font-size: 28px;
+            color: var(--green);
+        }
+        .file-drop-zone .file-preview .file-info {
+            flex: 1;
+            text-align: left;
+        }
+        .file-drop-zone .file-preview .file-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+        .file-drop-zone .file-preview .file-size {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .file-drop-zone .file-preview .file-remove {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .file-drop-zone .file-preview .file-remove:hover {
+            background: rgba(231, 76, 60, 0.10);
+        }
+        .file-drop-zone .drop-error {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .file-drop-zone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .dark-mode .file-drop-zone {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .file-drop-zone:hover {
+            background: var(--bg-card);
+        }
+        .dark-mode .file-drop-zone.dragover {
+            background: var(--green-bg);
+        }
+        .dark-mode .file-drop-zone.has-file {
+            background: var(--green-bg);
+        }
+        .dark-mode .file-drop-zone .file-preview {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        /* ─── Actions ─── */
+        .feedback-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .feedback-actions button {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+        .feedback-actions .btn-submit {
+            background: var(--green);
+            color: #ffffff;
+        }
+        .feedback-actions .btn-submit:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .feedback-actions .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .feedback-actions .btn-cancel {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .feedback-actions .btn-cancel:hover {
+            background: var(--border-color);
+        }
+
+        .btn-submit .spinner-btn {
+            display: none;
+        }
+        .btn-submit.loading .spinner-btn {
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .btn-submit.loading .btn-text {
+            display: none;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .feedback-card {
+                padding: 16px 18px;
+            }
+            .feedback-card .card-title {
+                font-size: 17px;
+            }
+            .feedback-actions button {
+                min-width: 100px;
+                font-size: 13px;
+                padding: 10px 0;
+            }
+            .file-drop-zone {
+                padding: 18px 16px;
+                min-height: 100px;
+            }
+            .file-drop-zone .drop-icon {
+                font-size: 28px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="feedback-wrapper">
+
+                <!-- ===== FEEDBACK CARD ===== -->
+                <div class="feedback-card">
+                    <div class="card-title">
+                        <i class="fa-regular fa-lightbulb"></i> Help Us Improve
+                    </div>
+                    <div class="card-subtitle">Your feedback makes CampusHub better. Share your suggestions, report bugs, or request features.</div>
+
+                    <form id="feedbackForm" autocomplete="off">
+
+                        <!-- Feedback Type -->
+                        <div class="form-group">
+                            <label for="feedbackType">Feedback Type <span class="required-star">*</span></label>
+                            <div class="form-select-wrap">
+                                <select id="feedbackType" class="form-select" required>
+                                    <option value="">Select a type...</option>
+                                    <option value="suggestion">💡 Suggestion</option>
+                                    <option value="bug_report">🐛 Bug Report</option>
+                                    <option value="feature_request">🚀 Feature Request</option>
+                                    <option value="general">💬 General Feedback</option>
+                                </select>
+                            </div>
+                            <div class="help-text" id="typeHelp"></div>
+                        </div>
+
+                        <!-- Subject -->
+                        <div class="form-group">
+                            <label for="subject">Subject <span class="required-star">*</span></label>
+                            <input type="text" id="subject" class="form-input" placeholder="Brief summary of your feedback" required />
+                            <div class="help-text" id="subjectHelp"></div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group">
+                            <label for="description">Description <span class="required-star">*</span></label>
+                            <textarea id="description" class="form-textarea" rows="4" placeholder="Please provide detailed feedback..." required></textarea>
+                            <div class="char-counter" id="charCounter">0 / 500</div>
+                            <div class="help-text" id="descHelp"></div>
+                        </div>
+
+                        <!-- Email (Optional) -->
+                        <div class="form-group">
+                            <label for="email">Email <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
+                            <input type="email" id="email" class="form-input" placeholder="your@email.com (so we can follow up)" />
+                            <div class="help-text" id="emailHelp"></div>
+                        </div>
+
+                        <!-- Screenshot / Attachment -->
+                        <div class="form-group">
+                            <label>Screenshot or Attachment <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
+                            <div class="file-drop-zone" id="fileDropZone">
+                                <div class="drop-icon"><i class="fa-regular fa-cloud-arrow-up"></i></div>
+                                <div class="drop-text">
+                                    Drop your file here or <strong>browse</strong>
+                                </div>
+                                <div class="drop-hint">JPG, PNG, PDF • Max 5MB</div>
+                                <div class="file-preview-container"></div>
+                                <div class="drop-error"></div>
+                                <input type="file" id="feedbackFile" accept=".jpg,.jpeg,.png,.pdf,image/*" />
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="feedback-actions">
+                            <button type="submit" class="btn-submit" id="submitBtn">
+                                <span class="btn-text"><i class="fa-regular fa-paper-plane"></i> Send Feedback</span>
+                                <span class="spinner-btn"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                            </button>
+                            <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div><!-- /feedback-card -->
+
+            </div><!-- /feedback-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Help Us Improve • dummy data for preview
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+    <script src="/assets/js/form-helpers.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const form = document.getElementById('feedbackForm');
+            const typeSelect = document.getElementById('feedbackType');
+            const subjectInput = document.getElementById('subject');
+            const descInput = document.getElementById('description');
+            const emailInput = document.getElementById('email');
+            const fileInput = document.getElementById('feedbackFile');
+
+            const typeHelp = document.getElementById('typeHelp');
+            const subjectHelp = document.getElementById('subjectHelp');
+            const descHelp = document.getElementById('descHelp');
+            const emailHelp = document.getElementById('emailHelp');
+
+            const submitBtn = document.getElementById('submitBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const charCounter = document.getElementById('charCounter');
+
+            const MAX_DESC_LENGTH = 500;
+
+            // ─── Character Counter ─────────────────────────────────────
+            descInput.addEventListener('input', function() {
+                const length = this.value.length;
+                charCounter.textContent = `${length} / ${MAX_DESC_LENGTH}`;
+                if (length > MAX_DESC_LENGTH * 0.8 && length <= MAX_DESC_LENGTH) {
+                    charCounter.className = 'char-counter warning';
+                } else if (length > MAX_DESC_LENGTH) {
+                    charCounter.className = 'char-counter danger';
+                } else {
+                    charCounter.className = 'char-counter';
+                }
+                validateForm();
+            });
+
+            // ─── Validation ────────────────────────────────────────────
+            function validateForm() {
+                let isValid = true;
+
+                // Type
+                if (!typeSelect.value) {
+                    setFieldHelp(typeHelp, 'Please select a feedback type.');
+                    isValid = false;
+                } else {
+                    clearFieldHelp(typeHelp);
+                }
+
+                // Subject
+                const subject = subjectInput.value.trim();
+                if (!subject) {
+                    setFieldHelp(subjectHelp, 'Please enter a subject.');
+                    isValid = false;
+                } else if (subject.length < 3) {
+                    setFieldHelp(subjectHelp, 'Subject must be at least 3 characters.');
+                    isValid = false;
+                } else {
+                    clearFieldHelp(subjectHelp);
+                }
+
+                // Description
+                const desc = descInput.value;
+                if (!desc.trim()) {
+                    setFieldHelp(descHelp, 'Please enter a description.');
+                    isValid = false;
+                } else if (desc.length > MAX_DESC_LENGTH) {
+                    setFieldHelp(descHelp, `Description is too long (max ${MAX_DESC_LENGTH} characters).`);
+                    isValid = false;
+                } else {
+                    clearFieldHelp(descHelp);
+                }
+
+                // Email (optional, but validate if filled)
+                const email = emailInput.value.trim();
+                if (email) {
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(email)) {
+                        setFieldHelp(emailHelp, 'Please enter a valid email address.');
+                        isValid = false;
+                    } else {
+                        clearFieldHelp(emailHelp);
+                    }
+                } else {
+                    clearFieldHelp(emailHelp);
+                }
+
+                submitBtn.disabled = !isValid;
+                return isValid;
+            }
+
+            function setFieldHelp(el, message) {
+                el.textContent = message;
+                el.className = 'help-text error';
+            }
+
+            function clearFieldHelp(el) {
+                el.textContent = '';
+                el.className = 'help-text';
+            }
+
+            // ─── Input events ──────────────────────────────────────────
+            typeSelect.addEventListener('change', validateForm);
+            subjectInput.addEventListener('input', validateForm);
+            emailInput.addEventListener('input', validateForm);
+
+            // ─── Submit ─────────────────────────────────────────────────
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!validateForm()) return;
+
+                const feedbackData = {
+                    type: typeSelect.value,
+                    subject: subjectInput.value.trim(),
+                    description: descInput.value.trim(),
+                    email: emailInput.value.trim() || null,
+                    attachment: fileInput.files[0] ? fileInput.files[0].name : null,
+                };
+
+                // Confirm submission
+                const doSubmit = () => {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('loading');
+
+                    // Simulate API call
+                    setTimeout(() => {
+                        submitBtn.classList.remove('loading');
+                        submitBtn.disabled = false;
+
+                        console.log('📝 Feedback submitted:', feedbackData);
+
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.success('Thank you for your feedback! 🎉', { duration: 4000 });
+                        } else {
+                            alert('Thank you for your feedback!');
+                        }
+
+                        // Reset form
+                        form.reset();
+                        fileInput.value = '';
+                        const container = document.querySelector('.file-preview-container');
+                        if (container) container.innerHTML = '';
+                        document.getElementById('fileDropZone').classList.remove('has-file');
+                        charCounter.textContent = `0 / ${MAX_DESC_LENGTH}`;
+                        charCounter.className = 'char-counter';
+                        validateForm();
+
+                    }, 1500);
+                };
+
+                if (typeof Modal !== 'undefined') {
+                    const modal = new Modal({
+                        title: 'Submit Feedback?',
+                        body: `
+                                <p>You are about to submit feedback of type <strong>${feedbackData.type}</strong>.</p>
+                                <p style="color:var(--text-muted); font-size:13px;"><strong>Subject:</strong> ${feedbackData.subject}</p>
+                                <p style="color:var(--text-muted); font-size:13px;">Thank you for helping us improve CampusHub!</p>
+                            `,
+                        type: 'info',
+                        confirmText: 'Submit',
+                        cancelText: 'Cancel',
+                        onConfirm: doSubmit
+                    });
+                    modal.open();
+                } else {
+                    if (confirm('Submit this feedback?')) {
+                        doSubmit();
+                    }
+                }
+            });
+
+            // ─── Cancel ─────────────────────────────────────────────────
+            cancelBtn.addEventListener('click', function() {
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.info('Feedback discarded.', { duration: 1500 });
+                }
+                form.reset();
+                fileInput.value = '';
+                const container = document.querySelector('.file-preview-container');
+                if (container) container.innerHTML = '';
+                document.getElementById('fileDropZone').classList.remove('has-file');
+                charCounter.textContent = `0 / ${MAX_DESC_LENGTH}`;
+                charCounter.className = 'char-counter';
+                validateForm();
+            });
+
+            // ─── Init ──────────────────────────────────────────────────
+            setTimeout(validateForm, 100);
+
+        })();
+    </script>
+
+</body>
+</html>
