@@ -323,36 +323,42 @@
         }
 
         function handleProfileAction(action) {
-            const messages = {
-                'view-profile': '📋 Navigating to profile page…',
-                'upload-id': '📤 Opening student ID upload…',
-                'change-visibility': '👁️ Toggling visibility settings…',
-                'device': '📱 Device management…',
-                'add-2fa': '🔐 Setting up 2-factor authentication…',
-                'report-issue': '🚩 Reporting issue / abuse…',
-                'change-password': '🔑 Changing password…',
-                'logout': '👋 Logging out…',
-            };
+    // Map actions to page URLs
+    const pageMap = {
+        'view-profile': 'profile.html',
+        'upload-id': 'upload-id.html',
+        'change-visibility': 'visibility.html',
+        'device': 'device.html',
+        'add-2fa': '2fa.html',
+        'report-issue': 'report.html',
+        'change-password': 'change-password.html',
+    };
 
-            const msg = messages[action] || `Action: ${action}`;
-
-            if (action === 'logout') {
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.info('Logging out…', { duration: 2000 });
-                } else {
-                    alert('Logging out…');
-                }
-                return;
-            }
-
-            if (typeof showAlert !== 'undefined') {
-                showAlert.info(msg, { duration: 2000 });
-            } else {
-                alert(msg);
-            }
-
-            console.log(`📌 Profile action: ${action}`);
+    if (action === 'logout') {
+        // Perform logout – clear session and redirect
+        localStorage.removeItem('authToken'); // if you store a token
+        // Optionally clear other session data
+        if (typeof showAlert !== 'undefined') {
+            showAlert.info('Logging out…', { duration: 1500 });
         }
+        setTimeout(() => {
+            window.location.href = 'login.html'; // or 'index.html'
+        }, 500);
+        return;
+    }
+
+    const page = pageMap[action];
+    if (page) {
+        // Navigate to the page
+        window.location.href = page;
+    } else {
+        // Fallback (shouldn't happen)
+        console.warn('Unknown action:', action);
+        if (typeof showAlert !== 'undefined') {
+            showAlert.warning('Action not available yet.', { duration: 2000 });
+        }
+    }
+}
 
         window.openProfileSidebar = openProfileSidebar;
         window.closeProfileSidebar = closeProfileSidebar;
