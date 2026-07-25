@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – About Us</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        .about-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ─── Hero Section ─── */
+        .about-hero {
+            background: linear-gradient(135deg, var(--green), #1a5a2a);
+            border-radius: var(--radius-card);
+            padding: 40px 32px;
+            margin-bottom: 24px;
+            color: #fff;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .about-hero .hero-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .about-hero h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        .about-hero p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .dark-mode .about-hero {
+            background: linear-gradient(135deg, #1a3a2a, #0d2a1a);
+            border-color: #2a3a2a;
+        }
+        @media (max-width: 480px) {
+            .about-hero {
+                padding: 28px 20px;
+            }
+            .about-hero h1 {
+                font-size: 22px;
+            }
+            .about-hero p {
+                font-size: 14px;
+            }
+            .about-hero .hero-icon {
+                font-size: 44px;
+            }
+        }
+
+        /* ─── Problem / Solution Cards ─── */
+        .problem-solution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        .ps-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 24px 22px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+        }
+        .ps-card:hover {
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-3px);
+        }
+        .ps-card .ps-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .ps-card .ps-icon.problem {
+            color: var(--red);
+        }
+        .ps-card .ps-icon.solution {
+            color: var(--green);
+        }
+        .ps-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+        .ps-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+        .ps-card ul {
+            padding-left: 20px;
+            margin-top: 6px;
+        }
+        .ps-card ul li {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+
+        @media (max-width: 640px) {
+            .problem-solution-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ─── Features Grid ─── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .feature-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 18px 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            text-align: center;
+            transition: all var(--transition);
+        }
+        .feature-item:hover {
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-3px);
+        }
+        .feature-item .feature-icon {
+            font-size: 28px;
+            color: var(--green);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .feature-item h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .feature-item p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            transition: color var(--transition);
+        }
+
+        /* ─── Stats ─── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-box {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 20px 16px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+        }
+        .stat-box:hover {
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-2px);
+        }
+        .stat-box .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--green);
+            letter-spacing: -0.5px;
+            transition: color var(--transition);
+        }
+        .stat-box .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+
+        /* ─── CTA ─── */
+        .about-cta {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 28px 24px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+        }
+        .about-cta h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+        .about-cta p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            transition: color var(--transition);
+        }
+        .about-cta .cta-btn {
+            display: inline-block;
+            padding: 12px 36px;
+            background: var(--green);
+            color: #fff;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .about-cta .cta-btn:hover {
+            transform: scale(1.03);
+            opacity: 0.9;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .feature-item {
+                padding: 14px 12px;
+            }
+            .feature-item .feature-icon {
+                font-size: 22px;
+            }
+            .feature-item h4 {
+                font-size: 13px;
+            }
+            .feature-item p {
+                font-size: 12px;
+            }
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .stat-box .stat-number {
+                font-size: 22px;
+            }
+            .about-cta h2 {
+                font-size: 18px;
+            }
+            .about-cta p {
+                font-size: 14px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="about-wrapper">
+
+                <!-- ===== HERO ===== -->
+                <div class="about-hero">
+                    <span class="hero-icon"><i class="fa-regular fa-graduation-cap"></i></span>
+                    <h1>Building Trust on Campus</h1>
+                    <p>CampusHub is a student‑only marketplace designed to eliminate scams, fake listings, and shady deals – so you can buy and sell with confidence.</p>
+                </div>
+
+                <!-- ===== PROBLEM / SOLUTION ===== -->
+                <div class="problem-solution-grid">
+                    <div class="ps-card">
+                        <span class="ps-icon problem"><i class="fa-regular fa-circle-exclamation"></i></span>
+                        <h3>The Problem</h3>
+                        <p>Students are constantly being scammed on campus – fake textbooks, stolen gadgets, ghost sellers, and dishonest buyers. Without a trusted system, every transaction is a gamble.</p>
+                        <ul>
+                            <li>❌ Scammers posing as students</li>
+                            <li>❌ Fake listings with doctored images</li>
+                            <li>❌ No accountability or recourse</li>
+                            <li>❌ Wasted time and money</li>
+                        </ul>
+                    </div>
+                    <div class="ps-card">
+                        <span class="ps-icon solution"><i class="fa-regular fa-circle-check"></i></span>
+                        <h3>The Solution</h3>
+                        <p>CampusHub verifies every user with student ID, tracks trust scores, and gives you the tools to spot red flags before you pay.</p>
+                        <ul>
+                            <li>✅ Verified student accounts</li>
+                            <li>✅ Trust scores based on real transactions</li>
+                            <li>✅ Secure messaging and dispute support</li>
+                            <li>✅ Honest reviews from real buyers</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ===== FEATURES ===== -->
+                <h2 style="font-size:20px; font-weight:700; color:var(--text-primary); margin-bottom:12px;">Why Students Trust CampusHub</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="feature-icon"><i class="fa-regular fa-id-card"></i></span>
+                        <h4>Verified Identity</h4>
+                        <p>Student ID verification ensures you're dealing with a real student.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon"><i class="fa-regular fa-star"></i></span>
+                        <h4>Trust Score</h4>
+                        <p>Every user has a trust score based on transaction history and reviews.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon"><i class="fa-regular fa-flag"></i></span>
+                        <h4>Report Abuse</h4>
+                        <p>Flag suspicious listings or users – our team takes action quickly.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon"><i class="fa-regular fa-lock"></i></span>
+                        <h4>Secure Chat</h4>
+                        <p>Communicate safely within the platform – no more sharing personal numbers.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon"><i class="fa-regular fa-handshake"></i></span>
+                        <h4>Dispute Resolution</h4>
+                        <p>Fair mediation for any disagreements between buyers and sellers.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon"><i class="fa-regular fa-mobile-screen-button"></i></span>
+                        <h4>Mobile First</h4>
+                        <p>Designed for students on the go – works perfectly on your phone.</p>
+                    </div>
+                </div>
+
+                <!-- ===== STATS ===== -->
+                <h2 style="font-size:20px; font-weight:700; color:var(--text-primary); margin-bottom:12px;">CampusHub by the Numbers</h2>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">12K+</div>
+                        <div class="stat-label">Verified Students</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">8.4K</div>
+                        <div class="stat-label">Successful Transactions</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">99.2%</div>
+                        <div class="stat-label">Trust Score Average</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">94%</div>
+                        <div class="stat-label">Satisfied Users</div>
+                    </div>
+                </div>
+
+                <!-- ===== CTA ===== -->
+                <div class="about-cta">
+                    <h2>Ready to trade with confidence?</h2>
+                    <p>Join thousands of students who are already using CampusHub to buy and sell safely.</p>
+                    <a href="/explore.html" class="cta-btn">Explore Now</a>
+                </div>
+
+            </div><!-- /about-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • About Us • built for Nigerian students, by students
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+            console.log('📖 About CampusHub – building trust on campus');
+        })();
+    </script>
+
+</body>
+</html>
