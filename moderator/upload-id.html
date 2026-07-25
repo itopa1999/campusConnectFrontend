@@ -1,1 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Upload Student ID</title>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        /* ─── ID Upload Page ─── */
+        .id-upload-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .id-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 24px 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .id-card .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition);
+        }
+        .id-card .card-title i {
+            color: var(--green);
+            font-size: 22px;
+        }
+        .id-card .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            transition: color var(--transition);
+        }
+
+        .id-card .explanation-box {
+            background: var(--green-bg);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--green);
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .id-card .explanation-box p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+            transition: color var(--transition);
+        }
+        .id-card .explanation-box i {
+            color: var(--green);
+            margin-right: 6px;
+        }
+        .dark-mode .id-card .explanation-box {
+            background: rgba(46, 204, 113, 0.06);
+            border-left-color: #2ecc71;
+        }
+
+        /* ─── Status Display ─── */
+        .id-status-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0 16px;
+        }
+        .id-status-display .id-image {
+            width: 160px;
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-img-placeholder);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: var(--text-muted2);
+            border: 2px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+            margin-bottom: 12px;
+        }
+        .id-status-display .id-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .id-status-display .status-badge {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 18px;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .id-status-display .status-badge.pending {
+            background: #fef3e8;
+            color: #e67e22;
+        }
+        .id-status-display .status-badge.approved {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .id-status-display .status-badge.rejected {
+            background: #fde8e8;
+            color: var(--red);
+        }
+        .dark-mode .id-status-display .status-badge.pending {
+            background: #3a2a1a;
+            color: #f39c12;
+        }
+        .dark-mode .id-status-display .status-badge.approved {
+            background: #1a3a2a;
+            color: #2ecc71;
+        }
+        .dark-mode .id-status-display .status-badge.rejected {
+            background: #3a1a1a;
+            color: #e74c3c;
+        }
+
+        .id-status-display .status-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            text-align: center;
+            transition: color var(--transition);
+        }
+        .id-status-display .status-message strong {
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+
+        /* ─── Upload Area (reuse from form-helpers) ─── */
+        .file-drop-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 32px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-input);
+            position: relative;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .file-drop-zone:hover {
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .file-drop-zone.dragover {
+            border-color: var(--green);
+            background: var(--green-bg);
+            transform: scale(1.01);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08);
+        }
+        .file-drop-zone.has-file {
+            border-color: var(--green);
+            background: var(--green-bg);
+            border-style: solid;
+        }
+        .file-drop-zone .drop-icon {
+            font-size: 40px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .file-drop-zone:hover .drop-icon {
+            color: var(--green);
+        }
+        .file-drop-zone .drop-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+        .file-drop-zone .drop-text strong {
+            color: var(--green);
+            cursor: pointer;
+        }
+        .file-drop-zone .drop-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .file-drop-zone .file-preview-container {
+            width: 100%;
+            max-width: 320px;
+            margin-top: 4px;
+        }
+        .file-drop-zone .file-preview {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+        }
+        .file-drop-zone .file-preview-image {
+            flex-direction: column;
+            padding: 12px;
+        }
+        .file-drop-zone .file-preview-image img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .file-drop-zone .file-preview .file-icon {
+            font-size: 28px;
+            color: var(--green);
+        }
+        .file-drop-zone .file-preview .file-info {
+            flex: 1;
+            text-align: left;
+        }
+        .file-drop-zone .file-preview .file-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+        .file-drop-zone .file-preview .file-size {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .file-drop-zone .file-preview .file-remove {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .file-drop-zone .file-preview .file-remove:hover {
+            background: rgba(231, 76, 60, 0.10);
+        }
+        .file-drop-zone .drop-error {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .file-drop-zone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .dark-mode .file-drop-zone {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .file-drop-zone:hover {
+            background: var(--bg-card);
+        }
+        .dark-mode .file-drop-zone.dragover {
+            background: var(--green-bg);
+        }
+        .dark-mode .file-drop-zone.has-file {
+            background: var(--green-bg);
+        }
+        .dark-mode .file-drop-zone .file-preview {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        /* ─── Submit Button ─── */
+        .id-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .id-actions button {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+        .id-actions .btn-submit {
+            background: var(--green);
+            color: #ffffff;
+        }
+        .id-actions .btn-submit:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .id-actions .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .id-actions .btn-cancel {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .id-actions .btn-cancel:hover {
+            background: var(--border-color);
+        }
+
+        /* ─── Approved state ─── */
+        .approved-message {
+            text-align: center;
+            padding: 8px 0;
+        }
+        .approved-message .check-icon {
+            font-size: 48px;
+            color: var(--green);
+            margin-bottom: 4px;
+            display: block;
+        }
+        .approved-message h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+        .approved-message p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+
+        /* ─── Loading shimmer ─── */
+        .id-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            gap: 12px;
+        }
+        .id-loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .id-loading p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .id-card {
+                padding: 16px 18px;
+            }
+            .id-card .card-title {
+                font-size: 17px;
+            }
+            .id-status-display .id-image {
+                width: 130px;
+                height: 100px;
+            }
+            .id-actions button {
+                min-width: 100px;
+                font-size: 13px;
+                padding: 10px 0;
+            }
+            .file-drop-zone {
+                padding: 24px 16px;
+                min-height: 140px;
+            }
+            .file-drop-zone .drop-icon {
+                font-size: 32px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="id-upload-wrapper">
+
+                <!-- ===== ID CARD ===== -->
+                <div class="id-card" id="idCard">
+                    <div class="card-title">
+                        <i class="fa-regular fa-id-card"></i> Student ID Verification
+                    </div>
+                    <div class="card-subtitle">Verify your identity to build trust and unlock full access</div>
+
+                    <!-- Explanation -->
+                    <div class="explanation-box">
+                        <p>
+                            <i class="fa-regular fa-circle-check"></i>
+                            <strong>Why verify your ID?</strong> A verified ID increases your <strong>trust score</strong>,
+                            making buyers more confident to purchase from you. It also helps us keep the community safe
+                            and reduces spam. <br />
+                            <span style="font-size:13px; opacity:0.8; display:block; margin-top:4px;">
+                                ✅ Verified sellers get up to <strong>30% more</strong> engagement on their listings.
+                            </span>
+                        </p>
+                    </div>
+
+                    <!-- Loading state -->
+                    <div id="idLoadingState" class="id-loading">
+                        <div class="spinner"></div>
+                        <p>Loading your verification status…</p>
+                    </div>
+
+                    <!-- Content (hidden until loaded) -->
+                    <div id="idContent" style="display:none;">
+
+                        <!-- Status Display -->
+                        <div class="id-status-display" id="statusDisplay">
+                            <div class="id-image" id="idImageContainer">
+                                <span id="idImagePlaceholder">📄</span>
+                                <img id="idImage" src="" alt="Student ID" style="display:none;" />
+                            </div>
+                            <div class="status-badge" id="statusBadge">Pending</div>
+                            <div class="status-message" id="statusMessage">
+                                Your ID is under review. We'll notify you once it's approved.
+                            </div>
+                        </div>
+
+                        <!-- Approved State (shown if status === 'approved') -->
+                        <div id="approvedState" class="approved-message" style="display:none;">
+                            <span class="check-icon"><i class="fa-regular fa-circle-check"></i></span>
+                            <h3>ID Verified ✅</h3>
+                            <p>Your student ID has been approved. You now have a verified badge and higher trust score.</p>
+                        </div>
+
+                        <!-- Upload Area (shown if status !== 'approved') -->
+                        <div id="uploadArea" style="display:none;">
+                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:4px; transition:color var(--transition);">
+                                <i class="fa-regular fa-cloud-arrow-up"></i> Upload a clear photo of your student ID.
+                                <br /><span style="font-size:12px;">Accepted formats: JPG, PNG, PDF &bull; Max 5MB</span>
+                            </p>
+
+                            <div class="file-drop-zone" id="fileDropZone">
+                                <div class="drop-icon"><i class="fa-regular fa-cloud-arrow-up"></i></div>
+                                <div class="drop-text">
+                                    Drop your ID here or <strong>browse</strong>
+                                </div>
+                                <div class="drop-hint">JPG, PNG or PDF • Max 5MB</div>
+                                <div class="file-preview-container"></div>
+                                <div class="drop-error"></div>
+                                <input type="file" id="idFileInput" accept=".jpg,.jpeg,.png,.pdf,image/*" />
+                            </div>
+
+                            <div class="id-actions">
+                                <button class="btn-submit" id="submitIdBtn" disabled>
+                                    <i class="fa-regular fa-paper-plane"></i> Submit for Review
+                                </button>
+                                <button class="btn-cancel" id="cancelBtn">Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- Rejected message (extra) -->
+                        <div id="rejectedState" style="display:none; margin-top:12px; padding:12px 16px; background:#fde8e8; border-radius:12px; border-left:4px solid var(--red);">
+                            <p style="font-size:13px; color:var(--red); margin:0;">
+                                <i class="fa-regular fa-circle-xmark"></i>
+                                <strong>Rejected:</strong> Your ID was not approved. Please upload a clearer image and try again.
+                            </p>
+                        </div>
+
+                    </div><!-- /idContent -->
+                </div><!-- /id-card -->
+
+            </div><!-- /id-upload-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Upload Student ID • dummy data for preview
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+    <script src="/assets/js/form-helpers.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const loadingState = document.getElementById('idLoadingState');
+            const content = document.getElementById('idContent');
+            const idImage = document.getElementById('idImage');
+            const idImagePlaceholder = document.getElementById('idImagePlaceholder');
+            const statusBadge = document.getElementById('statusBadge');
+            const statusMessage = document.getElementById('statusMessage');
+            const approvedState = document.getElementById('approvedState');
+            const uploadArea = document.getElementById('uploadArea');
+            const rejectedState = document.getElementById('rejectedState');
+            const fileInput = document.getElementById('idFileInput');
+            const submitBtn = document.getElementById('submitIdBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const fileDropZone = document.getElementById('fileDropZone');
+
+            // ─── Dummy data (simulate endpoint) ──────────────────────
+            // You can change this to test different statuses: 'pending', 'approved', 'rejected'
+            const DUMMY_STATUS = {
+                status: 'pending', // 'pending' | 'approved' | 'rejected'
+                image_url: null, // null means no image uploaded yet
+                message: 'Your ID is under review. We\'ll notify you once it\'s approved.',
+                // For approved:
+                // image_url: 'https://picsum.photos/seed/student-id/400/300',
+                // status: 'approved',
+                // message: 'Your ID has been verified!'
+                // For rejected:
+                // status: 'rejected',
+                // message: 'Your ID was rejected. Please upload a clearer image.'
+            };
+
+            // ─── Fetch ID status (simulated) ──────────────────────────
+            function fetchIdStatus() {
+                return new Promise((resolve) => {
+                    // Simulate network delay
+                    setTimeout(() => {
+                        // You can override the dummy data here for testing
+                        // For demo, we'll use a random status if you want to test variations
+                        // Uncomment below to randomize:
+                        // const statuses = ['pending', 'approved', 'rejected'];
+                        // const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                        // DUMMY_STATUS.status = randomStatus;
+                        // if (randomStatus === 'approved') DUMMY_STATUS.image_url = 'https://picsum.photos/seed/student-id-approved/400/300';
+                        // else if (randomStatus === 'rejected') DUMMY_STATUS.image_url = 'https://picsum.photos/seed/student-id-rejected/400/300';
+                        // else DUMMY_STATUS.image_url = null;
+
+                        resolve(DUMMY_STATUS);
+                    }, 800);
+                });
+            }
+
+            // ─── Update UI based on status ─────────────────────────────
+            function renderStatus(data) {
+                const { status, image_url, message } = data;
+
+                // Hide loading, show content
+                loadingState.style.display = 'none';
+                content.style.display = 'block';
+
+                // Update image
+                if (image_url) {
+                    idImage.src = image_url;
+                    idImage.style.display = 'block';
+                    idImagePlaceholder.style.display = 'none';
+                } else {
+                    idImage.style.display = 'none';
+                    idImagePlaceholder.style.display = 'flex';
+                }
+
+                // Status badge
+                statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+                statusBadge.className = 'status-badge ' + status.toLowerCase();
+
+                // Status message
+                statusMessage.textContent = message || '';
+
+                // Handle states
+                if (status === 'approved') {
+                    approvedState.style.display = 'block';
+                    uploadArea.style.display = 'none';
+                    rejectedState.style.display = 'none';
+                } else if (status === 'rejected') {
+                    approvedState.style.display = 'none';
+                    uploadArea.style.display = 'block';
+                    rejectedState.style.display = 'block';
+                    // Enable upload
+                    fileInput.disabled = false;
+                    submitBtn.disabled = true; // user must select a file first
+                } else { // pending
+                    approvedState.style.display = 'none';
+                    uploadArea.style.display = 'block';
+                    rejectedState.style.display = 'none';
+                    fileInput.disabled = false;
+                    submitBtn.disabled = true;
+                }
+
+                // If approved, disable upload (no changes allowed)
+                if (status === 'approved') {
+                    fileInput.disabled = true;
+                    fileDropZone.style.opacity = '0.5';
+                    fileDropZone.style.cursor = 'not-allowed';
+                    // Hide the drop zone entirely or show a message
+                    fileDropZone.style.pointerEvents = 'none';
+                } else {
+                    fileInput.disabled = false;
+                    fileDropZone.style.opacity = '1';
+                    fileDropZone.style.cursor = 'pointer';
+                    fileDropZone.style.pointerEvents = 'auto';
+                }
+            }
+
+            // ─── Submit new ID ─────────────────────────────────────────
+            function submitId(file) {
+                // Simulate upload
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading…';
+
+                // Simulate network delay
+                setTimeout(() => {
+                    // After upload, we would get a new status (usually 'pending')
+                    // For demo, we'll set status to 'pending' and show a success toast
+                    DUMMY_STATUS.status = 'pending';
+                    DUMMY_STATUS.image_url = URL.createObjectURL(file); // preview
+                    DUMMY_STATUS.message = 'Your ID has been uploaded and is now under review.';
+
+                    renderStatus(DUMMY_STATUS);
+                    submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit for Review';
+                    submitBtn.disabled = true;
+
+                    // Show success alert
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.success('ID uploaded successfully! We\'ll review it shortly.', { duration: 3000 });
+                    } else {
+                        alert('ID uploaded! Review pending.');
+                    }
+
+                    // Clear file input and preview
+                    fileInput.value = '';
+                    const container = fileDropZone.querySelector('.file-preview-container');
+                    if (container) container.innerHTML = '';
+                    fileDropZone.classList.remove('has-file');
+
+                }, 1500);
+            }
+
+            // ─── File selection handler (using form-helpers) ──────────
+            function handleFileSelection() {
+                const file = fileInput.files[0];
+                if (!file) {
+                    submitBtn.disabled = true;
+                    return;
+                }
+                // Validate size (5MB)
+                const maxSize = 5 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    const errorEl = fileDropZone.querySelector('.drop-error');
+                    if (errorEl) errorEl.textContent = 'File too large. Max 5MB.';
+                    fileInput.value = '';
+                    submitBtn.disabled = true;
+                    return;
+                }
+                // Validate type (image or PDF)
+                const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+                if (!validTypes.includes(file.type)) {
+                    const errorEl = fileDropZone.querySelector('.drop-error');
+                    if (errorEl) errorEl.textContent = 'Invalid file type. Please upload JPG, PNG or PDF.';
+                    fileInput.value = '';
+                    submitBtn.disabled = true;
+                    return;
+                }
+                // Valid
+                const errorEl = fileDropZone.querySelector('.drop-error');
+                if (errorEl) errorEl.textContent = '';
+                submitBtn.disabled = false;
+            }
+
+            // ─── Cancel / Reset ────────────────────────────────────────
+            function cancelUpload() {
+                fileInput.value = '';
+                const container = fileDropZone.querySelector('.file-preview-container');
+                if (container) container.innerHTML = '';
+                fileDropZone.classList.remove('has-file');
+                submitBtn.disabled = true;
+                const errorEl = fileDropZone.querySelector('.drop-error');
+                if (errorEl) errorEl.textContent = '';
+                // Re-fetch to reset to current status
+                fetchIdStatus().then(data => renderStatus(data));
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.info('Reset to current status.', { duration: 1500 });
+                }
+            }
+
+            // ─── Init ──────────────────────────────────────────────────
+            function init() {
+                // Load status
+                fetchIdStatus().then(data => {
+                    renderStatus(data);
+                }).catch(err => {
+                    loadingState.innerHTML = `
+                            <p style="color:var(--red);">❌ Failed to load status. Please refresh.</p>
+                        `;
+                    console.error('Error fetching ID status:', err);
+                });
+
+                // File input change
+                fileInput.addEventListener('change', handleFileSelection);
+
+                // Submit
+                submitBtn.addEventListener('click', function() {
+                    const file = fileInput.files[0];
+                    if (!file) return;
+                    submitId(file);
+                });
+
+                // Cancel
+                cancelBtn.addEventListener('click', cancelUpload);
+            }
+
+            // Wait for DOM and form-helpers to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                // If DOM already loaded, init after a tick
+                setTimeout(init, 200);
+            }
+
+        })();
+    </script>
+
+</body>
+</html>
