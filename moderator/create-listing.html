@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Create Listing</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <style>
+        /* ============================================================
+           CREATE LISTING – STEP FORM
+           ============================================================ */
+
+        /* ─── Page hero ─────────────────────────────────────────────── */
+        .create-hero {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 20px 16px;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .create-hero .hero-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+        .create-hero .hero-top .back-btn {
+            background: var(--bg-input);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .create-hero .hero-top .back-btn:hover {
+            background: var(--border-color);
+            color: var(--green);
+            transform: scale(0.95);
+        }
+        .create-hero .hero-top h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            transition: color var(--transition);
+        }
+        .create-hero .hero-top h1 i {
+            color: var(--green);
+            margin-right: 6px;
+        }
+        .create-hero .hero-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-left: 48px;
+            transition: color var(--transition);
+        }
+        .create-hero .hero-sub span {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* ─── Progress Steps ────────────────────────────────────────── */
+        .step-progress {
+            padding: 16px 20px 0;
+            background: var(--bg-app);
+            transition: background var(--transition);
+        }
+        .step-progress .progress-track {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .step-progress .progress-track::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 24px;
+            right: 24px;
+            height: 3px;
+            background: var(--border-color);
+            transform: translateY(-50%);
+            border-radius: 4px;
+            transition: background var(--transition);
+            z-index: 0;
+        }
+        .step-progress .progress-track .progress-fill {
+            position: absolute;
+            top: 50%;
+            left: 24px;
+            height: 3px;
+            background: var(--green);
+            transform: translateY(-50%);
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1;
+            width: 0%;
+        }
+
+        .step-progress .step-dot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            z-index: 2;
+            cursor: default;
+            flex: 1;
+        }
+        .step-progress .step-dot .dot-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-input);
+            border: 3px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted2);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        .step-progress .step-dot .dot-circle .step-icon {
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .step-progress .step-dot .dot-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color var(--transition);
+            text-align: center;
+        }
+
+        .step-progress .step-dot.active .dot-circle {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+            transform: scale(1.08);
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.25);
+        }
+        .step-progress .step-dot.active .dot-label {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .step-progress .step-dot.completed .dot-circle {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+            transform: scale(0.95);
+        }
+        .step-progress .step-dot.completed .dot-label {
+            color: var(--green);
+        }
+
+        .dark-mode .step-progress .progress-track::before {
+            background: var(--border-color);
+        }
+        .dark-mode .step-progress .step-dot .dot-circle {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+            color: var(--text-muted2);
+        }
+        .dark-mode .step-progress .step-dot.active .dot-circle {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(46, 204, 113, 0.25);
+        }
+
+        @media (max-width: 480px) {
+            .step-progress .step-dot .dot-circle {
+                width: 34px;
+                height: 34px;
+                font-size: 12px;
+            }
+            .step-progress .step-dot .dot-circle .step-icon {
+                font-size: 13px;
+            }
+            .step-progress .step-dot .dot-label {
+                font-size: 8px;
+                letter-spacing: 0.3px;
+            }
+            .step-progress .progress-track::before {
+                left: 16px;
+                right: 16px;
+            }
+            .step-progress .progress-track .progress-fill {
+                left: 16px;
+            }
+            .create-hero .hero-top h1 {
+                font-size: 17px;
+            }
+            .create-hero .hero-sub {
+                font-size: 12px;
+                margin-left: 48px;
+            }
+        }
+
+        /* ─── Step Container ────────────────────────────────────────── */
+        .step-container {
+            padding: 20px 20px 100px;
+            background: var(--bg-body);
+            min-height: 60vh;
+            transition: background var(--transition);
+        }
+        .step-container .step-panel {
+            display: none;
+            animation: fadeUp 0.4s ease forwards;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .step-container .step-panel.active {
+            display: block;
+        }
+
+        .step-container .step-panel .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition);
+        }
+        .step-container .step-panel .step-title i {
+            color: var(--green);
+            font-size: 20px;
+        }
+        .step-container .step-panel .step-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Form groups (re-using from style.css) ────────────────── */
+        .step-container .form-group {
+            margin-bottom: 22px;
+        }
+        .step-container .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+        .step-container .form-group label .required-star {
+            color: var(--red);
+            margin-left: 2px;
+        }
+        .step-container .form-group .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Image upload preview grid ────────────────────────────── */
+        .image-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .image-upload-grid .upload-slot {
+            aspect-ratio: 1;
+            border-radius: 14px;
+            border: 2px dashed var(--border-color);
+            background: var(--bg-input);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+            color: var(--text-muted2);
+        }
+        .image-upload-grid .upload-slot:hover {
+            border-color: var(--green);
+            background: var(--green-bg);
+            transform: scale(1.02);
+        }
+        .image-upload-grid .upload-slot .slot-icon {
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        .image-upload-grid .upload-slot .slot-label {
+            font-size: 9px;
+            font-weight: 600;
+            margin-top: 2px;
+            opacity: 0.6;
+        }
+        .image-upload-grid .upload-slot.has-image {
+            border-style: solid;
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .image-upload-grid .upload-slot.has-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+        }
+        .image-upload-grid .upload-slot.has-image .remove-img {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            border: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 2;
+        }
+        .image-upload-grid .upload-slot.has-image .remove-img:hover {
+            background: var(--red);
+            transform: scale(1.1);
+        }
+        .image-upload-grid .upload-slot input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 1;
+        }
+        .image-upload-grid .upload-slot .upload-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .image-upload-grid .upload-slot:hover .upload-overlay {
+            opacity: 1;
+        }
+        .dark-mode .image-upload-grid .upload-slot {
+            border-color: var(--border-color);
+            background: var(--bg-input);
+        }
+        .dark-mode .image-upload-grid .upload-slot:hover {
+            border-color: var(--green);
+            background: var(--green-bg);
+        }
+        .dark-mode .image-upload-grid .upload-slot.has-image {
+            background: var(--bg-card);
+        }
+
+        /* ─── Step navigation buttons ──────────────────────────────── */
+        .step-nav {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        .step-nav .btn {
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+            min-width: 120px;
+        }
+        .step-nav .btn-primary {
+            background: var(--green);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.2);
+        }
+        .step-nav .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(13, 138, 62, 0.3);
+        }
+        .step-nav .btn-primary:active {
+            transform: scale(0.97);
+        }
+        .step-nav .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .step-nav .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .step-nav .btn-secondary:hover {
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .step-nav .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+        .step-nav .btn-outline:hover {
+            border-color: var(--green);
+            color: var(--green);
+            background: var(--green-bg);
+        }
+
+        .step-nav .btn-success {
+            background: var(--green);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.25);
+        }
+        .step-nav .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(13, 138, 62, 0.35);
+        }
+
+        .dark-mode .step-nav .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .dark-mode .step-nav .btn-secondary:hover {
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+        .dark-mode .step-nav .btn-outline {
+            border-color: var(--border-color);
+            color: var(--text-secondary);
+        }
+        .dark-mode .step-nav .btn-outline:hover {
+            border-color: var(--green);
+            color: var(--green);
+            background: var(--green-bg);
+        }
+
+        @media (max-width: 480px) {
+            .step-nav .btn {
+                padding: 10px 18px;
+                font-size: 13px;
+                min-width: 80px;
+                flex: 1 1 auto;
+            }
+            .step-nav {
+                gap: 8px;
+            }
+        }
+
+        /* ─── Review Panel ──────────────────────────────────────────── */
+        .review-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-card);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+        }
+        .review-card .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .review-card .review-header h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .review-card .review-header h4 i {
+            color: var(--green);
+        }
+        .review-card .review-header .edit-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted2);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .review-card .review-header .edit-btn:hover {
+            background: var(--bg-input);
+            color: var(--green);
+        }
+        .review-card .review-body {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .review-card .review-body .review-item {
+            display: flex;
+            padding: 4px 0;
+            gap: 8px;
+        }
+        .review-card .review-body .review-item .label {
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 90px;
+            flex-shrink: 0;
+        }
+        .review-card .review-body .review-item .value {
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+        .review-card .review-body .review-item .value .tag-pill {
+            display: inline-block;
+            background: var(--green-bg);
+            color: var(--green);
+            padding: 1px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 2px 4px 2px 0;
+        }
+        .review-card .review-body .review-item .value .tag-pill i {
+            margin-right: 4px;
+        }
+
+        .dark-mode .review-card {
+            background: var(--bg-card);
+            border-color: var(--border-card);
+        }
+        .dark-mode .review-card .review-header .edit-btn:hover {
+            background: var(--bg-input);
+        }
+
+        .review-empty {
+            text-align: center;
+            padding: 24px 16px;
+            color: var(--text-muted);
+        }
+        .review-empty i {
+            font-size: 32px;
+            opacity: 0.3;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* ─── Success animation ────────────────────────────────────── */
+        .success-state {
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeUp 0.6s ease forwards;
+        }
+        .success-state .success-icon {
+            font-size: 72px;
+            color: var(--green);
+            margin-bottom: 16px;
+            display: block;
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transform: scale(0);
+        }
+        @keyframes popIn {
+            0% {
+                transform: scale(0) rotate(-10deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        .success-state h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .success-state p {
+            font-size: 15px;
+            color: var(--text-muted);
+            max-width: 340px;
+            margin: 0 auto 20px;
+        }
+        .success-state .btn {
+            padding: 12px 32px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: var(--green);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .success-state .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(13, 138, 62, 0.3);
+        }
+
+        /* ─── Responsive ────────────────────────────────────────────── */
+        @media (min-width: 640px) {
+            .step-container {
+                padding: 24px 30px 120px;
+            }
+            .step-progress {
+                padding: 20px 30px 0;
+            }
+            .create-hero {
+                padding: 24px 30px 20px;
+            }
+            .step-container .step-panel {
+                max-width: 640px;
+            }
+            .image-upload-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            .image-upload-grid .upload-slot {
+                min-height: 100px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .step-container {
+                padding: 32px 40px 140px;
+            }
+            .step-progress {
+                padding: 24px 40px 0;
+            }
+            .create-hero {
+                padding: 28px 40px 24px;
+            }
+            .step-container .step-panel {
+                max-width: 720px;
+            }
+            .image-upload-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            .image-upload-grid .upload-slot {
+                min-height: 120px;
+            }
+        }
+
+        /* ─── Toggle switch ────────────────────────────────────────── */
+        .toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+        .toggle-wrap .toggle-track {
+            width: 44px;
+            height: 26px;
+            border-radius: 30px;
+            background: var(--border-color);
+            position: relative;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            border: 2px solid var(--border-color);
+        }
+        .toggle-wrap .toggle-track .toggle-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        .toggle-wrap.active .toggle-track {
+            background: var(--green);
+            border-color: var(--green);
+        }
+        .toggle-wrap.active .toggle-track .toggle-thumb {
+            left: 20px;
+        }
+        .toggle-wrap .toggle-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+        .toggle-wrap .toggle-label span {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+        .dark-mode .toggle-wrap .toggle-track {
+            background: var(--border-color);
+            border-color: var(--border-color);
+        }
+        .dark-mode .toggle-wrap.active .toggle-track {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        /* ─── Tag input ────────────────────────────────────────────── */
+        .tag-input-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            transition: all 0.25s ease;
+            min-height: 48px;
+            align-items: center;
+        }
+        .tag-input-wrap:focus-within {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08);
+            background: var(--bg-card);
+        }
+        .tag-input-wrap .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--green-bg);
+            color: var(--green);
+            padding: 4px 12px 4px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            animation: fadeUp 0.2s ease forwards;
+        }
+        .tag-input-wrap .tag-pill .remove-tag {
+            background: none;
+            border: none;
+            color: var(--green);
+            opacity: 0.5;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 2px;
+            transition: opacity 0.2s;
+            line-height: 1;
+        }
+        .tag-input-wrap .tag-pill .remove-tag:hover {
+            opacity: 1;
+        }
+        .tag-input-wrap .tag-input {
+            flex: 1;
+            min-width: 100px;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+            color: var(--text-primary);
+            padding: 4px 0;
+        }
+        .tag-input-wrap .tag-input::placeholder {
+            color: var(--text-muted);
+        }
+        .dark-mode .tag-input-wrap {
+            border-color: var(--border-color);
+            background: var(--bg-input);
+        }
+        .dark-mode .tag-input-wrap:focus-within {
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .dark-mode .tag-input-wrap .tag-pill {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        /* ─── Extra helpers ────────────────────────────────────────── */
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-12 {
+            margin-top: 12px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .justify-between {
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== HERO ===== -->
+        <div class="create-hero">
+            <div class="hero-top">
+                <button class="back-btn" id="backToHome" aria-label="Go back">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h1><i class="fa-regular fa-pen-to-square"></i> Create Listing</h1>
+            </div>
+            <div class="hero-sub">
+                <span>📍</span> Sell, swap, or give away items on CampusHub
+            </div>
+        </div>
+
+        <!-- ===== PROGRESS ===== -->
+        <div class="step-progress" id="stepProgress">
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width:0%;"></div>
+
+                <div class="step-dot active" data-step="1">
+                    <div class="dot-circle"><span class="step-icon">📝</span></div>
+                    <span class="dot-label">Details</span>
+                </div>
+                <div class="step-dot" data-step="2">
+                    <div class="dot-circle"><span class="step-icon">📍</span></div>
+                    <span class="dot-label">Location</span>
+                </div>
+                <div class="step-dot" data-step="3">
+                    <div class="dot-circle"><span class="step-icon">✨</span></div>
+                    <span class="dot-label">Extras</span>
+                </div>
+                <div class="step-dot" data-step="4">
+                    <div class="dot-circle"><span class="step-icon">✅</span></div>
+                    <span class="dot-label">Review</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== STEP CONTAINER ===== -->
+        <div class="step-container">
+
+            <!-- ─── STEP 1: DETAILS ───────────────────────────────── -->
+            <div class="step-panel active" data-step="1">
+                <div class="step-title"><i class="fa-regular fa-pen-to-square"></i> Item Details</div>
+                <div class="step-desc">Tell us what you're listing. Be clear and descriptive.</div>
+
+                <!-- Title -->
+                <div class="form-group">
+                    <label for="listingTitle">Listing Title <span class="required-star">*</span></label>
+                    <input type="text" id="listingTitle" class="form-input" placeholder="e.g. MacBook Pro 2021 – like new" required data-help-text="A clear title helps buyers find your item." />
+                    <div class="help-text" id="titleHelp">A clear title helps buyers find your item.</div>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label for="listingCategory">Category <span class="required-star">*</span></label>
+                    <div class="form-select-wrap">
+                        <select id="listingCategory" class="form-select" required>
+                            <option value="">Select a category…</option>
+                            <option value="textbooks">📚 Textbooks</option>
+                            <option value="gadgets">💻 Gadgets &amp; Electronics</option>
+                            <option value="fashion">👕 Fashion &amp; Clothing</option>
+                            <option value="food">🍕 Food &amp; Drinks</option>
+                            <option value="services">🎓 Academic Services</option>
+                            <option value="sports">⚽ Sports &amp; Fitness</option>
+                            <option value="events">🎫 Event Tickets</option>
+                            <option value="furniture">🪑 Furniture</option>
+                            <option value="other">📦 Other</option>
+                        </select>
+                    </div>
+                    <div class="help-text">Choose the category that best fits your item.</div>
+                </div>
+
+                <!-- Price -->
+                <div class="form-group">
+                    <label for="listingPrice">Price (₦) <span class="required-star">*</span></label>
+                    <input type="number" id="listingPrice" class="form-input" placeholder="e.g. 15000" min="0" step="100" required data-help-text="Enter the price in Naira. Use 0 for free items." />
+                    <div class="help-text" id="priceHelp">Enter the price in Naira. Use 0 for free items.</div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="listingDesc">Description <span class="required-star">*</span></label>
+                    <textarea id="listingDesc" class="form-textarea" rows="4" placeholder="Describe your item in detail – condition, features, reason for selling…" required data-help-text="A good description attracts serious buyers."></textarea>
+                    <div class="help-text" id="descHelp">A good description attracts serious buyers.</div>
+                </div>
+
+                <!-- Images -->
+                <div class="form-group">
+                    <label>Images <span style="font-weight:400;color:var(--text-muted);font-size:12px;">(max 4)</span></label>
+                    <div class="image-upload-grid" id="imageGrid">
+                        <div class="upload-slot" data-slot="0">
+                            <span class="slot-icon"><i class="fa-regular fa-image"></i></span>
+                            <span class="slot-label">Add image</span>
+                            <input type="file" accept="image/*" data-slot="0" />
+                            <div class="upload-overlay">Change</div>
+                        </div>
+                        <div class="upload-slot" data-slot="1">
+                            <span class="slot-icon"><i class="fa-regular fa-image"></i></span>
+                            <span class="slot-label">Add image</span>
+                            <input type="file" accept="image/*" data-slot="1" />
+                            <div class="upload-overlay">Change</div>
+                        </div>
+                        <div class="upload-slot" data-slot="2">
+                            <span class="slot-icon"><i class="fa-regular fa-image"></i></span>
+                            <span class="slot-label">Add image</span>
+                            <input type="file" accept="image/*" data-slot="2" />
+                            <div class="upload-overlay">Change</div>
+                        </div>
+                        <div class="upload-slot" data-slot="3">
+                            <span class="slot-icon"><i class="fa-regular fa-image"></i></span>
+                            <span class="slot-label">Add image</span>
+                            <input type="file" accept="image/*" data-slot="3" />
+                            <div class="upload-overlay">Change</div>
+                        </div>
+                    </div>
+                    <div class="help-text">Upload up to 4 images. First image will be the cover.</div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-primary" id="step1Next">Next Step <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- ─── STEP 2: LOCATION ───────────────────────────────── -->
+            <div class="step-panel" data-step="2">
+                <div class="step-title"><i class="fa-solid fa-location-dot"></i> Location</div>
+                <div class="step-desc">Where can buyers find your item? Be specific.</div>
+
+                <!-- Campus -->
+                <div class="form-group">
+                    <label for="listingCampus">Campus <span class="required-star">*</span></label>
+                    <div class="form-select-wrap">
+                        <select id="listingCampus" class="form-select" required>
+                            <option value="">Select your campus…</option>
+                            <option value="uniben">University of Benin (UNIBEN)</option>
+                            <option value="unilag">University of Lagos (UNILAG)</option>
+                            <option value="oau">Obafemi Awolowo University (OAU)</option>
+                            <option value="unn">University of Nigeria, Nsukka (UNN)</option>
+                            <option value="abu">Ahmadu Bello University (ABU)</option>
+                            <option value="futa">Federal University of Technology, Akure (FUTA)</option>
+                            <option value="futo">Federal University of Technology, Owerri (FUTO)</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="help-text">Select the campus where the item is located.</div>
+                </div>
+
+                <!-- Specific location -->
+                <div class="form-group">
+                    <label for="listingSpot">Specific Spot <span class="required-star">*</span></label>
+                    <input type="text" id="listingSpot" class="form-input" placeholder="e.g. Faculty of Engineering, Block A, Room 203" required data-help-text="Add a building, hall, or landmark for easy pickup." />
+                    <div class="help-text" id="spotHelp">Add a building, hall, or landmark for easy pickup.</div>
+                </div>
+
+                <!-- Contact info -->
+                <div class="form-group">
+                    <label for="listingContact">Contact Phone <span class="required-star">*</span></label>
+                    <input type="tel" id="listingContact" class="form-input" placeholder="e.g. 080 1234 5678" required data-help-text="Buyers will contact you via this number." />
+                    <div class="help-text" id="contactHelp">Buyers will contact you via this number.</div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-secondary" id="step2Back"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-primary" id="step2Next">Next Step <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- ─── STEP 3: EXTRAS ─────────────────────────────────── -->
+            <div class="step-panel" data-step="3">
+                <div class="step-title"><i class="fa-regular fa-star"></i> Extras</div>
+                <div class="step-desc">Add more details to make your listing stand out.</div>
+
+                <!-- Condition -->
+                <div class="form-group">
+                    <label for="listingCondition">Condition <span class="required-star">*</span></label>
+                    <div class="form-select-wrap">
+                        <select id="listingCondition" class="form-select" required>
+                            <option value="">Select condition…</option>
+                            <option value="new">🆕 Brand New</option>
+                            <option value="like-new">✨ Like New</option>
+                            <option value="good">👍 Good</option>
+                            <option value="fair">👌 Fair</option>
+                            <option value="poor">🔧 Needs Work</option>
+                        </select>
+                    </div>
+                    <div class="help-text">Be honest about the condition to build trust.</div>
+                </div>
+
+                <!-- Negotiable toggle -->
+                <div class="form-group">
+                    <label>Price Negotiable</label>
+                    <div class="toggle-wrap active" id="negotiableToggle">
+                        <div class="toggle-track">
+                            <div class="toggle-thumb"></div>
+                        </div>
+                        <span class="toggle-label">Yes, negotiable <span>(buyers can make offers)</span></span>
+                    </div>
+                </div>
+
+                <!-- Delivery toggle -->
+                <div class="form-group">
+                    <label>Delivery Available</label>
+                    <div class="toggle-wrap" id="deliveryToggle">
+                        <div class="toggle-track">
+                            <div class="toggle-thumb"></div>
+                        </div>
+                        <span class="toggle-label">No, pickup only <span>(buyer collects in person)</span></span>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="form-group">
+                    <label for="tagInput">Tags <span style="font-weight:400;color:var(--text-muted);font-size:12px;">(max 5)</span></label>
+                    <div class="tag-input-wrap" id="tagWrap">
+                        <div id="tagList" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+                        <input type="text" id="tagInput" class="tag-input" placeholder="Add tags… (press Enter)" maxlength="20" />
+                    </div>
+                    <div class="help-text">Add keywords like "urgent", "bargain", "tutor" to help buyers find your listing.</div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-secondary" id="step3Back"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-primary" id="step3Next">Review Listing <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- ─── STEP 4: REVIEW ─────────────────────────────────── -->
+            <div class="step-panel" data-step="4">
+                <div class="step-title"><i class="fa-regular fa-circle-check"></i> Review &amp; Submit</div>
+                <div class="step-desc">Check everything looks good before publishing.</div>
+
+                <!-- Review Cards -->
+                <div id="reviewContainer">
+                    <!-- Details -->
+                    <div class="review-card" id="reviewDetails">
+                        <div class="review-header">
+                            <h4><i class="fa-regular fa-pen-to-square"></i> Details</h4>
+                            <button class="edit-btn" data-target="1"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                        </div>
+                        <div class="review-body" id="reviewDetailsBody">
+                            <div class="review-item"><span class="label">Title</span><span class="value" id="rvTitle">—</span></div>
+                            <div class="review-item"><span class="label">Category</span><span class="value" id="rvCategory">—</span></div>
+                            <div class="review-item"><span class="label">Price</span><span class="value" id="rvPrice">—</span></div>
+                            <div class="review-item"><span class="label">Description</span><span class="value" id="rvDesc">—</span></div>
+                            <div class="review-item"><span class="label">Images</span><span class="value" id="rvImages">—</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="review-card" id="reviewLocation">
+                        <div class="review-header">
+                            <h4><i class="fa-solid fa-location-dot"></i> Location</h4>
+                            <button class="edit-btn" data-target="2"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                        </div>
+                        <div class="review-body" id="reviewLocationBody">
+                            <div class="review-item"><span class="label">Campus</span><span class="value" id="rvCampus">—</span></div>
+                            <div class="review-item"><span class="label">Spot</span><span class="value" id="rvSpot">—</span></div>
+                            <div class="review-item"><span class="label">Contact</span><span class="value" id="rvContact">—</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Extras -->
+                    <div class="review-card" id="reviewExtras">
+                        <div class="review-header">
+                            <h4><i class="fa-regular fa-star"></i> Extras</h4>
+                            <button class="edit-btn" data-target="3"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                        </div>
+                        <div class="review-body" id="reviewExtrasBody">
+                            <div class="review-item"><span class="label">Condition</span><span class="value" id="rvCondition">—</span></div>
+                            <div class="review-item"><span class="label">Negotiable</span><span class="value" id="rvNegotiable">—</span></div>
+                            <div class="review-item"><span class="label">Delivery</span><span class="value" id="rvDelivery">—</span></div>
+                            <div class="review-item"><span class="label">Tags</span><span class="value" id="rvTags">—</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-secondary" id="step4Back"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-success" id="step4Submit"><i class="fa-regular fa-circle-check"></i> Publish Listing</button>
+                </div>
+            </div>
+
+            <!-- ─── SUCCESS STATE (hidden initially) ────────────────── -->
+            <div class="step-panel" data-step="success" style="display:none;">
+                <div class="success-state">
+                    <span class="success-icon"><i class="fa-regular fa-circle-check"></i></span>
+                    <h2>🎉 Listing Published!</h2>
+                    <p>Your item is now live on CampusHub. You'll be notified when buyers reach out.</p>
+                    <button class="btn" id="goHomeAfterSuccess"><i class="fa-solid fa-house"></i> Go Home</button>
+                    <button class="btn" id="viewListingAfterSuccess" style="margin-left:8px;background:var(--bg-input);color:var(--text-secondary);box-shadow:none;"><i class="fa-regular fa-eye"></i> View Listing</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • real-world responsive app • designed for Nigerian students
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const panels = document.querySelectorAll('.step-panel');
+            const dots = document.querySelectorAll('.step-dot');
+            const progressFill = document.getElementById('progressFill');
+
+            // Step 1
+            const titleInput = document.getElementById('listingTitle');
+            const categorySelect = document.getElementById('listingCategory');
+            const priceInput = document.getElementById('listingPrice');
+            const descInput = document.getElementById('listingDesc');
+            const imageSlots = document.querySelectorAll('.upload-slot');
+
+            // Step 2
+            const campusSelect = document.getElementById('listingCampus');
+            const spotInput = document.getElementById('listingSpot');
+            const contactInput = document.getElementById('listingContact');
+
+            // Step 3
+            const conditionSelect = document.getElementById('listingCondition');
+            const negotiableToggle = document.getElementById('negotiableToggle');
+            const deliveryToggle = document.getElementById('deliveryToggle');
+            const tagInput = document.getElementById('tagInput');
+            const tagList = document.getElementById('tagList');
+            const tagWrap = document.getElementById('tagWrap');
+
+            // Step 4
+            const reviewContainer = document.getElementById('reviewContainer');
+
+            // Buttons
+            const step1Next = document.getElementById('step1Next');
+            const step2Back = document.getElementById('step2Back');
+            const step2Next = document.getElementById('step2Next');
+            const step3Back = document.getElementById('step3Back');
+            const step3Next = document.getElementById('step3Next');
+            const step4Back = document.getElementById('step4Back');
+            const step4Submit = document.getElementById('step4Submit');
+            const backToHome = document.getElementById('backToHome');
+
+            const goHomeAfterSuccess = document.getElementById('goHomeAfterSuccess');
+            const viewListingAfterSuccess = document.getElementById('viewListingAfterSuccess');
+
+            // ─── State ─────────────────────────────────────────────────
+            let currentStep = 1;
+            const totalSteps = 4;
+            let tags = [];
+            let imageData = [null, null, null, null];
+            const stepData = {
+                title: '',
+                category: '',
+                price: '',
+                description: '',
+                campus: '',
+                spot: '',
+                contact: '',
+                condition: '',
+                negotiable: true,
+                delivery: false,
+                tags: []
+            };
+
+            // ─── Progress Update ──────────────────────────────────────
+            function updateProgress(step) {
+                const percent = ((step - 1) / (totalSteps - 1)) * 100;
+                progressFill.style.width = percent + '%';
+
+                dots.forEach((dot, index) => {
+                    const num = index + 1;
+                    dot.classList.remove('active', 'completed');
+                    if (num === step) dot.classList.add('active');
+                    else if (num < step) dot.classList.add('completed');
+                });
+
+                panels.forEach((panel) => {
+                    const panelStep = parseInt(panel.dataset.step, 10);
+                    panel.classList.toggle('active', panelStep === step);
+                });
+            }
+
+            // ─── Navigation ───────────────────────────────────────────
+            function goToStep(step) {
+                if (step < 1 || step > totalSteps) return;
+                currentStep = step;
+                updateProgress(step);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // ─── Validation Helpers ──────────────────────────────────
+            function validateStep1() {
+                const title = titleInput.value.trim();
+                const category = categorySelect.value;
+                const price = priceInput.value.trim();
+                const desc = descInput.value.trim();
+
+                let valid = true;
+                let firstError = null;
+
+                if (!title) {
+                    titleInput.classList.add('error');
+                    document.getElementById('titleHelp').textContent = 'Please enter a title.';
+                    document.getElementById('titleHelp').classList.add('error');
+                    valid = false;
+                    if (!firstError) firstError = titleInput;
+                } else {
+                    titleInput.classList.remove('error');
+                    titleInput.classList.add('success');
+                    document.getElementById('titleHelp').textContent = 'A clear title helps buyers find your item.';
+                    document.getElementById('titleHelp').classList.remove('error');
+                }
+
+                if (!category) {
+                    categorySelect.classList.add('error');
+                    valid = false;
+                    if (!firstError) firstError = categorySelect;
+                } else {
+                    categorySelect.classList.remove('error');
+                    categorySelect.classList.add('success');
+                }
+
+                if (!price || isNaN(price) || parseInt(price) < 0) {
+                    priceInput.classList.add('error');
+                    document.getElementById('priceHelp').textContent = 'Please enter a valid price (0 for free).';
+                    document.getElementById('priceHelp').classList.add('error');
+                    valid = false;
+                    if (!firstError) firstError = priceInput;
+                } else {
+                    priceInput.classList.remove('error');
+                    priceInput.classList.add('success');
+                    document.getElementById('priceHelp').textContent = 'Enter the price in Naira. Use 0 for free items.';
+                    document.getElementById('priceHelp').classList.remove('error');
+                }
+
+                if (!desc) {
+                    descInput.classList.add('error');
+                    document.getElementById('descHelp').textContent = 'Please add a description.';
+                    document.getElementById('descHelp').classList.add('error');
+                    valid = false;
+                    if (!firstError) firstError = descInput;
+                } else {
+                    descInput.classList.remove('error');
+                    descInput.classList.add('success');
+                    document.getElementById('descHelp').textContent = 'A good description attracts serious buyers.';
+                    document.getElementById('descHelp').classList.remove('error');
+                }
+
+                if (!valid && firstError) {
+                    firstError.focus();
+                }
+
+                return valid;
+            }
+
+            function validateStep2() {
+                const campus = campusSelect.value;
+                const spot = spotInput.value.trim();
+                const contact = contactInput.value.trim();
+
+                let valid = true;
+                let firstError = null;
+
+                if (!campus) {
+                    campusSelect.classList.add('error');
+                    valid = false;
+                    if (!firstError) firstError = campusSelect;
+                } else {
+                    campusSelect.classList.remove('error');
+                    campusSelect.classList.add('success');
+                }
+
+                if (!spot) {
+                    spotInput.classList.add('error');
+                    document.getElementById('spotHelp').textContent = 'Please enter a specific spot.';
+                    document.getElementById('spotHelp').classList.add('error');
+                    valid = false;
+                    if (!firstError) firstError = spotInput;
+                } else {
+                    spotInput.classList.remove('error');
+                    spotInput.classList.add('success');
+                    document.getElementById('spotHelp').textContent = 'Add a building, hall, or landmark for easy pickup.';
+                    document.getElementById('spotHelp').classList.remove('error');
+                }
+
+                if (!contact) {
+                    contactInput.classList.add('error');
+                    document.getElementById('contactHelp').textContent = 'Please enter a contact phone number.';
+                    document.getElementById('contactHelp').classList.add('error');
+                    valid = false;
+                    if (!firstError) firstError = contactInput;
+                } else {
+                    contactInput.classList.remove('error');
+                    contactInput.classList.add('success');
+                    document.getElementById('contactHelp').textContent = 'Buyers will contact you via this number.';
+                    document.getElementById('contactHelp').classList.remove('error');
+                }
+
+                if (!valid && firstError) firstError.focus();
+                return valid;
+            }
+
+            function validateStep3() {
+                const condition = conditionSelect.value;
+                let valid = true;
+
+                if (!condition) {
+                    conditionSelect.classList.add('error');
+                    valid = false;
+                } else {
+                    conditionSelect.classList.remove('error');
+                    conditionSelect.classList.add('success');
+                }
+
+                if (!valid) conditionSelect.focus();
+                return valid;
+            }
+
+            // ─── Toggle Helpers ──────────────────────────────────────
+            function setupToggle(toggleEl, onLabel, offLabel) {
+                const track = toggleEl.querySelector('.toggle-track');
+                const label = toggleEl.querySelector('.toggle-label');
+                let active = toggleEl.classList.contains('active');
+
+                toggleEl.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    active = !active;
+                    this.classList.toggle('active', active);
+                    if (label) {
+                        label.innerHTML = active ? onLabel : offLabel;
+                    }
+                    // Update state
+                    if (toggleEl === negotiableToggle) stepData.negotiable = active;
+                    if (toggleEl === deliveryToggle) stepData.delivery = active;
+                });
+
+                return {
+                    getState: () => active,
+                    setState: (val) => {
+                        active = val;
+                        toggleEl.classList.toggle('active', val);
+                        if (label) {
+                            label.innerHTML = val ? onLabel : offLabel;
+                        }
+                    }
+                };
+            }
+
+            const negotiableState = setupToggle(
+                negotiableToggle,
+                'Yes, negotiable <span>(buyers can make offers)</span>',
+                'No, fixed price <span>(price is firm)</span>'
+            );
+            const deliveryState = setupToggle(
+                deliveryToggle,
+                'Yes, delivery available <span>(additional fee may apply)</span>',
+                'No, pickup only <span>(buyer collects in person)</span>'
+            );
+
+            // ─── Tag Input ────────────────────────────────────────────
+            function addTag(text) {
+                const clean = text.trim().replace(/\s+/g, ' ');
+                if (!clean) return;
+                if (tags.length >= 5) {
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.warning('Maximum 5 tags allowed.', { duration: 2000 });
+                    }
+                    return;
+                }
+                if (tags.includes(clean)) {
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.info('Tag already added.', { duration: 1500 });
+                    }
+                    return;
+                }
+                tags.push(clean);
+                renderTags();
+                tagInput.value = '';
+                tagInput.focus();
+                stepData.tags = [...tags];
+            }
+
+            function removeTag(index) {
+                tags.splice(index, 1);
+                renderTags();
+                stepData.tags = [...tags];
+            }
+
+            function renderTags() {
+                tagList.innerHTML = tags.map((t, i) =>
+                    `<span class="tag-pill">
+                        <i class="fa-solid fa-hashtag"></i> ${t}
+                        <button type="button" class="remove-tag" data-index="${i}">&times;</button>
+                    </span>`
+                ).join('');
+
+                tagList.querySelectorAll('.remove-tag').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        removeTag(parseInt(this.dataset.index, 10));
+                    });
+                });
+            }
+
+            tagInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag(this.value);
+                }
+                if (e.key === 'Backspace' && !this.value && tags.length > 0) {
+                    removeTag(tags.length - 1);
+                }
+            });
+
+            tagInput.addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    addTag(this.value);
+                }
+            });
+
+            // ─── Image Upload ─────────────────────────────────────────
+            imageSlots.forEach((slot, index) => {
+                const fileInput = slot.querySelector('input[type="file"]');
+
+                fileInput.addEventListener('change', function(e) {
+                    const file = this.files[0];
+                    if (!file) return;
+
+                    // Validate size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.error('Image too large. Max 5MB.', { duration: 2000 });
+                        }
+                        this.value = '';
+                        return;
+                    }
+
+                    // Validate type
+                    if (!file.type.startsWith('image/')) {
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.error('Please select an image file.', { duration: 2000 });
+                        }
+                        this.value = '';
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imageData[index] = e.target.result;
+                        slot.classList.add('has-image');
+                        // Remove any existing img
+                        const existingImg = slot.querySelector('img');
+                        if (existingImg) existingImg.remove();
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.alt = 'Uploaded image';
+                        slot.prepend(img);
+
+                        // Ensure remove button exists
+                        let removeBtn = slot.querySelector('.remove-img');
+                        if (!removeBtn) {
+                            removeBtn = document.createElement('button');
+                            removeBtn.className = 'remove-img';
+                            removeBtn.innerHTML = '&times;';
+                            removeBtn.type = 'button';
+                            slot.appendChild(removeBtn);
+                        }
+                        removeBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            clearImageSlot(slot, index);
+                        });
+
+                        // Update slot label
+                        const label = slot.querySelector('.slot-label');
+                        if (label) label.textContent = '✓ Added';
+
+                        // Clear file input
+                        fileInput.value = '';
+                    };
+                    reader.readAsDataURL(file);
+                });
+
+                // Click on slot triggers file input
+                slot.addEventListener('click', function(e) {
+                    if (e.target.closest('.remove-img')) return;
+                    fileInput.click();
+                });
+            });
+
+            function clearImageSlot(slot, index) {
+                imageData[index] = null;
+                slot.classList.remove('has-image');
+                const img = slot.querySelector('img');
+                if (img) img.remove();
+                const removeBtn = slot.querySelector('.remove-img');
+                if (removeBtn) removeBtn.remove();
+                const label = slot.querySelector('.slot-label');
+                if (label) label.textContent = 'Add image';
+                const fileInput = slot.querySelector('input[type="file"]');
+                if (fileInput) fileInput.value = '';
+            }
+
+            // ─── Collect data from step 1 ────────────────────────────
+            function collectStep1() {
+                stepData.title = titleInput.value.trim();
+                stepData.category = categorySelect.value;
+                stepData.price = priceInput.value.trim();
+                stepData.description = descInput.value.trim();
+                stepData.images = imageData.filter(d => d !== null);
+            }
+
+            function collectStep2() {
+                stepData.campus = campusSelect.value;
+                stepData.spot = spotInput.value.trim();
+                stepData.contact = contactInput.value.trim();
+            }
+
+            function collectStep3() {
+                stepData.condition = conditionSelect.value;
+                stepData.negotiable = negotiableState.getState();
+                stepData.delivery = deliveryState.getState();
+                stepData.tags = [...tags];
+            }
+
+            // ─── Render Review ────────────────────────────────────────
+            function renderReview() {
+                collectStep1();
+                collectStep2();
+                collectStep3();
+
+                // Details
+                document.getElementById('rvTitle').textContent = stepData.title || '—';
+                const catMap = {
+                    'textbooks': '📚 Textbooks',
+                    'gadgets': '💻 Gadgets & Electronics',
+                    'fashion': '👕 Fashion & Clothing',
+                    'food': '🍕 Food & Drinks',
+                    'services': '🎓 Academic Services',
+                    'sports': '⚽ Sports & Fitness',
+                    'events': '🎫 Event Tickets',
+                    'furniture': '🪑 Furniture',
+                    'other': '📦 Other'
+                };
+                document.getElementById('rvCategory').textContent = catMap[stepData.category] || stepData.category || '—';
+                const priceNum = parseInt(stepData.price) || 0;
+                document.getElementById('rvPrice').textContent = priceNum === 0 ? '🎁 Free' : '₦' + priceNum.toLocaleString();
+                document.getElementById('rvDesc').textContent = stepData.description || '—';
+                const imgCount = stepData.images ? stepData.images.length : 0;
+                document.getElementById('rvImages').textContent = imgCount > 0 ? `${imgCount} image${imgCount > 1 ? 's' : ''} uploaded` :
+                    'No images';
+
+                // Location
+                const campusMap = {
+                    'uniben': 'University of Benin (UNIBEN)',
+                    'unilag': 'University of Lagos (UNILAG)',
+                    'oau': 'Obafemi Awolowo University (OAU)',
+                    'unn': 'University of Nigeria, Nsukka (UNN)',
+                    'abu': 'Ahmadu Bello University (ABU)',
+                    'futa': 'Federal University of Technology, Akure (FUTA)',
+                    'futo': 'Federal University of Technology, Owerri (FUTO)',
+                    'other': 'Other'
+                };
+                document.getElementById('rvCampus').textContent = campusMap[stepData.campus] || stepData.campus || '—';
+                document.getElementById('rvSpot').textContent = stepData.spot || '—';
+                document.getElementById('rvContact').textContent = stepData.contact || '—';
+
+                // Extras
+                const condMap = {
+                    'new': '🆕 Brand New',
+                    'like-new': '✨ Like New',
+                    'good': '👍 Good',
+                    'fair': '👌 Fair',
+                    'poor': '🔧 Needs Work'
+                };
+                document.getElementById('rvCondition').textContent = condMap[stepData.condition] || stepData.condition || '—';
+                document.getElementById('rvNegotiable').textContent = stepData.negotiable ? '✅ Yes, negotiable' :
+                    '❌ Fixed price';
+                document.getElementById('rvDelivery').textContent = stepData.delivery ? '✅ Delivery available' :
+                    '📦 Pickup only';
+                document.getElementById('rvTags').textContent = stepData.tags.length > 0 ? stepData.tags.map(t =>
+                    `<span class="tag-pill"><i class="fa-solid fa-hashtag"></i> ${t}</span>`
+                ).join(' ') : 'No tags added';
+            }
+
+            // ─── Edit button handlers (review → go to step) ─────────
+            reviewContainer.addEventListener('click', function(e) {
+                const editBtn = e.target.closest('.edit-btn');
+                if (!editBtn) return;
+                const target = parseInt(editBtn.dataset.target, 10);
+                if (target >= 1 && target <= 3) {
+                    goToStep(target);
+                }
+            });
+
+            // ─── Step navigation ──────────────────────────────────────
+
+            // Step 1 → 2
+            step1Next.addEventListener('click', function() {
+                if (validateStep1()) {
+                    goToStep(2);
+                } else {
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error('Please fix the highlighted fields.', { duration: 2500 });
+                    }
+                }
+            });
+
+            // Step 2 → back
+            step2Back.addEventListener('click', function() { goToStep(1); });
+
+            // Step 2 → 3
+            step2Next.addEventListener('click', function() {
+                if (validateStep2()) {
+                    goToStep(3);
+                } else {
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error('Please fill in all required fields.', { duration: 2500 });
+                    }
+                }
+            });
+
+            // Step 3 → back
+            step3Back.addEventListener('click', function() { goToStep(2); });
+
+            // Step 3 → 4 (review)
+            step3Next.addEventListener('click', function() {
+                if (validateStep3()) {
+                    renderReview();
+                    goToStep(4);
+                } else {
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error('Please select a condition.', { duration: 2000 });
+                    }
+                }
+            });
+
+            // Step 4 → back
+            step4Back.addEventListener('click', function() { goToStep(3); });
+
+            // Step 4 → Submit
+            step4Submit.addEventListener('click', function() {
+                renderReview();
+
+                // Final validation check
+                if (!stepData.title || !stepData.category || !stepData.price || !stepData.description ||
+                    !stepData.campus || !stepData.spot || !stepData.contact || !stepData.condition) {
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error('Please complete all required fields before publishing.', { duration: 3000 });
+                    }
+                    return;
+                }
+
+                // Simulate submission
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.success('🎉 Listing published successfully!', { duration: 3000 });
+                }
+
+                // Show success state
+                document.querySelectorAll('.step-panel').forEach(p => p.style.display = 'none');
+                const successPanel = document.querySelector('.step-panel[data-step="success"]');
+                successPanel.style.display = 'block';
+                successPanel.classList.add('active');
+
+                // Hide progress
+                document.getElementById('stepProgress').style.display = 'none';
+
+                // Log data (for demo)
+                console.log('📦 Listing Data:', stepData);
+            });
+
+            // ─── Back to home ─────────────────────────────────────────
+            function goHome() {
+                window.location.href = '/index.html';
+            }
+
+            backToHome.addEventListener('click', goHome);
+            goHomeAfterSuccess.addEventListener('click', goHome);
+
+            viewListingAfterSuccess.addEventListener('click', function() {
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.info('📄 Viewing your listing… (demo)', { duration: 2000 });
+                }
+            });
+
+            // ─── Keyboard shortcuts ──────────────────────────────────
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+Enter to submit from any step
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    if (currentStep === 4) {
+                        step4Submit.click();
+                    } else if (currentStep === 1) {
+                        step1Next.click();
+                    } else if (currentStep === 2) {
+                        step2Next.click();
+                    } else if (currentStep === 3) {
+                        step3Next.click();
+                    }
+                }
+
+                // ESC to go back
+                if (e.key === 'Escape') {
+                    if (currentStep === 1) {
+                        goHome();
+                    } else if (currentStep === 2) {
+                        goToStep(1);
+                    } else if (currentStep === 3) {
+                        goToStep(2);
+                    } else if (currentStep === 4) {
+                        goToStep(3);
+                    }
+                }
+            });
+
+            // ─── Init ─────────────────────────────────────────────────
+            updateProgress(1);
+
+            // Set default toggle states
+            negotiableState.setState(true);
+            deliveryState.setState(false);
+
+            // Focus first input
+            setTimeout(() => titleInput.focus(), 400);
+
+            console.log('📝 CampusHub – Create Listing ready!');
+            console.log('💡 Tip: Use Ctrl+Enter to submit, ESC to go back.');
+
+        })();
+    </script>
+
+</body>
+</html>

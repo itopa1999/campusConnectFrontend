@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Favourites</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        /* ============================================================
+           FAVOURITES PAGE SPECIFIC STYLES
+           ============================================================ */
+
+        /* ─── Page Header ─── */
+        .fav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+        }
+        .fav-header .fav-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .fav-header .fav-title h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color var(--transition);
+            letter-spacing: -0.3px;
+        }
+        .fav-header .fav-title .heart-icon {
+            font-size: 24px;
+            color: var(--red);
+            background: rgba(231, 76, 60, 0.10);
+            padding: 8px;
+            border-radius: 14px;
+            transition: background var(--transition);
+        }
+        .fav-header .fav-count-badge {
+            background: var(--red);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background var(--transition);
+            cursor: default;
+        }
+        .fav-header .fav-count-badge i {
+            font-size: 14px;
+        }
+        .fav-header .fav-count-badge span {
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* ─── Search Bar ─── */
+        .fav-search-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .fav-search-wrap .search-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border-radius: 28px;
+            padding: 8px 18px;
+            gap: 10px;
+            border: 1px solid transparent;
+            transition: all var(--transition);
+            min-width: 180px;
+        }
+        .fav-search-wrap .search-box:focus-within {
+            border-color: var(--green);
+            background: var(--bg-card);
+            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.08);
+        }
+        .fav-search-wrap .search-box i {
+            color: var(--text-muted2);
+            transition: color var(--transition);
+        }
+        .fav-search-wrap .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+            padding: 6px 0;
+            width: 100%;
+            transition: color var(--transition);
+        }
+        .fav-search-wrap .search-box input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            transition: color var(--transition);
+        }
+        .fav-search-wrap .search-box .clear-fav-search {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 4px;
+            transition: color 0.2s;
+            display: none;
+        }
+        .fav-search-wrap .search-box .clear-fav-search.visible {
+            display: block;
+        }
+        .fav-search-wrap .search-box .clear-fav-search:hover {
+            color: var(--red);
+        }
+        .fav-search-wrap .result-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+            transition: color var(--transition);
+        }
+
+        /* ─── Product Grid (reuse from explore) ─── */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px;
+            margin-bottom: 28px;
+            transition: opacity 0.3s ease;
+        }
+        .product-grid.loading {
+            opacity: 0.5;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+            cursor: default;
+            border: 1px solid var(--border-card);
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card-hover);
+        }
+        .product-card .img-wrap {
+            position: relative;
+            background: var(--bg-img-placeholder);
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: background var(--transition), color var(--transition);
+        }
+        .product-card .img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-card .img-wrap .tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+        .product-card .img-wrap .tag.hot {
+            background: var(--red);
+        }
+        .product-card .img-wrap .tag.free {
+            background: var(--green);
+        }
+        .product-card .img-wrap .tag.sell {
+            background: #2980b9;
+        }
+        .product-card .img-wrap .tag.wanted {
+            background: #e67e22;
+        }
+        .product-card .img-wrap .tag.swap {
+            background: #8e44ad;
+        }
+
+        /* ─── Favourite heart button (always red, click to remove) ─── */
+        .product-card .img-wrap .fav-heart-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: var(--red);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            z-index: 2;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .dark-mode .product-card .img-wrap .fav-heart-btn {
+            background: rgba(30, 30, 30, 0.85);
+            color: var(--red);
+        }
+        .product-card .img-wrap .fav-heart-btn:hover {
+            transform: scale(1.15);
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.25);
+        }
+        .dark-mode .product-card .img-wrap .fav-heart-btn:hover {
+            background: #2a2a2a;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.35);
+        }
+        .product-card .img-wrap .fav-heart-btn i {
+            pointer-events: none;
+        }
+        .product-card .img-wrap .fav-heart-btn .fa-solid {
+            color: var(--red);
+        }
+
+        .product-card .info {
+            padding: 10px 12px 12px;
+        }
+        .product-card .info .name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color var(--transition);
+        }
+        .product-card .info .price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--green);
+            letter-spacing: -0.3px;
+            transition: color var(--transition);
+        }
+        .product-card .info .price .free-tag {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--green);
+            background: var(--green-bg);
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+        .product-card .info .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .product-card .info .meta .location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .product-card .info .meta .location i {
+            font-size: 10px;
+            color: var(--green);
+        }
+        .product-card .info .meta .category-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--bg-input);
+            padding: 2px 10px;
+            border-radius: 20px;
+            transition: background var(--transition), color var(--transition);
+            white-space: nowrap;
+        }
+        .product-card .info .meta .category-tag i {
+            font-size: 10px;
+            color: var(--green);
+        }
+        .dark-mode .product-card .info .meta .category-tag {
+            background: var(--bg-input);
+            color: var(--text-muted2);
+        }
+        .dark-mode .product-card .info .meta .category-tag i {
+            color: var(--green);
+        }
+
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+            .product-card .img-wrap {
+                height: 110px;
+            }
+            .product-card .info .name {
+                font-size: 12px;
+            }
+            .product-card .info .price {
+                font-size: 14px;
+            }
+            .product-card .info .meta {
+                font-size: 10px;
+            }
+            .product-card .info .meta .category-tag {
+                font-size: 9px;
+                padding: 1px 8px;
+            }
+            .fav-header .fav-title h2 {
+                font-size: 17px;
+            }
+            .fav-header .fav-count-badge {
+                font-size: 11px;
+                padding: 3px 12px;
+            }
+            .product-card .img-wrap .fav-heart-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 13px;
+                top: 8px;
+                right: 8px;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 18px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 24px;
+            }
+            .product-card .img-wrap {
+                height: 160px;
+            }
+            .product-card .info .name {
+                font-size: 15px;
+            }
+            .product-card .info .price {
+                font-size: 18px;
+            }
+        }
+
+        /* ─── Pagination ─── */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        .pagination-controls button {
+            padding: 8px 20px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background: var(--green-bg);
+            border-color: var(--green);
+            color: var(--green);
+            transform: translateY(-2px);
+        }
+        .pagination-controls button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .pagination-controls .page-info {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            min-width: 80px;
+            text-align: center;
+            transition: color var(--transition);
+        }
+
+        /* ─── Empty State ─── */
+        .fav-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+        .fav-empty .empty-icon {
+            font-size: 64px;
+            opacity: 0.3;
+            margin-bottom: 16px;
+            display: block;
+            color: var(--red);
+        }
+        .fav-empty h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .fav-empty p {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 380px;
+            margin: 0 auto;
+            transition: color var(--transition);
+        }
+        .fav-empty .explore-cta {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 28px;
+            background: var(--green);
+            color: #fff;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+        }
+        .fav-empty .explore-cta:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+
+        /* ─── Loading shimmer ─── */
+        .shimmer-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            animation: shimmerPulse 1.5s ease-in-out infinite;
+        }
+        .shimmer-card .shimmer-img {
+            height: 140px;
+            background: var(--bg-input);
+        }
+        .shimmer-card .shimmer-info {
+            padding: 12px;
+        }
+        .shimmer-card .shimmer-info .line {
+            height: 12px;
+            background: var(--bg-input);
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+        .shimmer-card .shimmer-info .line.short {
+            width: 40%;
+        }
+        .shimmer-card .shimmer-info .line.long {
+            width: 70%;
+        }
+        .shimmer-card .shimmer-info .line:last-child {
+            margin-bottom: 0;
+        }
+        @keyframes shimmerPulse {
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ─── Toast notification for remove ─── */
+        .fav-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+        }
+        .fav-toast.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .fav-toast .toast-icon {
+            color: var(--red);
+            font-size: 20px;
+        }
+        .fav-toast .toast-undo {
+            background: none;
+            border: none;
+            color: var(--green);
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 8px;
+            transition: background 0.2s;
+            font-size: 13px;
+        }
+        .fav-toast .toast-undo:hover {
+            background: var(--green-bg);
+        }
+        .dark-mode .fav-toast {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width: 480px) {
+            .fav-toast {
+                font-size: 13px;
+                padding: 10px 18px;
+                white-space: normal;
+                max-width: 90%;
+                bottom: 90px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <!-- ===== FAVOURITES HEADER ===== -->
+            <div class="fav-header" id="favHeader">
+                <div class="fav-title">
+                    <span class="heart-icon"><i class="fa-solid fa-heart"></i></span>
+                    <h2>My Favourites</h2>
+                </div>
+                <div class="fav-count-badge">
+                    <i class="fa-regular fa-heart"></i>
+                    <span id="favCountDisplay">0</span>
+                </div>
+            </div>
+
+            <!-- ===== SEARCH ===== -->
+            <div class="fav-search-wrap">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="favSearchInput" placeholder="Search your favourites…" />
+                    <button class="clear-fav-search" id="clearFavSearch" title="Clear search">&times;</button>
+                </div>
+                <span class="result-count" id="favResultCount">0 results</span>
+            </div>
+
+            <!-- ===== PRODUCT GRID ===== -->
+            <div id="favGrid" class="product-grid">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- ===== PAGINATION ===== -->
+            <div class="pagination-controls" id="favPagination">
+                <button id="favPrev" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                <span class="page-info" id="favPageInfo">Page 1</span>
+                <button id="favNext">Next <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+        </main>
+
+        <!-- ===== TOAST ===== -->
+        <div class="fav-toast" id="favToast">
+            <span class="toast-icon"><i class="fa-solid fa-heart-broken"></i></span>
+            <span id="toastMessage">Removed from favourites</span>
+            <button class="toast-undo" id="toastUndo">Undo</button>
+        </div>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Favourites • heart to remove • real-world dummy data
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // DUMMY DATA – Favourites endpoint
+            // ============================================================
+            const dummyFavourites = {
+                request_id: "2fc84132-1ff5-4da5-a471-4f3ce2864058",
+                status_code: 200,
+                message: "Favourites retrieved successfully",
+                is_success: true,
+                data: {
+                    items: [{
+                        id: 2,
+                        title: "HP Laptop - Core i5",
+                        price: 145000,
+                        category: "Academic Services",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Food Court / Cafeteria"
+                    }, {
+                        id: 5,
+                        title: "Calculus Textbook - 3rd Ed",
+                        price: 3500,
+                        category: "Books",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Library"
+                    }, {
+                        id: 8,
+                        title: "Mini Fridge - 40L",
+                        price: 55000,
+                        category: "Electronics",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Student Union Building"
+                    }, {
+                        id: 11,
+                        title: "Bike - Trek FX 2",
+                        price: 32000,
+                        category: "Sports",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Main Gate"
+                    }, {
+                        id: 14,
+                        title: "Study Table & Chair",
+                        price: 25000,
+                        category: "Furniture",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Cafeteria"
+                    }, {
+                        id: 17,
+                        title: "iPhone 13 Pro Max",
+                        price: 480000,
+                        category: "Electronics",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Lecture Theatres Complex"
+                    }, {
+                        id: 20,
+                        title: "Physics Textbook - University",
+                        price: 2800,
+                        category: "Books",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Library"
+                    }, {
+                        id: 23,
+                        title: "Hoodie - UNIBEN Edition",
+                        price: 8500,
+                        category: "Fashion & Clothing",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Student Union Building"
+                    }, {
+                        id: 26,
+                        title: "Projector - Full HD",
+                        price: 18000,
+                        category: "Services",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Cafeteria"
+                    }, {
+                        id: 29,
+                        title: "Room for Rent - Self Contained",
+                        price: 120000,
+                        category: "Roommates & Shared Apartments",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Main Gate"
+                    }, {
+                        id: 32,
+                        title: "MacBook Air M1",
+                        price: 620000,
+                        category: "Laptops & Computers",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Lecture Theatres Complex"
+                    }, {
+                        id: 35,
+                        title: "Weight Loss Program",
+                        price: 15000,
+                        category: "Services",
+                        image: null,
+                        badge: "sell",
+                        hotspots: "Food Court / Cafeteria"
+                    }],
+                    pagination: {
+                        page: 1,
+                        per_page: 10,
+                        total_pages: 2,
+                        total_items: 12,
+                        has_next: true,
+                        has_previous: false
+                    }
+                }
+            };
+
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+            const grid = document.getElementById('favGrid');
+            const searchInput = document.getElementById('favSearchInput');
+            const clearSearch = document.getElementById('clearFavSearch');
+            const resultCount = document.getElementById('favResultCount');
+            const favCountDisplay = document.getElementById('favCountDisplay');
+            const prevBtn = document.getElementById('favPrev');
+            const nextBtn = document.getElementById('favNext');
+            const pageInfo = document.getElementById('favPageInfo');
+
+            const toast = document.getElementById('favToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastUndo = document.getElementById('toastUndo');
+
+            // ============================================================
+            // STATE
+            // ============================================================
+            let allItems = [...dummyFavourites.data.items];
+            let currentPage = 1;
+            const perPage = dummyFavourites.data.pagination.per_page || 10;
+            let searchQuery = '';
+            let filteredItems = [...allItems];
+            let removedItem = null; // for undo
+
+            // ============================================================
+            // HELPERS
+            // ============================================================
+            function getCategoryIcon(category) {
+                const map = {
+                    'Academic Services': 'fa-graduation-cap',
+                    'Books': 'fa-book',
+                    'Electronics': 'fa-microchip',
+                    'Sports': 'fa-futbol',
+                    'Furniture': 'fa-couch',
+                    'Fashion & Clothing': 'fa-shirt',
+                    'Services': 'fa-tools',
+                    'Roommates & Shared Apartments': 'fa-building',
+                    'Laptops & Computers': 'fa-laptop',
+                };
+                return map[category] || 'fa-tag';
+            }
+
+            function getBadgeClass(badge) {
+                const map = {
+                    'sell': 'sell',
+                    'hot': 'hot',
+                    'free': 'free',
+                    'wanted': 'wanted',
+                    'swap': 'swap',
+                };
+                return map[badge] || '';
+            }
+
+            function getBadgeLabel(badge) {
+                const map = {
+                    'sell': 'Sell',
+                    'hot': '🔥 Hot',
+                    'free': '🆓 Free',
+                    'wanted': '🔍 Wanted',
+                    'swap': '🔄 Swap',
+                };
+                return map[badge] || badge || '';
+            }
+
+            function getImageUrl(item) {
+                if (item.image) return item.image;
+                // Generate a consistent placeholder using the item id
+                return `https://picsum.photos/seed/fav_${item.id}/400/300`;
+            }
+
+            // ============================================================
+            // TOAST
+            // ============================================================
+            let toastTimer = null;
+
+            function showToast(message, undoCallback) {
+                toastMessage.textContent = message || 'Removed from favourites';
+                toast.classList.add('visible');
+
+                // Store undo callback
+                toastUndo._callback = undoCallback || null;
+                toastUndo.style.display = undoCallback ? 'inline-block' : 'none';
+
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('visible');
+                }, 4000);
+            }
+
+            function hideToast() {
+                toast.classList.remove('visible');
+                clearTimeout(toastTimer);
+            }
+
+            toastUndo.addEventListener('click', function() {
+                if (this._callback) {
+                    this._callback();
+                    hideToast();
+                }
+            });
+
+            // ============================================================
+            // RENDER
+            // ============================================================
+            function renderFavourites() {
+                const query = searchQuery.toLowerCase().trim();
+                let filtered = allItems;
+
+                if (query) {
+                    filtered = allItems.filter(item =>
+                        item.title.toLowerCase().includes(query) ||
+                        item.category.toLowerCase().includes(query) ||
+                        (item.hotspots && item.hotspots.toLowerCase().includes(query))
+                    );
+                }
+                filteredItems = filtered;
+
+                const total = filtered.length;
+                const totalPages = Math.ceil(total / perPage) || 1;
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+
+                const start = (currentPage - 1) * perPage;
+                const pageItems = filtered.slice(start, start + perPage);
+
+                // Update counts
+                favCountDisplay.textContent = total;
+                resultCount.textContent = `${total} item${total !== 1 ? 's' : ''}`;
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+                prevBtn.disabled = currentPage <= 1;
+                nextBtn.disabled = currentPage >= totalPages;
+
+                if (pageItems.length === 0) {
+                    grid.innerHTML = `
+                            <div class="fav-empty">
+                                <span class="empty-icon"><i class="fa-regular fa-heart"></i></span>
+                                <h3>No favourites yet</h3>
+                                <p>Start exploring and heart the items you love. They'll appear here.</p>
+                                <a href="/explore.html" class="explore-cta">Explore now</a>
+                            </div>
+                        `;
+                    return;
+                }
+
+                grid.innerHTML = pageItems.map(item => {
+                    const icon = getCategoryIcon(item.category);
+                    const badgeClass = getBadgeClass(item.badge);
+                    const badgeLabel = getBadgeLabel(item.badge);
+                    const imgSrc = getImageUrl(item);
+
+                    const priceDisplay = item.price === 0 ?
+                        '<span class="free-tag">Free</span>' :
+                        '₦' + item.price.toLocaleString();
+
+                    return `
+                            <div class="product-card" data-id="${item.id}">
+                                <div class="img-wrap">
+                                    <img src="${imgSrc}" alt="${item.title}" loading="lazy" 
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                                    <div class="placeholder-icon" style="display:none; position:absolute; inset:0; align-items:center; justify-content:center; font-size:40px; color:var(--text-muted2); background:var(--bg-img-placeholder);">📦</div>
+                                    ${badgeLabel ? `<span class="tag ${badgeClass}">${badgeLabel}</span>` : ''}
+                                    <button class="fav-heart-btn" data-id="${item.id}" title="Remove from favourites">
+                                        <i class="fa-solid fa-heart"></i>
+                                    </button>
+                                </div>
+                                <div class="info">
+                                    <div class="name" title="${item.title}">${item.title}</div>
+                                    <div class="price">${priceDisplay}</div>
+                                    <div class="meta">
+                                        <span class="location"><i class="fa-solid fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
+                                        <span class="category-tag"><i class="fa-solid ${icon}"></i> ${item.category}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                }).join('');
+
+                // ─── Attach remove event listeners ───
+                grid.querySelectorAll('.fav-heart-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        removeFromFavourites(id);
+                    });
+                });
+            }
+
+            // ============================================================
+            // REMOVE FROM FAVOURITES
+            // ============================================================
+            function removeFromFavourites(id) {
+                const itemIndex = allItems.findIndex(item => item.id === id);
+                if (itemIndex === -1) return;
+
+                // Store for undo
+                removedItem = allItems[itemIndex];
+                const removedId = removedItem.id;
+
+                // Remove from array
+                allItems.splice(itemIndex, 1);
+
+                // Update pagination if needed
+                const totalAfter = allItems.length;
+                const totalPagesAfter = Math.ceil(totalAfter / perPage) || 1;
+                if (currentPage > totalPagesAfter) currentPage = totalPagesAfter;
+                if (currentPage < 1) currentPage = 1;
+
+                // Re-render
+                renderFavourites();
+
+                // Show toast with undo
+                showToast(`"${removedItem.title}" removed from favourites`, function() {
+                    // Undo: re-insert at original position
+                    allItems.splice(itemIndex, 0, removedItem);
+                    renderFavourites();
+                    removedItem = null;
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.success('Restored to favourites!', { duration: 1500 });
+                    }
+                });
+
+                // Also trigger a small alert if available
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.info(`"${removedItem.title}" removed`, { duration: 1500 });
+                }
+            }
+
+            // ============================================================
+            // SEARCH
+            // ============================================================
+            searchInput.addEventListener('input', function() {
+                searchQuery = this.value;
+                clearSearch.classList.toggle('visible', !!this.value);
+                currentPage = 1;
+                renderFavourites();
+            });
+
+            clearSearch.addEventListener('click', function() {
+                searchInput.value = '';
+                searchQuery = '';
+                this.classList.remove('visible');
+                currentPage = 1;
+                renderFavourites();
+            });
+
+            // ============================================================
+            // PAGINATION
+            // ============================================================
+            prevBtn.addEventListener('click', function() {
+                if (currentPage > 1) { currentPage--;
+                    renderFavourites(); }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                const totalPages = Math.ceil(filteredItems.length / perPage);
+                if (currentPage < totalPages) { currentPage++;
+                    renderFavourites(); }
+            });
+
+            // ============================================================
+            // KEYBOARD SHORTCUT: CMD+K / CTRL+K → focus search
+            // ============================================================
+            document.addEventListener('keydown', function(e) {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+                if (e.key === 'Escape') {
+                    if (document.activeElement === searchInput) {
+                        searchInput.blur();
+                        clearSearch.classList.remove('visible');
+                    }
+                }
+            });
+
+            // ============================================================
+            // INIT
+            // ============================================================
+            function init() {
+                renderFavourites();
+                console.log('❤️ Favourites page initialized with ' + allItems.length + ' items');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                setTimeout(init, 100);
+            }
+
+            // Expose for debugging
+            window.__fav = {
+                allItems: () => allItems,
+                remove: removeFromFavourites,
+                render: renderFavourites
+            };
+
+        })();
+    </script>
+
+</body>
+</html>

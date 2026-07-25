@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Notifications</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        /* ============================================================
+           NOTIFICATIONS PAGE SPECIFIC STYLES
+           ============================================================ */
+
+        /* ─── Page Header ─── */
+        .notif-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+        }
+        .notif-header .notif-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .notif-header .notif-title h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color var(--transition);
+            letter-spacing: -0.3px;
+        }
+        .notif-header .notif-title .bell-icon {
+            font-size: 22px;
+            color: var(--green);
+            background: var(--green-bg);
+            padding: 8px 10px;
+            border-radius: 14px;
+            transition: background var(--transition);
+        }
+        .notif-header .notif-badge {
+            background: var(--red);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background var(--transition);
+            cursor: default;
+        }
+        .notif-header .notif-badge i {
+            font-size: 14px;
+        }
+        .notif-header .notif-badge span {
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* ─── Filter Tabs ─── */
+        .notif-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 4px;
+            background: var(--bg-input);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .notif-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .notif-tabs .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+        .notif-tabs .tab-btn i {
+            font-size: 15px;
+            transition: transform 0.3s ease;
+        }
+        .notif-tabs .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .notif-tabs .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--green);
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.15);
+            transform: scale(1.02);
+        }
+        .notif-tabs .tab-btn.active i {
+            transform: scale(1.1);
+        }
+        .notif-tabs .tab-btn .tab-badge {
+            background: var(--green);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 8px;
+            border-radius: 20px;
+            margin-left: 4px;
+        }
+        .notif-tabs .tab-btn .tab-badge.unread-badge {
+            background: var(--red);
+        }
+        .dark-mode .notif-tabs {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .notif-tabs .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .dark-mode .notif-tabs .tab-btn.active {
+            background: var(--bg-card);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width: 480px) {
+            .notif-tabs .tab-btn {
+                font-size: 11px;
+                padding: 8px 12px;
+                gap: 5px;
+            }
+            .notif-tabs .tab-btn i {
+                font-size: 13px;
+            }
+        }
+
+        /* ─── Action Bar ─── */
+        .notif-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .notif-actions .action-btn {
+            padding: 8px 18px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .notif-actions .action-btn:hover {
+            border-color: var(--green);
+            color: var(--green);
+            background: var(--green-bg);
+        }
+        .notif-actions .action-btn.danger:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: rgba(231, 76, 60, 0.08);
+        }
+        .notif-actions .action-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .notif-actions .action-btn i {
+            font-size: 13px;
+        }
+        .notif-actions .action-spacer {
+            flex: 1;
+        }
+        .notif-actions .result-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+
+        /* ─── Notification Cards ─── */
+        .notif-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            transition: opacity 0.3s ease;
+        }
+        .notif-list.loading {
+            opacity: 0.5;
+        }
+
+        .notif-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+            cursor: default;
+            position: relative;
+        }
+        .notif-card:hover {
+            box-shadow: var(--shadow-card-hover);
+            transform: translateX(3px);
+        }
+        .notif-card.unread {
+            border-left: 4px solid var(--green);
+            background: var(--green-bg);
+        }
+        .dark-mode .notif-card.unread {
+            background: rgba(46, 204, 113, 0.06);
+        }
+        .notif-card .notif-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            background: var(--bg-input);
+            color: var(--text-muted2);
+            transition: background var(--transition), color var(--transition);
+        }
+        .notif-card .notif-icon.listing {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .notif-card .notif-icon.message {
+            background: #e8f0fe;
+            color: #2980b9;
+        }
+        .notif-card .notif-icon.system {
+            background: #fef3e8;
+            color: #e67e22;
+        }
+        .dark-mode .notif-card .notif-icon.listing {
+            background: #1a3a2a;
+            color: #2ecc71;
+        }
+        .dark-mode .notif-card .notif-icon.message {
+            background: #1a2a3a;
+            color: #3498db;
+        }
+        .dark-mode .notif-card .notif-icon.system {
+            background: #3a2a1a;
+            color: #f39c12;
+        }
+
+        .notif-card .notif-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .notif-card .notif-body .notif-title-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+            margin-bottom: 2px;
+        }
+        .notif-card .notif-body .notif-message {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            transition: color var(--transition);
+            word-break: break-word;
+        }
+        .notif-card .notif-body .notif-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            transition: color var(--transition);
+        }
+        .notif-card .notif-body .notif-meta .time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .notif-card .notif-body .notif-meta .time i {
+            font-size: 10px;
+        }
+        .notif-card .notif-body .notif-meta .action-link {
+            color: var(--green);
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .notif-card .notif-body .notif-meta .action-link:hover {
+            opacity: 0.7;
+        }
+        .notif-card .notif-body .notif-meta .read-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 10px;
+            border-radius: 20px;
+            background: var(--bg-input);
+            color: var(--text-muted2);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            transition: background var(--transition), color var(--transition);
+        }
+        .notif-card .notif-body .notif-meta .read-badge.unread-badge {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .dark-mode .notif-card .notif-body .notif-meta .read-badge.unread-badge {
+            background: #1a3a2a;
+            color: #2ecc71;
+        }
+
+        .notif-card .notif-actions-right {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+        .notif-card .notif-actions-right button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 15px;
+            padding: 4px 6px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+        .notif-card .notif-actions-right button:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .notif-card .notif-actions-right .mark-read-btn:hover {
+            color: var(--green);
+            background: var(--green-bg);
+        }
+        .notif-card .notif-actions-right .delete-btn:hover {
+            color: var(--red);
+            background: rgba(231, 76, 60, 0.08);
+        }
+        .dark-mode .notif-card .notif-actions-right button:hover {
+            background: var(--bg-input);
+        }
+        .dark-mode .notif-card .notif-actions-right .mark-read-btn:hover {
+            background: #1a3a2a;
+            color: #2ecc71;
+        }
+        .dark-mode .notif-card .notif-actions-right .delete-btn:hover {
+            background: #3a1a1a;
+            color: #e74c3c;
+        }
+
+        .notif-card .notif-actions-right .mark-read-btn .fa-circle-check {
+            color: var(--green);
+        }
+        .notif-card .notif-actions-right .mark-read-btn .fa-circle {
+            color: var(--text-muted2);
+        }
+
+        @media (max-width: 480px) {
+            .notif-card {
+                padding: 12px 14px;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .notif-card .notif-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+            }
+            .notif-card .notif-body .notif-title-text {
+                font-size: 13px;
+            }
+            .notif-card .notif-body .notif-message {
+                font-size: 12px;
+            }
+            .notif-card .notif-actions-right {
+                margin-left: auto;
+            }
+            .notif-card .notif-actions-right button {
+                font-size: 13px;
+                padding: 2px 4px;
+            }
+            .notif-actions .action-btn {
+                font-size: 11px;
+                padding: 6px 14px;
+            }
+        }
+
+        /* ─── Pagination ─── */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 8px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        .pagination-controls button {
+            padding: 8px 20px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background: var(--green-bg);
+            border-color: var(--green);
+            color: var(--green);
+            transform: translateY(-2px);
+        }
+        .pagination-controls button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .pagination-controls .page-info {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            min-width: 80px;
+            text-align: center;
+            transition: color var(--transition);
+        }
+
+        /* ─── Empty State ─── */
+        .notif-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            width: 100%;
+        }
+        .notif-empty .empty-icon {
+            font-size: 64px;
+            opacity: 0.3;
+            margin-bottom: 16px;
+            display: block;
+            color: var(--text-muted2);
+        }
+        .notif-empty h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .notif-empty p {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 380px;
+            margin: 0 auto;
+            transition: color var(--transition);
+        }
+
+        /* ─── Toast ─── */
+        .notif-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+        }
+        .notif-toast.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .notif-toast .toast-icon {
+            font-size: 20px;
+        }
+        .notif-toast .toast-icon.success {
+            color: var(--green);
+        }
+        .notif-toast .toast-icon.warning {
+            color: #e67e22;
+        }
+        .notif-toast .toast-icon.danger {
+            color: var(--red);
+        }
+        .dark-mode .notif-toast {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width: 480px) {
+            .notif-toast {
+                font-size: 13px;
+                padding: 10px 18px;
+                white-space: normal;
+                max-width: 90%;
+                bottom: 90px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+
+        /* ─── Loading shimmer ─── */
+        .shimmer-notif {
+            display: flex;
+            gap: 14px;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-color);
+            animation: shimmerPulse 1.5s ease-in-out infinite;
+        }
+        .shimmer-notif .shimmer-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--bg-input);
+            flex-shrink: 0;
+        }
+        .shimmer-notif .shimmer-body {
+            flex: 1;
+        }
+        .shimmer-notif .shimmer-body .line {
+            height: 12px;
+            background: var(--bg-input);
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+        .shimmer-notif .shimmer-body .line.short {
+            width: 30%;
+        }
+        .shimmer-notif .shimmer-body .line.long {
+            width: 70%;
+        }
+        .shimmer-notif .shimmer-body .line:last-child {
+            margin-bottom: 0;
+        }
+        @keyframes shimmerPulse {
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <!-- ===== HEADER ===== -->
+            <div class="notif-header" id="notifHeader">
+                <div class="notif-title">
+                    <span class="bell-icon"><i class="fa-regular fa-bell"></i></span>
+                    <h2>Notifications</h2>
+                </div>
+                <div class="notif-badge">
+                    <i class="fa-regular fa-envelope"></i>
+                    <span id="unreadCountDisplay">0</span> unread
+                </div>
+            </div>
+
+            <!-- ===== FILTER TABS ===== -->
+            <div class="notif-tabs" id="notifTabs">
+                <button class="tab-btn active" data-filter="all">
+                    <i class="fa-regular fa-bell"></i> All
+                    <span class="tab-badge" id="allCount">0</span>
+                </button>
+                <button class="tab-btn" data-filter="unread">
+                    <i class="fa-regular fa-envelope"></i> Unread
+                    <span class="tab-badge unread-badge" id="unreadCountTab">0</span>
+                </button>
+                <button class="tab-btn" data-filter="read">
+                    <i class="fa-regular fa-envelope-open"></i> Read
+                    <span class="tab-badge" id="readCount">0</span>
+                </button>
+            </div>
+
+            <!-- ===== ACTION BAR ===== -->
+            <div class="notif-actions" id="notifActions">
+                <button class="action-btn" id="markAllReadBtn" title="Mark all as read">
+                    <i class="fa-regular fa-circle-check"></i> Mark all read
+                </button>
+                <button class="action-btn danger" id="deleteAllBtn" title="Delete all notifications">
+                    <i class="fa-regular fa-trash-can"></i> Delete all
+                </button>
+                <span class="action-spacer"></span>
+                <span class="result-count" id="notifResultCount">0 notifications</span>
+            </div>
+
+            <!-- ===== NOTIFICATION LIST ===== -->
+            <div id="notifList" class="notif-list">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- ===== PAGINATION ===== -->
+            <div class="pagination-controls" id="notifPagination">
+                <button id="notifPrev" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                <span class="page-info" id="notifPageInfo">Page 1</span>
+                <button id="notifNext">Next <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+        </main>
+
+        <!-- ===== TOAST ===== -->
+        <div class="notif-toast" id="notifToast">
+            <span class="toast-icon" id="toastIcon"><i class="fa-regular fa-circle-check"></i></span>
+            <span id="toastMessage">Action completed</span>
+        </div>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Notifications • filter by read status • dummy actions
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // DUMMY DATA – Notifications endpoint
+            // ============================================================
+            const dummyNotifications = {
+                request_id: "e11f68f0-816a-4352-b12c-bec986fb6aa9",
+                status_code: 200,
+                message: "Notifications retrieved successfully",
+                is_success: true,
+                data: {
+                    notifications: [{
+                        id: 120,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 119,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 118,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 117,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 116,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 115,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 114,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 113,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 112,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 111,
+                        notification_type: "listing",
+                        title: "Favourite Updated",
+                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
+                        is_read: false,
+                        action_url: "/dash/favourites.html",
+                        created_at: "8 hours ago"
+                    }, {
+                        id: 110,
+                        notification_type: "system",
+                        title: "Welcome to CampusHub!",
+                        message: "Start exploring and connecting with students around you.",
+                        is_read: true,
+                        action_url: "/explore.html",
+                        created_at: "2 days ago"
+                    }, {
+                        id: 109,
+                        notification_type: "message",
+                        title: "New message from Chidi",
+                        message: "Hey, is the laptop still available? I'm interested.",
+                        is_read: true,
+                        action_url: "/messages.html",
+                        created_at: "3 days ago"
+                    }, {
+                        id: 108,
+                        notification_type: "listing",
+                        title: "Your listing 'Mini Fridge' expired",
+                        message: "Your listing has expired. Reactivate it to keep it visible.",
+                        is_read: true,
+                        action_url: "/dash/listings.html",
+                        created_at: "5 days ago"
+                    }, {
+                        id: 107,
+                        notification_type: "system",
+                        title: "Profile completion reminder",
+                        message: "Complete your profile to boost your trust score and get more visibility.",
+                        is_read: false,
+                        action_url: "/profile.html",
+                        created_at: "6 days ago"
+                    }, {
+                        id: 106,
+                        notification_type: "listing",
+                        title: "Bike for Sale got a new view",
+                        message: "Your listing 'Bike - Trek FX 2' has received 5 new views today.",
+                        is_read: false,
+                        action_url: "/dash/listings.html",
+                        created_at: "1 week ago"
+                    }],
+                    unread_messages_counts: 64,
+                    pagination: {
+                        page: 1,
+                        per_page: 10,
+                        total_pages: 2,
+                        total_items: 15,
+                        has_next: true,
+                        has_previous: false
+                    }
+                }
+            };
+
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+            const list = document.getElementById('notifList');
+            const filterTabs = document.querySelectorAll('.notif-tabs .tab-btn');
+            const allCount = document.getElementById('allCount');
+            const unreadCountTab = document.getElementById('unreadCountTab');
+            const readCount = document.getElementById('readCount');
+            const unreadCountDisplay = document.getElementById('unreadCountDisplay');
+            const resultCount = document.getElementById('notifResultCount');
+            const prevBtn = document.getElementById('notifPrev');
+            const nextBtn = document.getElementById('notifNext');
+            const pageInfo = document.getElementById('notifPageInfo');
+
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
+
+            const toast = document.getElementById('notifToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            // ============================================================
+            // STATE
+            // ============================================================
+            let allNotifications = [...dummyNotifications.data.notifications];
+            let currentFilter = 'all'; // 'all' | 'unread' | 'read'
+            let currentPage = 1;
+            const perPage = dummyNotifications.data.pagination.per_page || 10;
+            let filteredItems = [...allNotifications];
+            let toastTimer = null;
+
+            // ============================================================
+            // HELPERS
+            // ============================================================
+            function getIconForType(type) {
+                const map = {
+                    'listing': 'fa-tag',
+                    'message': 'fa-envelope',
+                    'system': 'fa-gear'
+                };
+                return map[type] || 'fa-bell';
+            }
+
+            function getIconClass(type) {
+                const map = {
+                    'listing': 'listing',
+                    'message': 'message',
+                    'system': 'system'
+                };
+                return map[type] || '';
+            }
+
+            function getFilteredItems() {
+                if (currentFilter === 'all') return allNotifications;
+                if (currentFilter === 'unread') return allNotifications.filter(n => !n.is_read);
+                if (currentFilter === 'read') return allNotifications.filter(n => n.is_read);
+                return allNotifications;
+            }
+
+            function getUnreadCount() {
+                return allNotifications.filter(n => !n.is_read).length;
+            }
+
+            function getReadCount() {
+                return allNotifications.filter(n => n.is_read).length;
+            }
+
+            // ============================================================
+            // TOAST
+            // ============================================================
+            function showToast(message, type = 'success') {
+                toastMessage.textContent = message;
+                toastIcon.className = 'toast-icon';
+                if (type === 'success') toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
+                else if (type === 'warning') toastIcon.classList.add('warning', 'fa-regular', 'fa-triangle-exclamation');
+                else if (type === 'danger') toastIcon.classList.add('danger', 'fa-regular', 'fa-circle-xmark');
+                else toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
+
+                toast.classList.add('visible');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('visible');
+                }, 3000);
+            }
+
+            function hideToast() {
+                toast.classList.remove('visible');
+                clearTimeout(toastTimer);
+            }
+
+            // ============================================================
+            // RENDER
+            // ============================================================
+            function renderNotifications() {
+                filteredItems = getFilteredItems();
+                const total = filteredItems.length;
+                const totalPages = Math.ceil(total / perPage) || 1;
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+
+                const start = (currentPage - 1) * perPage;
+                const pageItems = filteredItems.slice(start, start + perPage);
+
+                // Update counts
+                const unread = getUnreadCount();
+                const read = getReadCount();
+                unreadCountDisplay.textContent = unread;
+                allCount.textContent = total;
+                unreadCountTab.textContent = unread;
+                readCount.textContent = read;
+                resultCount.textContent = `${total} notification${total !== 1 ? 's' : ''}`;
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+                prevBtn.disabled = currentPage <= 1;
+                nextBtn.disabled = currentPage >= totalPages;
+
+                // Update filter tab badges
+                document.querySelectorAll('.notif-tabs .tab-btn').forEach(btn => {
+                    const filter = btn.dataset.filter;
+                    const badge = btn.querySelector('.tab-badge');
+                    if (filter === 'all') badge.textContent = allNotifications.length;
+                    else if (filter === 'unread') badge.textContent = unread;
+                    else if (filter === 'read') badge.textContent = read;
+                });
+
+                if (pageItems.length === 0) {
+                    const emptyMsg = currentFilter === 'all' ? 'No notifications yet' :
+                        currentFilter === 'unread' ? 'All caught up! No unread notifications.' :
+                        'No read notifications.';
+                    list.innerHTML = `
+                            <div class="notif-empty">
+                                <span class="empty-icon"><i class="fa-regular fa-bell-slash"></i></span>
+                                <h3>${emptyMsg}</h3>
+                                <p>${currentFilter === 'all' ? 'When you get notifications, they\'ll appear here.' : ''}</p>
+                            </div>
+                        `;
+                    return;
+                }
+
+                list.innerHTML = pageItems.map(item => {
+                    const icon = getIconForType(item.notification_type);
+                    const iconClass = getIconClass(item.notification_type);
+                    const isUnread = !item.is_read;
+                    const readBadgeClass = isUnread ? 'unread-badge' : '';
+                    const readBadgeText = isUnread ? 'Unread' : 'Read';
+
+                    return `
+                            <div class="notif-card ${isUnread ? 'unread' : ''}" data-id="${item.id}">
+                                <div class="notif-icon ${iconClass}">
+                                    <i class="fa-regular ${icon}"></i>
+                                </div>
+                                <div class="notif-body">
+                                    <div class="notif-title-text">${item.title}</div>
+                                    <div class="notif-message">${item.message}</div>
+                                    <div class="notif-meta">
+                                        <span class="time"><i class="fa-regular fa-clock"></i> ${item.created_at}</span>
+                                        ${item.action_url ? `<a href="${item.action_url}" class="action-link">View</a>` : ''}
+                                        <span class="read-badge ${readBadgeClass}">${readBadgeText}</span>
+                                    </div>
+                                </div>
+                                <div class="notif-actions-right">
+                                    ${isUnread ? `
+                                        <button class="mark-read-btn" data-id="${item.id}" title="Mark as read">
+                                            <i class="fa-regular fa-circle"></i>
+                                        </button>
+                                    ` : `
+                                        <button class="mark-read-btn" data-id="${item.id}" title="Mark as unread">
+                                            <i class="fa-regular fa-circle-check"></i>
+                                        </button>
+                                    `}
+                                    <button class="delete-btn" data-id="${item.id}" title="Delete notification">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                }).join('');
+
+                // ─── Attach event listeners ───
+                list.querySelectorAll('.mark-read-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        const notif = allNotifications.find(n => n.id === id);
+                        if (notif) {
+                            notif.is_read = !notif.is_read;
+                            renderNotifications();
+                            const status = notif.is_read ? 'read' : 'unread';
+                            showToast(`Marked as ${status}`, 'success');
+                            if (typeof showAlert !== 'undefined') {
+                                showAlert.success(`Marked as ${status}`, { duration: 1500 });
+                            }
+                        }
+                    });
+                });
+
+                list.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        deleteNotification(id);
+                    });
+                });
+            }
+
+            // ============================================================
+            // ACTIONS
+            // ============================================================
+
+            // ─── Delete one ──────────────────────────────────────────
+            function deleteNotification(id) {
+                const index = allNotifications.findIndex(n => n.id === id);
+                if (index === -1) return;
+                const removed = allNotifications[index];
+                allNotifications.splice(index, 1);
+
+                // Adjust page if needed
+                const totalAfter = getFilteredItems().length;
+                const totalPagesAfter = Math.ceil(totalAfter / perPage) || 1;
+                if (currentPage > totalPagesAfter) currentPage = totalPagesAfter;
+                if (currentPage < 1) currentPage = 1;
+
+                renderNotifications();
+                showToast(`"${removed.title}" deleted`, 'danger');
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.info(`Notification deleted`, { duration: 1500 });
+                }
+            }
+
+            // ─── Delete all ──────────────────────────────────────────
+            function deleteAllNotifications() {
+                if (allNotifications.length === 0) {
+                    showToast('No notifications to delete', 'warning');
+                    return;
+                }
+
+                // Confirm via modal if available
+                const doDelete = () => {
+                    const count = allNotifications.length;
+                    allNotifications = [];
+                    currentPage = 1;
+                    renderNotifications();
+                    showToast(`Deleted all ${count} notifications`, 'danger');
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.success(`All notifications cleared`, { duration: 1500 });
+                    }
+                };
+
+                if (typeof Modal !== 'undefined') {
+                    const modal = new Modal({
+                        title: 'Delete all notifications?',
+                        body: `<p>This will permanently delete all ${allNotifications.length} notifications. This action cannot be undone.</p>`,
+                        type: 'danger',
+                        confirmText: 'Delete All',
+                        cancelText: 'Cancel',
+                        onConfirm: doDelete
+                    });
+                    modal.open();
+                } else {
+                    if (confirm(`Delete all ${allNotifications.length} notifications?`)) {
+                        doDelete();
+                    }
+                }
+            }
+
+            // ─── Mark all as read ──────────────────────────────────
+            function markAllAsRead() {
+                const unread = allNotifications.filter(n => !n.is_read);
+                if (unread.length === 0) {
+                    showToast('All notifications are already read', 'warning');
+                    return;
+                }
+
+                unread.forEach(n => n.is_read = true);
+                renderNotifications();
+                showToast(`Marked ${unread.length} notifications as read`, 'success');
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.success(`All caught up!`, { duration: 1500 });
+                }
+            }
+
+            // ============================================================
+            // FILTER TABS
+            // ============================================================
+            filterTabs.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterTabs.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    currentPage = 1;
+                    renderNotifications();
+                });
+            });
+
+            // ============================================================
+            // PAGINATION
+            // ============================================================
+            prevBtn.addEventListener('click', function() {
+                if (currentPage > 1) { currentPage--;
+                    renderNotifications(); }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                const totalPages = Math.ceil(getFilteredItems().length / perPage);
+                if (currentPage < totalPages) { currentPage++;
+                    renderNotifications(); }
+            });
+
+            // ============================================================
+            // BULK ACTIONS
+            // ============================================================
+            markAllReadBtn.addEventListener('click', markAllAsRead);
+            deleteAllBtn.addEventListener('click', deleteAllNotifications);
+
+            // ============================================================
+            // KEYBOARD SHORTCUTS
+            // ============================================================
+            document.addEventListener('keydown', function(e) {
+                // 'r' for mark all read
+                if (e.key === 'r' && !e.ctrlKey && !e.metaKey && !e.target.closest('input, textarea, button')) {
+                    e.preventDefault();
+                    markAllAsRead();
+                }
+                // 'd' for delete all
+                if (e.key === 'd' && !e.ctrlKey && !e.metaKey && !e.target.closest('input, textarea, button')) {
+                    e.preventDefault();
+                    deleteAllNotifications();
+                }
+            });
+
+            // ============================================================
+            // INIT
+            // ============================================================
+            function init() {
+                renderNotifications();
+                console.log('🔔 Notifications page initialized with ' + allNotifications.length + ' items');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                setTimeout(init, 100);
+            }
+
+            // Expose for debugging
+            window.__notif = {
+                all: () => allNotifications,
+                delete: deleteNotification,
+                deleteAll: deleteAllNotifications,
+                markAllRead: markAllAsRead,
+                render: renderNotifications
+            };
+
+        })();
+    </script>
+
+</body>
+</html>
