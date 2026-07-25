@@ -1,1 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Devices</title>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        .device-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .device-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 24px 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .device-card .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition);
+        }
+        .device-card .card-title i {
+            color: var(--green);
+            font-size: 22px;
+        }
+        .device-card .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Device List ─── */
+        .device-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .device-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border-radius: 12px;
+            transition: background var(--transition), border-color var(--transition);
+            border: 1px solid transparent;
+        }
+        .device-item:hover {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+            box-shadow: var(--shadow-card-hover);
+        }
+        .device-item .device-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            min-width: 0;
+        }
+        .device-item .device-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--green-bg);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            transition: background var(--transition), color var(--transition);
+        }
+        .device-item .device-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .device-item .device-details .device-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .device-item .device-details .device-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+        }
+        .device-item .device-details .device-meta .separator {
+            color: var(--border-color);
+        }
+        .device-item .device-details .device-meta .last-active {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .device-item .device-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+        .device-item .device-actions .delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 6px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+        .device-item .device-actions .delete-btn:hover {
+            color: var(--red);
+            background: rgba(231, 76, 60, 0.08);
+        }
+        .device-item .device-actions .delete-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dark-mode .device-item .device-actions .delete-btn:hover {
+            background: rgba(231, 76, 60, 0.15);
+        }
+
+        .device-item.current-device {
+            border-color: var(--green);
+            background: var(--green-bg);
+        }
+        .dark-mode .device-item.current-device {
+            background: rgba(46, 204, 113, 0.06);
+            border-color: #2ecc71;
+        }
+        .device-item.current-device .device-name::after {
+            content: ' (Current)';
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--green);
+            margin-left: 6px;
+        }
+
+        /* ─── Divider ─── */
+        .device-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 0;
+            transition: background var(--transition);
+        }
+
+        /* ─── Empty State ─── */
+        .device-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .device-empty .empty-icon {
+            font-size: 48px;
+            opacity: 0.3;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .device-empty h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .device-empty p {
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+
+        /* ─── Loading ─── */
+        .device-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            gap: 12px;
+        }
+        .device-loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .device-loading p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .device-card {
+                padding: 16px 18px;
+            }
+            .device-card .card-title {
+                font-size: 17px;
+            }
+            .device-item {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .device-item .device-info {
+                width: 100%;
+            }
+            .device-item .device-actions {
+                margin-left: auto;
+            }
+            .device-item .device-details .device-name {
+                font-size: 14px;
+            }
+            .device-item .device-details .device-meta {
+                font-size: 11px;
+            }
+            .device-item .device-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 16px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="device-wrapper">
+
+                <!-- ===== DEVICE CARD ===== -->
+                <div class="device-card" id="deviceCard">
+                    <div class="card-title">
+                        <i class="fa-regular fa-laptop"></i> Active Devices
+                    </div>
+                    <div class="card-subtitle">Manage devices where you're signed in</div>
+
+                    <!-- Loading state -->
+                    <div id="deviceLoadingState" class="device-loading">
+                        <div class="spinner"></div>
+                        <p>Loading your devices…</p>
+                    </div>
+
+                    <!-- Content (hidden until loaded) -->
+                    <div id="deviceContent" style="display:none;">
+
+                        <div class="device-list" id="deviceList">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <!-- Actions (optional) -->
+                        <div style="margin-top: 16px; display:flex; justify-content:flex-end;">
+                            <button class="btn-cancel" id="refreshBtn" style="background:var(--bg-input); border:none; padding:8px 20px; border-radius:30px; font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all 0.2s;">
+                                <i class="fa-regular fa-rotate"></i> Refresh
+                            </button>
+                        </div>
+
+                    </div><!-- /deviceContent -->
+                </div><!-- /device-card -->
+
+            </div><!-- /device-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Devices • dummy data for preview
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const loadingState = document.getElementById('deviceLoadingState');
+            const content = document.getElementById('deviceContent');
+            const deviceList = document.getElementById('deviceList');
+            const refreshBtn = document.getElementById('refreshBtn');
+
+            // ─── Dummy data (simulate endpoint) ──────────────────────
+            // You can change this to test different scenarios
+            const DUMMY_DEVICES = {
+                devices: [{
+                    id: 1,
+                    device_name: 'MacBook Pro (16")',
+                    browser: 'Chrome 122',
+                    os: 'macOS 14.4',
+                    ip: '192.168.1.100',
+                    last_active: '2026-07-25T14:30:00Z', // ISO string
+                    is_current: true,
+                }, {
+                    id: 2,
+                    device_name: 'iPhone 15 Pro',
+                    browser: 'Safari 17',
+                    os: 'iOS 17.5',
+                    ip: '192.168.1.102',
+                    last_active: '2026-07-24T09:15:00Z',
+                    is_current: false,
+                }, {
+                    id: 3,
+                    device_name: 'Windows PC (Dell XPS)',
+                    browser: 'Firefox 126',
+                    os: 'Windows 11',
+                    ip: '192.168.1.105',
+                    last_active: '2026-07-22T20:45:00Z',
+                    is_current: false,
+                }, {
+                    id: 4,
+                    device_name: 'Samsung Galaxy S24',
+                    browser: 'Chrome 121',
+                    os: 'Android 14',
+                    ip: '192.168.1.108',
+                    last_active: '2026-07-20T11:30:00Z',
+                    is_current: false,
+                }]
+            };
+
+            // ─── Helper: format last active time ─────────────────────
+            function formatLastActive(isoString) {
+                const date = new Date(isoString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMin = Math.floor(diffMs / 60000);
+                const diffHour = Math.floor(diffMs / 3600000);
+                const diffDay = Math.floor(diffMs / 86400000);
+
+                if (diffMin < 1) return 'Just now';
+                if (diffMin < 60) return `${diffMin} min ago`;
+                if (diffHour < 24) return `${diffHour} hour${diffHour > 1 ? 's' : ''} ago`;
+                if (diffDay < 7) return `${diffDay} day${diffDay > 1 ? 's' : ''} ago`;
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            // ─── Fetch devices (simulated) ────────────────────────────
+            function fetchDevices() {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        // For demo, you can randomize or mutate
+                        resolve(DUMMY_DEVICES);
+                    }, 700);
+                });
+            }
+
+            // ─── Render device list ────────────────────────────────────
+            function renderDevices(data) {
+                const devices = data.devices || [];
+
+                loadingState.style.display = 'none';
+                content.style.display = 'block';
+
+                if (devices.length === 0) {
+                    deviceList.innerHTML = `
+                            <div class="device-empty">
+                                <span class="empty-icon"><i class="fa-regular fa-laptop"></i></span>
+                                <h4>No active devices</h4>
+                                <p>You're not signed in on any other devices.</p>
+                            </div>
+                        `;
+                    return;
+                }
+
+                let html = '';
+                devices.forEach((device, index) => {
+                    const isCurrent = device.is_current || false;
+                    const icon = device.os && device.os.toLowerCase().includes('mac') ? 'fa-apple' :
+                        device.os && device.os.toLowerCase().includes('windows') ? 'fa-windows' :
+                        device.os && device.os.toLowerCase().includes('android') ? 'fa-android' :
+                        device.os && device.os.toLowerCase().includes('ios') ? 'fa-apple' :
+                        'fa-laptop';
+
+                    const lastActiveFormatted = formatLastActive(device.last_active);
+                    const deviceClass = isCurrent ? 'device-item current-device' : 'device-item';
+
+                    html += `
+                            <div class="${deviceClass}" data-id="${device.id}">
+                                <div class="device-info">
+                                    <div class="device-icon"><i class="fa-brands ${icon}"></i></div>
+                                    <div class="device-details">
+                                        <div class="device-name">${device.device_name}</div>
+                                        <div class="device-meta">
+                                            <span>${device.browser}</span>
+                                            <span class="separator">•</span>
+                                            <span>${device.os}</span>
+                                            <span class="separator">•</span>
+                                            <span class="last-active"><i class="fa-regular fa-clock"></i> ${lastActiveFormatted}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="device-actions">
+                                    ${!isCurrent ? `
+                                        <button class="delete-btn" data-id="${device.id}" title="Remove this device" aria-label="Remove device">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </button>
+                                    ` : `
+                                        <span style="font-size:12px; color:var(--text-muted); font-weight:500;">Current</span>
+                                    `}
+                                </div>
+                            </div>
+                        `;
+
+                    // Add divider between items (except last)
+                    if (index < devices.length - 1) {
+                        html += `<div class="device-divider"></div>`;
+                    }
+                });
+
+                deviceList.innerHTML = html;
+
+                // ─── Attach delete event listeners ──────────────────────
+                deviceList.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        const device = devices.find(d => d.id === id);
+                        if (device) {
+                            removeDevice(device);
+                        }
+                    });
+                });
+            }
+
+            // ─── Remove device ──────────────────────────────────────────
+            function removeDevice(device) {
+                // Confirm before removing
+                const doRemove = () => {
+                    // Simulate API call
+                    const removeBtn = document.querySelector(`.delete-btn[data-id="${device.id}"]`);
+                    if (removeBtn) {
+                        removeBtn.disabled = true;
+                        removeBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                    }
+
+                    setTimeout(() => {
+                        // Remove from dummy data
+                        const index = DUMMY_DEVICES.devices.findIndex(d => d.id === device.id);
+                        if (index !== -1) {
+                            DUMMY_DEVICES.devices.splice(index, 1);
+                        }
+                        // Re-render
+                        renderDevices(DUMMY_DEVICES);
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.success(`"${device.device_name}" removed.`, { duration: 2000 });
+                        } else {
+                            alert(`"${device.device_name}" removed.`);
+                        }
+                    }, 800);
+                };
+
+                if (typeof Modal !== 'undefined') {
+                    const modal = new Modal({
+                        title: 'Remove Device',
+                        body: `
+                                <p>Are you sure you want to remove <strong>${device.device_name}</strong>?</p>
+                                <p style="color:var(--text-muted); font-size:13px;">You will be signed out on this device.</p>
+                            `,
+                        type: 'danger',
+                        confirmText: 'Remove',
+                        cancelText: 'Cancel',
+                        onConfirm: doRemove
+                    });
+                    modal.open();
+                } else {
+                    if (confirm(`Remove "${device.device_name}"? You will be signed out on this device.`)) {
+                        doRemove();
+                    }
+                }
+            }
+
+            // ─── Refresh ────────────────────────────────────────────────
+            function refreshDevices() {
+                loadingState.style.display = 'flex';
+                content.style.display = 'none';
+                fetchDevices().then(data => {
+                    renderDevices(data);
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.info('Devices refreshed.', { duration: 1500 });
+                    }
+                }).catch(err => {
+                    loadingState.innerHTML = `
+                            <p style="color:var(--red);">❌ Failed to load devices. Please refresh.</p>
+                        `;
+                    console.error('Error fetching devices:', err);
+                });
+            }
+
+            // ─── Init ──────────────────────────────────────────────────
+            function init() {
+                fetchDevices().then(data => {
+                    renderDevices(data);
+                }).catch(err => {
+                    loadingState.innerHTML = `
+                            <p style="color:var(--red);">❌ Failed to load devices. Please refresh.</p>
+                        `;
+                    console.error('Error fetching devices:', err);
+                });
+
+                refreshBtn.addEventListener('click', refreshDevices);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                setTimeout(init, 200);
+            }
+
+        })();
+    </script>
+
+</body>
+</html>
