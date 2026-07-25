@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Terms & Privacy</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        .legal-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .legal-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 24px 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .legal-card .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition);
+        }
+        .legal-card .card-title i {
+            color: var(--green);
+            font-size: 22px;
+        }
+        .legal-card .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Tabs ─── */
+        .legal-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 4px;
+            background: var(--bg-input);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .legal-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .legal-tabs .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+        .legal-tabs .tab-btn i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+        .legal-tabs .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .legal-tabs .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--green);
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.15);
+            transform: scale(1.02);
+        }
+        .legal-tabs .tab-btn.active i {
+            transform: scale(1.1);
+        }
+        .dark-mode .legal-tabs {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .legal-tabs .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .dark-mode .legal-tabs .tab-btn.active {
+            background: var(--bg-card);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width: 480px) {
+            .legal-tabs .tab-btn {
+                font-size: 12px;
+                padding: 8px 12px;
+                gap: 5px;
+            }
+            .legal-tabs .tab-btn i {
+                font-size: 14px;
+            }
+        }
+
+        /* ─── Content ─── */
+        .legal-content {
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+        .legal-content.active {
+            display: block;
+        }
+
+        .legal-content h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 20px 0 10px;
+            transition: color var(--transition);
+        }
+        .legal-content h2:first-of-type {
+            margin-top: 0;
+        }
+        .legal-content h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 16px 0 6px;
+            transition: color var(--transition);
+        }
+        .legal-content p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            transition: color var(--transition);
+        }
+        .legal-content ul {
+            padding-left: 24px;
+            margin-bottom: 12px;
+        }
+        .legal-content ul li {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .legal-content .last-updated {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            transition: color var(--transition), border-color var(--transition);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .legal-card {
+                padding: 16px 18px;
+            }
+            .legal-card .card-title {
+                font-size: 17px;
+            }
+            .legal-content h2 {
+                font-size: 16px;
+            }
+            .legal-content h3 {
+                font-size: 14px;
+            }
+            .legal-content p,
+            .legal-content ul li {
+                font-size: 13px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="legal-wrapper">
+
+                <!-- ===== LEGAL CARD ===== -->
+                <div class="legal-card">
+                    <div class="card-title">
+                        <i class="fa-regular fa-gavel"></i> Terms &amp; Privacy
+                    </div>
+                    <div class="card-subtitle">Please read our terms of service and privacy policy carefully.</div>
+
+                    <!-- Tabs -->
+                    <div class="legal-tabs" id="legalTabs">
+                        <button class="tab-btn active" data-tab="terms">
+                            <i class="fa-regular fa-file-contract"></i> Terms &amp; Conditions
+                        </button>
+                        <button class="tab-btn" data-tab="privacy">
+                            <i class="fa-regular fa-shield-halved"></i> Privacy Policy
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="legal-content active" id="tabTerms">
+                        <h2>Terms and Conditions</h2>
+                        <p><strong>Effective Date:</strong> July 25, 2026</p>
+                        <p>Welcome to CampusHub. By using our platform, you agree to comply with and be bound by the following terms and conditions. Please read them carefully.</p>
+
+                        <h3>1. Acceptance of Terms</h3>
+                        <p>By creating an account or using CampusHub, you agree to these Terms and Conditions. If you do not agree, please do not use our services.</p>
+
+                        <h3>2. User Accounts</h3>
+                        <ul>
+                            <li>You must be a registered student at a recognized institution to create an account.</li>
+                            <li>You are responsible for maintaining the confidentiality of your login credentials.</li>
+                            <li>You must provide accurate and complete information when registering.</li>
+                        </ul>
+
+                        <h3>3. Listings and Transactions</h3>
+                        <ul>
+                            <li>All listings must be honest, accurate, and comply with applicable laws.</li>
+                            <li>Prohibited items include but are not limited to: illegal goods, weapons, counterfeit products, and stolen property.</li>
+                            <li>Transactions are between buyers and sellers. CampusHub is not responsible for the quality, safety, or legality of items listed.</li>
+                        </ul>
+
+                        <h3>4. User Conduct</h3>
+                        <ul>
+                            <li>Do not harass, threaten, or defraud other users.</li>
+                            <li>Do not post offensive, discriminatory, or harmful content.</li>
+                            <li>Respect the privacy and intellectual property of others.</li>
+                        </ul>
+
+                        <h3>5. Intellectual Property</h3>
+                        <p>All content on CampusHub, including text, graphics, logos, and software, is the property of CampusHub or its licensors. You may not reproduce, distribute, or create derivative works without permission.</p>
+
+                        <h3>6. Limitation of Liability</h3>
+                        <p>CampusHub is provided "as is" and "as available." We do not warrant that the platform will be error-free or uninterrupted. To the fullest extent permitted by law, CampusHub disclaims all liability for any damages arising from your use of the platform.</p>
+
+                        <h3>7. Termination</h3>
+                        <p>We reserve the right to suspend or terminate your account at our sole discretion, without notice, for violations of these Terms or for any other reason.</p>
+
+                        <h3>8. Changes to Terms</h3>
+                        <p>We may update these Terms from time to time. Your continued use of CampusHub constitutes acceptance of the updated Terms.</p>
+
+                        <div class="last-updated">Last updated: July 25, 2026</div>
+                    </div>
+
+                    <div class="legal-content" id="tabPrivacy">
+                        <h2>Privacy Policy</h2>
+                        <p><strong>Effective Date:</strong> July 25, 2026</p>
+                        <p>At CampusHub, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information.</p>
+
+                        <h3>1. Information We Collect</h3>
+                        <ul>
+                            <li><strong>Account Information:</strong> Name, email address, student ID, phone number, and profile photo.</li>
+                            <li><strong>Usage Data:</strong> Browsing history, listings viewed, searches, and interactions with other users.</li>
+                            <li><strong>Device Information:</strong> IP address, browser type, operating system, and device identifiers.</li>
+                            <li><strong>Location Data:</strong> Approximate location (e.g., campus) based on your IP or provided information.</li>
+                        </ul>
+
+                        <h3>2. How We Use Your Information</h3>
+                        <ul>
+                            <li>To provide, maintain, and improve our services.</li>
+                            <li>To facilitate transactions and communications between buyers and sellers.</li>
+                            <li>To personalize your experience and show relevant listings.</li>
+                            <li>To send notifications, updates, and promotional content (with your consent).</li>
+                            <li>To monitor and ensure the safety and security of our platform.</li>
+                        </ul>
+
+                        <h3>3. Data Sharing and Disclosure</h3>
+                        <ul>
+                            <li>We do not sell your personal data to third parties.</li>
+                            <li>We may share data with service providers who assist us in operating the platform (e.g., hosting, payment processing).</li>
+                            <li>We may disclose information if required by law or to protect the rights, property, or safety of CampusHub and its users.</li>
+                        </ul>
+
+                        <h3>4. Data Security</h3>
+                        <p>We implement industry-standard security measures to protect your data from unauthorized access, alteration, or destruction. However, no method of transmission over the internet is 100% secure.</p>
+
+                        <h3>5. Your Rights</h3>
+                        <ul>
+                            <li>You may access, update, or delete your account information at any time.</li>
+                            <li>You can opt out of marketing communications by adjusting your settings or contacting us.</li>
+                            <li>You have the right to request a copy of the data we hold about you.</li>
+                        </ul>
+
+                        <h3>6. Cookies</h3>
+                        <p>We use cookies to enhance your experience, analyze traffic, and remember your preferences. You can manage cookie settings in your browser.</p>
+
+                        <h3>7. Children's Privacy</h3>
+                        <p>CampusHub is intended for university students aged 16 and above. We do not knowingly collect information from children under 16.</p>
+
+                        <h3>8. Changes to This Policy</h3>
+                        <p>We may update this Privacy Policy periodically. We will notify you of any significant changes via email or through the platform.</p>
+
+                        <h3>9. Contact Us</h3>
+                        <p>If you have any questions about these Terms or Privacy Policy, please contact us at <strong>support@campushub.ng</strong>.</p>
+
+                        <div class="last-updated">Last updated: July 25, 2026</div>
+                    </div>
+
+                </div><!-- /legal-card -->
+
+            </div><!-- /legal-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Terms &amp; Privacy • dummy data for preview
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── Tab switching ──────────────────────────────────────────
+            const tabs = document.querySelectorAll('.legal-tabs .tab-btn');
+            const contents = {
+                terms: document.getElementById('tabTerms'),
+                privacy: document.getElementById('tabPrivacy'),
+            };
+
+            tabs.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tab = this.dataset.tab;
+
+                    // Update button states
+                    tabs.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Update content visibility
+                    Object.keys(contents).forEach(key => {
+                        contents[key].classList.toggle('active', key === tab);
+                    });
+                });
+            });
+
+            // ─── Keyboard shortcut: 1 for T&C, 2 for Privacy ──────────
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '1' && !e.ctrlKey && !e.metaKey && !e.target.closest('input, textarea, button, select')) {
+                    e.preventDefault();
+                    const btn = document.querySelector('.legal-tabs .tab-btn[data-tab="terms"]');
+                    if (btn) btn.click();
+                }
+                if (e.key === '2' && !e.ctrlKey && !e.metaKey && !e.target.closest('input, textarea, button, select')) {
+                    e.preventDefault();
+                    const btn = document.querySelector('.legal-tabs .tab-btn[data-tab="privacy"]');
+                    if (btn) btn.click();
+                }
+            });
+
+            // ─── Init ──────────────────────────────────────────────────
+            console.log('📜 Terms & Privacy page loaded');
+            console.log('💡 Keyboard shortcuts: 1 = T&C, 2 = Privacy');
+
+        })();
+    </script>
+
+</body>
+</html>
