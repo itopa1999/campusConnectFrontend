@@ -1,1 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Profile Visibility</title>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        .visibility-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .vis-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 24px 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .vis-card .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition);
+        }
+        .vis-card .card-title i {
+            color: var(--green);
+            font-size: 22px;
+        }
+        .vis-card .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Current Status Display ─── */
+        .vis-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: var(--bg-input);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: background var(--transition);
+        }
+        .vis-status .status-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+        .vis-status .status-value {
+            font-size: 14px;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 30px;
+            text-transform: capitalize;
+        }
+        .vis-status .status-value.public {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .vis-status .status-value.private {
+            background: #fde8e8;
+            color: var(--red);
+        }
+        .dark-mode .vis-status .status-value.public {
+            background: #1a3a2a;
+            color: #2ecc71;
+        }
+        .dark-mode .vis-status .status-value.private {
+            background: #3a1a1a;
+            color: #e74c3c;
+        }
+
+        /* ─── Toggle Switch ─── */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 12px 0;
+        }
+        .toggle-container .toggle-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+        .toggle-container .toggle-label small {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+
+        /* Custom Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-switch .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border-color);
+            border-radius: 34px;
+            transition: background 0.3s ease;
+            border: 2px solid var(--border-color);
+        }
+        .toggle-switch .slider::before {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+        .toggle-switch input:checked + .slider {
+            background: var(--green);
+            border-color: var(--green);
+        }
+        .toggle-switch input:checked + .slider::before {
+            transform: translateX(24px);
+        }
+        .toggle-switch input:disabled + .slider {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .dark-mode .toggle-switch .slider {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .toggle-switch .slider::before {
+            background: var(--bg-card);
+        }
+        .dark-mode .toggle-switch input:checked + .slider {
+            background: #2ecc71;
+            border-color: #2ecc71;
+        }
+
+        /* ─── Warning Banner ─── */
+        .warning-banner {
+            display: none;
+            padding: 14px 18px;
+            background: #fef3e8;
+            border-radius: 12px;
+            border-left: 4px solid #e67e22;
+            margin: 16px 0 8px;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .warning-banner.visible {
+            display: block;
+        }
+        .warning-banner .warning-icon {
+            color: #e67e22;
+            font-size: 18px;
+            margin-right: 8px;
+        }
+        .warning-banner p {
+            font-size: 13px;
+            color: #8a6d3b;
+            margin: 0;
+            line-height: 1.5;
+        }
+        .warning-banner p strong {
+            color: #a94442;
+        }
+        .dark-mode .warning-banner {
+            background: #3a2a1a;
+            border-left-color: #f39c12;
+        }
+        .dark-mode .warning-banner p {
+            color: #f0d5b0;
+        }
+        .dark-mode .warning-banner p strong {
+            color: #ff6b6b;
+        }
+
+        /* ─── Action Buttons ─── */
+        .vis-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .vis-actions button {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+        .vis-actions .btn-save {
+            background: var(--green);
+            color: #ffffff;
+        }
+        .vis-actions .btn-save:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .vis-actions .btn-save:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .vis-actions .btn-cancel {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .vis-actions .btn-cancel:hover {
+            background: var(--border-color);
+        }
+
+        /* ─── Loading ─── */
+        .vis-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            gap: 12px;
+        }
+        .vis-loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .vis-loading p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .vis-card {
+                padding: 16px 18px;
+            }
+            .vis-card .card-title {
+                font-size: 17px;
+            }
+            .vis-status {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .toggle-container {
+                flex-wrap: wrap;
+            }
+            .vis-actions button {
+                min-width: 100px;
+                font-size: 13px;
+                padding: 10px 0;
+            }
+            .warning-banner p {
+                font-size: 12px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="visibility-wrapper">
+
+                <!-- ===== VISIBILITY CARD ===== -->
+                <div class="vis-card" id="visCard">
+                    <div class="card-title">
+                        <i class="fa-regular fa-eye"></i> Profile Visibility
+                    </div>
+                    <div class="card-subtitle">Control who can see your profile and listings</div>
+
+                    <!-- Loading state -->
+                    <div id="visLoadingState" class="vis-loading">
+                        <div class="spinner"></div>
+                        <p>Loading visibility settings…</p>
+                    </div>
+
+                    <!-- Content (hidden until loaded) -->
+                    <div id="visContent" style="display:none;">
+
+                        <!-- Current Status -->
+                        <div class="vis-status">
+                            <span class="status-label">Current visibility:</span>
+                            <span class="status-value" id="currentStatusValue">public</span>
+                        </div>
+
+                        <!-- Toggle -->
+                        <div class="toggle-container">
+                            <div class="toggle-label">
+                                <span id="toggleLabelText">Public</span>
+                                <small id="toggleSubtext">Visible to all students</small>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="visibilityToggle" />
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Warning Banner -->
+                        <div class="warning-banner" id="warningBanner">
+                            <p>
+                                <i class="fa-regular fa-triangle-exclamation warning-icon"></i>
+                                <strong>⚠️ Warning:</strong> Setting your profile to <strong>Private</strong> will hide your profile and listings from other students.
+                                This may reduce trust and discourage buyers from purchasing your items.
+                                Only switch to private if you have a strong reason.
+                            </p>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="vis-actions">
+                            <button class="btn-save" id="saveBtn" disabled>
+                                <i class="fa-regular fa-floppy-disk"></i> Save Changes
+                            </button>
+                            <button class="btn-cancel" id="cancelBtn">Cancel</button>
+                        </div>
+
+                    </div><!-- /visContent -->
+                </div><!-- /vis-card -->
+
+            </div><!-- /visibility-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Profile Visibility • dummy data for preview
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const loadingState = document.getElementById('visLoadingState');
+            const content = document.getElementById('visContent');
+            const currentStatusValue = document.getElementById('currentStatusValue');
+            const toggle = document.getElementById('visibilityToggle');
+            const toggleLabelText = document.getElementById('toggleLabelText');
+            const toggleSubtext = document.getElementById('toggleSubtext');
+            const warningBanner = document.getElementById('warningBanner');
+            const saveBtn = document.getElementById('saveBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+
+            // ─── Dummy data (simulate endpoint) ──────────────────────
+            // You can change this to test different initial statuses: 'public' or 'private'
+            const DUMMY_VISIBILITY = {
+                status: 'public', // 'public' | 'private'
+                message: 'Your profile is currently visible to all students.'
+            };
+
+            // ─── Fetch visibility status (simulated) ──────────────────
+            function fetchVisibility() {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        // For demo, you can randomize:
+                        // const statuses = ['public', 'private'];
+                        // DUMMY_VISIBILITY.status = statuses[Math.floor(Math.random() * statuses.length)];
+                        resolve(DUMMY_VISIBILITY);
+                    }, 600);
+                });
+            }
+
+            // ─── Update UI based on status ─────────────────────────────
+            function renderVisibility(data) {
+                const status = data.status || 'public';
+
+                // Hide loading, show content
+                loadingState.style.display = 'none';
+                content.style.display = 'block';
+
+                // Update status badge
+                currentStatusValue.textContent = status;
+                currentStatusValue.className = 'status-value ' + status;
+
+                // Update toggle
+                const isPublic = status === 'public';
+                toggle.checked = isPublic;
+                updateToggleUI(isPublic);
+
+                // Warning banner: show only if toggling to private (i.e., when unchecked)
+                // We'll manage via change event
+                warningBanner.classList.remove('visible');
+
+                // Enable save only if changed (initially disabled)
+                saveBtn.disabled = true;
+            }
+
+            // ─── Update toggle label and subtext ──────────────────────
+            function updateToggleUI(isPublic) {
+                if (isPublic) {
+                    toggleLabelText.textContent = 'Public';
+                    toggleSubtext.textContent = 'Visible to all students';
+                } else {
+                    toggleLabelText.textContent = 'Private';
+                    toggleSubtext.textContent = 'Hidden from other students';
+                }
+            }
+
+            // ─── Save visibility change ────────────────────────────────
+            function saveVisibility(newStatus) {
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+
+                // Simulate API call
+                setTimeout(() => {
+                    // Update dummy data
+                    DUMMY_VISIBILITY.status = newStatus;
+                    // Re-render with new status
+                    renderVisibility(DUMMY_VISIBILITY);
+                    saveBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Changes';
+                    saveBtn.disabled = true;
+
+                    // Show success
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.success(`Profile visibility updated to ${newStatus}!`, { duration: 3000 });
+                    } else {
+                        alert(`Profile visibility updated to ${newStatus}!`);
+                    }
+
+                    // Reset warning banner
+                    warningBanner.classList.remove('visible');
+                }, 1200);
+            }
+
+            // ─── Cancel / reset ─────────────────────────────────────────
+            function cancelChanges() {
+                // Re-fetch current status and reset UI
+                fetchVisibility().then(data => {
+                    renderVisibility(data);
+                    // Reset warning
+                    warningBanner.classList.remove('visible');
+                    saveBtn.disabled = true;
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.info('Changes discarded.', { duration: 1500 });
+                    }
+                });
+            }
+
+            // ─── Init ──────────────────────────────────────────────────
+            function init() {
+                fetchVisibility().then(data => {
+                    renderVisibility(data);
+                }).catch(err => {
+                    loadingState.innerHTML = `
+                            <p style="color:var(--red);">❌ Failed to load visibility settings. Please refresh.</p>
+                        `;
+                    console.error('Error fetching visibility:', err);
+                });
+
+                // ─── Toggle change ──────────────────────────────────────
+                toggle.addEventListener('change', function() {
+                    const isChecked = this.checked;
+                    updateToggleUI(isChecked);
+
+                    // Show warning if switching to private
+                    if (!isChecked) {
+                        warningBanner.classList.add('visible');
+                    } else {
+                        warningBanner.classList.remove('visible');
+                    }
+
+                    // Enable save button (since we have a change)
+                    saveBtn.disabled = false;
+                });
+
+                // ─── Save ───────────────────────────────────────────────
+                saveBtn.addEventListener('click', function() {
+                    const newStatus = toggle.checked ? 'public' : 'private';
+                    // Warn again if switching to private (optional)
+                    if (newStatus === 'private') {
+                        // Additional confirmation via modal if available
+                        const doSave = () => {
+                            saveVisibility(newStatus);
+                        };
+                        // If Modal is available, use it
+                        if (typeof Modal !== 'undefined') {
+                            const modal = new Modal({
+                                title: 'Confirm Private Profile',
+                                body: `
+                                        <p><strong>⚠️ Important:</strong> Setting your profile to <strong>Private</strong> will hide your profile and listings from other students.</p>
+                                        <p style="color:var(--text-muted); font-size:13px;">This may reduce trust and discourage buyers from purchasing your items.</p>
+                                        <p style="color:var(--text-muted); font-size:13px;">Are you sure you want to continue?</p>
+                                    `,
+                                type: 'warning',
+                                confirmText: 'Yes, make it Private',
+                                cancelText: 'Cancel',
+                                onConfirm: doSave
+                            });
+                            modal.open();
+                            return;
+                        } else {
+                            // Fallback to confirm
+                            if (confirm('⚠️ Setting your profile to Private will hide your listings. Are you sure?')) {
+                                doSave();
+                            }
+                        }
+                    } else {
+                        // Switching to public: save directly
+                        saveVisibility(newStatus);
+                    }
+                });
+
+                // ─── Cancel ──────────────────────────────────────────────
+                cancelBtn.addEventListener('click', cancelChanges);
+            }
+
+            // Wait for DOM ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                setTimeout(init, 200);
+            }
+
+        })();
+    </script>
+
+</body>
+</html>
