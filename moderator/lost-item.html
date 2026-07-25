@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Lost & Found</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Page-Specific Styles -->
+    <style>
+        /* ============================================================
+           LOST ITEMS PAGE SPECIFIC STYLES
+           ============================================================ */
+
+        /* ─── Page Header ─── */
+        .lost-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+        }
+        .lost-header .lost-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .lost-header .lost-title h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color var(--transition);
+            letter-spacing: -0.3px;
+        }
+        .lost-header .lost-title .lost-icon {
+            font-size: 22px;
+            color: #e67e22;
+            background: #fef3e8;
+            padding: 8px 10px;
+            border-radius: 14px;
+            transition: background var(--transition);
+        }
+        .dark-mode .lost-header .lost-title .lost-icon {
+            background: #3a2a1a;
+        }
+        .lost-header .lost-badge {
+            background: #e67e22;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background var(--transition);
+            cursor: default;
+        }
+        .lost-header .lost-badge i {
+            font-size: 14px;
+        }
+        .lost-header .lost-badge span {
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* ─── Search Bar ─── */
+        .lost-search-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .lost-search-wrap .search-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border-radius: 28px;
+            padding: 8px 18px;
+            gap: 10px;
+            border: 1px solid transparent;
+            transition: all var(--transition);
+            min-width: 180px;
+        }
+        .lost-search-wrap .search-box:focus-within {
+            border-color: var(--green);
+            background: var(--bg-card);
+            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.08);
+        }
+        .lost-search-wrap .search-box i {
+            color: var(--text-muted2);
+            transition: color var(--transition);
+        }
+        .lost-search-wrap .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+            padding: 6px 0;
+            width: 100%;
+            transition: color var(--transition);
+        }
+        .lost-search-wrap .search-box input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            transition: color var(--transition);
+        }
+        .lost-search-wrap .search-box .clear-lost-search {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 4px;
+            transition: color 0.2s;
+            display: none;
+        }
+        .lost-search-wrap .search-box .clear-lost-search.visible {
+            display: block;
+        }
+        .lost-search-wrap .search-box .clear-lost-search:hover {
+            color: var(--red);
+        }
+        .lost-search-wrap .result-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+            transition: color var(--transition);
+        }
+
+        /* ─── Lost Items Grid ─── */
+        .lost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+            transition: opacity 0.3s ease;
+        }
+        .lost-grid.loading {
+            opacity: 0.5;
+        }
+
+        .lost-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--border-card);
+            position: relative;
+        }
+        .lost-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card-hover);
+        }
+        .lost-card .lost-img-wrap {
+            position: relative;
+            background: var(--bg-img-placeholder);
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: background var(--transition), color var(--transition);
+        }
+        .lost-card .lost-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .lost-card .lost-img-wrap .placeholder-icon {
+            font-size: 48px;
+            color: var(--text-muted2);
+            transition: color var(--transition);
+        }
+        .lost-card .lost-img-wrap .status-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+        .lost-card .lost-img-wrap .status-badge.open {
+            background: #2ecc71;
+        }
+        .lost-card .lost-img-wrap .status-badge.closed {
+            background: #e74c3c;
+        }
+        .lost-card .lost-img-wrap .status-badge.pending {
+            background: #f39c12;
+        }
+        .lost-card .lost-img-wrap .claim-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 16px;
+            border-radius: 30px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .lost-card:hover .lost-img-wrap .claim-hint {
+            opacity: 1;
+        }
+        .lost-card .lost-img-wrap .claim-hint i {
+            font-size: 12px;
+        }
+
+        .lost-card .lost-info {
+            padding: 12px 14px 14px;
+        }
+        .lost-card .lost-info .item-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .lost-card .lost-info .item-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            margin-top: 2px;
+        }
+        .lost-card .lost-info .item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .lost-card .lost-info .item-meta .location-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .lost-card .lost-info .item-meta .location-tag i {
+            font-size: 11px;
+            color: var(--green);
+        }
+        .lost-card .lost-info .item-meta .date-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .lost-card .lost-info .item-meta .date-tag i {
+            font-size: 11px;
+            color: var(--text-muted2);
+        }
+        .lost-card .lost-info .item-meta .verification-hint {
+            font-size: 10px;
+            color: var(--text-muted2);
+            background: var(--bg-input);
+            padding: 1px 10px;
+            border-radius: 20px;
+            transition: background var(--transition), color var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .lost-card .lost-info .item-meta .verification-hint i {
+            font-size: 10px;
+            color: var(--green);
+        }
+        .dark-mode .lost-card .lost-info .item-meta .verification-hint {
+            background: var(--bg-input);
+            color: var(--text-muted2);
+        }
+
+        @media (max-width: 480px) {
+            .lost-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 12px;
+            }
+            .lost-card .lost-img-wrap {
+                height: 130px;
+            }
+            .lost-card .lost-img-wrap .placeholder-icon {
+                font-size: 36px;
+            }
+            .lost-card .lost-info .item-name {
+                font-size: 13px;
+            }
+            .lost-card .lost-info .item-desc {
+                font-size: 12px;
+                -webkit-line-clamp: 1;
+            }
+            .lost-card .lost-info .item-meta {
+                font-size: 11px;
+                gap: 4px 8px;
+            }
+            .lost-card .lost-img-wrap .claim-hint {
+                font-size: 10px;
+                padding: 2px 12px;
+            }
+            .lost-card .lost-img-wrap .claim-hint i {
+                font-size: 10px;
+            }
+        }
+        @media (min-width: 640px) {
+            .lost-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 20px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .lost-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 24px;
+            }
+            .lost-card .lost-img-wrap {
+                height: 180px;
+            }
+        }
+
+        /* ─── Pagination ─── */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 8px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        .pagination-controls button {
+            padding: 8px 20px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background: var(--green-bg);
+            border-color: var(--green);
+            color: var(--green);
+            transform: translateY(-2px);
+        }
+        .pagination-controls button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .pagination-controls .page-info {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            min-width: 80px;
+            text-align: center;
+            transition: color var(--transition);
+        }
+
+        /* ─── Empty State ─── */
+        .lost-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+        .lost-empty .empty-icon {
+            font-size: 64px;
+            opacity: 0.3;
+            margin-bottom: 16px;
+            display: block;
+            color: #e67e22;
+        }
+        .lost-empty h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .lost-empty p {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 380px;
+            margin: 0 auto;
+            transition: color var(--transition);
+        }
+
+        /* ─── Loading shimmer ─── */
+        .shimmer-lost {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            animation: shimmerPulse 1.5s ease-in-out infinite;
+        }
+        .shimmer-lost .shimmer-img {
+            height: 160px;
+            background: var(--bg-input);
+        }
+        .shimmer-lost .shimmer-info {
+            padding: 12px 14px 14px;
+        }
+        .shimmer-lost .shimmer-info .line {
+            height: 12px;
+            background: var(--bg-input);
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+        .shimmer-lost .shimmer-info .line.short {
+            width: 40%;
+        }
+        .shimmer-lost .shimmer-info .line.long {
+            width: 70%;
+        }
+        .shimmer-lost .shimmer-info .line:last-child {
+            margin-bottom: 0;
+        }
+        @keyframes shimmerPulse {
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ============================================================
+           VERIFICATION MODAL (custom, not using global Modal)
+           ============================================================ */
+        .verify-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .verify-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .verify-modal {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            max-width: 480px;
+            width: 100%;
+            padding: 0;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+            opacity: 0;
+            border: 1px solid var(--border-color);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .verify-overlay.active .verify-modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .verify-modal .modal-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .verify-modal .modal-header .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+        .verify-modal .modal-header .modal-title small {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+        .verify-modal .modal-header .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted2);
+            cursor: pointer;
+            padding: 0 4px;
+            transition: color 0.2s, transform 0.2s;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .verify-modal .modal-header .modal-close:hover {
+            color: var(--red);
+            transform: rotate(90deg);
+        }
+
+        .verify-modal .modal-body {
+            padding: 20px 24px 24px;
+        }
+        .verify-modal .modal-body .verify-item-info {
+            display: flex;
+            gap: 14px;
+            padding: 12px 14px;
+            background: var(--bg-input);
+            border-radius: 12px;
+            margin-bottom: 18px;
+            transition: background var(--transition);
+        }
+        .verify-modal .modal-body .verify-item-info .v-thumb {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            background: var(--bg-img-placeholder);
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--text-muted2);
+            transition: background var(--transition), color var(--transition);
+        }
+        .verify-modal .modal-body .verify-item-info .v-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .verify-modal .modal-body .verify-item-info .v-text .v-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+        .verify-modal .modal-body .verify-item-info .v-text .v-location {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 1px;
+            transition: color var(--transition);
+        }
+        .verify-modal .modal-body .verify-item-info .v-text .v-location i {
+            font-size: 11px;
+            color: var(--green);
+        }
+
+        .verify-modal .modal-body .verify-instructions {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            padding: 10px 14px;
+            background: var(--green-bg);
+            border-radius: 10px;
+            border-left: 3px solid var(--green);
+            transition: background var(--transition), color var(--transition);
+            line-height: 1.5;
+        }
+        .verify-modal .modal-body .verify-instructions i {
+            color: var(--green);
+            margin-right: 6px;
+        }
+        .dark-mode .verify-modal .modal-body .verify-instructions {
+            background: rgba(46, 204, 113, 0.06);
+            border-left-color: #2ecc71;
+        }
+
+        .verify-modal .modal-body .form-group {
+            margin-bottom: 16px;
+        }
+        .verify-modal .modal-body .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .verify-modal .modal-body .form-group label .q-number {
+            color: var(--green);
+            margin-right: 4px;
+        }
+        .verify-modal .modal-body .form-group .question-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+        .verify-modal .modal-body .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.25s ease;
+            outline: none;
+        }
+        .verify-modal .modal-body .form-group input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
+            background: var(--bg-card);
+        }
+        .verify-modal .modal-body .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .verify-modal .modal-footer {
+            padding: 16px 24px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .verify-modal .modal-footer button {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 100px;
+        }
+        .verify-modal .modal-footer .btn-cancel {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .verify-modal .modal-footer .btn-cancel:hover {
+            background: var(--border-color);
+        }
+        .verify-modal .modal-footer .btn-submit {
+            background: var(--green);
+            color: #ffffff;
+        }
+        .verify-modal .modal-footer .btn-submit:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .verify-modal .modal-footer .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ─── Success state inside modal ─── */
+        .verify-modal .modal-body .success-state {
+            display: none;
+            text-align: center;
+            padding: 24px 8px;
+        }
+        .verify-modal .modal-body .success-state.active {
+            display: block;
+        }
+        .verify-modal .modal-body .success-state .success-icon {
+            font-size: 56px;
+            color: var(--green);
+            margin-bottom: 12px;
+        }
+        .verify-modal .modal-body .success-state h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .verify-modal .modal-body .success-state p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 360px;
+            margin: 0 auto;
+            transition: color var(--transition);
+        }
+        .verify-modal .modal-body .success-state .success-details {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: var(--green-bg);
+            border-radius: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: background var(--transition), color var(--transition);
+        }
+        .verify-modal .modal-body .success-state .success-details i {
+            color: var(--green);
+            margin-right: 6px;
+        }
+
+        .verify-modal .modal-body .form-fields {
+            display: block;
+        }
+        .verify-modal .modal-body .form-fields.hidden {
+            display: none;
+        }
+
+        /* ─── Toast ─── */
+        .lost-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+        }
+        .lost-toast.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .lost-toast .toast-icon {
+            font-size: 20px;
+        }
+        .lost-toast .toast-icon.success {
+            color: var(--green);
+        }
+        .lost-toast .toast-icon.warning {
+            color: #e67e22;
+        }
+        .lost-toast .toast-icon.danger {
+            color: var(--red);
+        }
+        .dark-mode .lost-toast {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width: 480px) {
+            .lost-toast {
+                font-size: 13px;
+                padding: 10px 18px;
+                white-space: normal;
+                max-width: 90%;
+                bottom: 90px;
+            }
+            .verify-modal {
+                max-width: 100%;
+                margin: 10px;
+                border-radius: 16px;
+            }
+            .verify-modal .modal-header {
+                padding: 16px 18px 12px;
+            }
+            .verify-modal .modal-body {
+                padding: 16px 18px 18px;
+            }
+            .verify-modal .modal-footer {
+                padding: 12px 18px 18px;
+                flex-direction: column;
+            }
+            .verify-modal .modal-footer button {
+                flex: none;
+                width: 100%;
+            }
+            .verify-modal .modal-body .verify-item-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .verify-modal .modal-body .verify-item-info .v-thumb {
+                width: 64px;
+                height: 64px;
+                font-size: 32px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <!-- ===== HEADER ===== -->
+            <div class="lost-header" id="lostHeader">
+                <div class="lost-title">
+                    <span class="lost-icon"><i class="fa-regular fa-compass"></i></span>
+                    <h2>Lost & Found</h2>
+                </div>
+                <div class="lost-badge">
+                    <i class="fa-regular fa-circle-question"></i>
+                    <span id="lostCountDisplay">0</span> items
+                </div>
+            </div>
+
+            <!-- ===== SEARCH ===== -->
+            <div class="lost-search-wrap">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="lostSearchInput" placeholder="Search by item name, location…" />
+                    <button class="clear-lost-search" id="clearLostSearch" title="Clear search">&times;</button>
+                </div>
+                <span class="result-count" id="lostResultCount">0 results</span>
+            </div>
+
+            <!-- ===== GRID ===== -->
+            <div id="lostGrid" class="lost-grid">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- ===== PAGINATION ===== -->
+            <div class="pagination-controls" id="lostPagination">
+                <button id="lostPrev" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                <span class="page-info" id="lostPageInfo">Page 1</span>
+                <button id="lostNext">Next <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+        </main>
+
+        <!-- ===== VERIFICATION MODAL ===== -->
+        <div class="verify-overlay" id="verifyOverlay">
+            <div class="verify-modal" id="verifyModal">
+                <div class="modal-header">
+                    <div>
+                        <div class="modal-title" id="modalItemName">Verify Ownership</div>
+                        <small id="modalItemLocation"><i class="fa-solid fa-location-dot"></i> Campus</small>
+                    </div>
+                    <button class="modal-close" id="modalClose">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Item preview -->
+                    <div class="verify-item-info">
+                        <div class="v-thumb" id="modalThumb">
+                            <span>📦</span>
+                        </div>
+                        <div class="v-text">
+                            <div class="v-name" id="modalItemName2">Item Name</div>
+                            <div class="v-location"><i class="fa-solid fa-location-dot"></i> <span id="modalItemLocation2">Location</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="verify-instructions">
+                        <i class="fa-regular fa-circle-check"></i>
+                        Answer the verification questions below to claim this item. If your answers match, you'll be contacted via email or phone.
+                    </div>
+
+                    <!-- Form fields -->
+                    <div class="form-fields" id="formFields">
+                        <div class="form-group">
+                            <label><span class="q-number">Q1.</span> <span class="question-text" id="q1Text">Verification question 1</span></label>
+                            <input type="text" id="q1Input" placeholder="Type your answer…" autocomplete="off" />
+                        </div>
+                        <div class="form-group">
+                            <label><span class="q-number">Q2.</span> <span class="question-text" id="q2Text">Verification question 2</span></label>
+                            <input type="text" id="q2Input" placeholder="Type your answer…" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <!-- Success state -->
+                    <div class="success-state" id="successState">
+                        <div class="success-icon"><i class="fa-regular fa-circle-check"></i></div>
+                        <h4>Claim Submitted! 🎉</h4>
+                        <p>Your responses have been recorded. If they match the owner's verification details, you'll receive an <strong>email</strong> or <strong>phone call</strong> shortly.</p>
+                        <div class="success-details">
+                            <i class="fa-regular fa-envelope"></i> Check your registered email &amp; phone
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" id="modalCancel">Cancel</button>
+                    <button class="btn-submit" id="modalSubmit">
+                        <i class="fa-regular fa-paper-plane"></i> Submit Claim
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TOAST ===== -->
+        <div class="lost-toast" id="lostToast">
+            <span class="toast-icon" id="toastIcon"><i class="fa-regular fa-circle-check"></i></span>
+            <span id="toastMessage">Action completed</span>
+        </div>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Lost &amp; Found • click any item to verify &amp; claim
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/style.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // DUMMY DATA – Lost Items endpoint
+            // ============================================================
+            const dummyLostItems = {
+                request_id: "7a4cfd80-3ae9-4e44-8065-7bae86e78a09",
+                status_code: 200,
+                message: "Lost items retrieved successfully.",
+                is_success: true,
+                data: {
+                    items: [{
+                        id: 6,
+                        item_name: "Black Backpack",
+                        description: "Nike backpack with laptop compartment, found near the library",
+                        location: "Library, 2nd floor",
+                        date_found: "2026-07-22",
+                        status: "open",
+                        verification1: "What brand is the backpack?",
+                        verification2: "What color is the backpack?",
+                        image: null
+                    }, {
+                        id: 5,
+                        item_name: "Silver iPhone 14",
+                        description: "iPhone 14 in a clear case, found at the cafeteria",
+                        location: "Food Court / Cafeteria",
+                        date_found: "2026-07-22",
+                        status: "open",
+                        verification1: "What model is the phone?",
+                        verification2: "What color is the phone case?",
+                        image: null
+                    }, {
+                        id: 4,
+                        item_name: "Blue Umbrella",
+                        description: "Large blue umbrella with a wooden handle",
+                        location: "Main Gate entrance",
+                        date_found: "2026-07-22",
+                        status: "open",
+                        verification1: "What color is the umbrella?",
+                        verification2: "What material is the handle made of?",
+                        image: null
+                    }, {
+                        id: 2,
+                        item_name: "Textbook - Calculus",
+                        description: "Thomas' Calculus, 14th Edition, with highlighted notes",
+                        location: "Lecture Theatres Complex, Room 204",
+                        date_found: "2026-07-22",
+                        status: "open",
+                        verification1: "What is the title of the textbook?",
+                        verification2: "What edition is the textbook?",
+                        image: null
+                    }, {
+                        id: 1,
+                        item_name: "Phone",
+                        description: "neat phonej",
+                        location: "mokola",
+                        date_found: "2026-07-23",
+                        status: "open",
+                        verification1: "phone name and type",
+                        verification2: "Phone color",
+                        image: null
+                    }, {
+                        id: 7,
+                        item_name: "White Earpods",
+                        description: "Apple AirPods Pro in a white charging case",
+                        location: "Student Union Building, lounge area",
+                        date_found: "2026-07-20",
+                        status: "open",
+                        verification1: "What brand are the earpods?",
+                        verification2: "What color is the charging case?",
+                        image: null
+                    }, {
+                        id: 8,
+                        item_name: "Nike Sneakers",
+                        description: "Nike Air Max, size 42, white and black",
+                        location: "Sports Complex, changing room",
+                        date_found: "2026-07-19",
+                        status: "open",
+                        verification1: "What brand are the sneakers?",
+                        verification2: "What size are the sneakers?",
+                        image: null
+                    }, {
+                        id: 9,
+                        item_name: "Laptop Charger",
+                        description: "Dell laptop charger, 65W, with a frayed cable",
+                        location: "Computer Lab, Building A",
+                        date_found: "2026-07-18",
+                        status: "open",
+                        verification1: "What brand is the charger for?",
+                        verification2: "What wattage is the charger?",
+                        image: null
+                    }],
+                    pagination: {
+                        page: 1,
+                        per_page: 10,
+                        total_pages: 1,
+                        total_items: 8,
+                        has_next: false,
+                        has_previous: false
+                    }
+                }
+            };
+
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+            const grid = document.getElementById('lostGrid');
+            const searchInput = document.getElementById('lostSearchInput');
+            const clearSearch = document.getElementById('clearLostSearch');
+            const resultCount = document.getElementById('lostResultCount');
+            const lostCountDisplay = document.getElementById('lostCountDisplay');
+            const prevBtn = document.getElementById('lostPrev');
+            const nextBtn = document.getElementById('lostNext');
+            const pageInfo = document.getElementById('lostPageInfo');
+
+            // Modal refs
+            const overlay = document.getElementById('verifyOverlay');
+            const modal = document.getElementById('verifyModal');
+            const modalClose = document.getElementById('modalClose');
+            const modalCancel = document.getElementById('modalCancel');
+            const modalSubmit = document.getElementById('modalSubmit');
+            const modalItemName = document.getElementById('modalItemName');
+            const modalItemName2 = document.getElementById('modalItemName2');
+            const modalItemLocation = document.getElementById('modalItemLocation');
+            const modalItemLocation2 = document.getElementById('modalItemLocation2');
+            const modalThumb = document.getElementById('modalThumb');
+            const q1Text = document.getElementById('q1Text');
+            const q2Text = document.getElementById('q2Text');
+            const q1Input = document.getElementById('q1Input');
+            const q2Input = document.getElementById('q2Input');
+            const formFields = document.getElementById('formFields');
+            const successState = document.getElementById('successState');
+
+            // Toast
+            const toast = document.getElementById('lostToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            // ============================================================
+            // STATE
+            // ============================================================
+            let allItems = [...dummyLostItems.data.items];
+            let currentPage = 1;
+            const perPage = dummyLostItems.data.pagination.per_page || 10;
+            let searchQuery = '';
+            let filteredItems = [...allItems];
+            let currentClaimItem = null;
+            let toastTimer = null;
+
+            // ============================================================
+            // HELPERS
+            // ============================================================
+            function getStatusClass(status) {
+                const map = {
+                    'open': 'open',
+                    'closed': 'closed',
+                    'pending': 'pending'
+                };
+                return map[status] || 'open';
+            }
+
+            function getStatusLabel(status) {
+                const map = {
+                    'open': 'Open',
+                    'closed': 'Closed',
+                    'pending': 'Pending'
+                };
+                return map[status] || status || 'Open';
+            }
+
+            function getImageUrl(item) {
+                if (item.image) return item.image;
+                return `https://picsum.photos/seed/lost_${item.id}/400/300`;
+            }
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    const d = new Date(dateStr);
+                    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                } catch {
+                    return dateStr;
+                }
+            }
+
+            // ============================================================
+            // TOAST
+            // ============================================================
+            function showToast(message, type = 'success') {
+                toastMessage.textContent = message;
+                toastIcon.className = 'toast-icon';
+                if (type === 'success') toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
+                else if (type === 'warning') toastIcon.classList.add('warning', 'fa-regular', 'fa-triangle-exclamation');
+                else if (type === 'danger') toastIcon.classList.add('danger', 'fa-regular', 'fa-circle-xmark');
+                else toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
+
+                toast.classList.add('visible');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('visible');
+                }, 3000);
+            }
+
+            function hideToast() {
+                toast.classList.remove('visible');
+                clearTimeout(toastTimer);
+            }
+
+            // ============================================================
+            // RENDER
+            // ============================================================
+            function renderItems() {
+                const query = searchQuery.toLowerCase().trim();
+                let filtered = allItems;
+
+                if (query) {
+                    filtered = allItems.filter(item =>
+                        item.item_name.toLowerCase().includes(query) ||
+                        item.description.toLowerCase().includes(query) ||
+                        item.location.toLowerCase().includes(query) ||
+                        (item.status && item.status.toLowerCase().includes(query))
+                    );
+                }
+                filteredItems = filtered;
+
+                const total = filtered.length;
+                const totalPages = Math.ceil(total / perPage) || 1;
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+
+                const start = (currentPage - 1) * perPage;
+                const pageItems = filtered.slice(start, start + perPage);
+
+                lostCountDisplay.textContent = allItems.length;
+                resultCount.textContent = `${total} item${total !== 1 ? 's' : ''}`;
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+                prevBtn.disabled = currentPage <= 1;
+                nextBtn.disabled = currentPage >= totalPages;
+
+                if (pageItems.length === 0) {
+                    grid.innerHTML = `
+                            <div class="lost-empty">
+                                <span class="empty-icon"><i class="fa-regular fa-compass"></i></span>
+                                <h3>No lost items found</h3>
+                                <p>${query ? 'Try adjusting your search terms.' : 'If you\'ve lost something, check back later or post a lost item.'}</p>
+                            </div>
+                        `;
+                    return;
+                }
+
+                grid.innerHTML = pageItems.map(item => {
+                    const statusClass = getStatusClass(item.status);
+                    const statusLabel = getStatusLabel(item.status);
+                    const imgSrc = getImageUrl(item);
+                    const dateDisplay = formatDate(item.date_found);
+
+                    return `
+                            <div class="lost-card" data-id="${item.id}">
+                                <div class="lost-img-wrap">
+                                    <img src="${imgSrc}" alt="${item.item_name}" loading="lazy"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';this.nextElementSibling.textContent='📦';" />
+                                    <div class="placeholder-icon" style="display:none;">📦</div>
+                                    <span class="status-badge ${statusClass}">${statusLabel}</span>
+                                    <span class="claim-hint"><i class="fa-regular fa-circle-question"></i> Verify to claim</span>
+                                </div>
+                                <div class="lost-info">
+                                    <div class="item-name" title="${item.item_name}">${item.item_name}</div>
+                                    <div class="item-desc">${item.description}</div>
+                                    <div class="item-meta">
+                                        <span class="location-tag"><i class="fa-solid fa-location-dot"></i> ${item.location}</span>
+                                        ${dateDisplay ? `<span class="date-tag"><i class="fa-regular fa-calendar"></i> ${dateDisplay}</span>` : ''}
+                                        <span class="verification-hint"><i class="fa-regular fa-circle-check"></i> Verify</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                }).join('');
+
+                // ─── Click to open modal ───
+                grid.querySelectorAll('.lost-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        const item = allItems.find(i => i.id === id);
+                        if (item) {
+                            openVerificationModal(item);
+                        }
+                    });
+                });
+            }
+
+            // ============================================================
+            // VERIFICATION MODAL
+            // ============================================================
+            function openVerificationModal(item) {
+                currentClaimItem = item;
+
+                // Reset state
+                formFields.classList.remove('hidden');
+                successState.classList.remove('active');
+                q1Input.value = '';
+                q2Input.value = '';
+                modalSubmit.style.display = 'flex';
+                modalSubmit.disabled = false;
+                modalSubmit.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Claim';
+
+                // Populate item info
+                modalItemName.textContent = `Verify "${item.item_name}"`;
+                modalItemName2.textContent = item.item_name;
+                modalItemLocation.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${item.location}`;
+                modalItemLocation2.textContent = item.location;
+
+                // Thumbnail
+                const imgSrc = getImageUrl(item);
+                modalThumb.innerHTML = `<img src="${imgSrc}" alt="${item.item_name}" onerror="this.style.display='none';this.parentElement.textContent='📦';this.parentElement.style.fontSize='28px';" />`;
+
+                // Verification questions
+                q1Text.textContent = item.verification1 || 'Verification question 1';
+                q2Text.textContent = item.verification2 || 'Verification question 2';
+                q1Input.placeholder = `Type your answer for Q1…`;
+                q2Input.placeholder = `Type your answer for Q2…`;
+
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Focus first input after animation
+                setTimeout(() => q1Input.focus(), 400);
+            }
+
+            function closeVerificationModal() {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+                currentClaimItem = null;
+                // Reset success state after close
+                setTimeout(() => {
+                    formFields.classList.remove('hidden');
+                    successState.classList.remove('active');
+                    modalSubmit.style.display = 'flex';
+                    modalSubmit.disabled = false;
+                    modalSubmit.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Claim';
+                }, 350);
+            }
+
+            // ─── Submit claim ──────────────────────────────────────────
+            function submitClaim() {
+                const answer1 = q1Input.value.trim();
+                const answer2 = q2Input.value.trim();
+
+                if (!answer1 || !answer2) {
+                    showToast('Please answer both verification questions.', 'warning');
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.warning('Please answer both questions.', { duration: 2000 });
+                    }
+                    return;
+                }
+
+                // Simulate sending to backend
+                modalSubmit.disabled = true;
+                modalSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting…';
+
+                setTimeout(() => {
+                    // Hide form, show success
+                    formFields.classList.add('hidden');
+                    successState.classList.add('active');
+                    modalSubmit.style.display = 'none';
+
+                    showToast('Claim submitted! You\'ll be contacted soon.', 'success');
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.success('✅ Claim submitted! Check your email/phone.', { duration: 3000 });
+                    }
+
+                    // Log for demo
+                    console.log('📝 Claim submitted for:', currentClaimItem?.item_name);
+                    console.log('  Q1:', currentClaimItem?.verification1, '→', answer1);
+                    console.log('  Q2:', currentClaimItem?.verification2, '→', answer2);
+                    console.log('  📧 Email & 📞 Phone will be used to contact the claimant.');
+                }, 1500);
+            }
+
+            // ─── Modal event listeners ────────────────────────────────
+            modalClose.addEventListener('click', closeVerificationModal);
+            modalCancel.addEventListener('click', closeVerificationModal);
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) closeVerificationModal();
+            });
+            modalSubmit.addEventListener('click', submitClaim);
+
+            // Enter key on inputs triggers submit
+            q1Input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    q2Input.focus();
+                }
+            });
+            q2Input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitClaim();
+                }
+            });
+
+            // ESC to close
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                    closeVerificationModal();
+                }
+            });
+
+            // ============================================================
+            // SEARCH
+            // ============================================================
+            searchInput.addEventListener('input', function() {
+                searchQuery = this.value;
+                clearSearch.classList.toggle('visible', !!this.value);
+                currentPage = 1;
+                renderItems();
+            });
+
+            clearSearch.addEventListener('click', function() {
+                searchInput.value = '';
+                searchQuery = '';
+                this.classList.remove('visible');
+                currentPage = 1;
+                renderItems();
+            });
+
+            // ============================================================
+            // PAGINATION
+            // ============================================================
+            prevBtn.addEventListener('click', function() {
+                if (currentPage > 1) { currentPage--;
+                    renderItems(); }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                const totalPages = Math.ceil(filteredItems.length / perPage);
+                if (currentPage < totalPages) { currentPage++;
+                    renderItems(); }
+            });
+
+            // ============================================================
+            // KEYBOARD SHORTCUT: CMD+K / CTRL+K → focus search
+            // ============================================================
+            document.addEventListener('keydown', function(e) {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+                if (e.key === 'Escape') {
+                    if (document.activeElement === searchInput) {
+                        searchInput.blur();
+                        clearSearch.classList.remove('visible');
+                    }
+                }
+            });
+
+            // ============================================================
+            // INIT
+            // ============================================================
+            function init() {
+                renderItems();
+                console.log('🔍 Lost & Found page initialized with ' + allItems.length + ' items');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                setTimeout(init, 100);
+            }
+
+            // Expose for debugging
+            window.__lost = {
+                all: () => allItems,
+                render: renderItems,
+                openModal: openVerificationModal,
+                closeModal: closeVerificationModal
+            };
+
+        })();
+    </script>
+
+</body>
+</html>
