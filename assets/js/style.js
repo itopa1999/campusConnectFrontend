@@ -166,6 +166,7 @@
                 { icon: 'fa-regular fa-laptop', label: 'Device', id: 'device' },
                 { icon: 'fa-regular fa-shield-halved', label: 'Add 2FA', id: 'add-2fa' },
                 { icon: 'fa-regular fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },
+                { icon: 'fa-regular fa-flag', label: 'Help us Improve', id: 'help-improve' },
                 { icon: 'fa-regular fa-key', label: 'Change Password', id: 'change-password' },
                 { icon: 'fa-regular fa-right-from-bracket', label: 'Logout', id: 'logout' },
             ];
@@ -331,6 +332,7 @@
         'device': 'device.html',
         'add-2fa': '2fa.html',
         'report-issue': 'report.html',
+        'help-improve': 'help-improve.html',
         'change-password': 'change-password.html',
     };
 
