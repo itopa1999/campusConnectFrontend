@@ -1153,6 +1153,28 @@ body {
     }
 }
 
+.bottom-nav .nav-item {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bottom-nav .nav-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+    color: color: var(--green)
+}
+
+.bottom-nav .sell-btn:hover {
+    transform: scale(1.05);
+}
+
+.bottom-nav .nav-item.active {
+    color: var(--green)
+}
+.bottom-nav .nav-item.active:hover {
+    background: transparent;
+}
+
 
 /* ===== SCROLL TO TOP BUTTON ===== */
 .scroll-top-btn {

@@ -10,6 +10,7 @@ loginForm.addEventListener('submit', async (e) => {
   const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
   const rememberMe = document.getElementById('rememberCheck').checked;
+  const platform = 'web'
 
   if (!email || !password) {
     showToast('Please fill in all fields.', 'error');
@@ -33,9 +34,10 @@ loginForm.addEventListener('submit', async (e) => {
       method: 'POST',
       headers: {
         'accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Key-Id': '1'
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password, platform })
     });
 
     const result = await response.json();
@@ -46,13 +48,11 @@ loginForm.addEventListener('submit', async (e) => {
       const storage = rememberMe ? localStorage : sessionStorage;
       storage.setItem('user', JSON.stringify({
         user_id: user.user_id,
-        first_name: user.first_name,
-        last_name: user.last_name,
         email: user.email,
         profile_pic: user.profile_pic,
         point_bal: user.point_bal,
         trusting_score: user.trusting_score,
-        is_email_verified: user.is_email_verified,
+        is_student_id_verified: user.is_student_id_verified,
         is_hall_verified: user.is_hall_verified,
       }));
 
@@ -66,7 +66,7 @@ loginForm.addEventListener('submit', async (e) => {
       setTimeout(() => {
         const redirectCookie = getCookie("redirect_after_login");
           if (!redirectCookie) {
-            window.location.href = "/dash/main.html";
+            window.location.href = "/moderator/dashboard.html";
             return;
         }
 
