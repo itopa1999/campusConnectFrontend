@@ -65,7 +65,53 @@
             color: var(--text-muted);
             transition: color var(--transition);
         }
-        .dash-welcome .flag-badge {
+
+        /* ─── Points Badge (Prominent) ─── */
+        .points-badge-large {
+            background: linear-gradient(135deg, var(--green), #0a6b2e);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: default;
+            transition: all var(--transition);
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+        .points-badge-large:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 24px rgba(13, 138, 62, 0.35);
+        }
+        .points-badge-large i {
+            font-size: 18px;
+            color: #ffd700;
+        }
+        .points-badge-large .points-number {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            min-width: 30px;
+            text-align: center;
+        }
+        .points-badge-large .points-label {
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.85;
+        }
+        .dark-mode .points-badge-large {
+            background: linear-gradient(135deg, #1a4a2a, #0d2a1a);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+        .dark-mode .points-badge-large:hover {
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .flag-badge {
             background: var(--red);
             color: #fff;
             font-size: 11px;
@@ -78,8 +124,69 @@
             cursor: default;
             transition: background var(--transition);
         }
-        .dash-welcome .flag-badge i {
+        .flag-badge i {
             font-size: 13px;
+        }
+
+        .dash-welcome .right-badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* ─── Verification Warning Banner ─── */
+        .verification-warning {
+            background: #fef3e8;
+            border-left: 4px solid #e67e22;
+            border-radius: var(--radius-card);
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .verification-warning .warning-icon {
+            font-size: 24px;
+            color: #e67e22;
+            flex-shrink: 0;
+        }
+        .verification-warning .warning-text {
+            flex: 1;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+        .verification-warning .warning-text strong {
+            color: #e67e22;
+        }
+        .verification-warning .warning-btn {
+            background: #e67e22;
+            color: #fff;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .verification-warning .warning-btn:hover {
+            opacity: 0.85;
+            transform: scale(0.98);
+        }
+        .dark-mode .verification-warning {
+            background: #3a2a1a;
+            border-left-color: #f39c12;
+        }
+        .dark-mode .verification-warning .warning-text {
+            color: var(--text-secondary);
+        }
+        .dark-mode .verification-warning .warning-text strong {
+            color: #f39c12;
         }
 
         /* ─── Stats Grid ─── */
@@ -179,44 +286,6 @@
             margin-top: 2px;
             transition: color var(--transition);
         }
-        .stat-card .stat-change {
-            font-size: 10px;
-            font-weight: 600;
-            margin-top: 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            padding: 1px 8px;
-            border-radius: 20px;
-        }
-        .stat-card .stat-change.up {
-            background: var(--green-bg);
-            color: var(--green);
-        }
-        .stat-card .stat-change.down {
-            background: #fde8e8;
-            color: var(--red);
-        }
-        .dark-mode .stat-card .stat-change.up {
-            background: #1a3a2a;
-            color: #2ecc71;
-        }
-        .dark-mode .stat-card .stat-change.down {
-            background: #3a1a1a;
-            color: #e74c3c;
-        }
-        .stat-card .stat-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text-muted2);
-            background: var(--bg-input);
-            padding: 1px 10px;
-            border-radius: 20px;
-            transition: background var(--transition), color var(--transition);
-        }
 
         /* ─── Progress Row ─── */
         .progress-row {
@@ -294,7 +363,7 @@
             }
         }
 
-        /* ─── Tabs (reuse from explore but with dashboard styling) ─── */
+        /* ─── Tabs ─── */
         .dash-tabs {
             display: flex;
             gap: 6px;
@@ -392,7 +461,7 @@
             display: block;
         }
 
-        /* ─── Search inside tab ─── */
+        /* ─── Search inside tab (MORE VISIBLE) ─── */
         .tab-search-wrap {
             display: flex;
             align-items: center;
@@ -404,33 +473,39 @@
             flex: 1;
             display: flex;
             align-items: center;
-            background: var(--bg-input);
+            background: var(--bg-card);
             border-radius: 28px;
-            padding: 6px 16px;
+            padding: 8px 18px;
             gap: 10px;
-            border: 1px solid transparent;
+            border: 2px solid var(--border-color);
             transition: all var(--transition);
-            min-width: 150px;
+            min-width: 180px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         .tab-search-wrap .search-box:focus-within {
             border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08), 0 2px 12px rgba(0, 0, 0, 0.06);
             background: var(--bg-card);
-            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.08);
         }
         .tab-search-wrap .search-box i {
-            color: var(--text-muted2);
+            color: var(--text-muted);
+            font-size: 16px;
             transition: color var(--transition);
+        }
+        .tab-search-wrap .search-box:focus-within i {
+            color: var(--green);
         }
         .tab-search-wrap .search-box input {
             border: none;
             background: transparent;
             outline: none;
             flex: 1;
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-primary);
             padding: 6px 0;
             width: 100%;
             transition: color var(--transition);
+            font-weight: 500;
         }
         .tab-search-wrap .search-box input::placeholder {
             color: var(--text-muted);
@@ -442,27 +517,53 @@
             border: none;
             color: var(--text-muted);
             cursor: pointer;
-            font-size: 16px;
-            padding: 0 4px;
-            transition: color 0.2s;
+            font-size: 18px;
+            padding: 0 6px;
+            transition: color 0.2s, transform 0.2s;
             display: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
         .tab-search-wrap .search-box .clear-tab-search.visible {
-            display: block;
+            display: flex;
         }
         .tab-search-wrap .search-box .clear-tab-search:hover {
             color: var(--red);
+            transform: scale(1.1);
+        }
+        .dark-mode .tab-search-wrap .search-box {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .tab-search-wrap .search-box:focus-within {
+            background: var(--bg-card);
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.08);
         }
         .tab-search-wrap .result-count {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-muted);
             font-weight: 500;
             white-space: nowrap;
             transition: color var(--transition);
+            background: var(--bg-input);
+            padding: 4px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .dark-mode .tab-search-wrap .result-count {
+            background: var(--bg-input);
+            border-color: var(--border-color);
         }
 
-        /* ─── Listing Cards (compact for dashboard) ─── */
+        /* ─── Listing Cards ─── */
         .dash-listing-card {
+            cursor: pointer;
             display: flex;
             gap: 14px;
             background: var(--bg-card);
@@ -473,7 +574,6 @@
             transition: all var(--transition);
             margin-bottom: 10px;
             align-items: center;
-            cursor: default;
         }
         .dash-listing-card:hover {
             box-shadow: var(--shadow-card-hover);
@@ -492,6 +592,15 @@
             font-size: 28px;
             color: var(--text-muted2);
             transition: background var(--transition), color var(--transition);
+        }
+        .dash-listing-card:hover .thumb {
+            transform: scale(1.02);
+            transition: transform 0.2s ease;
+        }
+
+        .dash-listing-card:hover .title {
+            color: var(--green);
+            transition: color 0.2s ease;
         }
         .dash-listing-card .thumb img {
             width: 100%;
@@ -544,6 +653,12 @@
             background: #fef3e8;
             color: #e67e22;
         }
+
+        .dash-listing-card .info .meta-row .badge-status.reject {
+            background: #dc3545;
+            color: #fff;
+        }
+
         .dash-listing-card .info .meta-row .badge-status.hidden {
             background: var(--bg-input);
             color: var(--text-muted2);
@@ -627,8 +742,9 @@
             }
         }
 
-        /* ─── Expiring List (no pagination) ─── */
+        /* ─── Expiring List ─── */
         .expiring-card {
+            cursor: pointer;
             background: var(--bg-card);
             border-radius: var(--radius-card);
             padding: 14px 18px;
@@ -641,7 +757,6 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 8px 12px;
-            cursor: default;
         }
         .expiring-card:hover {
             box-shadow: var(--shadow-card-hover);
@@ -767,7 +882,7 @@
             font-size: 11px;
         }
 
-        /* ─── Pagination (reuse) ─── */
+        /* ─── Pagination ─── */
         .dash-pagination {
             display: flex;
             justify-content: center;
@@ -838,7 +953,7 @@
             transition: color var(--transition);
         }
 
-        /* ─── Loading shimmer for cards ─── */
+        /* ─── Loading shimmer ─── */
         .shimmer {
             background: var(--bg-input);
             border-radius: var(--radius-card);
@@ -849,13 +964,8 @@
             transition: background var(--transition), border-color var(--transition);
         }
         @keyframes shimmerPulse {
-            0%,
-            100% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 1;
-            }
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
         .shimmer .line {
             height: 14px;
@@ -864,17 +974,11 @@
             margin-bottom: 6px;
             width: 60%;
         }
-        .shimmer .line.short {
-            width: 30%;
-        }
-        .shimmer .line.long {
-            width: 80%;
-        }
-        .shimmer .line:last-child {
-            margin-bottom: 0;
-        }
+        .shimmer .line.short { width: 30%; }
+        .shimmer .line.long { width: 80%; }
+        .shimmer .line:last-child { margin-bottom: 0; }
 
-        /* ─── Responsive tweaks ─── */
+        /* ─── Responsive ─── */
         @media (max-width: 480px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -902,7 +1006,19 @@
             .dash-welcome .greeting .greet-text {
                 font-size: 14px;
             }
-            .dash-welcome .flag-badge {
+            .dash-welcome .right-badges {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .points-badge-large {
+                font-size: 12px;
+                padding: 6px 14px;
+                flex: 1;
+            }
+            .points-badge-large .points-number {
+                font-size: 17px;
+            }
+            .flag-badge {
                 font-size: 10px;
                 padding: 2px 12px;
             }
@@ -922,6 +1038,26 @@
             }
             .expiring-card .exp-badge {
                 font-size: 10px;
+                padding: 2px 12px;
+            }
+            .verification-warning {
+                padding: 12px 14px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .verification-warning .warning-btn {
+                width: 100%;
+                text-align: center;
+            }
+            .tab-search-wrap .search-box {
+                padding: 6px 14px;
+                min-width: 120px;
+            }
+            .tab-search-wrap .search-box input {
+                font-size: 13px;
+            }
+            .tab-search-wrap .result-count {
+                font-size: 12px;
                 padding: 2px 12px;
             }
         }
@@ -953,6 +1089,53 @@
             color: var(--green);
             transition: color var(--transition);
         }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(25deg); }
+            75% { transform: rotate(-25deg); }
+        }
+        .wave-icon {
+            animation: wave 1s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        /* ─── Loading state ─── */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            grid-column: 1 / -1;
+        }
+        .loading-spinner .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ─── Tab loading overlay ─── */
+        .tab-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            grid-column: 1 / -1;
+        }
+        .tab-loading .spinner-small {
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
     </style>
 </head>
 <body>
@@ -977,15 +1160,26 @@
                 <div class="greeting">
                     <div class="avatar" id="userAvatar">S</div>
                     <div class="greet-text">
-                        Welcome back, <span id="userName">Salawu</span> 👋
-                        <small id="userSubtext">Here's what's happening with your listings</small>
+                        Welcome back, <span id="userName">Student</span> <i class="fa-regular fa-2x fa-hand-peace wave-icon"></i>
+                        <small id="userSubtext">Here is what is happening with your listings</small>
                     </div>
                 </div>
-                <div class="flag-badge" id="flagBadge">
-                    <i class="fa-solid fa-flag"></i>
-                    <span id="flagCount">1</span> flagged
+                <div class="right-badges">
+                    <!-- ===== PROMINENT POINTS BADGE ===== -->
+                    <div class="points-badge-large" id="pointsBadge">
+                        <i class="fa-regular fas fa-coins"></i>
+                        <span class="points-number" id="pointsCount">0</span>
+                        <span class="points-label">points</span>
+                    </div>
+                    <div class="flag-badge" id="flagBadge">
+                        <i class="fa-solid fas fa-flag"></i>
+                        <span id="flagCount">0</span> flagged
+                    </div>
                 </div>
             </div>
+
+            <!-- ===== VERIFICATION WARNING BANNER ===== -->
+            <div id="verificationBanner" style="display:none;"></div>
 
             <!-- ===== STATS ===== -->
             <div class="stats-grid" id="statsGrid">
@@ -996,23 +1190,23 @@
             <div class="progress-row" id="progressRow">
                 <div class="progress-card">
                     <div class="progress-header">
-                        <span class="prog-label"><i class="fa-regular fa-circle-check" style="margin-right:6px;color:var(--green);"></i>Profile Completion</span>
-                        <span class="prog-value" id="profileCompletionValue">77%</span>
+                        <span class="prog-label"><i class="fa-regular fas fa-circle-check" style="margin-right:6px;color:var(--green);"></i>Profile Completion</span>
+                        <span class="prog-value" id="profileCompletionValue">0%</span>
                     </div>
                     <div class="progress-track">
-                        <div class="progress-fill" id="profileCompletionFill" style="width:77%;"></div>
+                        <div class="progress-fill" id="profileCompletionFill" style="width:0%;"></div>
                     </div>
                     <div class="progress-sub"><i class="fa-regular fa-clock"></i> Complete your profile to boost trust</div>
                 </div>
                 <div class="progress-card">
                     <div class="progress-header">
                         <span class="prog-label"><i class="fa-regular fa-star" style="margin-right:6px;color:var(--star);"></i>Trust Score</span>
-                        <span class="prog-value" id="trustScoreValue">60%</span>
+                        <span class="prog-value" id="trustScoreValue">0%</span>
                     </div>
                     <div class="progress-track">
-                        <div class="progress-fill orange" id="trustScoreFill" style="width:60%;"></div>
+                        <div class="progress-fill orange" id="trustScoreFill" style="width:0%;"></div>
                     </div>
-                    <div class="progress-sub"><i class="fa-regular fa-circle-check"></i> Based on completed sales &amp; reviews</div>
+                    <div class="progress-sub"><i class="fa-regular fa-circle-check"></i> Based on completed sales and reviews</div>
                 </div>
             </div>
 
@@ -1020,27 +1214,27 @@
             <div class="dash-tabs" id="dashTabs">
                 <button class="tab-btn active" data-tab="listings">
                     <i class="fa-solid fa-list-ul"></i> All Listings
-                    <span class="tab-badge" id="listingCountBadge">4</span>
+                    <span class="tab-badge" id="listingCountBadge">0</span>
                 </button>
                 <button class="tab-btn" data-tab="expiring">
                     <i class="fa-regular fa-clock"></i> Expiring Soon
-                    <span class="tab-badge" id="expiringCountBadge">1</span>
+                    <span class="tab-badge" id="expiringCountBadge">0</span>
                 </button>
                 <button class="tab-btn" data-tab="reviews">
                     <i class="fa-regular fa-star"></i> Reviews
-                    <span class="tab-badge" id="reviewCountBadge">2</span>
+                    <span class="tab-badge" id="reviewCountBadge">0</span>
                 </button>
             </div>
 
-            <!-- ===== TAB: LISTINGS ===== -->
+            <!-- ===== TAB: LISTINGS (Loaded on page load) ===== -->
             <div class="tab-content active" id="tabListings">
                 <div class="tab-search-wrap">
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="listingSearchInput" placeholder="Search your listings…" />
+                        <input type="text" id="listingSearchInput" placeholder="Search your listings..." />
                         <button class="clear-tab-search" id="clearListingSearch" title="Clear search">&times;</button>
                     </div>
-                    <span class="result-count" id="listingResultCount">4 results</span>
+                    <span class="result-count" id="listingResultCount">0 results</span>
                 </div>
                 <div id="listingContainer">
                     <!-- populated by JS -->
@@ -1052,25 +1246,25 @@
                 </div>
             </div>
 
-            <!-- ===== TAB: EXPIRING ===== -->
+            <!-- ===== TAB: EXPIRING (Lazy loaded) ===== -->
             <div class="tab-content" id="tabExpiring">
                 <div id="expiringContainer">
-                    <!-- populated by JS -->
+                    <!-- populated by JS on tab click -->
                 </div>
             </div>
 
-            <!-- ===== TAB: REVIEWS ===== -->
+            <!-- ===== TAB: REVIEWS (Lazy loaded) ===== -->
             <div class="tab-content" id="tabReviews">
                 <div class="tab-search-wrap">
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="reviewSearchInput" placeholder="Search reviews…" />
+                        <input type="text" id="reviewSearchInput" placeholder="Search reviews..." />
                         <button class="clear-tab-search" id="clearReviewSearch" title="Clear search">&times;</button>
                     </div>
-                    <span class="result-count" id="reviewResultCount">2 results</span>
+                    <span class="result-count" id="reviewResultCount">0 results</span>
                 </div>
                 <div id="reviewContainer">
-                    <!-- populated by JS -->
+                    <!-- populated by JS on tab click -->
                 </div>
                 <div class="dash-pagination" id="reviewPagination">
                     <button id="reviewPrev" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
@@ -1083,7 +1277,7 @@
 
         <!-- ===== DEMO NOTE ===== -->
         <div class="demo-note">
-            <span>CampusHub</span> • Dashboard • real-world dummy data for preview
+            <span>CampusHub</span> • Dashboard
         </div>
 
     </div>
@@ -1098,308 +1292,18 @@
             'use strict';
 
             // ============================================================
-            // DUMMY DATA – 4 endpoints
-            // ============================================================
-
-            // ─── Endpoint 1: User stats ──────────────────────────────
-            const dummyStats = {
-                request_id: "d6b3163a-b355-47ca-8c4c-731b60868923",
-                status_code: 200,
-                message: "Dashboard data retrieved successfully",
-                is_success: true,
-                data: {
-                    first_name: "Salawu",
-                    total_active: 2,
-                    total_expired: 2,
-                    total_marked_sold: 0,
-                    total_pending: 0,
-                    total_rejected: 0,
-                    total_hidden: 0,
-                    total_items_sold: 10,
-                    trust_score: 60,
-                    profile_completion: 77,
-                    flagged_listing_count: 1
-                }
-            };
-
-            // ─── Endpoint 2: All listings (with pagination) ──────────
-            const dummyListings = {
-                request_id: "f025d7d0-0c51-40b9-9c9c-44f77f405c17",
-                status_code: 200,
-                message: "Dashboard listings data retrieved successfully",
-                is_success: true,
-                data: {
-                    all_listings: [{
-                        id: 12,
-                        title: "Love is Good",
-                        description: "cxcdd",
-                        price: 0,
-                        category: "Roommates & Shared Apartments",
-                        badge: "",
-                        is_hot_sale: true,
-                        is_ads_banner: true,
-                        lisiting_type: "freebie",
-                        auto_reactivate: false,
-                        location: ["Lecture Theatres Complex"],
-                        status: "expired",
-                        image: "http://127.0.0.1:8000/media/Lisiting_images/Lisiting_image_love_is_goos_9c72291a04.webp",
-                        created_at_humanized: "1 week ago"
-                    }, {
-                        id: 15,
-                        title: "Laptop hp E2w",
-                        description: "clean neat okay",
-                        price: 85000,
-                        category: "Laptops & Computers",
-                        badge: "hot",
-                        is_hot_sale: true,
-                        is_ads_banner: false,
-                        lisiting_type: "sell",
-                        auto_reactivate: true,
-                        location: ["Main Gate", "Lecture Theatres Complex"],
-                        status: "active",
-                        image: "https://picsum.photos/seed/laptop/400/300",
-                        created_at_humanized: "3 days ago"
-                    }, {
-                        id: 18,
-                        title: "Mini Fridge",
-                        description: "works perfectly",
-                        price: 45000,
-                        category: "Electronics",
-                        badge: "",
-                        is_hot_sale: false,
-                        is_ads_banner: false,
-                        lisiting_type: "sell",
-                        auto_reactivate: false,
-                        location: ["Student Union Building"],
-                        status: "active",
-                        image: "https://picsum.photos/seed/fridge/400/300",
-                        created_at_humanized: "2 weeks ago"
-                    }, {
-                        id: 22,
-                        title: "Calculus Textbook",
-                        description: "like new",
-                        price: 3000,
-                        category: "Books",
-                        badge: "bargain",
-                        is_hot_sale: false,
-                        is_ads_banner: false,
-                        lisiting_type: "sell",
-                        auto_reactivate: false,
-                        location: ["Library"],
-                        status: "sold",
-                        image: "https://picsum.photos/seed/book/400/300",
-                        created_at_humanized: "1 month ago"
-                    }, {
-                        id: 25,
-                        title: "Room for Rent",
-                        description: "self-contained, near campus",
-                        price: 120000,
-                        category: "Roommates & Shared Apartments",
-                        badge: "",
-                        is_hot_sale: false,
-                        is_ads_banner: false,
-                        lisiting_type: "sell",
-                        auto_reactivate: false,
-                        location: ["Main Gate"],
-                        status: "pending",
-                        image: "https://picsum.photos/seed/room/400/300",
-                        created_at_humanized: "5 days ago"
-                    }, {
-                        id: 28,
-                        title: "Bike for Sale",
-                        description: "good condition",
-                        price: 25000,
-                        category: "Sports",
-                        badge: "",
-                        is_hot_sale: false,
-                        is_ads_banner: false,
-                        lisiting_type: "sell",
-                        auto_reactivate: false,
-                        location: ["Cafeteria"],
-                        status: "active",
-                        image: "https://picsum.photos/seed/bike/400/300",
-                        created_at_humanized: "2 days ago"
-                    }],
-                    pagination: {
-                        page: 1,
-                        per_page: 6,
-                        total_pages: 1,
-                        total_items: 6,
-                        has_next: false,
-                        has_previous: false
-                    }
-                }
-            };
-
-            // ─── Endpoint 3: Upcoming expiring ──────────────────────
-            const dummyExpiring = {
-                request_id: "exp-123",
-                status_code: 200,
-                message: "Expiring listings retrieved",
-                is_success: true,
-                data: {
-                    upcoming_expiring_listings: [{
-                        title: "Laptop hp E2w",
-                        description: "clean neat okay",
-                        expires_at_humanized: "Expires in 23 days",
-                        hostpost_names: ["Main Gate", "Lecture Theatres Complex"],
-                        auto_reactivate: false
-                    }, {
-                        title: "Mini Fridge",
-                        description: "works perfectly",
-                        expires_at_humanized: "Expires in 5 days",
-                        hostpost_names: ["Student Union Building"],
-                        auto_reactivate: true
-                    }, {
-                        title: "Love is Good",
-                        description: "cxcdd",
-                        expires_at_humanized: "Expires in 2 days",
-                        hostpost_names: ["Lecture Theatres Complex"],
-                        auto_reactivate: false
-                    }]
-                }
-            };
-
-            // ─── Endpoint 4: Reviews ────────────────────────────────
-            const dummyReviews = {
-                request_id: "af7ea347-ed80-400a-8519-90512fc001bc",
-                status_code: 200,
-                message: "Dashboard review listing data retrieved successfully",
-                is_success: true,
-                data: {
-                    reviews: [{
-                        from: "Admin Admin",
-                        rating: 2,
-                        comment: "not too good",
-                        listing_name: "Mini Fridge",
-                        date: "3 weeks ago"
-                    }, {
-                        from: "Admin Admin",
-                        rating: 4,
-                        comment: "love his responses.",
-                        listing_name: "Laptop hp E2w",
-                        date: "3 weeks ago"
-                    }, {
-                        from: "Chidi Okafor",
-                        rating: 5,
-                        comment: "Great seller! Very responsive and item was exactly as described.",
-                        listing_name: "Calculus Textbook",
-                        date: "1 week ago"
-                    }, {
-                        from: "Amina Bello",
-                        rating: 3,
-                        comment: "Item was okay but delivery took a bit long.",
-                        listing_name: "Bike for Sale",
-                        date: "4 days ago"
-                    }],
-                    pagination: {
-                        page: 1,
-                        per_page: 4,
-                        total_pages: 1,
-                        total_items: 4,
-                        has_next: false,
-                        has_previous: false
-                    }
-                }
-            };
-
-            // ─── Extend listings for pagination demo (more items) ──
-            const extraListings = [{
-                id: 30,
-                title: "iPhone 12 Pro",
-                description: "64GB, good condition",
-                price: 320000,
-                category: "Electronics",
-                badge: "hot",
-                is_hot_sale: true,
-                is_ads_banner: false,
-                lisiting_type: "sell",
-                auto_reactivate: false,
-                location: ["Main Gate"],
-                status: "active",
-                image: "https://picsum.photos/seed/iphone/400/300",
-                created_at_humanized: "1 day ago"
-            }, {
-                id: 33,
-                title: "Study Table",
-                description: "wooden, sturdy",
-                price: 18000,
-                category: "Furniture",
-                badge: "",
-                is_hot_sale: false,
-                is_ads_banner: false,
-                lisiting_type: "sell",
-                auto_reactivate: false,
-                location: ["Library"],
-                status: "active",
-                image: "https://picsum.photos/seed/table/400/300",
-                created_at_humanized: "6 days ago"
-            }, {
-                id: 36,
-                title: "Physics Textbook",
-                description: "University Physics",
-                price: 2500,
-                category: "Books",
-                badge: "bargain",
-                is_hot_sale: false,
-                is_ads_banner: false,
-                lisiting_type: "sell",
-                auto_reactivate: false,
-                location: ["Lecture Theatres Complex"],
-                status: "expired",
-                image: "https://picsum.photos/seed/physics/400/300",
-                created_at_humanized: "2 months ago"
-            }, {
-                id: 39,
-                title: "Hoodie (UNIBEN)",
-                description: "size L, new",
-                price: 7000,
-                category: "Fashion & Clothing",
-                badge: "",
-                is_hot_sale: false,
-                is_ads_banner: false,
-                lisiting_type: "sell",
-                auto_reactivate: false,
-                location: ["Student Union Building"],
-                status: "active",
-                image: "https://picsum.photos/seed/hoodie/400/300",
-                created_at_humanized: "4 days ago"
-            }, {
-                id: 42,
-                title: "Projector for Rent",
-                description: "HD, for events",
-                price: 15000,
-                category: "Services",
-                badge: "",
-                is_hot_sale: false,
-                is_ads_banner: false,
-                lisiting_type: "sell",
-                auto_reactivate: false,
-                location: ["Cafeteria"],
-                status: "pending",
-                image: "https://picsum.photos/seed/projector/400/300",
-                created_at_humanized: "2 days ago"
-            }];
-
-            // Merge extra listings into dummyListings for pagination demo
-            dummyListings.data.all_listings = dummyListings.data.all_listings.concat(extraListings);
-            dummyListings.data.pagination.total_items = dummyListings.data.all_listings.length;
-            dummyListings.data.pagination.total_pages = Math.ceil(dummyListings.data.all_listings.length / dummyListings.data
-                .pagination.per_page);
-            dummyListings.data.pagination.has_next = dummyListings.data.pagination.page < dummyListings.data.pagination
-                .total_pages;
-
-            // ============================================================
             // DOM REFS
             // ============================================================
             const statsGrid = document.getElementById('statsGrid');
             const userName = document.getElementById('userName');
             const userAvatar = document.getElementById('userAvatar');
             const flagCount = document.getElementById('flagCount');
+            const pointsCount = document.getElementById('pointsCount');
             const profileCompletionValue = document.getElementById('profileCompletionValue');
             const profileCompletionFill = document.getElementById('profileCompletionFill');
             const trustScoreValue = document.getElementById('trustScoreValue');
             const trustScoreFill = document.getElementById('trustScoreFill');
+            const verificationBanner = document.getElementById('verificationBanner');
 
             const tabs = document.querySelectorAll('.dash-tabs .tab-btn');
             const tabContents = {
@@ -1432,172 +1336,315 @@
             // ============================================================
             // STATE
             // ============================================================
-            let listings = dummyListings.data.all_listings || [];
+            let listings = [];
             let listingsPage = 1;
-            const perPage = dummyListings.data.pagination.per_page || 6;
-            let listingsFiltered = [...listings];
+            const perPage = 10;
             let listingSearchQuery = '';
 
-            let reviews = dummyReviews.data.reviews || [];
+            let reviews = [];
             let reviewsPage = 1;
-            const reviewsPerPage = dummyReviews.data.pagination.per_page || 4;
-            let reviewsFiltered = [...reviews];
+            const reviewsPerPage = 10;
             let reviewSearchQuery = '';
 
-            let expirings = dummyExpiring.data.upcoming_expiring_listings || [];
+            let expirings = [];
+
+            // Track which tabs have been loaded
+            let expiringLoaded = false;
+            let reviewsLoaded = false;
+
+            // ============================================================
+            // LOADING STATE
+            // ============================================================
+            function showLoading(container) {
+                container.innerHTML = `
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                `;
+            }
+
+            function showTabLoading(container) {
+                container.innerHTML = `
+                    <div class="tab-loading">
+                        <div class="spinner-small"></div>
+                    </div>
+                `;
+            }
+
+            // ============================================================
+            // API CALLS with search params
+            // ============================================================
+            async function fetchDashboard() {
+                try {
+                    const response = await fetchWithAuth(`${CAMPUS_URL}dashboard`, {
+                        method: 'GET',
+                        showSpinner: true,
+                        spinnerText: 'Loading dashboard...'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch dashboard data');
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error('Dashboard fetch error:', error);
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error('Failed to load dashboard data. Please refresh.');
+                    }
+                    return null;
+                }
+            }
+
+            async function fetchListings(search = '') {
+                try {
+                    let url = `${CAMPUS_URL}dashboard-listing`;
+                    if (search && search.trim()) {
+                        url += '?search=' + encodeURIComponent(search.trim());
+                    }
+                    
+                    const response = await fetchWithAuth(url, {
+                        method: 'GET',
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch listings');
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error('Listings fetch error:', error);
+                    return null;
+                }
+            }
+
+            async function fetchExpiring() {
+                try {
+                    const response = await fetchWithAuth(`${CAMPUS_URL}dashboard-upcoming-listing`, {
+                        method: 'GET'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch expiring listings');
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error('Expiring fetch error:', error);
+                    return null;
+                }
+            }
+
+            async function fetchReviews(search = '') {
+                try {
+                    let url = `${CAMPUS_URL}dashboard-reviews`;
+                    if (search && search.trim()) {
+                        url += '?search=' + encodeURIComponent(search.trim());
+                    }
+                    
+                    const response = await fetchWithAuth(url, {
+                        method: 'GET'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch reviews');
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error('Reviews fetch error:', error);
+                    return null;
+                }
+            }
+
+            // ============================================================
+            // RENDER: VERIFICATION BANNER
+            // ============================================================
+            function renderVerificationBanner() {
+                const user = getUserData();
+                if (!user) {
+                    verificationBanner.style.display = 'none';
+                    return;
+                }
+
+                const isStudentVerified = user.is_student_id_verified;
+                const isHallVerified = user.is_hall_verified;
+
+                if (isStudentVerified && isHallVerified) {
+                    verificationBanner.style.display = 'none';
+                    return;
+                }
+
+                let warnings = [];
+                if (!isStudentVerified) warnings.push('Student ID not verified');
+                if (!isHallVerified) warnings.push('Hall verification pending');
+
+                verificationBanner.style.display = 'flex';
+                verificationBanner.className = 'verification-warning';
+                verificationBanner.innerHTML = `
+                    <span class="warning-icon"><i class="fa-regular fas fa-triangle-exclamation"></i></span>
+                    <span class="warning-text">
+                        <strong>Verification Required:</strong> ${warnings.join(' • ')}. 
+                        Complete verification to unlock full access and build trust with buyers.
+                    </span>
+                    <button class="warning-btn" id="verifyNowBtn">
+                        <i class="fa-regular fa-id-card"></i> Verify Now
+                    </button>
+                `;
+
+                document.getElementById('verifyNowBtn')?.addEventListener('click', function() {
+                    window.location.href = 'upload-id.html';
+                });
+            }
 
             // ============================================================
             // RENDER: STATS
             // ============================================================
             function renderStats(data) {
-                const stats = data.data;
-                const items = [{
-                    label: 'Active',
-                    value: stats.total_active,
-                    icon: 'fa-regular fa-circle-check',
-                    iconClass: 'green',
-                    change: '+2 this week',
-                    up: true
-                }, {
-                    label: 'Expired',
-                    value: stats.total_expired,
-                    icon: 'fa-regular fa-calendar-xmark',
-                    iconClass: 'orange',
-                    change: '0 this week',
-                    up: false
-                }, {
-                    label: 'Sold',
-                    value: stats.total_items_sold,
-                    icon: 'fa-solid fa-money-bill-wave',
-                    iconClass: 'purple',
-                    change: '+10 total',
-                    up: true
-                }, {
-                    label: 'Pending',
-                    value: stats.total_pending,
-                    icon: 'fa-regular fa-hourglass-half',
-                    iconClass: 'blue',
-                    change: 'Awaiting review',
-                    up: false
-                }, {
-                    label: 'Rejected',
-                    value: stats.total_rejected,
-                    icon: 'fa-regular fa-circle-xmark',
-                    iconClass: 'red',
-                    change: '0',
-                    up: false
-                }, {
-                    label: 'Hidden',
-                    value: stats.total_hidden,
-                    icon: 'fa-regular fa-eye-slash',
-                    iconClass: 'teal',
-                    change: '0',
-                    up: false
-                }];
-
-                statsGrid.innerHTML = items.map(item => `
-                        <div class="stat-card">
-                            <div class="stat-icon ${item.iconClass}"><i class="${item.icon}"></i></div>
-                            <div class="stat-value">${item.value}</div>
-                            <div class="stat-label">${item.label}</div>
-                            <div class="stat-change ${item.up ? 'up' : 'down'}">
-                                <i class="fa-solid ${item.up ? 'fa-arrow-up' : 'fa-arrow-down'}"></i>
-                                ${item.change}
-                            </div>
+                if (!data || !data.data) {
+                    statsGrid.innerHTML = `
+                        <div class="dash-empty" style="grid-column:1/-1;">
+                            <span class="empty-icon"><i class="fa-regular fa-chart-bar"></i></span>
+                            <h4>No data available</h4>
+                            <p>Unable to load dashboard statistics.</p>
                         </div>
-                    `).join('');
-
-                // Update profile & trust
-                profileCompletionValue.textContent = stats.profile_completion + '%';
-                profileCompletionFill.style.width = stats.profile_completion + '%';
-                trustScoreValue.textContent = stats.trust_score + '%';
-                trustScoreFill.style.width = stats.trust_score + '%';
-
-                // User name & avatar
-                userName.textContent = stats.first_name;
-                userAvatar.textContent = stats.first_name.charAt(0).toUpperCase();
-
-                // Flag
-                flagCount.textContent = stats.flagged_listing_count;
-            }
-
-            // ============================================================
-            // RENDER: LISTINGS
-            // ============================================================
-            function renderListings() {
-                const query = listingSearchQuery.toLowerCase().trim();
-                let filtered = listings;
-
-                if (query) {
-                    filtered = listings.filter(item =>
-                        item.title.toLowerCase().includes(query) ||
-                        item.category.toLowerCase().includes(query) ||
-                        item.status.toLowerCase().includes(query)
-                    );
-                }
-                listingsFiltered = filtered;
-
-                const total = filtered.length;
-                const totalPages = Math.ceil(total / perPage) || 1;
-                if (listingsPage > totalPages) listingsPage = totalPages;
-                const start = (listingsPage - 1) * perPage;
-                const pageItems = filtered.slice(start, start + perPage);
-
-                listingResultCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
-                listingCountBadge.textContent = total;
-                listingPageInfo.textContent = `Page ${listingsPage} of ${totalPages}`;
-                listingPrev.disabled = listingsPage <= 1;
-                listingNext.disabled = listingsPage >= totalPages;
-
-                if (pageItems.length === 0) {
-                    listingContainer.innerHTML = `
-                            <div class="dash-empty">
-                                <span class="empty-icon">🔍</span>
-                                <h4>No listings found</h4>
-                                <p>Try adjusting your search or filters.</p>
-                            </div>
-                        `;
+                    `;
                     return;
                 }
 
-                listingContainer.innerHTML = pageItems.map(item => {
-                    const statusClass = item.status === 'active' ? 'active' :
-                        item.status === 'expired' ? 'expired' :
-                        item.status === 'sold' ? 'sold' :
-                        item.status === 'pending' ? 'pending' : 'hidden';
+                const stats = data.data;
+                const user = getUserData();
+                
+                // Update points from storage
+                if (user && user.point_bal !== undefined) {
+                    pointsCount.textContent = user.point_bal;
+                }
 
-                    const statusLabel = item.status.charAt(0).toUpperCase() + item.status.slice(1);
-                    const priceDisplay = item.price === 0 ?
-                        '<span class="free">Free</span>' :
-                        '₦' + item.price.toLocaleString();
+                const items = [
+                    { label: 'Active', value: stats.total_active || 0, icon: 'fa-regular fa-circle-check', iconClass: 'green' },
+                    { label: 'Expired', value: stats.total_expired || 0, icon: 'fa-regular fa-calendar-xmark', iconClass: 'orange' },
+                    { label: 'Sold', value: stats.total_items_sold || 0, icon: 'fa-solid fa-money-bill-wave', iconClass: 'purple' },
+                    { label: 'Pending', value: stats.total_pending || 0, icon: 'fa-regular fa-hourglass-half', iconClass: 'blue' },
+                    { label: 'Rejected', value: stats.total_rejected || 0, icon: 'fa-regular fa-circle-xmark', iconClass: 'red' },
+                    { label: 'Hidden', value: stats.total_hidden || 0, icon: 'fa-regular fa-eye-slash', iconClass: 'teal' }
+                ];
+
+                statsGrid.innerHTML = items.map(item => `
+                    <div class="stat-card">
+                        <div class="stat-icon ${item.iconClass}"><i class="${item.icon}"></i></div>
+                        <div class="stat-value">${item.value}</div>
+                        <div class="stat-label">${item.label}</div>
+                    </div>
+                `).join('');
+
+                // Update profile & trust
+                const profileCompletion = stats.profile_completion || 0;
+                const trustScore = stats.trust_score || 0;
+                
+                profileCompletionValue.textContent = profileCompletion + '%';
+                profileCompletionFill.style.width = profileCompletion + '%';
+                trustScoreValue.textContent = trustScore + '%';
+                trustScoreFill.style.width = trustScore + '%';
+
+                // User name & avatar
+                if (stats.first_name) {
+                    userName.textContent = stats.first_name;
+                    userAvatar.textContent = stats.first_name.charAt(0).toUpperCase();
+                } else if (user && user.email) {
+                    const displayName = user.email.split('@')[0];
+                    const formattedName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+                    userName.textContent = formattedName;
+                    userAvatar.textContent = user.email.charAt(0).toUpperCase();
+                }
+
+                // Flag
+                flagCount.textContent = stats.flagged_listing_count || 0;
+            }
+
+            // ============================================================
+            // RENDER: LISTINGS (with backend search)
+            // ============================================================
+            async function renderListings() {
+                // Show loading state
+                showLoading(listingContainer);
+                
+                // Fetch from backend with search query
+                const data = await fetchListings(listingSearchQuery);
+                
+                if (!data || !data.data) {
+                    listingContainer.innerHTML = `
+                        <div class="dash-empty">
+                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <h4>Error loading listings</h4>
+                            <p>Unable to load your listings. Please try again.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listings = data.data.all_listings || [];
+                const pagination = data.data.pagination || {};
+                const total = pagination.total_items || listings.length;
+                const totalPages = pagination.total_pages || 1;
+                
+                listingResultCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
+                listingCountBadge.textContent = total;
+                listingPageInfo.textContent = `Page ${pagination.page || 1} of ${totalPages}`;
+                listingPrev.disabled = !pagination.has_previous;
+                listingNext.disabled = !pagination.has_next;
+
+                if (listings.length === 0) {
+                    listingContainer.innerHTML = `
+                        <div class="dash-empty">
+                            <span class="empty-icon"><i class="fa-regular fa-list"></i></span>
+                            <h4>No listings found</h4>
+                            <p>${listingSearchQuery ? 'Try adjusting your search.' : 'You haven\'t created any listings yet.'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listingContainer.innerHTML = listings.map(item => {
+                    const statusClass = listingStatusMap[item.status] || 'hidden';
+                    const statusLabel = item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'Unknown';
+                    const priceDisplay = item.price;
                     const locationStr = item.location && item.location.length > 0 ? item.location[0] : 'Campus';
-
-                    const badgeIcon = item.is_hot_sale ? '🔥' : (item.badge === 'bargain' ? '💰' : '');
+                    const imageUrl = item.image || (
+                        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='200' y='160' font-family='Arial' font-size='24' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E"
+                    );
 
                     return `
-                            <div class="dash-listing-card" data-id="${item.id}">
-                                <div class="thumb">
-                                    <img src="${item.image || 'https://picsum.photos/seed/' + item.id + '/400/300'}" 
-                                         alt="${item.title}" 
-                                         loading="lazy"
-                                         onerror="this.style.display='none';this.parentElement.textContent='📦';this.parentElement.style.fontSize='28px';this.parentElement.style.color='var(--text-muted2)';" />
-                                </div>
-                                <div class="info">
-                                    <div class="title">${badgeIcon} ${item.title}</div>
-                                    <div class="meta-row">
-                                        <span class="badge-status ${statusClass}">${statusLabel}</span>
-                                        <span class="location-tag"><i class="fa-solid fa-location-dot"></i> ${locationStr}</span>
-                                        <span>${item.category}</span>
-                                        <span>${item.created_at_humanized || 'Recently'}</span>
-                                    </div>
-                                </div>
-                                <div class="price-tag">
-                                    ${priceDisplay}
-                                    <small>${item.lisiting_type || 'sell'}</small>
+                        <div class="dash-listing-card" data-id="${item.id}">
+                            <div class="thumb">
+                                <img src="${imageUrl}" 
+                                     alt="${item.title || 'Listing'}" 
+                                     loading="lazy"
+                                     onerror="this.style.display='none';this.parentElement.textContent='📦';this.parentElement.style.fontSize='28px';this.parentElement.style.color='var(--text-muted2)';" />
+                            </div>
+                            <div class="info">
+                                <div class="title">${item.title || 'Untitled'}</div>
+                                <div class="meta-row">
+                                    <span class="badge-status ${statusClass}">${statusLabel}</span>
+                                    <span class="location-tag"><i class="fa-solid fa-location-dot"></i> ${locationStr}</span>
+                                    <span>${item.category || 'Uncategorized'}</span>
+                                    <span>${item.created_at_humanized || 'Recently'}</span>
                                 </div>
                             </div>
-                        `;
+                            <div class="price-tag">
+                                ${priceDisplay}
+                                <small>${item.lisiting_type || 'sell'}</small>
+                            </div>
+                        </div>
+                    `;
                 }).join('');
+
+                listingContainer.querySelectorAll('.dash-listing-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        const title = this.querySelector('.title')?.textContent?.trim() || '';
+                        window.location.href = `my-listing-details.html?id=${id}&title=${encodeURIComponent(title)}`;
+                    });
+                });
             }
 
             // ============================================================
@@ -1608,114 +1655,153 @@
 
                 if (expirings.length === 0) {
                     expiringContainer.innerHTML = `
-                            <div class="dash-empty">
-                                <span class="empty-icon">🎉</span>
-                                <h4>All clear!</h4>
-                                <p>No listings are expiring soon. Keep up the good work!</p>
-                            </div>
-                        `;
+                        <div class="dash-empty">
+                            <span class="empty-icon"><i class="fa-regular fa-clock"></i></span>
+                            <h4>All clear</h4>
+                            <p>No listings are expiring soon. Keep up the good work</p>
+                        </div>
+                    `;
                     return;
                 }
 
                 expiringContainer.innerHTML = expirings.map(item => {
-                    const isUrgent = item.expires_at_humanized.includes('2 days') || item.expires_at_humanized
-                    .includes('1 day');
+                    const isUrgent = item.expires_at_humanized?.includes('2 days') || 
+                                    item.expires_at_humanized?.includes('1 day');
                     const urgentClass = isUrgent ? 'urgent' : '';
                     const reactivateIcon = item.auto_reactivate ?
                         '<i class="fa-solid fa-rotate" style="color:var(--green);"></i>' :
                         '<i class="fa-regular fa-circle" style="color:var(--text-muted);"></i>';
 
-                    const locs = item.hostpost_names && item.hostpost_names.length > 0 ?
+                    const locs = item.hostpost_names?.length > 0 ?
                         item.hostpost_names.join(' • ') :
                         'Campus';
 
                     return `
-                            <div class="expiring-card">
-                                <div class="exp-info">
-                                    <div class="exp-title">${item.title}</div>
-                                    <div class="exp-meta">
-                                        <span><i class="fa-solid fa-location-dot"></i> ${locs}</span>
-                                        <span>${reactivateIcon} ${item.auto_reactivate ? 'Auto-reactivate ON' : 'Auto-reactivate OFF'}</span>
-                                    </div>
-                                </div>
-                                <div class="exp-badge ${urgentClass}">
-                                    <i class="fa-regular fa-clock"></i>
-                                    ${item.expires_at_humanized}
+                        <div class="expiring-card" data-id="${item.id}">
+                            <div class="exp-info">
+                                <div class="exp-title">${item.title || 'Untitled'}</div>
+                                <div class="exp-meta">
+                                    <span><i class="fa-solid fa-location-dot"></i> ${locs}</span>
+                                    <span>${reactivateIcon} ${item.auto_reactivate ? 'Auto-reactivate ON' : 'Auto-reactivate OFF'}</span>
                                 </div>
                             </div>
-                        `;
+                            <div class="exp-badge ${urgentClass}">
+                                <i class="fa-regular fa-clock"></i>
+                                ${item.expires_at_humanized || 'Expiring soon'}
+                            </div>
+                        </div>
+                    `;
                 }).join('');
+
+                expiringContainer.querySelectorAll('.expiring-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        const title = this.querySelector('.exp-title')?.textContent?.trim() || '';
+                        window.location.href = `my-listing-details.html?id=${id}&title=${encodeURIComponent(title)}`;
+                    });
+                });
             }
 
             // ============================================================
-            // RENDER: REVIEWS
+            // RENDER: REVIEWS (with backend search)
             // ============================================================
-            function renderReviews() {
-                const query = reviewSearchQuery.toLowerCase().trim();
-                let filtered = reviews;
-
-                if (query) {
-                    filtered = reviews.filter(item =>
-                        item.from.toLowerCase().includes(query) ||
-                        item.listing_name.toLowerCase().includes(query) ||
-                        item.comment.toLowerCase().includes(query)
-                    );
-                }
-                reviewsFiltered = filtered;
-
-                const total = filtered.length;
-                const totalPages = Math.ceil(total / reviewsPerPage) || 1;
-                if (reviewsPage > totalPages) reviewsPage = totalPages;
-                const start = (reviewsPage - 1) * reviewsPerPage;
-                const pageItems = filtered.slice(start, start + reviewsPerPage);
-
-                reviewResultCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
-                reviewCountBadge.textContent = total;
-                reviewPageInfo.textContent = `Page ${reviewsPage} of ${totalPages}`;
-                reviewPrev.disabled = reviewsPage <= 1;
-                reviewNext.disabled = reviewsPage >= totalPages;
-
-                if (pageItems.length === 0) {
+            async function renderReviews() {
+                // Show loading state
+                showLoading(reviewContainer);
+                
+                // Fetch from backend with search query
+                const data = await fetchReviews(reviewSearchQuery);
+                
+                if (!data || !data.data) {
                     reviewContainer.innerHTML = `
-                            <div class="dash-empty">
-                                <span class="empty-icon">⭐</span>
-                                <h4>No reviews yet</h4>
-                                <p>Complete more sales to get feedback from buyers.</p>
-                            </div>
-                        `;
+                        <div class="dash-empty">
+                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <h4>Error loading reviews</h4>
+                            <p>Unable to load your reviews. Please try again.</p>
+                        </div>
+                    `;
                     return;
                 }
 
-                reviewContainer.innerHTML = pageItems.map(item => {
+                reviews = data.data.reviews || [];
+                const pagination = data.data.pagination || {};
+                const total = pagination.total_items || reviews.length;
+                const totalPages = pagination.total_pages || 1;
+                
+                reviewResultCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
+                reviewCountBadge.textContent = total;
+                reviewPageInfo.textContent = `Page ${pagination.page || 1} of ${totalPages}`;
+                reviewPrev.disabled = !pagination.has_previous;
+                reviewNext.disabled = !pagination.has_next;
+
+                if (reviews.length === 0) {
+                    reviewContainer.innerHTML = `
+                        <div class="dash-empty">
+                            <span class="empty-icon"><i class="fa-regular fa-star"></i></span>
+                            <h4>No reviews yet</h4>
+                            <p>${reviewSearchQuery ? 'Try adjusting your search.' : 'Complete more sales to get feedback from buyers.'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                reviewContainer.innerHTML = reviews.map(item => {
                     const stars = Array.from({ length: 5 }, (_, i) =>
-                        i < item.rating ?
+                        i < (item.rating || 0) ?
                         '<i class="fa-solid fa-star"></i>' :
                         '<i class="fa-regular fa-star empty"></i>'
                     ).join('');
 
                     return `
-                            <div class="review-card">
-                                <div class="review-head">
-                                    <span class="reviewer">
-                                        ${item.from}
-                                        <span class="from-label">• ${item.date}</span>
-                                    </span>
-                                    <span class="stars">${stars}</span>
-                                </div>
-                                <div class="review-comment">“${item.comment}”</div>
-                                <div class="review-footer">
-                                    <span class="listing-ref">
-                                        <i class="fa-solid fa-tag"></i> ${item.listing_name}
-                                    </span>
-                                    <span>${item.rating}/5</span>
-                                </div>
+                        <div class="review-card">
+                            <div class="review-head">
+                                <span class="reviewer">
+                                    ${item.from || 'Anonymous'}
+                                    <span class="from-label">• ${item.date || 'Recently'}</span>
+                                </span>
+                                <span class="stars">${stars}</span>
                             </div>
-                        `;
+                            <div class="review-comment">“${item.comment || 'No comment provided.'}”</div>
+                            <div class="review-footer">
+                                <span class="listing-ref">
+                                    <i class="fa-solid fa-tag"></i> ${item.listing_name || 'Unknown listing'}
+                                </span>
+                                <span>${item.rating || 0}/5</span>
+                            </div>
+                        </div>
+                    `;
                 }).join('');
             }
 
             // ============================================================
-            // TAB SWITCHING
+            // LOAD EXPIRING (Lazy)
+            // ============================================================
+            async function loadExpiring() {
+                if (expiringLoaded) return;
+                
+                showTabLoading(expiringContainer);
+                
+                const data = await fetchExpiring();
+                if (data && data.data) {
+                    expirings = data.data.upcoming_expiring_listings || [];
+                }
+                expiringLoaded = true;
+                renderExpiring();
+            }
+
+            // ============================================================
+            // LOAD REVIEWS (Lazy)
+            // ============================================================
+            async function loadReviews() {
+                if (reviewsLoaded) return;
+                
+                showTabLoading(reviewContainer);
+                reviewsLoaded = true;
+                await renderReviews();
+            }
+
+            // ============================================================
+            // TAB SWITCHING with Lazy Loading
             // ============================================================
             function switchTab(tabId) {
                 tabs.forEach(btn => {
@@ -1726,10 +1812,13 @@
                     tabContents[key].classList.toggle('active', key === tabId);
                 });
 
-                // Refresh content when switching
-                if (tabId === 'listings') renderListings();
-                else if (tabId === 'expiring') renderExpiring();
-                else if (tabId === 'reviews') renderReviews();
+                if (tabId === 'listings') {
+                    renderListings();
+                } else if (tabId === 'expiring') {
+                    loadExpiring();
+                } else if (tabId === 'reviews') {
+                    loadReviews();
+                }
             }
 
             tabs.forEach(btn => {
@@ -1740,63 +1829,65 @@
             });
 
             // ============================================================
-            // LISTING SEARCH & PAGINATION
+            // SEARCH (Backend-based with debounce)
             // ============================================================
+            let listingSearchTimeout;
             listingSearchInput.addEventListener('input', function() {
                 listingSearchQuery = this.value;
                 clearListingSearch.classList.toggle('visible', !!this.value);
-                listingsPage = 1;
-                renderListings();
+                
+                clearTimeout(listingSearchTimeout);
+                listingSearchTimeout = setTimeout(() => {
+                    renderListings();
+                }, 400);
             });
 
             clearListingSearch.addEventListener('click', function() {
                 listingSearchInput.value = '';
                 listingSearchQuery = '';
                 this.classList.remove('visible');
-                listingsPage = 1;
                 renderListings();
             });
 
-            listingPrev.addEventListener('click', function() {
-                if (listingsPage > 1) { listingsPage--;
-                    renderListings(); }
-            });
-            listingNext.addEventListener('click', function() {
-                const totalPages = Math.ceil(listingsFiltered.length / perPage);
-                if (listingsPage < totalPages) { listingsPage++;
-                    renderListings(); }
-            });
-
-            // ============================================================
-            // REVIEW SEARCH & PAGINATION
-            // ============================================================
+            let reviewSearchTimeout;
             reviewSearchInput.addEventListener('input', function() {
                 reviewSearchQuery = this.value;
                 clearReviewSearch.classList.toggle('visible', !!this.value);
-                reviewsPage = 1;
-                renderReviews();
+                
+                clearTimeout(reviewSearchTimeout);
+                reviewSearchTimeout = setTimeout(() => {
+                    renderReviews();
+                }, 400);
             });
 
             clearReviewSearch.addEventListener('click', function() {
                 reviewSearchInput.value = '';
                 reviewSearchQuery = '';
                 this.classList.remove('visible');
-                reviewsPage = 1;
                 renderReviews();
             });
 
+            // ============================================================
+            // PAGINATION
+            // ============================================================
+            listingPrev.addEventListener('click', function() {
+                // TODO: Implement pagination with backend
+                // For now, just reload
+                renderListings();
+            });
+            listingNext.addEventListener('click', function() {
+                renderListings();
+            });
+
             reviewPrev.addEventListener('click', function() {
-                if (reviewsPage > 1) { reviewsPage--;
-                    renderReviews(); }
+                renderReviews();
             });
             reviewNext.addEventListener('click', function() {
-                const totalPages = Math.ceil(reviewsFiltered.length / reviewsPerPage);
-                if (reviewsPage < totalPages) { reviewsPage++;
-                    renderReviews(); }
+                renderReviews();
             });
 
             // ============================================================
-            // KEYBOARD SHORTCUT: CMD+K / CTRL+K → focus search
+            // KEYBOARD SHORTCUTS
             // ============================================================
             document.addEventListener('keydown', function(e) {
                 if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -1804,11 +1895,8 @@
                     const activeTab = document.querySelector('.dash-tabs .tab-btn.active');
                     if (activeTab) {
                         const tabId = activeTab.dataset.tab;
-                        if (tabId === 'listings') {
-                            listingSearchInput.focus();
-                        } else if (tabId === 'reviews') {
-                            reviewSearchInput.focus();
-                        }
+                        if (tabId === 'listings') listingSearchInput.focus();
+                        else if (tabId === 'reviews') reviewSearchInput.focus();
                     }
                 }
                 if (e.key === 'Escape') {
@@ -1824,43 +1912,51 @@
             });
 
             // ============================================================
+            // LOAD ALL DATA
+            // ============================================================
+            async function loadAllData() {
+                try {
+                    // Load dashboard stats
+                    const statsData = await fetchDashboard();
+                    if (statsData) {
+                        renderStats(statsData);
+                    }
+
+                    // Load listings (always loaded on page load)
+                    await renderListings();
+
+                    // Render verification banner
+                    renderVerificationBanner();
+
+                    console.log('Dashboard loaded successfully');
+                } catch (error) {
+                    console.error('Error loading dashboard:', error);
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error('Failed to load dashboard data. Please refresh.');
+                    }
+                }
+            }
+
+            // ============================================================
             // INIT
             // ============================================================
             function init() {
-                // Stats
-                renderStats(dummyStats);
+                // Show loading states for tabs
+                showTabLoading(expiringContainer);
+                showTabLoading(reviewContainer);
 
-                // Listings
-                renderListings();
+                // Load all data
+                loadAllData();
 
-                // Expiring
-                renderExpiring();
-
-                // Reviews
-                renderReviews();
-
-                // Update badges
-                listingCountBadge.textContent = listings.length;
-                expiringCountBadge.textContent = expirings.length;
-                reviewCountBadge.textContent = reviews.length;
-
-                // Set default tab active
+                // Set default tab
                 switchTab('listings');
-
-                console.log('📊 Dashboard initialized with dummy data');
             }
 
             // Wait for global.js to inject header/nav
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {
-                // If DOM is already ready, wait a tick for global.js
                 setTimeout(init, 100);
-            }
-
-            // Also re-init if global.js loads after
-            if (typeof window.__dashboardInit === 'undefined') {
-                window.__dashboardInit = init;
             }
 
         })();

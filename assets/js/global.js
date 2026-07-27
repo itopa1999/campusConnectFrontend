@@ -10,12 +10,27 @@
     // API ENDPOINTS
     // ============================================================
     const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
-    const REPORT_URL = 'http://127.0.0.1:8000/user/api/report/';
     const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
     const NOTIFICATIONS_URL = 'http://127.0.0.1:8000/user/api/notifications/';
-    const REFRESH_URL = 'http://127.0.0.1:8000/user/api/auth/refresh-token';
     const LOGOUT_URL = 'http://127.0.0.1:8000/user/api/auth/logout-user';
+    const REFRESH_POINTS_URL = 'http://127.0.0.1:8000/user/api/';
     const X_KEY_ID = '1';
+
+    const listingStatusMap = {
+        active: 'active',
+        expired: 'expired',
+        sold: 'sold',
+        pending: 'pending',
+        reject: 'reject',
+    };
+
+    const notificationTypeMap = {
+        listing: 'listing',
+        account: 'account',
+        system: 'system',
+        transaction: 'transaction',
+        others: 'others'
+    };
 
     // ============================================================
     // USER SESSION MANAGEMENT
@@ -159,7 +174,7 @@
     }
 
     async function refreshToken() {
-        const response = await fetch(REFRESH_URL, {
+        const response = await fetch(`${AUTH_URL}refresh-token`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -260,7 +275,7 @@
 
     async function logoutUser() {
         try {
-            const response = await fetchWithAuth(LOGOUT_URL, {
+            const response = await fetchWithAuth(`${AUTH_URL}logout-user`, {
                 method: 'POST',
                 headers: {
                     'accept': 'application/json',
@@ -287,6 +302,48 @@
             setTimeout(() => {
                 window.location.href = '/auth/auth.html';
             }, 500);
+        }
+    }
+
+    // ============================================================
+    // REFRESH POINTS BALANCE
+    // ============================================================
+
+    async function refreshPointBalance() {
+        try {
+            const response = await fetchWithAuth(REFRESH_POINTS_URL, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' },
+            showSpinner: true,
+            credentials: 'include',
+            });
+            if (!response.ok) throw new Error('Failed to refresh dashboard');
+            const result = await response.json();
+            if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
+            const newBalance = result.data.points_balance;
+
+            const BuyPointUserPoints = document.getElementById('userPoints');
+            const summaryPointsBalance = document.getElementById('summaryPointsBalance');
+            const pointsBalanceDisplay = document.getElementById('pointsBalanceDisplay');
+
+            if (pointsBalanceDisplay) pointsBalanceDisplay.innerText = newBalance;
+            if (BuyPointUserPoints) BuyPointUserPoints.innerText = newBalance;
+            if (summaryPointsBalance) summaryPointsBalance.innerText = newBalance;
+
+            const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+            if (userStr) {
+            try {
+                const user = JSON.parse(userStr);
+                user.point_bal = newBalance;
+                const storage = sessionStorage.getItem('rememberMe') === 'true' ? localStorage : sessionStorage;
+                storage.setItem('user', JSON.stringify(user));
+            } catch (e) { }
+            }
+
+            showAlert.success('Point balance updated', { duration: 1500 });
+        } catch (err) {
+            console.error('Refresh error:', err);
+            showAlert.fail('Failed to refresh Point balance', { duration: 1500 });
         }
     }
 
@@ -1058,6 +1115,10 @@
     // ============================================================
     // EXPOSE GLOBALLY
     // ============================================================
+    window.AUTH_URL = AUTH_URL;
+    window.CAMPUS_URL = CAMPUS_URL;
+    window.NOTIFICATIONS_URL = NOTIFICATIONS_URL;
+
 
     window.fetchWithAuth = fetchWithAuth;
     window.showGlobalSpinner = showGlobalSpinner;
@@ -1070,6 +1131,9 @@
     window.setUserData = setUserData;
     window.updateHeaderUser = updateHeaderUser;
     window.clearUserSession = clearUserSession;
+    window.listingStatusMap = listingStatusMap;
+    window.notificationTypeMap = notificationTypeMap;
+    window.refreshPointBalance = refreshPointBalance;
 
     // ============================================================
     // DOM READY

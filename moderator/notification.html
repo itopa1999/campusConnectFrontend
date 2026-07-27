@@ -232,7 +232,7 @@
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-card);
             transition: all var(--transition);
-            cursor: default;
+            cursor: pointer;
             position: relative;
         }
         .notif-card:hover {
@@ -263,7 +263,7 @@
             background: var(--green-bg);
             color: var(--green);
         }
-        .notif-card .notif-icon.message {
+        .notif-card .notif-icon.account {
             background: #e8f0fe;
             color: #2980b9;
         }
@@ -271,17 +271,33 @@
             background: #fef3e8;
             color: #e67e22;
         }
+        .notif-card .notif-icon.transaction {
+            background: #f0ebff;
+            color: #8e44ad;
+        }
+        .notif-card .notif-icon.others {
+            background: var(--bg-input);
+            color: var(--text-muted2);
+        }
         .dark-mode .notif-card .notif-icon.listing {
             background: #1a3a2a;
             color: #2ecc71;
         }
-        .dark-mode .notif-card .notif-icon.message {
+        .dark-mode .notif-card .notif-icon.account {
             background: #1a2a3a;
             color: #3498db;
         }
         .dark-mode .notif-card .notif-icon.system {
             background: #3a2a1a;
             color: #f39c12;
+        }
+        .dark-mode .notif-card .notif-icon.transaction {
+            background: #2a1a3a;
+            color: #a569bd;
+        }
+        .dark-mode .notif-card .notif-icon.others {
+            background: var(--bg-input);
+            color: var(--text-muted2);
         }
 
         .notif-card .notif-body {
@@ -320,16 +336,6 @@
         .notif-card .notif-body .notif-meta .time i {
             font-size: 10px;
         }
-        .notif-card .notif-body .notif-meta .action-link {
-            color: var(--green);
-            font-weight: 500;
-            text-decoration: none;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .notif-card .notif-body .notif-meta .action-link:hover {
-            opacity: 0.7;
-        }
         .notif-card .notif-body .notif-meta .read-badge {
             font-size: 9px;
             font-weight: 700;
@@ -366,6 +372,8 @@
             border-radius: 8px;
             transition: all 0.2s;
             line-height: 1;
+            position: relative;
+            z-index: 2;
         }
         .notif-card .notif-actions-right button:hover {
             background: var(--bg-input);
@@ -617,6 +625,25 @@
                 opacity: 1;
             }
         }
+
+        /* ─── Loading spinner ─── */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        .loading-spinner .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -698,7 +725,7 @@
 
         <!-- ===== DEMO NOTE ===== -->
         <div class="demo-note">
-            <span>CampusHub</span> • Notifications • filter by read status • dummy actions
+            <span>CampusHub</span> • Notifications
         </div>
 
     </div>
@@ -713,146 +740,13 @@
             'use strict';
 
             // ============================================================
-            // DUMMY DATA – Notifications endpoint
+            // API ENDPOINTS
             // ============================================================
-            const dummyNotifications = {
-                request_id: "e11f68f0-816a-4352-b12c-bec986fb6aa9",
-                status_code: 200,
-                message: "Notifications retrieved successfully",
-                is_success: true,
-                data: {
-                    notifications: [{
-                        id: 120,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 119,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 118,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 117,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 116,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 115,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 114,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 113,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 112,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been added.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 111,
-                        notification_type: "listing",
-                        title: "Favourite Updated",
-                        message: "Your favourite status for 'HP Laptop - Core i5' has been removed.",
-                        is_read: false,
-                        action_url: "/dash/favourites.html",
-                        created_at: "8 hours ago"
-                    }, {
-                        id: 110,
-                        notification_type: "system",
-                        title: "Welcome to CampusHub!",
-                        message: "Start exploring and connecting with students around you.",
-                        is_read: true,
-                        action_url: "/explore.html",
-                        created_at: "2 days ago"
-                    }, {
-                        id: 109,
-                        notification_type: "message",
-                        title: "New message from Chidi",
-                        message: "Hey, is the laptop still available? I'm interested.",
-                        is_read: true,
-                        action_url: "/messages.html",
-                        created_at: "3 days ago"
-                    }, {
-                        id: 108,
-                        notification_type: "listing",
-                        title: "Your listing 'Mini Fridge' expired",
-                        message: "Your listing has expired. Reactivate it to keep it visible.",
-                        is_read: true,
-                        action_url: "/dash/listings.html",
-                        created_at: "5 days ago"
-                    }, {
-                        id: 107,
-                        notification_type: "system",
-                        title: "Profile completion reminder",
-                        message: "Complete your profile to boost your trust score and get more visibility.",
-                        is_read: false,
-                        action_url: "/profile.html",
-                        created_at: "6 days ago"
-                    }, {
-                        id: 106,
-                        notification_type: "listing",
-                        title: "Bike for Sale got a new view",
-                        message: "Your listing 'Bike - Trek FX 2' has received 5 new views today.",
-                        is_read: false,
-                        action_url: "/dash/listings.html",
-                        created_at: "1 week ago"
-                    }],
-                    unread_messages_counts: 64,
-                    pagination: {
-                        page: 1,
-                        per_page: 10,
-                        total_pages: 2,
-                        total_items: 15,
-                        has_next: true,
-                        has_previous: false
-                    }
-                }
-            };
+            const NOTIFICATIONS_BASE = `${NOTIFICATIONS_URL}`;
+            const MARK_ALL_READ_URL = NOTIFICATIONS_BASE + 'all-mark-read';
+            const DELETE_ALL_URL = NOTIFICATIONS_BASE + 'delete-all';
+            const DELETE_ONE_URL = NOTIFICATIONS_BASE + 'delete/';
+            const MARK_READ_URL = NOTIFICATIONS_BASE + 'mark-read/';
 
             // ============================================================
             // DOM REFS
@@ -878,52 +772,51 @@
             // ============================================================
             // STATE
             // ============================================================
-            let allNotifications = [...dummyNotifications.data.notifications];
-            let currentFilter = 'all'; // 'all' | 'unread' | 'read'
+            let allNotifications = [];
+            let currentFilter = 'all';
             let currentPage = 1;
-            const perPage = dummyNotifications.data.pagination.per_page || 10;
-            let filteredItems = [...allNotifications];
-            let toastTimer = null;
+            const perPage = 10;
+            let totalItems = 0;
+            let totalPages = 1;
+            let isLoading = false;
 
             // ============================================================
             // HELPERS
             // ============================================================
             function getIconForType(type) {
                 const map = {
-                    'listing': 'fa-tag',
-                    'message': 'fa-envelope',
-                    'system': 'fa-gear'
+                    'listing': 'fas fa-tag',
+                    'account': 'fas fa-user',
+                    'system': 'fas fa-gear',
+                    'transaction': 'fas fa-coins',
+                    'others': 'fas fa-bell'
                 };
-                return map[type] || 'fa-bell';
+                return map[type] || 'fas fa-bell';
             }
 
             function getIconClass(type) {
                 const map = {
                     'listing': 'listing',
-                    'message': 'message',
-                    'system': 'system'
+                    'account': 'account',
+                    'system': 'system',
+                    'transaction': 'transaction',
+                    'others': 'others'
                 };
-                return map[type] || '';
+                return map[type] || 'others';
             }
 
-            function getFilteredItems() {
-                if (currentFilter === 'all') return allNotifications;
-                if (currentFilter === 'unread') return allNotifications.filter(n => !n.is_read);
-                if (currentFilter === 'read') return allNotifications.filter(n => n.is_read);
-                return allNotifications;
-            }
-
-            function getUnreadCount() {
-                return allNotifications.filter(n => !n.is_read).length;
-            }
-
-            function getReadCount() {
-                return allNotifications.filter(n => n.is_read).length;
+            function getFilterParam() {
+                if (currentFilter === 'all') return '';
+                if (currentFilter === 'unread') return '?is_read=false';
+                if (currentFilter === 'read') return '?is_read=true';
+                return '';
             }
 
             // ============================================================
             // TOAST
             // ============================================================
+            let toastTimer = null;
+
             function showToast(message, type = 'success') {
                 toastMessage.textContent = message;
                 toastIcon.className = 'toast-icon';
@@ -936,7 +829,7 @@
                 clearTimeout(toastTimer);
                 toastTimer = setTimeout(() => {
                     toast.classList.remove('visible');
-                }, 3000);
+                }, 3500);
             }
 
             function hideToast() {
@@ -945,159 +838,155 @@
             }
 
             // ============================================================
-            // RENDER
+            // API CALLS
             // ============================================================
-            function renderNotifications() {
-                filteredItems = getFilteredItems();
-                const total = filteredItems.length;
-                const totalPages = Math.ceil(total / perPage) || 1;
-                if (currentPage > totalPages) currentPage = totalPages;
-                if (currentPage < 1) currentPage = 1;
+            async function fetchNotifications(page = 1) {
+                if (isLoading) return;
+                isLoading = true;
+                
+                showLoading(list);
 
-                const start = (currentPage - 1) * perPage;
-                const pageItems = filteredItems.slice(start, start + perPage);
+                try {
+                    let url = NOTIFICATIONS_URL;
+                    const filterParam = getFilterParam();
+                    if (filterParam) {
+                        url += filterParam;
+                        if (page > 1) {
+                            url += '&page=' + page;
+                        }
+                    } else if (page > 1) {
+                        url += '?page=' + page;
+                    }
 
-                // Update counts
-                const unread = getUnreadCount();
-                const read = getReadCount();
-                unreadCountDisplay.textContent = unread;
-                allCount.textContent = total;
-                unreadCountTab.textContent = unread;
-                readCount.textContent = read;
-                resultCount.textContent = `${total} notification${total !== 1 ? 's' : ''}`;
-                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-                prevBtn.disabled = currentPage <= 1;
-                nextBtn.disabled = currentPage >= totalPages;
+                    const response = await fetchWithAuth(url, {
+                        method: 'GET'
+                    });
 
-                // Update filter tab badges
-                document.querySelectorAll('.notif-tabs .tab-btn').forEach(btn => {
-                    const filter = btn.dataset.filter;
-                    const badge = btn.querySelector('.tab-badge');
-                    if (filter === 'all') badge.textContent = allNotifications.length;
-                    else if (filter === 'unread') badge.textContent = unread;
-                    else if (filter === 'read') badge.textContent = read;
-                });
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch notifications');
+                    }
 
-                if (pageItems.length === 0) {
-                    const emptyMsg = currentFilter === 'all' ? 'No notifications yet' :
-                        currentFilter === 'unread' ? 'All caught up! No unread notifications.' :
-                        'No read notifications.';
+                    const result = await response.json();
+                    
+                    if (result.is_success) {
+                        allNotifications = result.data.notifications || [];
+                        totalItems = result.data.pagination?.total_items || 0;
+                        totalPages = result.data.pagination?.total_pages || 1;
+                        currentPage = result.data.pagination?.page || 1;
+                        
+                        // Update unread count from response
+                        if (result.data.unread_messages_counts !== undefined) {
+                            unreadCountDisplay.textContent = result.data.unread_messages_counts;
+                        }
+                        
+                        renderNotifications();
+                    } else {
+                        showToast(result.message || 'Failed to load notifications', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Fetch notifications error:', error);
+                    showToast('Failed to load notifications. Please try again.', 'danger');
                     list.innerHTML = `
-                            <div class="notif-empty">
-                                <span class="empty-icon"><i class="fa-regular fa-bell-slash"></i></span>
-                                <h3>${emptyMsg}</h3>
-                                <p>${currentFilter === 'all' ? 'When you get notifications, they\'ll appear here.' : ''}</p>
-                            </div>
-                        `;
+                        <div class="notif-empty">
+                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <h3>Error loading notifications</h3>
+                            <p>Please refresh the page to try again.</p>
+                        </div>
+                    `;
+                } finally {
+                    isLoading = false;
+                }
+            }
+
+            async function markAsRead(id) {
+                try {
+                    const response = await fetchWithAuth(MARK_READ_URL + id, {
+                        method: 'PUT'
+                    });
+
+                    const result = await response.json();
+                    
+                    if (response.ok && result.is_success) {
+                        showToast(result.message || 'Marked as read', 'success');
+                        await fetchNotifications(currentPage);
+                    } else {
+                        showToast(result.message || 'Failed to mark as read', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Mark as read error:', error);
+                    showToast('Failed to mark as read. Please try again.', 'danger');
+                }
+            }
+
+            async function deleteNotification(id) {
+                try {
+                    const response = await fetchWithAuth(DELETE_ONE_URL + id, {
+                        method: 'DELETE'
+                    });
+
+                    const result = await response.json();
+                    
+                    if (response.ok && result.is_success) {
+                        showToast(result.message || 'Notification deleted', 'success');
+                        await fetchNotifications(currentPage);
+                    } else {
+                        showToast(result.message || 'Failed to delete notification', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Delete notification error:', error);
+                    showToast('Failed to delete notification. Please try again.', 'danger');
+                }
+            }
+
+            async function markAllAsRead() {
+                if (allNotifications.length === 0) {
+                    showToast('No notifications to mark as read', 'warning');
                     return;
                 }
 
-                list.innerHTML = pageItems.map(item => {
-                    const icon = getIconForType(item.notification_type);
-                    const iconClass = getIconClass(item.notification_type);
-                    const isUnread = !item.is_read;
-                    const readBadgeClass = isUnread ? 'unread-badge' : '';
-                    const readBadgeText = isUnread ? 'Unread' : 'Read';
-
-                    return `
-                            <div class="notif-card ${isUnread ? 'unread' : ''}" data-id="${item.id}">
-                                <div class="notif-icon ${iconClass}">
-                                    <i class="fa-regular ${icon}"></i>
-                                </div>
-                                <div class="notif-body">
-                                    <div class="notif-title-text">${item.title}</div>
-                                    <div class="notif-message">${item.message}</div>
-                                    <div class="notif-meta">
-                                        <span class="time"><i class="fa-regular fa-clock"></i> ${item.created_at}</span>
-                                        ${item.action_url ? `<a href="${item.action_url}" class="action-link">View</a>` : ''}
-                                        <span class="read-badge ${readBadgeClass}">${readBadgeText}</span>
-                                    </div>
-                                </div>
-                                <div class="notif-actions-right">
-                                    ${isUnread ? `
-                                        <button class="mark-read-btn" data-id="${item.id}" title="Mark as read">
-                                            <i class="fa-regular fa-circle"></i>
-                                        </button>
-                                    ` : `
-                                        <button class="mark-read-btn" data-id="${item.id}" title="Mark as unread">
-                                            <i class="fa-regular fa-circle-check"></i>
-                                        </button>
-                                    `}
-                                    <button class="delete-btn" data-id="${item.id}" title="Delete notification">
-                                        <i class="fa-regular fa-trash-can"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                }).join('');
-
-                // ─── Attach event listeners ───
-                list.querySelectorAll('.mark-read-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const id = parseInt(this.dataset.id);
-                        const notif = allNotifications.find(n => n.id === id);
-                        if (notif) {
-                            notif.is_read = !notif.is_read;
-                            renderNotifications();
-                            const status = notif.is_read ? 'read' : 'unread';
-                            showToast(`Marked as ${status}`, 'success');
-                            if (typeof showAlert !== 'undefined') {
-                                showAlert.success(`Marked as ${status}`, { duration: 1500 });
-                            }
-                        }
+                try {
+                    const response = await fetchWithAuth(MARK_ALL_READ_URL, {
+                        method: 'PUT'
                     });
-                });
 
-                list.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const id = parseInt(this.dataset.id);
-                        deleteNotification(id);
-                    });
-                });
-            }
-
-            // ============================================================
-            // ACTIONS
-            // ============================================================
-
-            // ─── Delete one ──────────────────────────────────────────
-            function deleteNotification(id) {
-                const index = allNotifications.findIndex(n => n.id === id);
-                if (index === -1) return;
-                const removed = allNotifications[index];
-                allNotifications.splice(index, 1);
-
-                // Adjust page if needed
-                const totalAfter = getFilteredItems().length;
-                const totalPagesAfter = Math.ceil(totalAfter / perPage) || 1;
-                if (currentPage > totalPagesAfter) currentPage = totalPagesAfter;
-                if (currentPage < 1) currentPage = 1;
-
-                renderNotifications();
-                showToast(`"${removed.title}" deleted`, 'danger');
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.info(`Notification deleted`, { duration: 1500 });
+                    const result = await response.json();
+                    
+                    if (response.ok && result.is_success) {
+                        showToast(result.message || 'All notifications marked as read', 'success');
+                        await fetchNotifications(currentPage);
+                    } else {
+                        showToast(result.message || 'Failed to mark all as read', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Mark all as read error:', error);
+                    showToast('Failed to mark all as read. Please try again.', 'danger');
                 }
             }
 
-            // ─── Delete all ──────────────────────────────────────────
-            function deleteAllNotifications() {
+            async function deleteAllNotifications() {
                 if (allNotifications.length === 0) {
                     showToast('No notifications to delete', 'warning');
                     return;
                 }
 
                 // Confirm via modal if available
-                const doDelete = () => {
-                    const count = allNotifications.length;
-                    allNotifications = [];
-                    currentPage = 1;
-                    renderNotifications();
-                    showToast(`Deleted all ${count} notifications`, 'danger');
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert.success(`All notifications cleared`, { duration: 1500 });
+                const doDelete = async () => {
+                    try {
+                        const response = await fetchWithAuth(DELETE_ALL_URL, {
+                            method: 'DELETE'
+                        });
+
+                        const result = await response.json();
+                        
+                        if (response.ok && result.is_success) {
+                            showToast(result.message || 'All notifications deleted', 'success');
+                            await fetchNotifications(1);
+                        } else {
+                            showToast(result.message || 'Failed to delete all notifications', 'danger');
+                        }
+                    } catch (error) {
+                        console.error('Delete all error:', error);
+                        showToast('Failed to delete all notifications. Please try again.', 'danger');
                     }
                 };
 
@@ -1118,20 +1007,110 @@
                 }
             }
 
-            // ─── Mark all as read ──────────────────────────────────
-            function markAllAsRead() {
-                const unread = allNotifications.filter(n => !n.is_read);
-                if (unread.length === 0) {
-                    showToast('All notifications are already read', 'warning');
+            // ============================================================
+            // RENDER
+            // ============================================================
+            function showLoading(container) {
+                container.innerHTML = `
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                `;
+            }
+
+            function renderNotifications() {
+                const total = totalItems;
+                const totalPagesCalc = totalPages;
+
+                // Update counts
+                const unreadCount = allNotifications.filter(n => !n.is_read).length;
+                const readCountVal = allNotifications.filter(n => n.is_read).length;
+                
+                unreadCountTab.textContent = unreadCount;
+                allCount.textContent = total;
+                readCount.textContent = readCountVal;
+                resultCount.textContent = `${total} notification${total !== 1 ? 's' : ''}`;
+                pageInfo.textContent = `Page ${currentPage} of ${totalPagesCalc}`;
+                prevBtn.disabled = currentPage <= 1;
+                nextBtn.disabled = currentPage >= totalPagesCalc;
+
+                if (allNotifications.length === 0) {
+                    const emptyMsg = currentFilter === 'all' ? 'No notifications yet' :
+                        currentFilter === 'unread' ? 'All caught up! No unread notifications.' :
+                        'No read notifications.';
+                    list.innerHTML = `
+                        <div class="notif-empty">
+                            <span class="empty-icon"><i class="fa-regular fa-bell-slash"></i></span>
+                            <h3>${emptyMsg}</h3>
+                            <p>${currentFilter === 'all' ? 'When you get notifications, they will appear here.' : ''}</p>
+                        </div>
+                    `;
                     return;
                 }
 
-                unread.forEach(n => n.is_read = true);
-                renderNotifications();
-                showToast(`Marked ${unread.length} notifications as read`, 'success');
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.success(`All caught up!`, { duration: 1500 });
-                }
+                list.innerHTML = allNotifications.map(item => {
+                    const icon = getIconForType(item.notification_type);
+                    const iconClass = getIconClass(item.notification_type);
+                    const isUnread = !item.is_read;
+                    const readBadgeClass = isUnread ? 'unread-badge' : '';
+                    const readBadgeText = isUnread ? 'Unread' : 'Read';
+
+                    return `
+                        <div class="notif-card ${isUnread ? 'unread' : ''}" data-id="${item.id}" data-url="${item.action_url || '#'}">
+                            <div class="notif-icon ${iconClass}">
+                                <i class="fa-regular ${icon}"></i>
+                            </div>
+                            <div class="notif-body">
+                                <div class="notif-title-text">${item.title}</div>
+                                <div class="notif-message">${item.message}</div>
+                                <div class="notif-meta">
+                                    <span class="time"><i class="fa-regular fa-clock"></i> ${item.created_at}</span>
+                                    <span class="read-badge ${readBadgeClass}">${readBadgeText}</span>
+                                </div>
+                            </div>
+                            <div class="notif-actions-right">
+                                <button class="mark-read-btn" data-id="${item.id}" title="${isUnread ? 'Mark as read' : 'Mark as unread'}">
+                                    ${isUnread ? '<i class="fa-regular fa-circle"></i>' : '<i class="fa-regular fa-circle-check"></i>'}
+                                </button>
+                                <button class="delete-btn" data-id="${item.id}" title="Delete notification">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // ─── Attach event listeners ───
+                // Card click → navigate to action_url
+                list.querySelectorAll('.notif-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        // Don't navigate if click was on a button
+                        if (e.target.closest('button')) return;
+                        
+                        const url = this.dataset.url;
+                        if (url && url !== '#') {
+                            window.location.href = url;
+                        }
+                    });
+                });
+
+                // Mark read/unread button
+                list.querySelectorAll('.mark-read-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        markAsRead(id);
+                    });
+                });
+
+                // Delete button
+                list.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        deleteNotification(id);
+                    });
+                });
             }
 
             // ============================================================
@@ -1143,7 +1122,7 @@
                     this.classList.add('active');
                     currentFilter = this.dataset.filter;
                     currentPage = 1;
-                    renderNotifications();
+                    fetchNotifications(1);
                 });
             });
 
@@ -1151,14 +1130,15 @@
             // PAGINATION
             // ============================================================
             prevBtn.addEventListener('click', function() {
-                if (currentPage > 1) { currentPage--;
-                    renderNotifications(); }
+                if (currentPage > 1) {
+                    fetchNotifications(currentPage - 1);
+                }
             });
 
             nextBtn.addEventListener('click', function() {
-                const totalPages = Math.ceil(getFilteredItems().length / perPage);
-                if (currentPage < totalPages) { currentPage++;
-                    renderNotifications(); }
+                if (currentPage < totalPages) {
+                    fetchNotifications(currentPage + 1);
+                }
             });
 
             // ============================================================
@@ -1171,15 +1151,9 @@
             // KEYBOARD SHORTCUTS
             // ============================================================
             document.addEventListener('keydown', function(e) {
-                // 'r' for mark all read
                 if (e.key === 'r' && !e.ctrlKey && !e.metaKey && !e.target.closest('input, textarea, button')) {
                     e.preventDefault();
                     markAllAsRead();
-                }
-                // 'd' for delete all
-                if (e.key === 'd' && !e.ctrlKey && !e.metaKey && !e.target.closest('input, textarea, button')) {
-                    e.preventDefault();
-                    deleteAllNotifications();
                 }
             });
 
@@ -1187,8 +1161,15 @@
             // INIT
             // ============================================================
             function init() {
-                renderNotifications();
-                console.log('🔔 Notifications page initialized with ' + allNotifications.length + ' items');
+                // Show loading state
+                list.innerHTML = `
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                `;
+                
+                fetchNotifications(1);
+                console.log('Notifications page initialized');
             }
 
             if (document.readyState === 'loading') {
@@ -1196,15 +1177,6 @@
             } else {
                 setTimeout(init, 100);
             }
-
-            // Expose for debugging
-            window.__notif = {
-                all: () => allNotifications,
-                delete: deleteNotification,
-                deleteAll: deleteAllNotifications,
-                markAllRead: markAllAsRead,
-                render: renderNotifications
-            };
 
         })();
     </script>

@@ -127,7 +127,7 @@
 
         .packages-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 14px;
         }
         .package-card {
@@ -170,10 +170,10 @@
             color: var(--text-muted);
         }
         .package-card .package-save {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            color: var(--red);
-            background: rgba(231, 76, 60, 0.08);
+            color: var(--green);
+            background: var(--green-bg);
             padding: 2px 14px;
             border-radius: 20px;
             display: inline-block;
@@ -195,11 +195,14 @@
         .package-card .package-badge.popular {
             background: #e67e22;
         }
+        .package-card .package-badge.best-value {
+            background: #2980b9;
+        }
         .dark-mode .package-card:hover {
             border-color: #2ecc71;
         }
         .dark-mode .package-card .package-save {
-            background: rgba(231, 76, 60, 0.15);
+            background: rgba(46, 204, 113, 0.12);
         }
 
         @media (max-width: 480px) {
@@ -216,13 +219,557 @@
             .package-card .package-price {
                 font-size: 15px;
             }
-            .package-card .package-save {
+        }
+
+        /* ─── Tabs ─── */
+        .points-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 4px;
+            background: var(--bg-input);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .points-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .points-tabs .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+        .points-tabs .tab-btn i {
+            font-size: 15px;
+            transition: transform 0.3s ease;
+        }
+        .points-tabs .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .points-tabs .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--green);
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.15);
+            transform: scale(1.02);
+        }
+        .points-tabs .tab-btn.active i {
+            transform: scale(1.1);
+        }
+        .points-tabs .tab-btn .tab-badge {
+            background: var(--green);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 8px;
+            border-radius: 20px;
+            margin-left: 4px;
+        }
+        .dark-mode .points-tabs {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .points-tabs .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .dark-mode .points-tabs .tab-btn.active {
+            background: var(--bg-card);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width: 480px) {
+            .points-tabs .tab-btn {
                 font-size: 11px;
-                padding: 1px 10px;
+                padding: 8px 12px;
+                gap: 5px;
+            }
+            .points-tabs .tab-btn i {
+                font-size: 13px;
             }
         }
 
-        /* ─── Payment Gateway Modal ─── */
+        /* ─── Tab Content ─── */
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ─── Filter Row ─── */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .filter-row .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-row .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .filter-row .filter-group input[type="date"] {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            transition: all 0.25s ease;
+            width: 150px;
+        }
+        .filter-row .filter-group input[type="date"]:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.08);
+        }
+        .filter-row .filter-group input[type="date"]::placeholder {
+            color: var(--text-muted);
+        }
+        .filter-row .filter-actions {
+            display: flex;
+            gap: 6px;
+            margin-left: auto;
+        }
+        .filter-row .filter-actions button {
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-row .filter-actions button:hover {
+            border-color: var(--green);
+            color: var(--green);
+            background: var(--green-bg);
+        }
+        .filter-row .filter-actions button.btn-clear-filter:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: rgba(231, 76, 60, 0.06);
+        }
+        .filter-row .result-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+            transition: color var(--transition);
+            margin-left: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 12px;
+            }
+            .filter-row .filter-group {
+                justify-content: stretch;
+            }
+            .filter-row .filter-group input[type="date"] {
+                flex: 1;
+                width: 100%;
+            }
+            .filter-row .filter-actions {
+                margin-left: 0;
+                justify-content: center;
+            }
+            .filter-row .result-count {
+                margin-left: 0;
+                text-align: center;
+            }
+        }
+
+        /* ─── Cards Grid ─── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .card-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            padding: 16px 18px;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .card-item:hover {
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .card-item .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .card-item .card-top .card-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .card-item .card-top .card-left .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+        .card-item .card-top .card-left .card-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .card-item .card-top .card-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .card-item .card-top .card-right .card-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+        .card-item .card-top .card-right .card-amount.negative {
+            color: var(--red);
+        }
+        .card-item .card-top .card-right .card-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: inline-block;
+            margin-top: 2px;
+        }
+        .card-item .card-top .card-right .card-status.completed {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .card-item .card-top .card-right .card-status.pending {
+            background: #fef3e8;
+            color: #e67e22;
+        }
+        .card-item .card-top .card-right .card-status.failed {
+            background: #fde8e8;
+            color: var(--red);
+        }
+        .card-item .card-top .card-right .card-status.refunded {
+            background: #e8f0fe;
+            color: #2980b9;
+        }
+        .dark-mode .card-item .card-top .card-right .card-status.completed {
+            background: #1a3a2a;
+            color: #2ecc71;
+        }
+        .dark-mode .card-item .card-top .card-right .card-status.pending {
+            background: #3a2a1a;
+            color: #f39c12;
+        }
+        .dark-mode .card-item .card-top .card-right .card-status.failed {
+            background: #3a1a1a;
+            color: #e74c3c;
+        }
+        .dark-mode .card-item .card-top .card-right .card-status.refunded {
+            background: #1a2a3a;
+            color: #3498db;
+        }
+
+        .card-item .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 8px;
+            transition: border-color var(--transition);
+        }
+        .card-item .card-bottom .card-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color var(--transition);
+        }
+        .card-item .card-bottom .card-meta i {
+            font-size: 11px;
+            color: var(--green);
+        }
+        .card-item .card-bottom .card-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+
+        /* Transaction specific */
+        .card-item .card-amount-large {
+            font-size: 20px;
+            font-weight: 700;
+            transition: color var(--transition);
+        }
+        .card-item .card-amount-large.positive {
+            color: var(--green);
+        }
+        .card-item .card-amount-large.negative {
+            color: var(--red);
+        }
+        .card-item .card-type-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 30px;
+            text-transform: capitalize;
+            background: var(--bg-input);
+            color: var(--text-muted2);
+            transition: background var(--transition), color var(--transition);
+        }
+        .card-item .card-type-badge.credit {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .card-item .card-type-badge.debit {
+            background: #fde8e8;
+            color: var(--red);
+        }
+        .dark-mode .card-item .card-type-badge.credit {
+            background: #1a3a2a;
+            color: #2ecc71;
+        }
+        .dark-mode .card-item .card-type-badge.debit {
+            background: #3a1a1a;
+            color: #e74c3c;
+        }
+
+        .card-item .card-balance {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+
+        @media (max-width: 480px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .card-item {
+                padding: 14px 14px;
+            }
+            .card-item .card-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .card-item .card-top .card-right {
+                text-align: left;
+                width: 100%;
+            }
+            .card-item .card-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+        }
+
+        /* ─── Pagination ─── */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        .pagination-controls button {
+            padding: 6px 18px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background: var(--green-bg);
+            border-color: var(--green);
+            color: var(--green);
+            transform: translateY(-2px);
+        }
+        .pagination-controls button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .pagination-controls .page-info {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            min-width: 80px;
+            text-align: center;
+            transition: color var(--transition);
+        }
+
+        /* ─── Empty State ─── */
+        .cards-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+        .cards-empty .empty-icon {
+            font-size: 48px;
+            opacity: 0.3;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .cards-empty h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            transition: color var(--transition);
+        }
+        .cards-empty p {
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+
+        /* ─── Loading ─── */
+        .cards-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+            gap: 12px;
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+        .cards-loading .spinner {
+            width: 32px;
+            height: 32px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .cards-loading p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ─── Toast ─── */
+        .points-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+        }
+        .points-toast.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .points-toast .toast-icon {
+            font-size: 20px;
+        }
+        .points-toast .toast-icon.success {
+            color: var(--green);
+        }
+        .points-toast .toast-icon.warning {
+            color: #e67e22;
+        }
+        .points-toast .toast-icon.danger {
+            color: var(--red);
+        }
+        .dark-mode .points-toast {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width: 480px) {
+            .points-toast {
+                font-size: 13px;
+                padding: 10px 18px;
+                white-space: normal;
+                max-width: 90%;
+                bottom: 90px;
+            }
+        }
+
+        /* ─── Payment Modal ─── */
         .payment-overlay {
             position: fixed;
             top: 0;
@@ -449,479 +996,6 @@
             }
         }
 
-        /* ─── Tabs ─── */
-        .points-tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 20px;
-            padding: 4px;
-            background: var(--bg-input);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            transition: background var(--transition), border-color var(--transition);
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .points-tabs::-webkit-scrollbar {
-            display: none;
-        }
-        .points-tabs .tab-btn {
-            flex: 1;
-            padding: 10px 16px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            white-space: nowrap;
-            min-width: fit-content;
-        }
-        .points-tabs .tab-btn i {
-            font-size: 15px;
-            transition: transform 0.3s ease;
-        }
-        .points-tabs .tab-btn:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.5);
-        }
-        .points-tabs .tab-btn.active {
-            background: var(--bg-card);
-            color: var(--green);
-            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.15);
-            transform: scale(1.02);
-        }
-        .points-tabs .tab-btn.active i {
-            transform: scale(1.1);
-        }
-        .points-tabs .tab-btn .tab-badge {
-            background: var(--green);
-            color: #fff;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 1px 8px;
-            border-radius: 20px;
-            margin-left: 4px;
-        }
-        .dark-mode .points-tabs {
-            background: var(--bg-input);
-            border-color: var(--border-color);
-        }
-        .dark-mode .points-tabs .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        .dark-mode .points-tabs .tab-btn.active {
-            background: var(--bg-card);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-        }
-        @media (max-width: 480px) {
-            .points-tabs .tab-btn {
-                font-size: 11px;
-                padding: 8px 12px;
-                gap: 5px;
-            }
-            .points-tabs .tab-btn i {
-                font-size: 13px;
-            }
-        }
-
-        /* ─── Filters ─── */
-        .filter-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .filter-row .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .filter-row .filter-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-        .filter-row .filter-group input[type="date"] {
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 13px;
-            outline: none;
-            transition: all 0.25s ease;
-        }
-        .filter-row .filter-group input[type="date"]:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.08);
-        }
-        .filter-row .filter-group input[type="date"]::placeholder {
-            color: var(--text-muted);
-        }
-        .filter-row .search-box {
-            flex: 1;
-            min-width: 150px;
-            display: flex;
-            align-items: center;
-            background: var(--bg-input);
-            border-radius: 28px;
-            padding: 6px 16px;
-            gap: 8px;
-            border: 1px solid transparent;
-            transition: all var(--transition);
-        }
-        .filter-row .search-box:focus-within {
-            border-color: var(--green);
-            background: var(--bg-card);
-            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.08);
-        }
-        .filter-row .search-box i {
-            color: var(--text-muted2);
-            transition: color var(--transition);
-        }
-        .filter-row .search-box input {
-            border: none;
-            background: transparent;
-            outline: none;
-            flex: 1;
-            font-size: 13px;
-            color: var(--text-primary);
-            padding: 4px 0;
-            width: 100%;
-            transition: color var(--transition);
-        }
-        .filter-row .search-box input::placeholder {
-            color: var(--text-muted);
-        }
-        .filter-row .search-box .clear-filter-search {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 16px;
-            padding: 0 4px;
-            transition: color 0.2s;
-            display: none;
-        }
-        .filter-row .search-box .clear-filter-search.visible {
-            display: block;
-        }
-        .filter-row .search-box .clear-filter-search:hover {
-            color: var(--red);
-        }
-        .filter-row .filter-actions {
-            display: flex;
-            gap: 6px;
-        }
-        .filter-row .filter-actions button {
-            padding: 6px 16px;
-            border-radius: 30px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .filter-row .filter-actions button:hover {
-            border-color: var(--green);
-            color: var(--green);
-            background: var(--green-bg);
-        }
-        .filter-row .filter-actions button.btn-clear-filter {
-            border-color: transparent;
-            color: var(--text-muted);
-        }
-        .filter-row .filter-actions button.btn-clear-filter:hover {
-            border-color: var(--red);
-            color: var(--red);
-            background: rgba(231, 76, 60, 0.06);
-        }
-        .filter-row .result-count {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-            white-space: nowrap;
-            transition: color var(--transition);
-            margin-left: auto;
-        }
-
-        @media (max-width: 480px) {
-            .filter-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .filter-row .filter-group {
-                justify-content: stretch;
-            }
-            .filter-row .filter-group input[type="date"] {
-                flex: 1;
-            }
-            .filter-row .search-box {
-                min-width: 100%;
-            }
-            .filter-row .result-count {
-                margin-left: 0;
-                text-align: center;
-            }
-            .filter-row .filter-actions {
-                justify-content: center;
-            }
-        }
-
-        /* ─── Table ─── */
-        .table-wrap {
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            transition: border-color var(--transition), background var(--transition);
-        }
-        .table-wrap table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        .table-wrap table thead {
-            background: var(--bg-input);
-            transition: background var(--transition);
-        }
-        .table-wrap table th {
-            padding: 12px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--text-secondary);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            border-bottom: 1px solid var(--border-color);
-            transition: color var(--transition), border-color var(--transition);
-            white-space: nowrap;
-        }
-        .table-wrap table td {
-            padding: 12px 16px;
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--border-color);
-            transition: color var(--transition), border-color var(--transition);
-            vertical-align: middle;
-        }
-        .table-wrap table tbody tr:last-child td {
-            border-bottom: none;
-        }
-        .table-wrap table tbody tr:hover {
-            background: var(--bg-input);
-            transition: background var(--transition);
-        }
-        .table-wrap table .status-badge {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 14px;
-            border-radius: 30px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            display: inline-block;
-        }
-        .table-wrap table .status-badge.completed {
-            background: var(--green-bg);
-            color: var(--green);
-        }
-        .table-wrap table .status-badge.pending {
-            background: #fef3e8;
-            color: #e67e22;
-        }
-        .table-wrap table .status-badge.failed {
-            background: #fde8e8;
-            color: var(--red);
-        }
-        .dark-mode .table-wrap table .status-badge.completed {
-            background: #1a3a2a;
-            color: #2ecc71;
-        }
-        .dark-mode .table-wrap table .status-badge.pending {
-            background: #3a2a1a;
-            color: #f39c12;
-        }
-        .dark-mode .table-wrap table .status-badge.failed {
-            background: #3a1a1a;
-            color: #e74c3c;
-        }
-        .table-wrap table .points-amount {
-            font-weight: 700;
-            color: var(--green);
-        }
-        .table-wrap table .points-amount.negative {
-            color: var(--red);
-        }
-
-        /* ─── Pagination ─── */
-        .pagination-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border-color);
-        }
-        .pagination-controls button {
-            padding: 6px 18px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .pagination-controls button:hover:not(:disabled) {
-            background: var(--green-bg);
-            border-color: var(--green);
-            color: var(--green);
-            transform: translateY(-2px);
-        }
-        .pagination-controls button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .pagination-controls .page-info {
-            font-size: 14px;
-            color: var(--text-muted);
-            font-weight: 500;
-            min-width: 80px;
-            text-align: center;
-            transition: color var(--transition);
-        }
-
-        /* ─── Empty State ─── */
-        .table-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
-        .table-empty .empty-icon {
-            font-size: 48px;
-            opacity: 0.3;
-            margin-bottom: 12px;
-            display: block;
-        }
-        .table-empty h4 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-            transition: color var(--transition);
-        }
-        .table-empty p {
-            font-size: 14px;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-
-        /* ─── Toast notification for purchase ─── */
-        .points-toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            padding: 12px 24px;
-            border-radius: 14px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            border: 1px solid var(--border-color);
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            white-space: nowrap;
-        }
-        .points-toast.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-        .points-toast .toast-icon {
-            font-size: 20px;
-        }
-        .points-toast .toast-icon.success {
-            color: var(--green);
-        }
-        .points-toast .toast-icon.warning {
-            color: #e67e22;
-        }
-        .dark-mode .points-toast {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-        @media (max-width: 480px) {
-            .points-toast {
-                font-size: 13px;
-                padding: 10px 18px;
-                white-space: normal;
-                max-width: 90%;
-                bottom: 90px;
-            }
-        }
-
-        /* ─── Tab Content ─── */
-        .tab-content {
-            display: none;
-            animation: fadeUp 0.4s ease;
-        }
-        .tab-content.active {
-            display: block;
-        }
-
-        /* ─── Loading ─── */
-        .table-loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 0;
-            gap: 12px;
-        }
-        .table-loading .spinner {
-            width: 32px;
-            height: 32px;
-            border: 4px solid var(--border-color);
-            border-top-color: var(--green);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .table-loading p {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
         /* ─── Demo note ─── */
         .demo-note {
             text-align: center;
@@ -937,6 +1011,11 @@
             font-weight: 600;
             color: var(--green);
             transition: color var(--transition);
+        }
+
+        /* ─── Scroll to packages button ─── */
+        #RefreshPointBal {
+            cursor: pointer;
         }
     </style>
 </head>
@@ -962,23 +1041,21 @@
                 <!-- ===== POINTS BALANCE ===== -->
                 <div class="points-balance" id="pointsBalance">
                     <div class="balance-left">
-                        <span class="balance-icon"><i class="fa-regular fa-coins"></i></span>
+                        <span class="balance-icon"><i class="fa-regular fas fa-coins"></i></span>
                         <div class="balance-text">
                             <div class="balance-label">Available Points</div>
                             <div class="balance-amount" id="userPoints">0</div>
                         </div>
                     </div>
                     <div class="balance-right">
-                        <span class="points-value" id="pointsValue">0 pts</span>
-                        <button class="buy-points-btn" id="scrollToPackages"><i class="fa-regular fa-cart-plus"></i> Buy Points</button>
+                        <button class="buy-points-btn" onclick="window.refreshPointBalance()" id="RefreshPointBal"><i class="fa-regular fas fa-refresh"></i> Refresh</button>
                     </div>
                 </div>
 
                 <!-- ===== PACKAGES ===== -->
                 <div class="packages-section" id="packagesSection">
                     <div class="section-title">
-                        <i class="fa-regular fa-gift"></i> Point Packages
-                        <span style="font-size:13px; font-weight:400; color:var(--text-muted);">Buy points to unlock premium features</span>
+                        <i class="fa-regular fas fa-gift"></i> Point Packages
                     </div>
                     <div class="packages-grid" id="packagesGrid">
                         <!-- Populated by JS -->
@@ -988,11 +1065,11 @@
                 <!-- ===== TABS ===== -->
                 <div class="points-tabs" id="pointsTabs">
                     <button class="tab-btn active" data-tab="purchases">
-                        <i class="fa-regular fa-receipt"></i> Purchase History
+                        <i class="fa-regular fas fa-receipt"></i> Purchase History
                         <span class="tab-badge" id="purchaseCount">0</span>
                     </button>
                     <button class="tab-btn" data-tab="transactions">
-                        <i class="fa-regular fa-arrow-right-arrow-left"></i> Transactions
+                        <i class="fa-regular fas fa-arrow-right-arrow-left"></i> Transactions
                         <span class="tab-badge" id="transactionCount">0</span>
                     </button>
                 </div>
@@ -1008,33 +1085,14 @@
                             <label>To</label>
                             <input type="date" id="purchaseDateTo" />
                         </div>
-                        <div class="search-box">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="purchaseSearch" placeholder="Search purchases…" />
-                            <button class="clear-filter-search" id="clearPurchaseSearch">&times;</button>
-                        </div>
                         <div class="filter-actions">
                             <button class="btn-clear-filter" id="purchaseClearFilters">Clear</button>
                         </div>
                         <span class="result-count" id="purchaseResultCount">0 results</span>
                     </div>
 
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Transaction ID</th>
-                                    <th>Package</th>
-                                    <th>Points</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="purchaseTableBody">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
+                    <div class="cards-grid" id="purchaseContainer">
+                        <!-- Populated by JS -->
                     </div>
 
                     <div class="pagination-controls" id="purchasePagination">
@@ -1044,7 +1102,7 @@
                     </div>
                 </div>
 
-                <!-- ===== TAB: TRANSACTIONS ===== -->
+                <!-- ===== TAB: TRANSACTIONS (Lazy Loaded) ===== -->
                 <div class="tab-content" id="tabTransactions">
                     <div class="filter-row" id="transactionFilters">
                         <div class="filter-group">
@@ -1055,33 +1113,14 @@
                             <label>To</label>
                             <input type="date" id="transactionDateTo" />
                         </div>
-                        <div class="search-box">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="transactionSearch" placeholder="Search transactions…" />
-                            <button class="clear-filter-search" id="clearTransactionSearch">&times;</button>
-                        </div>
                         <div class="filter-actions">
                             <button class="btn-clear-filter" id="transactionClearFilters">Clear</button>
                         </div>
                         <span class="result-count" id="transactionResultCount">0 results</span>
                     </div>
 
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Transaction ID</th>
-                                    <th>Description</th>
-                                    <th>Amount</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="transactionTableBody">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
+                    <div class="cards-grid" id="transactionContainer">
+                        <!-- Populated by JS on tab click -->
                     </div>
 
                     <div class="pagination-controls" id="transactionPagination">
@@ -1106,29 +1145,30 @@
                     <button class="modal-close" id="paymentModalClose">&times;</button>
                 </div>
 
-                <!-- Package Summary -->
                 <div class="package-summary" id="paymentSummary">
                     <span class="summary-label">You are buying</span>
                     <span class="summary-value" id="paymentSummaryText">0 points for ₦0</span>
                 </div>
 
-                <!-- Gateway Selection -->
                 <div class="gateway-label">Select Payment Gateway</div>
                 <div class="gateway-grid" id="gatewayGrid">
                     <div class="gateway-option" data-gateway="paystack">
                         <span class="gateway-check"><i class="fa-solid fa-check"></i></span>
-                        <span class="gateway-icon"><img src="https://paystack.com/favicon.ico" alt="Paystack" style="width:32px; height:32px; border-radius:4px;" onerror="this.style.display='none';this.parentElement.textContent='💳';" /></span>
+                        <span class="gateway-icon"><i class="fa-regular fa-credit-card"></i></span>
                         <span class="gateway-name">Paystack</span>
+                        <span style="font-size:10px;color:var(--text-muted2);display:block;">Card, Bank, USSD</span>
                     </div>
                     <div class="gateway-option" data-gateway="flutterwave">
                         <span class="gateway-check"><i class="fa-solid fa-check"></i></span>
-                        <span class="gateway-icon"><img src="https://flutterwave.com/favicon.ico" alt="Flutterwave" style="width:32px; height:32px; border-radius:4px;" onerror="this.style.display='none';this.parentElement.textContent='💳';" /></span>
+                        <span class="gateway-icon"><i class="fa-regular fa-credit-card"></i></span>
                         <span class="gateway-name">Flutterwave</span>
+                        <span style="font-size:10px;color:var(--text-muted2);display:block;">Card, Bank, QR</span>
                     </div>
                     <div class="gateway-option" data-gateway="monnify">
                         <span class="gateway-check"><i class="fa-solid fa-check"></i></span>
-                        <span class="gateway-icon"><img src="https://monnify.com/favicon.ico" alt="Monnify" style="width:32px; height:32px; border-radius:4px;" onerror="this.style.display='none';this.parentElement.textContent='💳';" /></span>
+                        <span class="gateway-icon"><i class="fa-regular fa-credit-card"></i></span>
                         <span class="gateway-name">Monnify</span>
+                        <span style="font-size:10px;color:var(--text-muted2);display:block;">Bank Transfer, Card</span>
                     </div>
                 </div>
 
@@ -1147,7 +1187,7 @@
 
         <!-- ===== DEMO NOTE ===== -->
         <div class="demo-note">
-            <span>CampusHub</span> • Points & Transactions • dummy data for preview
+            <span>CampusHub</span> • Points & Transactions
         </div>
 
     </div>
@@ -1162,205 +1202,82 @@
             'use strict';
 
             // ============================================================
-            // DUMMY DATA – 3 Endpoints
-            // ============================================================
-
-            // ─── 1. Point Packages ──────────────────────────────────────
-            const DUMMY_PACKAGES = [{
-                id: 1,
-                name: 'Starter',
-                points: 100,
-                price: 500,
-                save: 0,
-                badge: null,
-            }, {
-                id: 2,
-                name: 'Popular',
-                points: 500,
-                price: 2000,
-                save: 500,
-                badge: 'popular',
-            }, {
-                id: 3,
-                name: 'Pro',
-                points: 1500,
-                price: 5000,
-                save: 2500,
-                badge: null,
-            }, {
-                id: 4,
-                name: 'Ultimate',
-                points: 5000,
-                price: 15000,
-                save: 10000,
-                badge: null,
-            }, ];
-
-            // ─── 2. Purchase History ────────────────────────────────────
-            const generatePurchases = () => {
-                const packages = ['Starter', 'Popular', 'Pro', 'Ultimate'];
-                const statuses = ['completed', 'pending', 'completed', 'completed', 'failed'];
-                const data = [];
-                for (let i = 1; i <= 25; i++) {
-                    const pkg = packages[Math.floor(Math.random() * packages.length)];
-                    const points = pkg === 'Starter' ? 100 : pkg === 'Popular' ? 500 : pkg === 'Pro' ? 1500 : 5000;
-                    const price = pkg === 'Starter' ? 500 : pkg === 'Popular' ? 2000 : pkg === 'Pro' ? 5000 : 15000;
-                    const status = statuses[Math.floor(Math.random() * statuses.length)];
-                    const date = new Date();
-                    date.setDate(date.getDate() - Math.floor(Math.random() * 60));
-                    data.push({
-                        id: 'PUR-' + String(1000 + i).padStart(4, '0'),
-                        package: pkg,
-                        points: points,
-                        amount: price,
-                        status: status,
-                        date: date.toISOString().split('T')[0] + ' ' + ['10:30', '14:20', '09:15', '16:45', '11:00'][
-                            Math.floor(Math.random() * 5)
-                        ],
-                        dateObj: date,
-                    });
-                }
-                data.sort((a, b) => b.dateObj - a.dateObj);
-                return data;
-            };
-
-            // ─── 3. Transaction History ────────────────────────────────
-            const generateTransactions = () => {
-                const descriptions = [
-                    'Points purchase - Starter',
-                    'Points purchase - Popular',
-                    'Points purchase - Pro',
-                    'Points purchase - Ultimate',
-                    'Listing fee - MacBook Pro',
-                    'Listing fee - iPhone 13',
-                    'Listing fee - Textbook',
-                    'Promotion - Banner Ad',
-                    'Promotion - Hot Sale',
-                    'Withdrawal - Points refund',
-                ];
-                const types = ['credit', 'debit', 'credit', 'debit', 'debit', 'debit', 'credit', 'debit', 'debit', 'credit'];
-                const statuses = ['completed', 'completed', 'pending', 'completed', 'failed', 'completed'];
-                const data = [];
-                for (let i = 1; i <= 30; i++) {
-                    const desc = descriptions[Math.floor(Math.random() * descriptions.length)];
-                    const type = types[Math.floor(Math.random() * types.length)];
-                    const amount = Math.floor(Math.random() * 20000) + 100;
-                    const status = statuses[Math.floor(Math.random() * statuses.length)];
-                    const date = new Date();
-                    date.setDate(date.getDate() - Math.floor(Math.random() * 90));
-                    data.push({
-                        id: 'TXN-' + String(2000 + i).padStart(4, '0'),
-                        description: desc,
-                        amount: amount,
-                        type: type,
-                        status: status,
-                        date: date.toISOString().split('T')[0] + ' ' + ['08:15', '13:30', '17:20', '10:45', '15:00'][
-                            Math.floor(Math.random() * 5)
-                        ],
-                        dateObj: date,
-                    });
-                }
-                data.sort((a, b) => b.dateObj - a.dateObj);
-                return data;
-            };
-
-            // ─── User points ────────────────────────────────────────────
-            let USER_POINTS = 2350;
-
-            // ─── Data stores ────────────────────────────────────────────
-            let allPurchases = generatePurchases();
-            let allTransactions = generateTransactions();
-
-            // ============================================================
             // DOM REFS
             // ============================================================
-
             const packagesGrid = document.getElementById('packagesGrid');
             const userPointsEl = document.getElementById('userPoints');
-            const pointsValueEl = document.getElementById('pointsValue');
 
-            // Tabs
             const tabBtns = document.querySelectorAll('.points-tabs .tab-btn');
             const tabPurchases = document.getElementById('tabPurchases');
             const tabTransactions = document.getElementById('tabTransactions');
 
-            // Purchase table
-            const purchaseBody = document.getElementById('purchaseTableBody');
+            const purchaseContainer = document.getElementById('purchaseContainer');
             const purchasePrev = document.getElementById('purchasePrev');
             const purchaseNext = document.getElementById('purchaseNext');
             const purchasePageInfo = document.getElementById('purchasePageInfo');
             const purchaseResultCount = document.getElementById('purchaseResultCount');
             const purchaseCount = document.getElementById('purchaseCount');
 
-            // Purchase filters
             const purchaseDateFrom = document.getElementById('purchaseDateFrom');
             const purchaseDateTo = document.getElementById('purchaseDateTo');
-            const purchaseSearch = document.getElementById('purchaseSearch');
-            const clearPurchaseSearch = document.getElementById('clearPurchaseSearch');
             const purchaseClearFilters = document.getElementById('purchaseClearFilters');
 
-            // Transaction table
-            const transactionBody = document.getElementById('transactionTableBody');
+            const transactionContainer = document.getElementById('transactionContainer');
             const transactionPrev = document.getElementById('transactionPrev');
             const transactionNext = document.getElementById('transactionNext');
             const transactionPageInfo = document.getElementById('transactionPageInfo');
             const transactionResultCount = document.getElementById('transactionResultCount');
             const transactionCount = document.getElementById('transactionCount');
 
-            // Transaction filters
             const transactionDateFrom = document.getElementById('transactionDateFrom');
             const transactionDateTo = document.getElementById('transactionDateTo');
-            const transactionSearch = document.getElementById('transactionSearch');
-            const clearTransactionSearch = document.getElementById('clearTransactionSearch');
             const transactionClearFilters = document.getElementById('transactionClearFilters');
 
-            // Toast
             const toast = document.getElementById('pointsToast');
             const toastMessage = document.getElementById('toastMessage');
             const toastIcon = document.getElementById('toastIcon');
 
-            // Scroll to packages
-            const scrollBtn = document.getElementById('scrollToPackages');
-
-            // Payment Modal
             const paymentOverlay = document.getElementById('paymentOverlay');
-            const paymentModal = document.getElementById('paymentModal');
             const paymentModalClose = document.getElementById('paymentModalClose');
             const paymentCancelBtn = document.getElementById('paymentCancelBtn');
             const paymentPayBtn = document.getElementById('paymentPayBtn');
             const paymentSummaryText = document.getElementById('paymentSummaryText');
             const gatewayOptions = document.querySelectorAll('.gateway-option');
-            const gatewayGrid = document.getElementById('gatewayGrid');
 
             // ============================================================
             // STATE
             // ============================================================
-
             let selectedPackage = null;
             let selectedGateway = null;
 
             // Purchase state
             let purchasePage = 1;
-            const purchasePerPage = 8;
-            let purchaseFiltered = [];
+            const purchasePerPage = 10;
+            let purchaseTotalPages = 1;
+            let purchaseTotalItems = 0;
 
             // Transaction state
             let transactionPage = 1;
-            const transactionPerPage = 8;
-            let transactionFiltered = [];
+            const transactionPerPage = 10;
+            let transactionTotalPages = 1;
+            let transactionTotalItems = 0;
+            let transactionsLoaded = false;
+            let isLoadingTransactions = false;
 
-            // Toast timer
+            // User points
+            let userPoints = 0;
+
             let toastTimer = null;
 
             // ============================================================
             // TOAST
             // ============================================================
-
             function showToast(message, type = 'success') {
                 toastMessage.textContent = message;
                 toastIcon.className = 'toast-icon';
                 if (type === 'success') toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
                 else if (type === 'warning') toastIcon.classList.add('warning', 'fa-regular', 'fa-triangle-exclamation');
+                else if (type === 'danger') toastIcon.classList.add('danger', 'fa-regular', 'fa-circle-xmark');
                 else toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
 
                 toast.classList.add('visible');
@@ -1371,21 +1288,331 @@
             }
 
             // ============================================================
+            // API: Fetch Packages
+            // ============================================================
+            async function fetchPackages() {
+                try {
+                    const response = await fetchWithAuth(`${AUTH_URL}point-packages`, {
+                        method: 'GET',
+                        showSpinner: true,
+                        spinnerText: 'Loading packages...'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch packages');
+                    }
+
+                    const result = await response.json();
+                    if (result.is_success) {
+                        renderPackages(result.data);
+                    } else {
+                        showToast(result.message || 'Failed to load packages', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Fetch packages error:', error);
+                    showToast('Failed to load packages. Please refresh.', 'danger');
+                    packagesGrid.innerHTML = `
+                        <div class="cards-empty" style="grid-column:1/-1;">
+                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <h4>Error loading packages</h4>
+                            <p>Please refresh the page to try again.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // ============================================================
+            // API: Fetch Purchases
+            // ============================================================
+            async function fetchPurchases(page = 1) {
+                showLoading(purchaseContainer);
+
+                try {
+                    let url = `${AUTH_URL}get-purchase?page=${page}&per_page=${purchasePerPage}`;
+
+                    const dateFrom = purchaseDateFrom.value;
+                    const dateTo = purchaseDateTo.value;
+                    if (dateFrom) url += '&date_from=' + dateFrom;
+                    if (dateTo) url += '&date_to=' + dateTo;
+
+                    const response = await fetchWithAuth(url, {
+                        method: 'GET'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch purchases');
+                    }
+
+                    const result = await response.json();
+                    if (result.is_success) {
+                        purchaseTotalItems = result.data.pagination?.total_items || 0;
+                        purchaseTotalPages = result.data.pagination?.total_pages || 1;
+                        purchasePage = result.data.pagination?.page || 1;
+                        renderPurchases(result.data.items || []);
+                    } else {
+                        showToast(result.message || 'Failed to load purchases', 'danger');
+                        purchaseContainer.innerHTML = `
+                            <div class="cards-empty" style="grid-column:1/-1;">
+                                <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                                <h4>Error loading purchases</h4>
+                                <p>Please try again.</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Fetch purchases error:', error);
+                    showToast('Failed to load purchases. Please try again.', 'danger');
+                    purchaseContainer.innerHTML = `
+                        <div class="cards-empty" style="grid-column:1/-1;">
+                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <h4>Error loading purchases</h4>
+                            <p>Please refresh the page.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // ============================================================
+            // API: Fetch Transactions (Lazy)
+            // ============================================================
+            async function fetchTransactions(page = 1) {
+                if (isLoadingTransactions) return;
+                isLoadingTransactions = true;
+
+                showLoading(transactionContainer);
+
+                try {
+                    let url = `${AUTH_URL}get-transactions?page=${page}&per_page=${transactionPerPage}`;
+
+                    const dateFrom = transactionDateFrom.value;
+                    const dateTo = transactionDateTo.value;
+                    if (dateFrom) url += '&date_from=' + dateFrom;
+                    if (dateTo) url += '&date_to=' + dateTo;
+
+                    const response = await fetchWithAuth(url, {
+                        method: 'GET'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch transactions');
+                    }
+
+                    const result = await response.json();
+                    if (result.is_success) {
+                        transactionTotalItems = result.data.pagination?.total_items || 0;
+                        transactionTotalPages = result.data.pagination?.total_pages || 1;
+                        transactionPage = result.data.pagination?.page || 1;
+                        transactionsLoaded = true;
+                        renderTransactions(result.data.items || []);
+                    } else {
+                        showToast(result.message || 'Failed to load transactions', 'danger');
+                        transactionContainer.innerHTML = `
+                            <div class="cards-empty" style="grid-column:1/-1;">
+                                <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                                <h4>Error loading transactions</h4>
+                                <p>Please try again.</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Fetch transactions error:', error);
+                    showToast('Failed to load transactions. Please try again.', 'danger');
+                    transactionContainer.innerHTML = `
+                        <div class="cards-empty" style="grid-column:1/-1;">
+                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <h4>Error loading transactions</h4>
+                            <p>Please refresh the page.</p>
+                        </div>
+                    `;
+                } finally {
+                    isLoadingTransactions = false;
+                }
+            }
+
+            // ============================================================
+            // RENDER: Packages
+            // ============================================================
+            function renderPackages(packages) {
+                if (!packages || packages.length === 0) {
+                    packagesGrid.innerHTML = `
+                        <div class="cards-empty" style="grid-column:1/-1;">
+                            <span class="empty-icon"><i class="fa-regular fa-gift"></i></span>
+                            <h4>No packages available</h4>
+                            <p>Please check back later.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                packagesGrid.innerHTML = packages.map(pkg => {
+                    const popularBadge = pkg.is_popular ? '<span class="package-badge popular">Popular</span>' : '';
+                    const bestBadge = pkg.is_best_value ? '<span class="package-badge best-value">Best Value</span>' : '';
+                    const badges = popularBadge + bestBadge;
+
+                    const saveText = pkg.savings_percentage > 0 ?
+                        `<div class="package-save">Save ${pkg.savings_percentage}%</div>` : '';
+
+                    return `
+                        <div class="package-card" data-id="${pkg.id}">
+                            ${badges}
+                            <div class="package-points">${pkg.points.toLocaleString()} <small>pts</small></div>
+                            <div class="package-price">${pkg.price}</div>  <!-- Display formatted price -->
+                            ${saveText}
+                            ${pkg.description ? `<div style="margin-top:6px; font-size:12px; color:var(--text-muted);">${pkg.description}</div>` : ''}
+                            ${pkg.price_per_point ? `<div style="margin-top:6px; font-size:11px; color:var(--text-muted2);">${pkg.price_per_point}</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                // Click to open payment modal
+                packagesGrid.querySelectorAll('.package-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        const pkg = packages.find(p => p.id === id);
+                        if (pkg) openPaymentModal(pkg);
+                    });
+                });
+            }
+
+            // ============================================================
+            // RENDER: Purchases (Cards)
+            // ============================================================
+            function renderPurchases(items) {
+                purchaseCount.textContent = purchaseTotalItems;
+                purchaseResultCount.textContent = `${purchaseTotalItems} purchase${purchaseTotalItems !== 1 ? 's' : ''}`;
+                purchasePageInfo.textContent = `Page ${purchasePage} of ${purchaseTotalPages}`;
+                purchasePrev.disabled = purchasePage <= 1;
+                purchaseNext.disabled = purchasePage >= purchaseTotalPages;
+
+                if (!items || items.length === 0) {
+                    purchaseContainer.innerHTML = `
+                        <div class="cards-empty" style="grid-column:1/-1;">
+                            <span class="empty-icon"><i class="fa-regular fa-receipt"></i></span>
+                            <h4>No purchases found</h4>
+                            <p>${purchaseDateFrom.value || purchaseDateTo.value ? 'Try adjusting your date filters.' : 'Buy points to see your purchase history here.'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                purchaseContainer.innerHTML = items.map(item => {
+                    const statusClass = item.status || 'pending';
+                    const statusLabel = statusClass.charAt(0).toUpperCase() + statusClass.slice(1);
+                    const date = item.created_at ? new Date(item.created_at).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    }) : 'N/A';
+
+                    return `
+                        <div class="card-item">
+                            <div class="card-top">
+                                <div class="card-left">
+                                    <div class="card-title">${item.points_awarded || 0} points</div>
+                                    <div class="card-sub">${item.gateway ? 'via ' + item.gateway.charAt(0).toUpperCase() + item.gateway.slice(1) : 'Purchase'}</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="card-amount">${item.amount_paid || '₦0'}</div>
+                                    <span class="card-status ${statusClass}">${statusLabel}</span>
+                                </div>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-meta"><i class="fa-regular fa-hashtag"></i> ${item.payment_reference || 'N/A'}</span>
+                                <span class="card-date"><i class="fa-regular fa-calendar"></i> ${date}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ============================================================
+            // RENDER: Transactions (Cards)
+            // ============================================================
+            function renderTransactions(items) {
+                transactionCount.textContent = transactionTotalItems;
+                transactionResultCount.textContent = `${transactionTotalItems} transaction${transactionTotalItems !== 1 ? 's' : ''}`;
+                transactionPageInfo.textContent = `Page ${transactionPage} of ${transactionTotalPages}`;
+                transactionPrev.disabled = transactionPage <= 1;
+                transactionNext.disabled = transactionPage >= transactionTotalPages;
+
+                if (!items || items.length === 0) {
+                    transactionContainer.innerHTML = `
+                        <div class="cards-empty" style="grid-column:1/-1;">
+                            <span class="empty-icon"><i class="fa-regular fa-arrow-right-arrow-left"></i></span>
+                            <h4>No transactions found</h4>
+                            <p>${transactionDateFrom.value || transactionDateTo.value ? 'Try adjusting your date filters.' : 'Your transaction history will appear here.'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                transactionContainer.innerHTML = items.map(item => {
+                    const amount = item.amount || 0;
+                    const isPositive = amount > 0;
+                    const amountClass = isPositive ? 'positive' : 'negative';
+                    const amountDisplay = (isPositive ? '+' : '') + amount;
+
+                    const typeClass = item.transaction_type || 'other';
+                    const typeLabel = item.transaction_type_display || typeClass.charAt(0).toUpperCase() + typeClass.slice(1);
+
+                    const date = item.created_at ? new Date(item.created_at).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    }) : 'N/A';
+
+                    const balanceDisplay = item.balance_after !== undefined && item.balance_after !== null ?
+                        `Balance: ${item.balance_after}` : '';
+
+                    return `
+                        <div class="card-item">
+                            <div class="card-top">
+                                <div class="card-left">
+                                    <div class="card-title">${item.description || 'Transaction'}</div>
+                                    <div class="card-sub">
+                                        <span class="card-type-badge ${typeClass}">${typeLabel}</span>
+                                        ${item.reference ? ` • ${item.reference}` : ''}
+                                    </div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="card-amount-large ${amountClass}">${amountDisplay}</div>
+                                </div>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-meta">
+                                    ${balanceDisplay ? `<i class="fa-regular fa-wallet"></i> ${balanceDisplay}` : ''}
+                                </span>
+                                <span class="card-date"><i class="fa-regular fa-calendar"></i> ${date}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ============================================================
+            // LOADING STATE
+            // ============================================================
+            function showLoading(container) {
+                container.innerHTML = `
+                    <div class="cards-loading" style="grid-column:1/-1; width:100%;">
+                        <div class="spinner"></div>
+                        <p>Loading...</p>
+                    </div>
+                `;
+            }
+
+            // ============================================================
             // PAYMENT MODAL
             // ============================================================
-
             function openPaymentModal(pkg) {
                 selectedPackage = pkg;
                 selectedGateway = null;
 
-                // Update summary
-                paymentSummaryText.textContent = `${pkg.points.toLocaleString()} points for ₦${pkg.price.toLocaleString()}`;
+                paymentSummaryText.textContent = `${pkg.points.toLocaleString()} points for ${pkg.price}`;
 
-                // Reset gateway selection
                 gatewayOptions.forEach(opt => opt.classList.remove('selected'));
                 paymentPayBtn.disabled = true;
 
-                // Show modal
                 paymentOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
@@ -1397,7 +1624,6 @@
                 selectedGateway = null;
             }
 
-            // Gateway selection
             gatewayOptions.forEach(option => {
                 option.addEventListener('click', function() {
                     gatewayOptions.forEach(opt => opt.classList.remove('selected'));
@@ -1407,273 +1633,89 @@
                 });
             });
 
-            // Close modal
             paymentModalClose.addEventListener('click', closePaymentModal);
             paymentCancelBtn.addEventListener('click', closePaymentModal);
             paymentOverlay.addEventListener('click', function(e) {
                 if (e.target === paymentOverlay) closePaymentModal();
             });
 
-            // ESC key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && paymentOverlay.classList.contains('active')) {
                     closePaymentModal();
                 }
             });
 
-            // Pay Now
-            paymentPayBtn.addEventListener('click', function() {
-                if (!selectedPackage || !selectedGateway) return;
-
-                // Disable button during processing
-                paymentPayBtn.disabled = true;
-                paymentPayBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing…';
-
-                // Simulate payment processing
-                setTimeout(() => {
-                    // Complete purchase
-                    completePurchase(selectedPackage, selectedGateway);
-                    closePaymentModal();
-                    paymentPayBtn.innerHTML = 'Pay Now';
-                    paymentPayBtn.disabled = false;
-                }, 1500);
-            });
-
-            // ============================================================
-            // COMPLETE PURCHASE (after gateway selection)
-            // ============================================================
-
-            function completePurchase(pkg, gateway) {
-                // Create purchase record
-                const newPurchase = {
-                    id: 'PUR-' + String(3000 + Math.floor(Math.random() * 9000)),
-                    package: pkg.name,
-                    points: pkg.points,
-                    amount: pkg.price,
-                    status: 'completed',
-                    date: new Date().toISOString().split('T')[0] + ' ' + new Date().toTimeString().slice(0, 5),
-                    dateObj: new Date(),
-                };
-
-                // Add to purchases
-                allPurchases.unshift(newPurchase);
-
-                // Update user points
-                USER_POINTS += pkg.points;
-                updatePointsDisplay();
-
-                // Re-render purchases
-                filterPurchases();
-                renderPurchases();
-
-                // Show toast with gateway info
-                const gatewayNames = {
-                    paystack: 'Paystack',
-                    flutterwave: 'Flutterwave',
-                    monnify: 'Monnify'
-                };
-                showToast(`✅ ${pkg.points} points purchased via ${gatewayNames[gateway] || gateway}!`, 'success');
-
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.success(`✨ ${pkg.points} points added via ${gatewayNames[gateway] || gateway}!`, { duration: 3000 });
+            paymentPayBtn.addEventListener('click', async function() {
+                if (!selectedPackage || !selectedGateway) {
+                    showToast('Please select a payment gateway.', 'warning');
+                    return;
                 }
-            }
 
-            // ============================================================
-            // RENDER: Packages
-            // ============================================================
+                const submitBtn = this;
+                const originalText = submitBtn.innerHTML;
+                
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing…';
 
-            function renderPackages() {
-                packagesGrid.innerHTML = DUMMY_PACKAGES.map(pkg => {
-                    const saveText = pkg.save > 0 ? `Save ₦${pkg.save.toLocaleString()}` : '';
-                    const badgeHtml = pkg.badge ? `<span class="package-badge ${pkg.badge}">${pkg.badge}</span>` :
-                    '';
+                try {
+                    // Logic: use 'package_price' (number) for the payment amount
+                    const payload = {
+                        package_id: selectedPackage.id,
+                        points: selectedPackage.points,
+                        amount: selectedPackage.package_price,  // ← number (e.g., 2500)
+                        gateway: selectedGateway
+                    };
 
-                    return `
-                            <div class="package-card" data-id="${pkg.id}">
-                                ${badgeHtml}
-                                <div class="package-points">${pkg.points.toLocaleString()} <small>pts</small></div>
-                                <div class="package-price">₦${pkg.price.toLocaleString()}</div>
-                                ${saveText ? `<div class="package-save">${saveText}</div>` : ''}
-                                <div style="margin-top:10px; font-size:12px; color:var(--text-muted);">${pkg.name}</div>
-                            </div>
-                        `;
-                }).join('');
+                    console.log('Payment payload:', payload);
 
-                // Click to open payment modal
-                packagesGrid.querySelectorAll('.package-card').forEach(card => {
-                    card.addEventListener('click', function() {
-                        const id = parseInt(this.dataset.id);
-                        const pkg = DUMMY_PACKAGES.find(p => p.id === id);
-                        if (pkg) openPaymentModal(pkg);
+                    // Send to backend
+                    const response = await fetchWithAuth(`${AUTH_URL}buy-points-initial`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
                     });
-                });
-            }
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.message || 'Payment initiation failed.');
+                    }
+
+                    if (result.is_success && result.data?.checkout_url) {
+                        window.open(result.data.checkout_url, '_blank');
+                        
+                        showToast(`Payment page opened for ${selectedGateway}. Complete your payment.`, 'success');
+                        
+                        setTimeout(() => {
+                            closePaymentModal();
+                        }, 800);
+                    } else {
+                        throw new Error(result.message || 'Something went wrong.');
+                    }
+
+                } catch (error) {
+                    console.error('Payment error:', error);
+                    showToast(error.message || 'Payment failed. Please try again.', 'danger');
+                    
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error(error.message || 'Payment failed. Please try again.');
+                    }
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            });
 
             // ============================================================
             // UPDATE POINTS DISPLAY
             // ============================================================
-
             function updatePointsDisplay() {
-                userPointsEl.textContent = USER_POINTS.toLocaleString();
-                pointsValueEl.textContent = USER_POINTS.toLocaleString() + ' pts';
+                userPointsEl.textContent = userPoints.toLocaleString();
             }
 
             // ============================================================
-            // FILTER FUNCTIONS
+            // TAB SWITCHING with Lazy Loading
             // ============================================================
-
-            function filterPurchases() {
-                const from = purchaseDateFrom.value;
-                const to = purchaseDateTo.value;
-                const search = purchaseSearch.value.toLowerCase().trim();
-
-                purchaseFiltered = allPurchases.filter(item => {
-                    if (from && item.date < from) return false;
-                    if (to && item.date > to + ' 23:59:59') return false;
-                    if (search) {
-                        const match = item.id.toLowerCase().includes(search) ||
-                            item.package.toLowerCase().includes(search) ||
-                            item.status.toLowerCase().includes(search) ||
-                            item.date.includes(search);
-                        if (!match) return false;
-                    }
-                    return true;
-                });
-
-                const totalPages = Math.ceil(purchaseFiltered.length / purchasePerPage);
-                if (purchasePage > totalPages) purchasePage = Math.max(1, totalPages);
-                if (purchasePage < 1) purchasePage = 1;
-
-                purchaseResultCount.textContent = `${purchaseFiltered.length} result${purchaseFiltered.length !== 1 ? 's' : ''}`;
-                purchaseCount.textContent = allPurchases.length;
-                renderPurchases();
-            }
-
-            function filterTransactions() {
-                const from = transactionDateFrom.value;
-                const to = transactionDateTo.value;
-                const search = transactionSearch.value.toLowerCase().trim();
-
-                transactionFiltered = allTransactions.filter(item => {
-                    if (from && item.date < from) return false;
-                    if (to && item.date > to + ' 23:59:59') return false;
-                    if (search) {
-                        const match = item.id.toLowerCase().includes(search) ||
-                            item.description.toLowerCase().includes(search) ||
-                            item.status.toLowerCase().includes(search) ||
-                            item.type.toLowerCase().includes(search) ||
-                            item.date.includes(search);
-                        if (!match) return false;
-                    }
-                    return true;
-                });
-
-                const totalPages = Math.ceil(transactionFiltered.length / transactionPerPage);
-                if (transactionPage > totalPages) transactionPage = Math.max(1, totalPages);
-                if (transactionPage < 1) transactionPage = 1;
-
-                transactionResultCount.textContent = `${transactionFiltered.length} result${transactionFiltered.length !== 1 ? 's' : ''}`;
-                transactionCount.textContent = allTransactions.length;
-                renderTransactions();
-            }
-
-            // ============================================================
-            // RENDER: Purchases
-            // ============================================================
-
-            function renderPurchases() {
-                const start = (purchasePage - 1) * purchasePerPage;
-                const pageItems = purchaseFiltered.slice(start, start + purchasePerPage);
-
-                const totalPages = Math.ceil(purchaseFiltered.length / purchasePerPage) || 1;
-                purchasePageInfo.textContent = `Page ${purchasePage} of ${totalPages}`;
-                purchasePrev.disabled = purchasePage <= 1;
-                purchaseNext.disabled = purchasePage >= totalPages;
-
-                if (pageItems.length === 0) {
-                    purchaseBody.innerHTML = `
-                            <tr>
-                                <td colspan="6">
-                                    <div class="table-empty">
-                                        <span class="empty-icon"><i class="fa-regular fa-receipt"></i></span>
-                                        <h4>No purchases found</h4>
-                                        <p>${purchaseSearch.value ? 'Try adjusting your filters.' : 'Buy points to see your purchase history here.'}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                    return;
-                }
-
-                purchaseBody.innerHTML = pageItems.map(item => {
-                    const statusClass = item.status;
-                    const statusLabel = item.status.charAt(0).toUpperCase() + item.status.slice(1);
-
-                    return `
-                            <tr>
-                                <td><span style="font-size:12px; font-weight:500; color:var(--text-muted);">${item.id}</span></td>
-                                <td>${item.package}</td>
-                                <td><span class="points-amount">${item.points.toLocaleString()}</span></td>
-                                <td>₦${item.amount.toLocaleString()}</td>
-                                <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
-                                <td style="font-size:13px; color:var(--text-muted);">${item.date}</td>
-                            </tr>
-                        `;
-                }).join('');
-            }
-
-            // ============================================================
-            // RENDER: Transactions
-            // ============================================================
-
-            function renderTransactions() {
-                const start = (transactionPage - 1) * transactionPerPage;
-                const pageItems = transactionFiltered.slice(start, start + transactionPerPage);
-
-                const totalPages = Math.ceil(transactionFiltered.length / transactionPerPage) || 1;
-                transactionPageInfo.textContent = `Page ${transactionPage} of ${totalPages}`;
-                transactionPrev.disabled = transactionPage <= 1;
-                transactionNext.disabled = transactionPage >= totalPages;
-
-                if (pageItems.length === 0) {
-                    transactionBody.innerHTML = `
-                            <tr>
-                                <td colspan="6">
-                                    <div class="table-empty">
-                                        <span class="empty-icon"><i class="fa-regular fa-arrow-right-arrow-left"></i></span>
-                                        <h4>No transactions found</h4>
-                                        <p>${transactionSearch.value ? 'Try adjusting your filters.' : 'Your transaction history will appear here.'}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                    return;
-                }
-
-                transactionBody.innerHTML = pageItems.map(item => {
-                    const statusClass = item.status;
-                    const statusLabel = item.status.charAt(0).toUpperCase() + item.status.slice(1);
-                    const typeIcon = item.type === 'credit' ? '+' : '-';
-                    const typeClass = item.type === 'credit' ? 'points-amount' : 'points-amount negative';
-
-                    return `
-                            <tr>
-                                <td><span style="font-size:12px; font-weight:500; color:var(--text-muted);">${item.id}</span></td>
-                                <td>${item.description}</td>
-                                <td><span class="${typeClass}">${typeIcon}₦${item.amount.toLocaleString()}</span></td>
-                                <td><span style="text-transform:capitalize; font-weight:500;">${item.type}</span></td>
-                                <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
-                                <td style="font-size:13px; color:var(--text-muted);">${item.date}</td>
-                            </tr>
-                        `;
-                }).join('');
-            }
-
-            // ============================================================
-            // TAB SWITCHING
-            // ============================================================
-
             function switchTab(tabId) {
                 tabBtns.forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.tab === tabId);
@@ -1683,9 +1725,13 @@
                 tabTransactions.classList.toggle('active', tabId === 'transactions');
 
                 if (tabId === 'purchases') {
-                    filterPurchases();
-                } else {
-                    filterTransactions();
+                    fetchPurchases(purchasePage);
+                } else if (tabId === 'transactions') {
+                    if (!transactionsLoaded) {
+                        fetchTransactions(1);
+                    } else {
+                        fetchTransactions(transactionPage);
+                    }
                 }
             }
 
@@ -1698,132 +1744,70 @@
             // ============================================================
             // PAGINATION EVENTS
             // ============================================================
-
             purchasePrev.addEventListener('click', function() {
-                if (purchasePage > 1) { purchasePage--;
-                    renderPurchases(); }
+                if (purchasePage > 1) fetchPurchases(purchasePage - 1);
             });
             purchaseNext.addEventListener('click', function() {
-                const totalPages = Math.ceil(purchaseFiltered.length / purchasePerPage);
-                if (purchasePage < totalPages) { purchasePage++;
-                    renderPurchases(); }
+                if (purchasePage < purchaseTotalPages) fetchPurchases(purchasePage + 1);
             });
 
             transactionPrev.addEventListener('click', function() {
-                if (transactionPage > 1) { transactionPage--;
-                    renderTransactions(); }
+                if (transactionPage > 1) fetchTransactions(transactionPage - 1);
             });
             transactionNext.addEventListener('click', function() {
-                const totalPages = Math.ceil(transactionFiltered.length / transactionPerPage);
-                if (transactionPage < totalPages) { transactionPage++;
-                    renderTransactions(); }
+                if (transactionPage < transactionTotalPages) fetchTransactions(transactionPage + 1);
             });
 
             // ============================================================
             // FILTER EVENTS
             // ============================================================
-
-            purchaseDateFrom.addEventListener('change', filterPurchases);
-            purchaseDateTo.addEventListener('change', filterPurchases);
-            purchaseSearch.addEventListener('input', function() {
-                clearPurchaseSearch.classList.toggle('visible', !!this.value);
-                purchasePage = 1;
-                filterPurchases();
-            });
-            clearPurchaseSearch.addEventListener('click', function() {
-                purchaseSearch.value = '';
-                this.classList.remove('visible');
-                purchasePage = 1;
-                filterPurchases();
-            });
+            purchaseDateFrom.addEventListener('change', function() { fetchPurchases(1); });
+            purchaseDateTo.addEventListener('change', function() { fetchPurchases(1); });
             purchaseClearFilters.addEventListener('click', function() {
                 purchaseDateFrom.value = '';
                 purchaseDateTo.value = '';
-                purchaseSearch.value = '';
-                clearPurchaseSearch.classList.remove('visible');
-                purchasePage = 1;
-                filterPurchases();
+                fetchPurchases(1);
             });
 
-            transactionDateFrom.addEventListener('change', filterTransactions);
-            transactionDateTo.addEventListener('change', filterTransactions);
-            transactionSearch.addEventListener('input', function() {
-                clearTransactionSearch.classList.toggle('visible', !!this.value);
-                transactionPage = 1;
-                filterTransactions();
+            transactionDateFrom.addEventListener('change', function() {
+                if (transactionsLoaded) fetchTransactions(1);
             });
-            clearTransactionSearch.addEventListener('click', function() {
-                transactionSearch.value = '';
-                this.classList.remove('visible');
-                transactionPage = 1;
-                filterTransactions();
+            transactionDateTo.addEventListener('change', function() {
+                if (transactionsLoaded) fetchTransactions(1);
             });
             transactionClearFilters.addEventListener('click', function() {
                 transactionDateFrom.value = '';
                 transactionDateTo.value = '';
-                transactionSearch.value = '';
-                clearTransactionSearch.classList.remove('visible');
-                transactionPage = 1;
-                filterTransactions();
-            });
-
-            // ============================================================
-            // SCROLL TO PACKAGES
-            // ============================================================
-
-            scrollBtn.addEventListener('click', function() {
-                document.getElementById('packagesSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-
-            // ============================================================
-            // KEYBOARD SHORTCUT: CMD+K / CTRL+K → focus search
-            // ============================================================
-
-            document.addEventListener('keydown', function(e) {
-                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                    e.preventDefault();
-                    const activeTab = document.querySelector('.points-tabs .tab-btn.active');
-                    if (activeTab) {
-                        if (activeTab.dataset.tab === 'purchases') {
-                            purchaseSearch.focus();
-                        } else {
-                            transactionSearch.focus();
-                        }
-                    }
-                }
-                if (e.key === 'Escape') {
-                    if (document.activeElement === purchaseSearch) {
-                        purchaseSearch.blur();
-                        clearPurchaseSearch.classList.remove('visible');
-                    }
-                    if (document.activeElement === transactionSearch) {
-                        transactionSearch.blur();
-                        clearTransactionSearch.classList.remove('visible');
-                    }
-                }
+                if (transactionsLoaded) fetchTransactions(1);
             });
 
             // ============================================================
             // INIT
             // ============================================================
+            async function init() {
+                // Load packages and purchases on page load
+                await fetchPackages();
 
-            function init() {
-                renderPackages();
-                updatePointsDisplay();
-                filterPurchases();
-                filterTransactions();
-                switchTab('purchases');
+                // Get user points from storage
+                const user = getUserData();
+                if (user && user.point_bal !== undefined) {
+                    userPoints = user.point_bal;
+                    updatePointsDisplay();
+                }
+
+                // Load purchases
+                await fetchPurchases(1);
+
+                // Set default tab (purchases is active by default)
+                // Transactions will be lazy loaded when tab is clicked
 
                 console.log('💰 Points & Transactions page initialized');
-                console.log('📦 Packages:', DUMMY_PACKAGES.length);
-                console.log('📋 Purchases:', allPurchases.length);
-                console.log('📊 Transactions:', allTransactions.length);
             }
 
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {
-                setTimeout(init, 200);
+                setTimeout(init, 100);
             }
 
         })();
