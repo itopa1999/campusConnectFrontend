@@ -474,7 +474,7 @@
         }
 
         /* ============================================================
-           VERIFICATION MODAL (custom, not using global Modal)
+           VERIFICATION MODAL
            ============================================================ */
         .verify-overlay {
             position: fixed;
@@ -841,6 +841,343 @@
             }
         }
 
+        /* ─── Add Item Modal ─── */
+        .add-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .add-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .add-modal {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            max-width: 560px;
+            width: 100%;
+            padding: 0;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+            opacity: 0;
+            border: 1px solid var(--border-color);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .add-overlay.active .add-modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .add-modal .modal-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .add-modal .modal-header .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+        .add-modal .modal-header .modal-title small {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+        .add-modal .modal-header .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted2);
+            cursor: pointer;
+            padding: 0 4px;
+            transition: color 0.2s, transform 0.2s;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .add-modal .modal-header .modal-close:hover {
+            color: var(--red);
+            transform: rotate(90deg);
+        }
+
+        .add-modal .modal-body {
+            padding: 20px 24px 24px;
+        }
+        .add-modal .modal-body .form-group {
+            margin-bottom: 16px;
+        }
+        .add-modal .modal-body .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .add-modal .modal-body .form-group label .required-star {
+            color: var(--red);
+            margin-left: 2px;
+        }
+        .add-modal .modal-body .form-group .form-input,
+        .add-modal .modal-body .form-group .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.25s ease;
+            outline: none;
+            font-family: inherit;
+        }
+        .add-modal .modal-body .form-group .form-input:focus,
+        .add-modal .modal-body .form-group .form-textarea:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
+            background: var(--bg-card);
+        }
+        .add-modal .modal-body .form-group .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .add-modal .modal-body .form-group .form-input.error,
+        .add-modal .modal-body .form-group .form-textarea.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
+        }
+        .add-modal .modal-body .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+        .add-modal .modal-body .help-text.error {
+            color: var(--red);
+        }
+
+        /* File drop zone inside add modal */
+        .add-modal .file-drop-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-input);
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .add-modal .file-drop-zone:hover {
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .add-modal .file-drop-zone.dragover {
+            border-color: var(--green);
+            background: var(--green-bg);
+            transform: scale(1.01);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08);
+        }
+        .add-modal .file-drop-zone.has-file {
+            border-color: var(--green);
+            background: var(--green-bg);
+            border-style: solid;
+        }
+        .add-modal .file-drop-zone .drop-icon {
+            font-size: 32px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .add-modal .file-drop-zone:hover .drop-icon {
+            color: var(--green);
+        }
+        .add-modal .file-drop-zone .drop-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+        .add-modal .file-drop-zone .drop-text strong {
+            color: var(--green);
+            cursor: pointer;
+        }
+        .add-modal .file-drop-zone .drop-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .add-modal .file-drop-zone .file-preview-container {
+            width: 100%;
+            max-width: 280px;
+            margin-top: 4px;
+        }
+        .add-modal .file-drop-zone .file-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+        }
+        .add-modal .file-drop-zone .file-preview .file-info {
+            flex: 1;
+            text-align: left;
+        }
+        .add-modal .file-drop-zone .file-preview .file-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+        .add-modal .file-drop-zone .file-preview .file-size {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .add-modal .file-drop-zone .file-preview .file-remove {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .add-modal .file-drop-zone .file-preview .file-remove:hover {
+            background: rgba(231, 76, 60, 0.10);
+        }
+        .add-modal .file-drop-zone .drop-error {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .add-modal .file-drop-zone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .dark-mode .add-modal .file-drop-zone {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .add-modal .file-drop-zone:hover {
+            background: var(--bg-card);
+        }
+        .dark-mode .add-modal .file-drop-zone.dragover {
+            background: var(--green-bg);
+        }
+        .dark-mode .add-modal .file-drop-zone.has-file {
+            background: var(--green-bg);
+        }
+        .dark-mode .add-modal .file-drop-zone .file-preview {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        .add-modal .modal-footer {
+            padding: 16px 24px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .add-modal .modal-footer button {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 100px;
+        }
+        .add-modal .modal-footer .btn-cancel {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .add-modal .modal-footer .btn-cancel:hover {
+            background: var(--border-color);
+        }
+        .add-modal .modal-footer .btn-submit {
+            background: var(--green);
+            color: #ffffff;
+        }
+        .add-modal .modal-footer .btn-submit:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .add-modal .modal-footer .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .add-modal .modal-footer .btn-submit .spinner-btn {
+            display: none;
+        }
+        .add-modal .modal-footer .btn-submit.loading .spinner-btn {
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .add-modal .modal-footer .btn-submit.loading .btn-text {
+            display: none;
+        }
+
+        /* ─── Add button ─── */
+        .add-lost-btn {
+            background: var(--green);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(13, 138, 62, 0.2);
+        }
+        .add-lost-btn:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .add-lost-btn i {
+            font-size: 14px;
+        }
+
         /* ─── Demo note ─── */
         .demo-note {
             text-align: center;
@@ -867,7 +1204,7 @@
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fas fa-location-dot"></i>
             <div class="loc-text">
                 University of Benin <span>• Ugbowo</span>
             </div>
@@ -879,19 +1216,24 @@
             <!-- ===== HEADER ===== -->
             <div class="lost-header" id="lostHeader">
                 <div class="lost-title">
-                    <span class="lost-icon"><i class="fa-regular fa-compass"></i></span>
+                    <span class="lost-icon"><i class="fas fa-compass"></i></span>
                     <h2>Lost & Found</h2>
                 </div>
-                <div class="lost-badge">
-                    <i class="fa-regular fa-circle-question"></i>
-                    <span id="lostCountDisplay">0</span> items
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <button class="add-lost-btn" id="addLostBtn">
+                        <i class="fas fa-plus"></i> Add New
+                    </button>
+                    <div class="lost-badge">
+                        <i class="fas fa-circle-question"></i>
+                        <span id="lostCountDisplay">0</span> items
+                    </div>
                 </div>
             </div>
 
             <!-- ===== SEARCH ===== -->
             <div class="lost-search-wrap">
                 <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i class="fas fa-magnifying-glass"></i>
                     <input type="text" id="lostSearchInput" placeholder="Search by item name, location…" />
                     <button class="clear-lost-search" id="clearLostSearch" title="Clear search">&times;</button>
                 </div>
@@ -905,20 +1247,20 @@
 
             <!-- ===== PAGINATION ===== -->
             <div class="pagination-controls" id="lostPagination">
-                <button id="lostPrev" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                <button id="lostPrev" disabled><i class="fas fa-chevron-left"></i> Prev</button>
                 <span class="page-info" id="lostPageInfo">Page 1</span>
-                <button id="lostNext">Next <i class="fa-solid fa-chevron-right"></i></button>
+                <button id="lostNext">Next <i class="fas fa-chevron-right"></i></button>
             </div>
 
         </main>
 
-        <!-- ===== VERIFICATION MODAL ===== -->
+        <!-- ===== VERIFICATION MODAL (Claim) ===== -->
         <div class="verify-overlay" id="verifyOverlay">
             <div class="verify-modal" id="verifyModal">
                 <div class="modal-header">
                     <div>
                         <div class="modal-title" id="modalItemName">Verify Ownership</div>
-                        <small id="modalItemLocation"><i class="fa-solid fa-location-dot"></i> Campus</small>
+                        <small id="modalItemLocation"><i class="fas fa-location-dot"></i> Campus</small>
                     </div>
                     <button class="modal-close" id="modalClose">&times;</button>
                 </div>
@@ -930,13 +1272,13 @@
                         </div>
                         <div class="v-text">
                             <div class="v-name" id="modalItemName2">Item Name</div>
-                            <div class="v-location"><i class="fa-solid fa-location-dot"></i> <span id="modalItemLocation2">Location</span></div>
+                            <div class="v-location"><i class="fas fa-location-dot"></i> <span id="modalItemLocation2">Location</span></div>
                         </div>
                     </div>
 
                     <!-- Instructions -->
                     <div class="verify-instructions">
-                        <i class="fa-regular fa-circle-check"></i>
+                        <i class="fas fa-circle-check"></i>
                         Answer the verification questions below to claim this item. If your answers match, you'll be contacted via email or phone.
                     </div>
 
@@ -954,18 +1296,97 @@
 
                     <!-- Success state -->
                     <div class="success-state" id="successState">
-                        <div class="success-icon"><i class="fa-regular fa-circle-check"></i></div>
+                        <div class="success-icon"><i class="fas fa-circle-check"></i></div>
                         <h4>Claim Submitted! 🎉</h4>
                         <p>Your responses have been recorded. If they match the owner's verification details, you'll receive an <strong>email</strong> or <strong>phone call</strong> shortly.</p>
                         <div class="success-details">
-                            <i class="fa-regular fa-envelope"></i> Check your registered email &amp; phone
+                            <i class="fas fa-envelope"></i> Check your registered email &amp; phone
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn-cancel" id="modalCancel">Cancel</button>
                     <button class="btn-submit" id="modalSubmit">
-                        <i class="fa-regular fa-paper-plane"></i> Submit Claim
+                        <i class="fas fa-paper-plane"></i> Submit Claim
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ADD LOST ITEM MODAL ===== -->
+        <div class="add-overlay" id="addOverlay">
+            <div class="add-modal" id="addModal">
+                <div class="modal-header">
+                    <div>
+                        <div class="modal-title">Report Lost Item</div>
+                        <small>Provide details about the lost item to help find it</small>
+                    </div>
+                    <button class="modal-close" id="addModalClose">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="addLostForm" autocomplete="off">
+                        <!-- Item Name -->
+                        <div class="form-group">
+                            <label for="addItemName">Item Name <span class="required-star">*</span></label>
+                            <input type="text" id="addItemName" class="form-input" placeholder="e.g., Black Backpack" required />
+                            <div class="help-text" id="addItemNameHelp"></div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group">
+                            <label for="addDescription">Description <span class="required-star">*</span></label>
+                            <textarea id="addDescription" class="form-textarea" placeholder="Describe the item (brand, color, special marks…)" required></textarea>
+                            <div class="help-text" id="addDescriptionHelp"></div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="form-group">
+                            <label for="addLocation">Location <span class="required-star">*</span></label>
+                            <input type="text" id="addLocation" class="form-input" placeholder="e.g., Library, 2nd floor" required />
+                            <div class="help-text" id="addLocationHelp"></div>
+                        </div>
+
+                        <!-- Date Found -->
+                        <div class="form-group">
+                            <label for="addDateFound">Date Found <span class="required-star">*</span></label>
+                            <input type="date" id="addDateFound" class="form-input" required />
+                            <div class="help-text" id="addDateFoundHelp"></div>
+                        </div>
+
+                        <!-- Verification Question 1 -->
+                        <div class="form-group">
+                            <label for="addVerification1">Verification Question 1 <span class="required-star">*</span></label>
+                            <input type="text" id="addVerification1" class="form-input" placeholder="e.g., What brand is the backpack?" required />
+                            <div class="help-text" id="addVerification1Help"></div>
+                        </div>
+
+                        <!-- Verification Question 2 -->
+                        <div class="form-group">
+                            <label for="addVerification2">Verification Question 2 <span class="required-star">*</span></label>
+                            <input type="text" id="addVerification2" class="form-input" placeholder="e.g., What color is the backpack?" required />
+                            <div class="help-text" id="addVerification2Help"></div>
+                        </div>
+
+                        <!-- Image Upload (optional) -->
+                        <div class="form-group">
+                            <label>Photo (optional)</label>
+                            <div class="file-drop-zone" id="addFileDropZone">
+                                <div class="drop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+                                <div class="drop-text">Drop an image here or <strong>browse</strong></div>
+                                <div class="drop-hint">JPG, PNG, WebP • Max 5MB</div>
+                                <div class="file-preview-container"></div>
+                                <div class="drop-error"></div>
+                                <input type="file" id="addFileInput" accept="image/*" />
+                            </div>
+                            <div class="help-text" style="font-size:11px; color:var(--text-muted);">Uploading a photo helps identify the item.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" id="addModalCancel">Cancel</button>
+                    <button class="btn-submit" id="addModalSubmit">
+                        <span class="btn-text"><i class="fas fa-paper-plane"></i> Report Item</span>
+                        <span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>
                     </button>
                 </div>
             </div>
@@ -973,7 +1394,7 @@
 
         <!-- ===== TOAST ===== -->
         <div class="lost-toast" id="lostToast">
-            <span class="toast-icon" id="toastIcon"><i class="fa-regular fa-circle-check"></i></span>
+            <span class="toast-icon" id="toastIcon"><i class="fas fa-circle-check"></i></span>
             <span id="toastMessage">Action completed</span>
         </div>
 
@@ -988,111 +1409,11 @@
     <script src="/assets/js/global.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/form-helpers.js"></script>
 
     <script>
         (function() {
             'use strict';
-
-            // ============================================================
-            // DUMMY DATA – Lost Items endpoint
-            // ============================================================
-            const dummyLostItems = {
-                request_id: "7a4cfd80-3ae9-4e44-8065-7bae86e78a09",
-                status_code: 200,
-                message: "Lost items retrieved successfully.",
-                is_success: true,
-                data: {
-                    items: [{
-                        id: 6,
-                        item_name: "Black Backpack",
-                        description: "Nike backpack with laptop compartment, found near the library",
-                        location: "Library, 2nd floor",
-                        date_found: "2026-07-22",
-                        status: "open",
-                        verification1: "What brand is the backpack?",
-                        verification2: "What color is the backpack?",
-                        image: null
-                    }, {
-                        id: 5,
-                        item_name: "Silver iPhone 14",
-                        description: "iPhone 14 in a clear case, found at the cafeteria",
-                        location: "Food Court / Cafeteria",
-                        date_found: "2026-07-22",
-                        status: "open",
-                        verification1: "What model is the phone?",
-                        verification2: "What color is the phone case?",
-                        image: null
-                    }, {
-                        id: 4,
-                        item_name: "Blue Umbrella",
-                        description: "Large blue umbrella with a wooden handle",
-                        location: "Main Gate entrance",
-                        date_found: "2026-07-22",
-                        status: "open",
-                        verification1: "What color is the umbrella?",
-                        verification2: "What material is the handle made of?",
-                        image: null
-                    }, {
-                        id: 2,
-                        item_name: "Textbook - Calculus",
-                        description: "Thomas' Calculus, 14th Edition, with highlighted notes",
-                        location: "Lecture Theatres Complex, Room 204",
-                        date_found: "2026-07-22",
-                        status: "open",
-                        verification1: "What is the title of the textbook?",
-                        verification2: "What edition is the textbook?",
-                        image: null
-                    }, {
-                        id: 1,
-                        item_name: "Phone",
-                        description: "neat phonej",
-                        location: "mokola",
-                        date_found: "2026-07-23",
-                        status: "open",
-                        verification1: "phone name and type",
-                        verification2: "Phone color",
-                        image: null
-                    }, {
-                        id: 7,
-                        item_name: "White Earpods",
-                        description: "Apple AirPods Pro in a white charging case",
-                        location: "Student Union Building, lounge area",
-                        date_found: "2026-07-20",
-                        status: "open",
-                        verification1: "What brand are the earpods?",
-                        verification2: "What color is the charging case?",
-                        image: null
-                    }, {
-                        id: 8,
-                        item_name: "Nike Sneakers",
-                        description: "Nike Air Max, size 42, white and black",
-                        location: "Sports Complex, changing room",
-                        date_found: "2026-07-19",
-                        status: "open",
-                        verification1: "What brand are the sneakers?",
-                        verification2: "What size are the sneakers?",
-                        image: null
-                    }, {
-                        id: 9,
-                        item_name: "Laptop Charger",
-                        description: "Dell laptop charger, 65W, with a frayed cable",
-                        location: "Computer Lab, Building A",
-                        date_found: "2026-07-18",
-                        status: "open",
-                        verification1: "What brand is the charger for?",
-                        verification2: "What wattage is the charger?",
-                        image: null
-                    }],
-                    pagination: {
-                        page: 1,
-                        per_page: 10,
-                        total_pages: 1,
-                        total_items: 8,
-                        has_next: false,
-                        has_previous: false
-                    }
-                }
-            };
 
             // ============================================================
             // DOM REFS
@@ -1106,9 +1427,8 @@
             const nextBtn = document.getElementById('lostNext');
             const pageInfo = document.getElementById('lostPageInfo');
 
-            // Modal refs
-            const overlay = document.getElementById('verifyOverlay');
-            const modal = document.getElementById('verifyModal');
+            // Claim modal
+            const verifyOverlay = document.getElementById('verifyOverlay');
             const modalClose = document.getElementById('modalClose');
             const modalCancel = document.getElementById('modalCancel');
             const modalSubmit = document.getElementById('modalSubmit');
@@ -1124,6 +1444,21 @@
             const formFields = document.getElementById('formFields');
             const successState = document.getElementById('successState');
 
+            // Add modal
+            const addOverlay = document.getElementById('addOverlay');
+            const addModalClose = document.getElementById('addModalClose');
+            const addModalCancel = document.getElementById('addModalCancel');
+            const addModalSubmit = document.getElementById('addModalSubmit');
+            const addLostForm = document.getElementById('addLostForm');
+            const addItemName = document.getElementById('addItemName');
+            const addDescription = document.getElementById('addDescription');
+            const addLocation = document.getElementById('addLocation');
+            const addDateFound = document.getElementById('addDateFound');
+            const addVerification1 = document.getElementById('addVerification1');
+            const addVerification2 = document.getElementById('addVerification2');
+            const addFileInput = document.getElementById('addFileInput');
+            const addFileDropZone = document.getElementById('addFileDropZone');
+
             // Toast
             const toast = document.getElementById('lostToast');
             const toastMessage = document.getElementById('toastMessage');
@@ -1132,38 +1467,31 @@
             // ============================================================
             // STATE
             // ============================================================
-            let allItems = [...dummyLostItems.data.items];
+            let allItems = [];
             let currentPage = 1;
-            const perPage = dummyLostItems.data.pagination.per_page || 10;
+            const perPage = 10;
             let searchQuery = '';
-            let filteredItems = [...allItems];
+            let filteredItems = [];
             let currentClaimItem = null;
             let toastTimer = null;
+            let isFetching = false;
 
             // ============================================================
             // HELPERS
             // ============================================================
             function getStatusClass(status) {
-                const map = {
-                    'open': 'open',
-                    'closed': 'closed',
-                    'pending': 'pending'
-                };
+                const map = { 'open': 'open', 'closed': 'closed', 'pending': 'pending' };
                 return map[status] || 'open';
             }
 
             function getStatusLabel(status) {
-                const map = {
-                    'open': 'Open',
-                    'closed': 'Closed',
-                    'pending': 'Pending'
-                };
+                const map = { 'open': 'Open', 'closed': 'Closed', 'pending': 'Pending' };
                 return map[status] || status || 'Open';
             }
 
             function getImageUrl(item) {
                 if (item.image) return item.image;
-                return `https://picsum.photos/seed/lost_${item.id}/400/300`;
+                return ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='200' y='160' font-family='Arial' font-size='24' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E");
             }
 
             function formatDate(dateStr) {
@@ -1176,16 +1504,14 @@
                 }
             }
 
-            // ============================================================
-            // TOAST
-            // ============================================================
+            // ─── Toast ────────────────────────────────────────────────
             function showToast(message, type = 'success') {
                 toastMessage.textContent = message;
                 toastIcon.className = 'toast-icon';
-                if (type === 'success') toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
-                else if (type === 'warning') toastIcon.classList.add('warning', 'fa-regular', 'fa-triangle-exclamation');
-                else if (type === 'danger') toastIcon.classList.add('danger', 'fa-regular', 'fa-circle-xmark');
-                else toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
+                if (type === 'success') toastIcon.classList.add('success', 'fas', 'fa-circle-check');
+                else if (type === 'warning') toastIcon.classList.add('warning', 'fas', 'fa-triangle-exclamation');
+                else if (type === 'danger') toastIcon.classList.add('danger', 'fas', 'fa-circle-xmark');
+                else toastIcon.classList.add('success', 'fas', 'fa-circle-check');
 
                 toast.classList.add('visible');
                 clearTimeout(toastTimer);
@@ -1200,12 +1526,90 @@
             }
 
             // ============================================================
+            // API CALLS
+            // ============================================================
+            const LOST_API = `${CAMPUS_URL}lost-and-found/reports`;
+            const CLAIM_API = `${CAMPUS_URL}lost-and-found/claim`;
+            const REPORT_API = `${CAMPUS_URL}report-lost-item`;
+
+            async function fetchLostItems(search = '') {
+                if (isFetching) return;
+                isFetching = true;
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1; display:flex; justify-content:center; padding:40px;">
+                        <div style="width:40px; height:40px; border:4px solid var(--border-color); border-top-color:var(--green); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+                    </div>
+                `;
+                try {
+                    let url = LOST_API;
+                    if (search.trim()) {
+                        url += `?search=${encodeURIComponent(search.trim())}`;
+                    }
+                    const response = await fetchWithAuth(url, { 
+                        method: 'GET',
+                        showSpinner: true,
+                        spinnerText: 'Loading Items...'
+                    });
+                    if (!response.ok) throw new Error('Failed to fetch lost items');
+                    const result = await response.json();
+                    if (!result.is_success) throw new Error(result.message || 'Unknown error');
+                    allItems = result.data.items || [];
+                    const pagination = result.data.pagination || {};
+                    // Update total count
+                    lostCountDisplay.textContent = allItems.length;
+                    // Filtered items will be set by renderItems
+                    renderItems();
+                } catch (error) {
+                    console.error('Fetch lost items error:', error);
+                    showToast(error.message || 'Failed to load lost items.', 'danger');
+                    grid.innerHTML = `
+                        <div class="lost-empty">
+                            <span class="empty-icon"><i class="fas fa-compass"></i></span>
+                            <h3>Error loading items</h3>
+                            <p>Please refresh the page or try again later.</p>
+                        </div>
+                    `;
+                } finally {
+                    isFetching = false;
+                }
+            }
+
+            async function submitClaim(itemId, answer1, answer2) {
+                const payload = { lost_item: itemId, answer1, answer2 };
+                const response = await fetchWithAuth(CLAIM_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err.message || 'Claim submission failed');
+                }
+                const result = await response.json();
+                if (!result.is_success) throw new Error(result.message || 'Claim submission failed');
+                return result;
+            }
+
+            async function submitReport(formData) {
+                const response = await fetchWithAuth(REPORT_API, {
+                    method: 'POST',
+                    body: formData, // multipart/form-data
+                });
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err.message || 'Report submission failed');
+                }
+                const result = await response.json();
+                if (!result.is_success) throw new Error(result.message || 'Report submission failed');
+                return result;
+            }
+
+            // ============================================================
             // RENDER
             // ============================================================
             function renderItems() {
                 const query = searchQuery.toLowerCase().trim();
                 let filtered = allItems;
-
                 if (query) {
                     filtered = allItems.filter(item =>
                         item.item_name.toLowerCase().includes(query) ||
@@ -1224,7 +1628,6 @@
                 const start = (currentPage - 1) * perPage;
                 const pageItems = filtered.slice(start, start + perPage);
 
-                lostCountDisplay.textContent = allItems.length;
                 resultCount.textContent = `${total} item${total !== 1 ? 's' : ''}`;
                 pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
                 prevBtn.disabled = currentPage <= 1;
@@ -1232,12 +1635,12 @@
 
                 if (pageItems.length === 0) {
                     grid.innerHTML = `
-                            <div class="lost-empty">
-                                <span class="empty-icon"><i class="fa-regular fa-compass"></i></span>
-                                <h3>No lost items found</h3>
-                                <p>${query ? 'Try adjusting your search terms.' : 'If you\'ve lost something, check back later or post a lost item.'}</p>
-                            </div>
-                        `;
+                        <div class="lost-empty">
+                            <span class="empty-icon"><i class="fas fa-compass"></i></span>
+                            <h3>No lost items found</h3>
+                            <p>${query ? 'Try adjusting your search terms.' : 'If you\'ve lost something, check back later or post a lost item.'}</p>
+                        </div>
+                    `;
                     return;
                 }
 
@@ -1248,154 +1651,326 @@
                     const dateDisplay = formatDate(item.date_found);
 
                     return `
-                            <div class="lost-card" data-id="${item.id}">
-                                <div class="lost-img-wrap">
-                                    <img src="${imgSrc}" alt="${item.item_name}" loading="lazy"
-                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';this.nextElementSibling.textContent='📦';" />
-                                    <div class="placeholder-icon" style="display:none;">📦</div>
-                                    <span class="status-badge ${statusClass}">${statusLabel}</span>
-                                    <span class="claim-hint"><i class="fa-regular fa-circle-question"></i> Verify to claim</span>
-                                </div>
-                                <div class="lost-info">
-                                    <div class="item-name" title="${item.item_name}">${item.item_name}</div>
-                                    <div class="item-desc">${item.description}</div>
-                                    <div class="item-meta">
-                                        <span class="location-tag"><i class="fa-solid fa-location-dot"></i> ${item.location}</span>
-                                        ${dateDisplay ? `<span class="date-tag"><i class="fa-regular fa-calendar"></i> ${dateDisplay}</span>` : ''}
-                                        <span class="verification-hint"><i class="fa-regular fa-circle-check"></i> Verify</span>
-                                    </div>
+                        <div class="lost-card" data-id="${item.id}">
+                            <div class="lost-img-wrap">
+                                <img src="${imgSrc}" alt="${item.item_name}" loading="lazy"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex';this.nextElementSibling.textContent='📦';" />
+                                <div class="placeholder-icon" style="display:none;">📦</div>
+                                <span class="status-badge ${statusClass}">${statusLabel}</span>
+                                <span class="claim-hint"><i class="fas fa-circle-question"></i> Verify to claim</span>
+                            </div>
+                            <div class="lost-info">
+                                <div class="item-name" title="${item.item_name}">${item.item_name}</div>
+                                <div class="item-desc">${item.description}</div>
+                                <div class="item-meta">
+                                    <span class="location-tag"><i class="fas fa-location-dot"></i> ${item.location}</span>
+                                    ${dateDisplay ? `<span class="date-tag"><i class="fas fa-calendar"></i> ${dateDisplay}</span>` : ''}
+                                    <span class="verification-hint"><i class="fas fa-circle-check"></i> Verify</span>
                                 </div>
                             </div>
-                        `;
+                        </div>
+                    `;
                 }).join('');
 
-                // ─── Click to open modal ───
                 grid.querySelectorAll('.lost-card').forEach(card => {
                     card.addEventListener('click', function() {
                         const id = parseInt(this.dataset.id);
                         const item = allItems.find(i => i.id === id);
-                        if (item) {
-                            openVerificationModal(item);
-                        }
+                        if (item) openVerificationModal(item);
                     });
                 });
             }
 
             // ============================================================
-            // VERIFICATION MODAL
+            // VERIFICATION MODAL (Claim)
             // ============================================================
             function openVerificationModal(item) {
                 currentClaimItem = item;
-
-                // Reset state
                 formFields.classList.remove('hidden');
                 successState.classList.remove('active');
                 q1Input.value = '';
                 q2Input.value = '';
                 modalSubmit.style.display = 'flex';
                 modalSubmit.disabled = false;
-                modalSubmit.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Claim';
+                modalSubmit.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Claim';
 
-                // Populate item info
                 modalItemName.textContent = `Verify "${item.item_name}"`;
                 modalItemName2.textContent = item.item_name;
-                modalItemLocation.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${item.location}`;
+                modalItemLocation.innerHTML = `<i class="fas fa-location-dot"></i> ${item.location}`;
                 modalItemLocation2.textContent = item.location;
 
-                // Thumbnail
                 const imgSrc = getImageUrl(item);
                 modalThumb.innerHTML = `<img src="${imgSrc}" alt="${item.item_name}" onerror="this.style.display='none';this.parentElement.textContent='📦';this.parentElement.style.fontSize='28px';" />`;
 
-                // Verification questions
                 q1Text.textContent = item.verification1 || 'Verification question 1';
                 q2Text.textContent = item.verification2 || 'Verification question 2';
                 q1Input.placeholder = `Type your answer for Q1…`;
                 q2Input.placeholder = `Type your answer for Q2…`;
 
-                overlay.classList.add('active');
+                verifyOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
-
-                // Focus first input after animation
                 setTimeout(() => q1Input.focus(), 400);
             }
 
             function closeVerificationModal() {
-                overlay.classList.remove('active');
+                verifyOverlay.classList.remove('active');
                 document.body.style.overflow = '';
                 currentClaimItem = null;
-                // Reset success state after close
                 setTimeout(() => {
                     formFields.classList.remove('hidden');
                     successState.classList.remove('active');
                     modalSubmit.style.display = 'flex';
                     modalSubmit.disabled = false;
-                    modalSubmit.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Submit Claim';
+                    modalSubmit.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Claim';
                 }, 350);
             }
 
-            // ─── Submit claim ──────────────────────────────────────────
-            function submitClaim() {
+            async function handleClaimSubmit() {
                 const answer1 = q1Input.value.trim();
                 const answer2 = q2Input.value.trim();
-
                 if (!answer1 || !answer2) {
                     showToast('Please answer both verification questions.', 'warning');
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert.warning('Please answer both questions.', { duration: 2000 });
-                    }
                     return;
                 }
+                if (!currentClaimItem) return;
 
-                // Simulate sending to backend
                 modalSubmit.disabled = true;
-                modalSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting…';
+                modalSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting…';
 
-                setTimeout(() => {
-                    // Hide form, show success
+                try {
+                    await submitClaim(currentClaimItem.id, answer1, answer2);
+                    // Success
                     formFields.classList.add('hidden');
                     successState.classList.add('active');
                     modalSubmit.style.display = 'none';
-
                     showToast('Claim submitted! You\'ll be contacted soon.', 'success');
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert.success('✅ Claim submitted! Check your email/phone.', { duration: 3000 });
-                    }
-
-                    // Log for demo
-                    console.log('📝 Claim submitted for:', currentClaimItem?.item_name);
-                    console.log('  Q1:', currentClaimItem?.verification1, '→', answer1);
-                    console.log('  Q2:', currentClaimItem?.verification2, '→', answer2);
-                    console.log('  📧 Email & 📞 Phone will be used to contact the claimant.');
-                }, 1500);
+                    // Optionally refresh the list to update status
+                    fetchLostItems(searchQuery);
+                } catch (error) {
+                    console.error('Claim error:', error);
+                    showToast(error.message || 'Claim submission failed.', 'danger');
+                    modalSubmit.disabled = false;
+                    modalSubmit.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Claim';
+                }
             }
 
-            // ─── Modal event listeners ────────────────────────────────
+            // ─── Claim modal event listeners ──────────────────────────
             modalClose.addEventListener('click', closeVerificationModal);
             modalCancel.addEventListener('click', closeVerificationModal);
-            overlay.addEventListener('click', function(e) {
-                if (e.target === overlay) closeVerificationModal();
+            verifyOverlay.addEventListener('click', function(e) {
+                if (e.target === verifyOverlay) closeVerificationModal();
             });
-            modalSubmit.addEventListener('click', submitClaim);
+            modalSubmit.addEventListener('click', handleClaimSubmit);
 
-            // Enter key on inputs triggers submit
             q1Input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    q2Input.focus();
-                }
+                if (e.key === 'Enter') { e.preventDefault();
+                    q2Input.focus(); }
             });
             q2Input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    submitClaim();
+                if (e.key === 'Enter') { e.preventDefault();
+                    handleClaimSubmit(); }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && verifyOverlay.classList.contains('active')) {
+                    closeVerificationModal();
+                }
+                if (e.key === 'Escape' && addOverlay.classList.contains('active')) {
+                    closeAddModal();
                 }
             });
 
-            // ESC to close
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && overlay.classList.contains('active')) {
-                    closeVerificationModal();
+            // ============================================================
+            // ADD LOST ITEM MODAL
+            // ============================================================
+            function openAddModal() {
+                addOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                // Set default date
+                const today = new Date().toISOString().split('T')[0];
+                addDateFound.value = today;
+                // Reset form
+                addLostForm.reset();
+                addDateFound.value = today;
+                // Clear file preview
+                const container = addFileDropZone.querySelector('.file-preview-container');
+                if (container) container.innerHTML = '';
+                addFileDropZone.classList.remove('has-file');
+                addFileInput.value = '';
+                // Clear errors
+                document.querySelectorAll('#addLostForm .help-text').forEach(el => {
+                    el.textContent = '';
+                    el.className = 'help-text';
+                });
+                document.querySelectorAll('#addLostForm .form-input, #addLostForm .form-textarea').forEach(el => {
+                    el.classList.remove('error');
+                });
+                addModalSubmit.disabled = false;
+                addModalSubmit.classList.remove('loading');
+                addModalSubmit.innerHTML = '<span class="btn-text"><i class="fas fa-paper-plane"></i> Report Item</span><span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>';
+            }
+
+            function closeAddModal() {
+                addOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            // ─── Add modal form validation ────────────────────────────
+            function validateAddForm() {
+                let valid = true;
+                const fields = [
+                    { el: addItemName, help: document.getElementById('addItemNameHelp'), msg: 'Item name is required.' },
+                    { el: addDescription, help: document.getElementById('addDescriptionHelp'), msg: 'Description is required.' },
+                    { el: addLocation, help: document.getElementById('addLocationHelp'), msg: 'Location is required.' },
+                    { el: addDateFound, help: document.getElementById('addDateFoundHelp'), msg: 'Date is required.' },
+                    { el: addVerification1, help: document.getElementById('addVerification1Help'), msg: 'Verification question 1 is required.' },
+                    { el: addVerification2, help: document.getElementById('addVerification2Help'), msg: 'Verification question 2 is required.' },
+                ];
+                fields.forEach(f => {
+                    if (!f.el.value.trim()) {
+                        f.el.classList.add('error');
+                        f.help.textContent = f.msg;
+                        f.help.className = 'help-text error';
+                        valid = false;
+                    } else {
+                        f.el.classList.remove('error');
+                        f.help.textContent = '';
+                        f.help.className = 'help-text';
+                    }
+                });
+                return valid;
+            }
+
+            // ─── Add form submit ──────────────────────────────────────
+            async function handleAddSubmit(e) {
+                e.preventDefault();
+                if (!validateAddForm()) return;
+
+                const formData = new FormData();
+                formData.append('item_name', addItemName.value.trim());
+                formData.append('description', addDescription.value.trim());
+                formData.append('location', addLocation.value.trim());
+                formData.append('date_found', addDateFound.value);
+                formData.append('verification1', addVerification1.value.trim());
+                formData.append('verification2', addVerification2.value.trim());
+
+                const file = addFileInput.files[0];
+                if (file) {
+                    formData.append('image', file);
                 }
+
+                addModalSubmit.disabled = true;
+                addModalSubmit.classList.add('loading');
+
+                try {
+                    await submitReport(formData);
+                    showToast('Lost item reported successfully!', 'success');
+                    closeAddModal();
+                    // Refresh list
+                    fetchLostItems(searchQuery);
+                } catch (error) {
+                    console.error('Report error:', error);
+                    showToast(error.message || 'Failed to report item.', 'danger');
+                    addModalSubmit.disabled = false;
+                    addModalSubmit.classList.remove('loading');
+                    addModalSubmit.innerHTML = '<span class="btn-text"><i class="fas fa-paper-plane"></i> Report Item</span><span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>';
+                }
+            }
+
+            // ─── Add modal event listeners ────────────────────────────
+            document.getElementById('addLostBtn').addEventListener('click', openAddModal);
+            addModalClose.addEventListener('click', closeAddModal);
+            addModalCancel.addEventListener('click', closeAddModal);
+            addOverlay.addEventListener('click', function(e) {
+                if (e.target === addOverlay) closeAddModal();
+            });
+            addModalSubmit.addEventListener('click', handleAddSubmit);
+            addLostForm.addEventListener('submit', handleAddSubmit);
+
+            // Real-time validation on input
+            addItemName.addEventListener('input', validateAddForm);
+            addDescription.addEventListener('input', validateAddForm);
+            addLocation.addEventListener('input', validateAddForm);
+            addDateFound.addEventListener('change', validateAddForm);
+            addVerification1.addEventListener('input', validateAddForm);
+            addVerification2.addEventListener('input', validateAddForm);
+
+            // ─── File drop zone for add modal ─────────────────────────
+            function handleAddFileSelection() {
+                const file = addFileInput.files[0];
+                const container = addFileDropZone.querySelector('.file-preview-container');
+                const errorEl = addFileDropZone.querySelector('.drop-error');
+                if (!file) {
+                    container.innerHTML = '';
+                    addFileDropZone.classList.remove('has-file');
+                    errorEl.textContent = '';
+                    return;
+                }
+                // Validate size and type
+                if (file.size > 5 * 1024 * 1024) {
+                    errorEl.textContent = 'File too large. Max 5MB.';
+                    addFileInput.value = '';
+                    container.innerHTML = '';
+                    addFileDropZone.classList.remove('has-file');
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    errorEl.textContent = 'Please upload an image.';
+                    addFileInput.value = '';
+                    container.innerHTML = '';
+                    addFileDropZone.classList.remove('has-file');
+                    return;
+                }
+                errorEl.textContent = '';
+                addFileDropZone.classList.add('has-file');
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    container.innerHTML = `
+                        <div class="file-preview" style="flex-direction:column; padding:12px;">
+                            <img src="${e.target.result}" style="max-width:80px; max-height:80px; border-radius:8px; object-fit:cover;" />
+                            <div class="file-info" style="text-align:center; margin-top:6px;">
+                                <div class="file-name">${file.name}</div>
+                                <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
+                            </div>
+                            <button type="button" class="file-remove" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;padding:4px 8px;border-radius:8px;transition:background 0.2s;">&times;</button>
+                        </div>
+                    `;
+                    container.querySelector('.file-remove').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        addFileInput.value = '';
+                        container.innerHTML = '';
+                        addFileDropZone.classList.remove('has-file');
+                        errorEl.textContent = '';
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+
+            addFileInput.addEventListener('change', handleAddFileSelection);
+
+            // Drag and drop for add modal
+            addFileDropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+            addFileDropZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+            addFileDropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    addFileInput.files = files;
+                    handleAddFileSelection();
+                }
+            });
+            addFileDropZone.addEventListener('click', function(e) {
+                if (e.target.closest('.file-remove')) return;
+                if (e.target.closest('.file-preview')) return;
+                addFileInput.click();
             });
 
             // ============================================================
@@ -1405,7 +1980,8 @@
                 searchQuery = this.value;
                 clearSearch.classList.toggle('visible', !!this.value);
                 currentPage = 1;
-                renderItems();
+                // We'll fetch with search param from backend
+                fetchLostItems(searchQuery);
             });
 
             clearSearch.addEventListener('click', function() {
@@ -1413,7 +1989,7 @@
                 searchQuery = '';
                 this.classList.remove('visible');
                 currentPage = 1;
-                renderItems();
+                fetchLostItems('');
             });
 
             // ============================================================
@@ -1423,7 +1999,6 @@
                 if (currentPage > 1) { currentPage--;
                     renderItems(); }
             });
-
             nextBtn.addEventListener('click', function() {
                 const totalPages = Math.ceil(filteredItems.length / perPage);
                 if (currentPage < totalPages) { currentPage++;
@@ -1438,11 +2013,9 @@
                     e.preventDefault();
                     searchInput.focus();
                 }
-                if (e.key === 'Escape') {
-                    if (document.activeElement === searchInput) {
-                        searchInput.blur();
-                        clearSearch.classList.remove('visible');
-                    }
+                if (e.key === 'Escape' && document.activeElement === searchInput) {
+                    searchInput.blur();
+                    clearSearch.classList.remove('visible');
                 }
             });
 
@@ -1450,8 +2023,8 @@
             // INIT
             // ============================================================
             function init() {
-                renderItems();
-                console.log('🔍 Lost & Found page initialized with ' + allItems.length + ' items');
+                fetchLostItems('');
+                console.log('🔍 Lost & Found page initialized.');
             }
 
             if (document.readyState === 'loading') {
@@ -1461,12 +2034,7 @@
             }
 
             // Expose for debugging
-            window.__lost = {
-                all: () => allItems,
-                render: renderItems,
-                openModal: openVerificationModal,
-                closeModal: closeVerificationModal
-            };
+            window.__lost = { fetch: fetchLostItems, render: renderItems };
 
         })();
     </script>

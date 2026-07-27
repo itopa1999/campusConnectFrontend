@@ -446,6 +446,8 @@
             async function fetchHallStatus() {
                 const response = await fetchWithAuth(`${AUTH_URL}profile-student-hall`, {
                     method: 'GET',
+                    showSpinner: true,
+                    spinnerText: 'Loading Hall...'
                 });
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
@@ -461,7 +463,7 @@
             // 2. Submit hall details
             async function submitHallDetails(payload) {
                 const response = await fetchWithAuth(`${AUTH_URL}add-student-hall`, {
-                    method: 'POST',
+                    method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',

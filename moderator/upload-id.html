@@ -583,6 +583,8 @@
             async function fetchIdStatus() {
                 const response = await fetchWithAuth(`${AUTH_URL}profile-student-id`, {
                     method: 'GET',
+                    showSpinner: true,
+                    spinnerText: 'Loading ID...'
                 });
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
@@ -645,7 +647,9 @@
                 } else {
                     idImageContainer.style.display = 'flex';
                     if (student_id_photo_url) {
-                        idImage.src = student_id_photo_url;
+                        idImage.src = student_id_photo_url || (
+                        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='200' y='160' font-family='Arial' font-size='24' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E"
+                    );
                         idImage.style.display = 'block';
                         idImagePlaceholder.style.display = 'none';
                     } else {
