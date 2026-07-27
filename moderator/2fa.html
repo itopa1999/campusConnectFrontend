@@ -10,6 +10,7 @@
 
     <!-- Global Styles -->
     <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
     <!-- Page-Specific Styles -->
     <style>
@@ -309,9 +310,9 @@
     </div>
 
     <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/global.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
-    <script src="/assets/js/global.js"></script>
 
     <script>
         (function() {
@@ -329,31 +330,31 @@
                     id: 1,
                     name: 'Authenticator App',
                     description: 'Use Google Authenticator, Microsoft Authenticator, or Authy.',
-                    icon: 'fa-regular fa-mobile-screen-button',
+                    icon: 'fa-regular fas fa-mobile-screen-button',
                     is_enabled: true,
                 }, {
                     id: 2,
                     name: 'SMS (Text Message)',
                     description: 'Receive a one-time code via SMS on your registered phone number.',
-                    icon: 'fa-regular fa-comment-sms',
+                    icon: 'fa-regular fas fa-comment-sms',
                     is_enabled: false,
                 }, {
                     id: 3,
                     name: 'Email OTP',
                     description: 'Get a verification code sent to your registered email address.',
-                    icon: 'fa-regular fa-envelope',
+                    icon: 'fa-regular fas fa-envelope',
                     is_enabled: false,
                 }, {
                     id: 4,
                     name: 'Hardware Token (YubiKey)',
                     description: 'Use a physical USB/NFC security key for authentication.',
-                    icon: 'fa-regular fa-usb',
+                    icon: 'fas fa-usb',
                     is_enabled: false,
                 }, {
                     id: 5,
                     name: 'Backup Codes',
                     description: 'Generate a set of one-time use backup codes for emergencies.',
-                    icon: 'fa-regular fa-key',
+                    icon: 'fa-regular fas fa-key',
                     is_enabled: false,
                 }]
             };

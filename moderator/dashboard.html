@@ -10,6 +10,7 @@
 
     <!-- Global Styles -->
     <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
     <!-- Page-Specific Styles -->
     <style>
@@ -1136,6 +1137,134 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
+
+        /* ─── Quick Links ─── */
+        .quick-links-section {
+            margin-bottom: 24px;
+        }
+        .quick-links-section .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color var(--transition);
+        }
+        .quick-links-section .section-title i {
+            color: var(--green);
+            font-size: 16px;
+        }
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .quick-link-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 14px 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 8px;
+            min-height: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .quick-link-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 50%, rgba(13, 138, 62, 0.03));
+            pointer-events: none;
+        }
+        .quick-link-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card-hover);
+            border-color: var(--green);
+        }
+        .quick-link-card:active {
+            transform: scale(0.96);
+        }
+        .quick-link-card .ql-icon {
+            font-size: 24px;
+            color: var(--green);
+            transition: color var(--transition), transform var(--transition);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--green-bg);
+            transition: all 0.3s ease;
+        }
+        .quick-link-card:hover .ql-icon {
+            transform: scale(1.08);
+            background: var(--green);
+            color: #fff;
+        }
+        .quick-link-card .ql-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+            line-height: 1.2;
+        }
+        .quick-link-card:hover .ql-label {
+            color: var(--green);
+        }
+        .dark-mode .quick-link-card {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+        .dark-mode .quick-link-card:hover {
+            border-color: var(--green);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .dark-mode .quick-link-card .ql-icon {
+            background: #1a3a2a;
+            color: #2ecc71;
+        }
+        .dark-mode .quick-link-card:hover .ql-icon {
+            background: var(--green);
+            color: #fff;
+        }
+        @media (max-width: 480px) {
+            .quick-links-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            .quick-link-card {
+                min-height: 70px;
+                padding: 10px 6px;
+            }
+            .quick-link-card .ql-icon {
+                font-size: 20px;
+                width: 40px;
+                height: 40px;
+            }
+            .quick-link-card .ql-label {
+                font-size: 10px;
+            }
+        }
+        @media (min-width: 640px) {
+            .quick-links-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1170,6 +1299,9 @@
                         <i class="fa-regular fas fa-coins"></i>
                         <span class="points-number" id="pointsCount">0</span>
                         <span class="points-label">points</span>
+                        <span style="margin-left: auto; cursor: pointer;" class="refresh-spinner" onclick="window.refreshPointBalance()" title="Refresh balance">
+                            <i class="fas fa-sync-alt" id="refreshIcon"></i>
+                        </span>
                     </div>
                     <div class="flag-badge" id="flagBadge">
                         <i class="fa-solid fas fa-flag"></i>
@@ -1209,6 +1341,17 @@
                     <div class="progress-sub"><i class="fa-regular fa-circle-check"></i> Based on completed sales and reviews</div>
                 </div>
             </div>
+
+            <!-- ===== QUICK LINKS ===== -->
+            <div class="quick-links-section">
+                <div class="section-title">
+                    <i class="fas fa-bolt"></i> Quick Access
+                </div>
+                <div class="quick-links-grid" id="quickLinksGrid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
 
             <!-- ===== TABS ===== -->
             <div class="dash-tabs" id="dashTabs">
@@ -1283,9 +1426,9 @@
     </div>
 
     <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/global.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
-    <script src="/assets/js/global.js"></script>
 
     <script>
         (function() {
@@ -1561,6 +1704,52 @@
                 flagCount.textContent = stats.flagged_listing_count || 0;
             }
 
+            // ============================================================
+            // RENDER: QUICK LINKS
+            // ============================================================
+            function renderQuickLinks() {
+                const quickLinksGrid = document.getElementById('quickLinksGrid');
+                
+                // Most commonly used quick links (6 items)
+                const quickLinks = [
+                    { icon: 'fas fa-user', label: 'View Profile', id: 'view-profile', page: 'profile.html' },
+                    { icon: 'fas fa-coins', label: 'Buy Points', id: 'buy-point', page: 'buy-point.html' },
+                    { icon: 'fas fa-id-card', label: 'Upload Student ID', id: 'upload-id', page: 'upload-id.html' },
+                    { icon: 'fas fa-building', label: 'Hall Verification', id: 'hall-verified', page: 'hall-verification.html' },
+                    { icon: 'fas fa-key', label: 'Change Password', id: 'change-password', page: 'change-password.html' },
+                    { icon: 'fas fa-flag', label: 'Report Issue', id: 'report-issue', page: 'report.html' }
+                ];
+                
+                quickLinksGrid.innerHTML = quickLinks.map(item => `
+                    <div class="quick-link-card" data-page="${item.page}" data-id="${item.id}">
+                        <div class="ql-icon"><i class="${item.icon}"></i></div>
+                        <span class="ql-label">${item.label}</span>
+                    </div>
+                `).join('');
+                
+                // Add click handlers
+                quickLinksGrid.querySelectorAll('.quick-link-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const page = this.dataset.page;
+                        const id = this.dataset.id;
+                        
+                        // Handle special cases
+                        if (id === 'logout') {
+                            logoutUser()
+                        }
+                        
+                        if (id === 'report-issue') {
+                            window.location.href = page;
+                            return;
+                        }
+                        
+                        // Navigate to page
+                        if (page) {
+                            window.location.href = page;
+                        }
+                    });
+                });
+            }
             // ============================================================
             // RENDER: LISTINGS (with backend search)
             // ============================================================
@@ -1927,6 +2116,10 @@
 
                     // Render verification banner
                     renderVerificationBanner();
+
+                    
+                    // Render quick links
+                    renderQuickLinks()
 
                     console.log('Dashboard loaded successfully');
                 } catch (error) {

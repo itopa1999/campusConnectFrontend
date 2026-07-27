@@ -1,6 +1,7 @@
 // ============================================================
 // global.js – Shared functionality for all pages
-// Includes: header, dark mode, filter sidebar, bottom nav, scroll to top, desktop overlay, profile sidebar, auth
+// Includes: header, dark mode, filter sidebar, bottom nav,
+// scroll to top, desktop overlay, profile sidebar, auth, form guard
 // ============================================================
 
 (function() {
@@ -59,7 +60,6 @@
         localStorage.removeItem('user');
         sessionStorage.removeItem('user');
         sessionStorage.removeItem('rememberMe');
-        // Also clear any other user-related data
         localStorage.removeItem('authToken');
         sessionStorage.removeItem('authToken');
     }
@@ -73,34 +73,26 @@
     function updateHeaderUser() {
         const user = getUserData();
         
-        // Update sidebar avatar, name, and email
         const avatarEl = document.querySelector('#profileSidebarAvatar');
         const nameEl = document.querySelector('#profileSidebarName');
         const emailEl = document.querySelector('#profileSidebarEmail');
         
         if (user) {
-            // Update avatar with first letter of email (since we don't have first_name)
             if (avatarEl) {
                 const email = user.email || '';
                 const initial = email.charAt(0).toUpperCase() || 'S';
                 avatarEl.textContent = initial;
             }
-            
-            // Update name - use email or fallback
             if (nameEl) {
                 const displayName = user.email ? user.email.split('@')[0] : 'Student';
-                // Capitalize first letter
                 const formattedName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
                 nameEl.textContent = formattedName;
             }
-            
-            // Update email display
             if (emailEl) {
                 const displayEmail = user.email ? '@' + user.email.split('@')[1] : '@student.uniben';
                 emailEl.textContent = displayEmail;
             }
         } else {
-            // Default fallback
             if (avatarEl) avatarEl.textContent = 'S';
             if (nameEl) nameEl.textContent = 'Student';
             if (emailEl) emailEl.textContent = '@student.uniben';
@@ -205,8 +197,6 @@
         }
 
         const defaultHeaders = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
             'X-Key-Id': X_KEY_ID,
         };
 
@@ -226,7 +216,6 @@
             showGlobalSpinner(spinnerText);
         }
 
-        // Internal request function with retry capability
         const makeRequest = async (retryCount = 0) => {
             try {
                 let response = await fetch(url, opts);
@@ -312,10 +301,10 @@
     async function refreshPointBalance() {
         try {
             const response = await fetchWithAuth(REFRESH_POINTS_URL, {
-            method: 'GET',
-            headers: { 'Accept': 'application/json' },
-            showSpinner: true,
-            credentials: 'include',
+                method: 'GET',
+                headers: { 'Accept': 'application/json' },
+                showSpinner: true,
+                credentials: 'include',
             });
             if (!response.ok) throw new Error('Failed to refresh dashboard');
             const result = await response.json();
@@ -332,12 +321,12 @@
 
             const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
             if (userStr) {
-            try {
-                const user = JSON.parse(userStr);
-                user.point_bal = newBalance;
-                const storage = sessionStorage.getItem('rememberMe') === 'true' ? localStorage : sessionStorage;
-                storage.setItem('user', JSON.stringify(user));
-            } catch (e) { }
+                try {
+                    const user = JSON.parse(userStr);
+                    user.point_bal = newBalance;
+                    const storage = sessionStorage.getItem('rememberMe') === 'true' ? localStorage : sessionStorage;
+                    storage.setItem('user', JSON.stringify(user));
+                } catch (e) { }
             }
 
             showAlert.success('Point balance updated', { duration: 1500 });
@@ -357,7 +346,6 @@
     function createProfileSidebar() {
         if (document.querySelector('.profile-sidebar-overlay')) return;
 
-        // ─── Overlay ──────────────────────────────────────────────
         const overlay = document.createElement('div');
         overlay.className = 'profile-sidebar-overlay';
         overlay.style.cssText = `
@@ -373,7 +361,6 @@
             transition: opacity 0.3s ease;
         `;
 
-        // ─── Sidebar ──────────────────────────────────────────────
         const sidebar = document.createElement('div');
         sidebar.className = 'profile-sidebar';
         sidebar.style.cssText = `
@@ -394,7 +381,6 @@
             overflow: hidden;
         `;
 
-        // ─── Header ──────────────────────────────────────────────
         const header = document.createElement('div');
         header.style.cssText = `
             padding: 20px 24px 16px;
@@ -415,7 +401,6 @@
             <button class="profile-sidebar-close" style="background:none;border:none;font-size:24px;color:var(--text-muted2,#8e8e93);cursor:pointer;padding:4px 8px;border-radius:8px;transition:background 0.2s,color 0.2s;line-height:1;">&times;</button>
         `;
 
-        // ─── Body ──────────────────────────────────────────────────
         const body = document.createElement('div');
         body.style.cssText = `
             flex: 1;
@@ -424,35 +409,67 @@
         `;
 
         const menuItems = [
-            { icon: 'fa-regular fa-user', label: 'View Profile', id: 'view-profile' },
-            { icon: 'fa-regular fa-coins', label: 'Buy Points', id: 'buy-point' },
-            { icon: 'fa-regular fa-id-card', label: 'Upload Student ID', id: 'upload-id' },
-            { icon: 'fa-regular fa-building', label: 'Hall Verification', id: 'hall-verified' },
-            { icon: 'fa-regular fa-eye', label: 'Change Visibility', id: 'change-visibility' },
-            { icon: 'fa-regular fa-laptop', label: 'Device', id: 'device' },
-            { icon: 'fa-regular fa-shield-halved', label: 'Add 2FA', id: 'add-2fa' },
-            { icon: 'fa-regular fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },
-            { icon: 'fa-regular fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
-            { icon: 'fa-regular fa-info-circle', label: 'About us', id: 'about-us' },
-            { icon: 'fa-regular fa-key', label: 'Change Password', id: 'change-password' },
-            { icon: 'fa-regular fa-right-from-bracket', label: 'Logout', id: 'logout' },
+            { icon: 'fas fa-user', label: 'View Profile', id: 'view-profile' },
+            { icon: 'fas fa-coins', label: 'Buy Points', id: 'buy-point' },
+            { icon: 'fas fa-id-card', label: 'Upload Student ID', id: 'upload-id' },
+            { icon: 'fas fa-building', label: 'Hall Verification', id: 'hall-verified' },       
+            { icon: 'fas fa-eye', label: 'Change Visibility', id: 'change-visibility' },
+            { icon: 'fas fa-laptop', label: 'Device', id: 'device' },
+            { icon: 'fas fa-shield-halved', label: 'Add 2FA', id: 'add-2fa' },                  
+            { icon: 'fas fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },        
+            { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
+            { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
+            { icon: 'fas fa-key', label: 'Change Password', id: 'change-password' },
+            { icon: 'fas fa-right-from-bracket', label: 'Logout', id: 'logout' },                
         ];
 
         let itemsHTML = '';
         menuItems.forEach((item, index) => {
             const isLast = index === menuItems.length - 1;
+            const isLogout = item.id === 'logout';
+
+            let divStyle = `
+                display:flex;
+                align-items:center;
+                gap:14px;
+                padding:14px 24px;
+                cursor:pointer;
+                transition:background 0.2s;
+                color:var(--text-primary,#1a1a1a);
+            `;
+
+            let iconStyle = `
+                font-size:18px;
+                width:24px;
+                text-align:center;
+                color:var(--text-muted2,#8e8e93);
+                transition:color 0.2s;
+            `;
+
+            if (isLogout) {
+                divStyle += `
+                    background: linear-gradient(135deg, #ff4d4d, #cc0000);
+                    color: #ffffff;
+                    border-radius: 10px;
+                    margin: 4px 12px 0 12px;
+                    padding: 14px 20px;
+                `;
+                iconStyle += `
+                    color: #ffffff !important;
+                `;
+            }
+
             itemsHTML += `
-                <div class="profile-menu-item" data-action="${item.id}" style="display:flex;align-items:center;gap:14px;padding:14px 24px;cursor:pointer;transition:background 0.2s;color:var(--text-primary,#1a1a1a);">
-                    <i class="${item.icon}" style="font-size:18px;width:24px;text-align:center;color:var(--text-muted2,#8e8e93);transition:color 0.2s;"></i>
+                <div class="profile-menu-item" data-action="${item.id}" style="${divStyle}">
+                    <i class="${item.icon}" style="${iconStyle}"></i>
                     <span style="font-size:14px;font-weight:500;">${item.label}</span>
                 </div>
-                ${!isLast ? `<div style="margin:0 24px;height:1px;background:var(--border-color,#f0f0f0);"></div>` : ''}
+                ${!isLast && !isLogout ? `<div style="margin:0 24px;height:1px;background:var(--border-color,#f0f0f0);"></div>` : ''}
             `;
         });
 
         body.innerHTML = itemsHTML;
 
-        // ─── Footer ──────────────────────────────────────────────
         const footer = document.createElement('div');
         footer.style.cssText = `
             padding: 14px 24px 20px;
@@ -464,14 +481,12 @@
         `;
         footer.innerHTML = `CampusHub v2.0 • <span style="color:var(--green);">NG</span>`;
 
-        // ─── Assemble ─────────────────────────────────────────────
         sidebar.appendChild(header);
         sidebar.appendChild(body);
         sidebar.appendChild(footer);
         overlay.appendChild(sidebar);
         document.body.appendChild(overlay);
 
-        // ─── Store refs ───────────────────────────────────────────
         profileSidebarInstance = {
             overlay,
             sidebar,
@@ -486,7 +501,6 @@
             email: header.querySelector('#profileSidebarEmail'),
         };
 
-        // ─── Event listeners ──────────────────────────────────────
         profileSidebarInstance.closeBtn.addEventListener('click', closeProfileSidebar);
 
         overlay.addEventListener('click', function(e) {
@@ -507,7 +521,6 @@
             });
         });
 
-        // ─── Styles ──────────────────────────────────────────────
         const styleEl = document.createElement('style');
         styleEl.textContent = `
             .profile-menu-item:hover {
@@ -550,8 +563,6 @@
         document.head.appendChild(styleEl);
 
         profileSidebarInitialized = true;
-        
-        // Update header with user data after creating sidebar
         updateHeaderUser();
     }
 
@@ -560,8 +571,6 @@
         if (!profileSidebarInstance) return;
 
         const { overlay, sidebar } = profileSidebarInstance;
-
-        // Update user data when sidebar opens
         updateHeaderUser();
 
         overlay.style.display = 'block';
@@ -587,7 +596,6 @@
     }
 
     function handleProfileAction(action) {
-        // Map actions to page URLs
         const pageMap = {
             'view-profile': 'profile.html',
             'buy-point': 'buy-point.html',
@@ -609,7 +617,7 @@
 
         const page = pageMap[action];
         if (page) {
-            window.location.href = page;
+            navigateWithGuard(page);
         } else {
             console.warn('Unknown action:', action);
             if (typeof showAlert !== 'undefined') {
@@ -652,7 +660,6 @@
             document.body.prepend(header);
         }
 
-        // ─── Logo double-click shake ─────────────────────────────
         const logo = document.getElementById('logoContainer');
         let clickCount = 0;
         let clickTimer = null;
@@ -679,15 +686,13 @@
             });
         }
 
-        // ─── Notification bell ──────────────────────────────────
         const bell = document.getElementById('notificationBell');
         if (bell) {
             bell.addEventListener('click', function() {
-                window.location.href = 'notification.html';
+                navigateWithGuard('notification.html');
             });
         }
 
-        // ─── Profile icon ────────────────────────────────────────
         const profileIcon = document.getElementById('profileIcon');
         if (profileIcon) {
             const newIcon = profileIcon.cloneNode(true);
@@ -699,7 +704,6 @@
             });
         }
 
-        // ─── Theme toggle ────────────────────────────────────────
         const toggleBtn = document.getElementById('themeToggle');
         if (toggleBtn) {
             const newToggle = toggleBtn.cloneNode(true);
@@ -984,6 +988,158 @@
     }
 
     // ============================================================
+    // FORM GUARD – Warn on unsaved changes (uses Modal class)
+    // ============================================================
+
+    let isFormDirty = false;
+    let formGuardActive = true;
+
+    function setFormDirty(dirty = true) {
+        isFormDirty = dirty;
+    }
+
+    function resetFormDirty() {
+        isFormDirty = false;
+    }
+
+    function getFormDirty() {
+        return isFormDirty;
+    }
+
+    function showLeaveConfirmModal(onConfirm, onCancel) {
+        if (typeof Modal !== 'function') {
+            // fallback to browser confirm if Modal not loaded
+            if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
+                if (typeof onConfirm === 'function') onConfirm();
+            } else {
+                if (typeof onCancel === 'function') onCancel();
+            }
+            return;
+        }
+
+        const modal = new Modal({
+            title: 'Unsaved Changes',
+            type: 'warning',
+            body: `
+                <div style="text-align:center; padding: 8px 0;">
+                    <div style="font-size: 48px; margin-bottom: 12px;">⚠️</div>
+                    <p style="font-size: 16px; color: var(--text-secondary); line-height: 1.6;">
+                        You have unsaved changes in your form.<br>
+                        If you leave now, your input will be discarded.
+                    </p>
+                </div>
+            `,
+            confirmText: 'Leave Anyway',
+            cancelText: 'Stay',
+            showConfirm: true,
+            showCancel: true,
+            closeOnOverlay: false,
+            closeOnEsc: false,
+            onConfirm: function() {
+                if (typeof onConfirm === 'function') onConfirm();
+                modal.destroy();
+            },
+            onCancel: function() {
+                if (typeof onCancel === 'function') onCancel();
+                modal.destroy();
+            }
+        });
+        modal.open();
+    }
+
+    function navigateWithGuard(url, bypass = false) {
+        if (!url) return;
+        if (bypass || !isFormDirty || !formGuardActive) {
+            window.location.href = url;
+            return;
+        }
+
+        showLeaveConfirmModal(
+            function() { // Leave
+                resetFormDirty();
+                window.location.href = url;
+            },
+            function() { // Stay – do nothing
+            }
+        );
+    }
+
+    function initFormGuard() {
+        // ── Detect form changes ──
+        document.addEventListener('input', function(e) {
+            const form = e.target.closest('form');
+            if (form && !form.dataset.guardDisabled) {
+                isFormDirty = true;
+            }
+        });
+
+        document.addEventListener('change', function(e) {
+            const form = e.target.closest('form');
+            if (form && !form.dataset.guardDisabled) {
+                isFormDirty = true;
+            }
+        });
+
+        // ── Before unload (refresh / close tab) ──
+        window.addEventListener('beforeunload', function(e) {
+            if (isFormDirty && formGuardActive) {
+                e.preventDefault();
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+            }
+        });
+
+        // ── Intercept link clicks (anchor tags) ──
+        document.addEventListener('click', function(e) {
+            const target = e.target.closest('a');
+            if (!target) return;
+            const href = target.getAttribute('href');
+            if (!href) return;
+            if (href.startsWith('javascript:')) return;
+            if (href.startsWith('#')) return;
+            if (target.target === '_blank') return;
+            if (href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+            const url = new URL(href, window.location.origin);
+            if (url.origin !== window.location.origin) return;
+
+            if (isFormDirty && formGuardActive) {
+                e.preventDefault();
+                navigateWithGuard(href);
+            }
+        });
+
+        // ── Intercept popstate (back/forward) ──
+        let popstateIntercept = false;
+        window.addEventListener('popstate', function(e) {
+            if (isFormDirty && formGuardActive && !popstateIntercept) {
+                popstateIntercept = true;
+                history.pushState(null, '', window.location.href);
+                showLeaveConfirmModal(
+                    function() {
+                        resetFormDirty();
+                        window.history.back();
+                    },
+                    function() {
+                        popstateIntercept = false;
+                    }
+                );
+            } else {
+                popstateIntercept = false;
+            }
+        });
+
+        // ── Reset dirty on successful form submit ──
+        document.addEventListener('submit', function(e) {
+            const form = e.target.closest('form');
+            if (form && !form.dataset.guardDisabled) {
+                setTimeout(() => {
+                    resetFormDirty();
+                }, 300);
+            }
+        }, true);
+    }
+
+    // ============================================================
     // BOTTOM NAV
     // ============================================================
 
@@ -1036,7 +1192,7 @@
             item.addEventListener('click', function() {
                 const page = this.dataset.page;
                 if (page) {
-                    window.location.href = '' + page + '.html';
+                    navigateWithGuard('' + page + '.html');
                 }
             });
         });
@@ -1044,7 +1200,7 @@
         const sellBtn = nav.querySelector('.sell-btn');
         if (sellBtn) {
             sellBtn.addEventListener('click', function() {
-                window.location.href = 'create-listing.html';
+                navigateWithGuard('create-listing.html');
             });
         }
     }
@@ -1062,7 +1218,6 @@
                                'change-password.html', 'explore.html'];
         const currentPage = window.location.pathname.split('/').pop();
         
-        // If we're on a protected page and not authenticated, redirect to login
         if (protectedPages.includes(currentPage) && !isAuthenticated()) {
             if (typeof showAlert !== 'undefined') {
                 showAlert.warning('Please login to access this page.', { duration: 2000 });
@@ -1081,23 +1236,16 @@
 
     function init() {
         initDarkMode();
-
-        // Check if user is on a protected page
         checkProtectedPage();
-
-        // Create profile sidebar DOM early
         createProfileSidebar();
-
         renderHeader();
         initFilterSidebar();
         renderBottomNav();
         initScrollToTop();
         initDesktopOverlay();
-
-        // Update header with user info
+        initFormGuard(); // <── form guard initialised
         updateHeaderUser();
 
-        // Ensure profile icon listener is attached after header render
         setTimeout(function() {
             const profileIcon = document.querySelector('#profileIcon');
             if (profileIcon) {
@@ -1119,7 +1267,6 @@
     window.CAMPUS_URL = CAMPUS_URL;
     window.NOTIFICATIONS_URL = NOTIFICATIONS_URL;
 
-
     window.fetchWithAuth = fetchWithAuth;
     window.showGlobalSpinner = showGlobalSpinner;
     window.hideGlobalSpinner = hideGlobalSpinner;
@@ -1134,6 +1281,13 @@
     window.listingStatusMap = listingStatusMap;
     window.notificationTypeMap = notificationTypeMap;
     window.refreshPointBalance = refreshPointBalance;
+
+    // Form guard exports
+    window.setFormDirty = setFormDirty;
+    window.resetFormDirty = resetFormDirty;
+    window.getFormDirty = getFormDirty;
+    window.navigateWithGuard = navigateWithGuard;
+    window.showLeaveConfirmModal = showLeaveConfirmModal;
 
     // ============================================================
     // DOM READY

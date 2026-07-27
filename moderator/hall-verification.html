@@ -10,6 +10,7 @@
 
     <!-- Global Styles -->
     <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
     <!-- Page-Specific Styles -->
     <style>
@@ -50,7 +51,57 @@
             transition: color var(--transition);
         }
 
-        /* ─── Status Display ─── */
+        /* ─── Verified Card (display only) ─── */
+        .hall-verified-card {
+            text-align: center;
+            padding: 12px 0 8px;
+        }
+        .hall-verified-card .check-icon {
+            font-size: 56px;
+            color: var(--green);
+            display: block;
+            margin-bottom: 6px;
+        }
+        .hall-verified-card h3 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .hall-verified-card .hall-details {
+            background: var(--bg-input);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 12px auto 0;
+            max-width: 320px;
+            text-align: left;
+            transition: background var(--transition);
+        }
+        .hall-verified-card .hall-details .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            transition: border-color var(--transition);
+        }
+        .hall-verified-card .hall-details .detail-row:last-child {
+            border-bottom: none;
+        }
+        .hall-verified-card .hall-details .detail-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .hall-verified-card .hall-details .detail-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .dark-mode .hall-verified-card .hall-details {
+            background: var(--bg-input);
+        }
+
+        /* ─── Status Display (for unverified) ─── */
         .hall-status-display {
             display: flex;
             flex-direction: column;
@@ -67,12 +118,10 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-        }
-        .hall-status-display .status-badge.pending {
             background: #fef3e8;
             color: #e67e22;
         }
-        .hall-status-display .status-badge.approved {
+        .hall-status-display .status-badge.verified {
             background: var(--green-bg);
             color: var(--green);
         }
@@ -80,11 +129,11 @@
             background: #fde8e8;
             color: var(--red);
         }
-        .dark-mode .hall-status-display .status-badge.pending {
+        .dark-mode .hall-status-display .status-badge {
             background: #3a2a1a;
             color: #f39c12;
         }
-        .dark-mode .hall-status-display .status-badge.approved {
+        .dark-mode .hall-status-display .status-badge.verified {
             background: #1a3a2a;
             color: #2ecc71;
         }
@@ -99,78 +148,6 @@
             margin-top: 6px;
             text-align: center;
             transition: color var(--transition);
-        }
-        .hall-status-display .status-message strong {
-            color: var(--text-primary);
-            transition: color var(--transition);
-        }
-
-        /* ─── Locked / Verified Overlay ─── */
-        .hall-card.verified .form-group {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-        .hall-card.verified .hall-actions .btn-submit {
-            display: none;
-        }
-        .hall-card.verified .verified-badge {
-            display: block;
-        }
-        .verified-badge {
-            display: none;
-            text-align: center;
-            padding: 12px 0 4px;
-        }
-        .verified-badge .check-icon {
-            font-size: 48px;
-            color: var(--green);
-            display: block;
-            margin-bottom: 4px;
-        }
-        .verified-badge h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            transition: color var(--transition);
-        }
-        .verified-badge p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            transition: color var(--transition);
-        }
-
-        /* ─── Rejection Reason ─── */
-        .rejection-reason {
-            background: #fde8e8;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin: 12px 0 16px;
-            border-left: 4px solid var(--red);
-            display: none;
-        }
-        .rejection-reason.visible {
-            display: block;
-        }
-        .rejection-reason p {
-            font-size: 13px;
-            color: var(--red);
-            margin: 0;
-        }
-        .rejection-reason p strong {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #a94442;
-        }
-        .dark-mode .rejection-reason {
-            background: #3a1a1a;
-            border-left-color: #e74c3c;
-        }
-        .dark-mode .rejection-reason p {
-            color: #ff6b6b;
-        }
-        .dark-mode .rejection-reason p strong {
-            color: #ff8787;
         }
 
         /* ─── Form Elements ─── */
@@ -190,8 +167,7 @@
             margin-left: 2px;
         }
 
-        .hall-card .form-input,
-        .hall-card .form-select {
+        .hall-card .form-input {
             width: 100%;
             padding: 12px 16px;
             border-radius: 12px;
@@ -203,19 +179,12 @@
             transition: all 0.25s ease;
             outline: none;
         }
-        .hall-card .form-input:focus,
-        .hall-card .form-select:focus {
+        .hall-card .form-input:focus {
             border-color: var(--green);
             box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
             background: var(--bg-card);
         }
-        .hall-card .form-input:disabled,
-        .hall-card .form-select:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .hall-card .form-input.error,
-        .hall-card .form-select.error {
+        .hall-card .form-input.error {
             border-color: var(--red);
             box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
         }
@@ -318,6 +287,9 @@
                 font-size: 13px;
                 padding: 10px 0;
             }
+            .hall-verified-card .hall-details {
+                max-width: 100%;
+            }
         }
 
         /* ─── Demo note ─── */
@@ -346,7 +318,7 @@
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fas fa-location-dot"></i>
             <div class="loc-text">
                 University of Benin <span>• Ugbowo</span>
             </div>
@@ -360,7 +332,7 @@
                 <!-- ===== HALL CARD ===== -->
                 <div class="hall-card" id="hallCard">
                     <div class="card-title">
-                        <i class="fa-regular fa-building"></i> Hall Verification
+                        <i class="fas fa-building"></i> Hall Verification
                     </div>
                     <div class="card-subtitle">Verify your hall of residence to unlock campus-specific features and build trust.</div>
 
@@ -373,31 +345,37 @@
                     <!-- Content (hidden until loaded) -->
                     <div id="hallContent" style="display:none;">
 
-                        <!-- Status Display -->
+                        <!-- Status Display (shown when NOT verified) -->
                         <div class="hall-status-display" id="statusDisplay">
-                            <span class="status-badge" id="statusBadge">Pending</span>
+                            <span class="status-badge" id="statusBadge">Not Verified</span>
                             <div class="status-message" id="statusMessage">
-                                Your hall verification is under review.
+                                Please provide your hall details to get verified.
                             </div>
                         </div>
 
-                        <!-- Rejection Reason -->
-                        <div class="rejection-reason" id="rejectionReason">
-                            <p>
-                                <strong><i class="fa-regular fa-circle-xmark"></i> Reason for rejection:</strong>
-                                <span id="rejectionText">The document was unclear. Please upload a clearer image.</span>
-                            </p>
+                        <!-- Verified Card (shown when student_hall_verified_status === 'approved') -->
+                        <div id="verifiedCard" style="display:none;">
+                            <div class="hall-verified-card">
+                                <span class="check-icon"><i class="fas fa-circle-check"></i></span>
+                                <h3>Hall Verified ✅</h3>
+                                <div class="hall-details" id="hallDetails">
+                                    <div class="detail-row">
+                                        <span class="detail-label">Hall of Residence</span>
+                                        <span class="detail-value" id="displayHall">—</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Room / Flat Number</span>
+                                        <span class="detail-value" id="displayRoom">—</span>
+                                    </div>
+                                </div>
+                                <p style="font-size:14px; color:var(--text-secondary); margin-top:12px;">
+                                    This information helps other students trust you and find you on campus.
+                                </p>
+                            </div>
                         </div>
 
-                        <!-- Verified State (shown if status === 'approved') -->
-                        <div class="verified-badge" id="verifiedState">
-                            <span class="check-icon"><i class="fa-regular fa-circle-check"></i></span>
-                            <h3>Hall Verified ✅</h3>
-                            <p>Your hall of residence has been verified. This helps build trust with other students.</p>
-                        </div>
-
-                        <!-- Form -->
-                        <form id="hallForm" autocomplete="off">
+                        <!-- Form (shown when status is not 'approved') -->
+                        <form id="hallForm" autocomplete="off" style="display:none;">
 
                             <!-- Hall Name -->
                             <div class="form-group">
@@ -413,25 +391,11 @@
                                 <div class="help-text" id="roomNumberHelp"></div>
                             </div>
 
-                            <!-- Hostel Type (Optional) -->
-                            <div class="form-group">
-                                <label for="hostelType">Hostel Type <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
-                                <div class="form-select-wrap">
-                                    <select id="hostelType" class="form-select">
-                                        <option value="">Select type...</option>
-                                        <option value="single">Single Room</option>
-                                        <option value="double">Double Room</option>
-                                        <option value="self-contained">Self-Contained</option>
-                                        <option value="shared">Shared Flat</option>
-                                    </select>
-                                </div>
-                            </div>
-
                             <!-- Actions -->
                             <div class="hall-actions" id="hallActions">
                                 <button type="submit" class="btn-submit" id="submitBtn">
-                                    <span class="btn-text"><i class="fa-regular fa-paper-plane"></i> Submit for Verification</span>
-                                    <span class="spinner-btn"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                                    <span class="btn-text"><i class="fas fa-paper-plane"></i> Submit for Verification</span>
+                                    <span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>
                                 </button>
                                 <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
                             </div>
@@ -446,15 +410,15 @@
 
         <!-- ===== DEMO NOTE ===== -->
         <div class="demo-note">
-            <span>CampusHub</span> • Hall Verification • dummy data for preview
+            <span>CampusHub</span> • Hall Verification
         </div>
 
     </div>
 
     <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/global.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
-    <script src="/assets/js/global.js"></script>
 
     <script>
         (function() {
@@ -463,122 +427,123 @@
             // ─── DOM refs ──────────────────────────────────────────────
             const loadingState = document.getElementById('hallLoadingState');
             const content = document.getElementById('hallContent');
-            const hallCard = document.getElementById('hallCard');
             const statusBadge = document.getElementById('statusBadge');
             const statusMessage = document.getElementById('statusMessage');
-            const rejectionReason = document.getElementById('rejectionReason');
-            const rejectionText = document.getElementById('rejectionText');
-            const verifiedState = document.getElementById('verifiedState');
-
+            const verifiedCard = document.getElementById('verifiedCard');
+            const displayHall = document.getElementById('displayHall');
+            const displayRoom = document.getElementById('displayRoom');
+            const hallForm = document.getElementById('hallForm');
             const hallNameInput = document.getElementById('hallName');
             const roomNumberInput = document.getElementById('roomNumber');
-            const hostelTypeSelect = document.getElementById('hostelType');
             const hallNameHelp = document.getElementById('hallNameHelp');
             const roomNumberHelp = document.getElementById('roomNumberHelp');
-
             const submitBtn = document.getElementById('submitBtn');
             const cancelBtn = document.getElementById('cancelBtn');
-            const form = document.getElementById('hallForm');
 
-            // ─── Dummy data (simulate endpoint) ──────────────────────
-            // Change status to test different flows: 'pending', 'approved', 'rejected'
-            const DUMMY_DATA = {
-                hall: "John Wood Hall",
-                room: "A-204",
-                hostel_type: "single",
-                status: "pending", // 'pending' | 'approved' | 'rejected'
-                reason: null, // Only if rejected
-                date: "2026-07-20"
-            };
+            // ─── API Calls ──────────────────────────────────────────────
 
-            // ─── Fetch hall verification (simulated) ──────────────────
-            function fetchHallVerification() {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        // You can randomize for testing:
-                        // const statuses = ['pending', 'approved', 'rejected'];
-                        // DUMMY_DATA.status = statuses[Math.floor(Math.random() * statuses.length)];
-                        // if (DUMMY_DATA.status === 'rejected') DUMMY_DATA.reason = 'The document was unclear. Please upload a clearer image.';
-                        // else DUMMY_DATA.reason = null;
-
-                        resolve(DUMMY_DATA);
-                    }, 700);
+            // 1. Fetch current hall status
+            async function fetchHallStatus() {
+                const response = await fetchWithAuth(`${AUTH_URL}profile-student-hall`, {
+                    method: 'GET',
                 });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `HTTP ${response.status}`);
+                }
+                const result = await response.json();
+                if (!result.is_success) {
+                    throw new Error(result.message || 'Failed to fetch hall status');
+                }
+                return result.data;
             }
 
-            // ─── Render UI based on data ──────────────────────────────
-            function renderHallVerification(data) {
-                const { hall, room, hostel_type, status, reason } = data;
+            // 2. Submit hall details
+            async function submitHallDetails(payload) {
+                const response = await fetchWithAuth(`${AUTH_URL}add-student-hall`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `HTTP ${response.status}`);
+                }
+                const result = await response.json();
+                if (!result.is_success) {
+                    throw new Error(result.message || 'Submission failed');
+                }
+                return result.data;
+            }
+
+            // ─── Render UI ──────────────────────────────────────────────
+
+            function renderHallStatus(data) {
+                const { student_hall_verified, student_hall_verified_status, hall_residence, hall_number } = data;
 
                 loadingState.style.display = 'none';
                 content.style.display = 'block';
 
-                // Populate form fields
-                hallNameInput.value = hall || '';
-                roomNumberInput.value = room || '';
-                hostelTypeSelect.value = hostel_type || '';
+                const isApproved = (student_hall_verified_status === 'approved');
 
-                // Update status badge
-                statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-                statusBadge.className = 'status-badge ' + status.toLowerCase();
-
-                // Update status message
-                const messages = {
-                    pending: 'Your hall verification is under review. We\'ll notify you once it\'s approved.',
-                    approved: 'Your hall has been verified! This helps build trust with other students.',
-                    rejected: 'Your hall verification was rejected. Please update the information and resubmit.'
-                };
-                statusMessage.textContent = messages[status] || '';
-
-                // Handle states
-                const isApproved = status === 'approved';
-                const isRejected = status === 'rejected';
-
-                // Verified state
                 if (isApproved) {
-                    verifiedState.style.display = 'block';
-                    hallCard.classList.add('verified');
-                    submitBtn.style.display = 'none';
-                    hallNameInput.disabled = true;
-                    roomNumberInput.disabled = true;
-                    hostelTypeSelect.disabled = true;
+                    // Show verified card
+                    verifiedCard.style.display = 'block';
+                    hallForm.style.display = 'none';
+                    statusBadge.textContent = 'Verified';
+                    statusBadge.className = 'status-badge verified';
+                    statusMessage.textContent = 'Your hall has been verified! This helps build trust with other students.';
+                    displayHall.textContent = hall_residence || '—';
+                    displayRoom.textContent = hall_number || '—';
                 } else {
-                    verifiedState.style.display = 'none';
-                    hallCard.classList.remove('verified');
-                    submitBtn.style.display = 'block';
-                    hallNameInput.disabled = false;
-                    roomNumberInput.disabled = false;
-                    hostelTypeSelect.disabled = false;
+                    // Show form
+                    verifiedCard.style.display = 'none';
+                    hallForm.style.display = 'block';
+
+                    // Determine status label & message
+                    let statusLabel = 'Not Verified';
+                    let statusMsg = 'Please provide your hall details to get verified.';
+                    let badgeClass = '';
+
+                    if (student_hall_verified_status === 'pending') {
+                        statusLabel = 'Pending Review';
+                        statusMsg = 'Your hall verification is currently under review. You can update your details below.';
+                        badgeClass = 'pending';
+                    } else if (student_hall_verified_status === 'rejected') {
+                        statusLabel = 'Rejected';
+                        statusMsg = 'Your hall verification was rejected. Please update your details and resubmit.';
+                        badgeClass = 'rejected';
+                    }
+
+                    statusBadge.textContent = statusLabel;
+                    statusBadge.className = 'status-badge ' + badgeClass;
+                    statusMessage.textContent = statusMsg;
+
+                    // Pre‑fill form fields if data exists
+                    hallNameInput.value = hall_residence || '';
+                    roomNumberInput.value = hall_number || '';
+                    // Clear help messages
+                    hallNameHelp.textContent = '';
+                    hallNameHelp.className = 'help-text';
+                    roomNumberHelp.textContent = '';
+                    roomNumberHelp.className = 'help-text';
+                    // Reset submit button
+                    submitBtn.disabled = true;
+                    submitBtn.classList.remove('loading');
+                    submitBtn.innerHTML = `<span class="btn-text"><i class="fas fa-paper-plane"></i> Submit for Verification</span><span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>`;
+                    // Validate after pre‑filling (will enable if both fields have values)
+                    validateForm();
                 }
-
-                // Rejection reason
-                if (isRejected && reason) {
-                    rejectionReason.classList.add('visible');
-                    rejectionText.textContent = reason;
-                    // Enable editing for resubmission
-                    hallNameInput.disabled = false;
-                    roomNumberInput.disabled = false;
-                    hostelTypeSelect.disabled = false;
-                    submitBtn.style.display = 'block';
-                    hallCard.classList.remove('verified');
-                } else {
-                    rejectionReason.classList.remove('visible');
-                }
-
-                // Reset submit button state
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('loading');
-                submitBtn.innerHTML = '<span class="btn-text"><i class="fa-regular fa-paper-plane"></i> Submit for Verification</span><span class="spinner-btn"><i class="fa-solid fa-spinner fa-spin"></i></span>';
-
-                // Validate form initially
-                validateForm();
             }
 
             // ─── Validation ────────────────────────────────────────────
+
             function validateForm() {
                 let isValid = true;
 
-                // Hall Name
                 const hallName = hallNameInput.value.trim();
                 if (!hallName) {
                     setFieldHelp(hallNameHelp, 'Please enter your hall of residence.');
@@ -587,7 +552,6 @@
                     clearFieldHelp(hallNameHelp);
                 }
 
-                // Room Number
                 const roomNumber = roomNumberInput.value.trim();
                 if (!roomNumber) {
                     setFieldHelp(roomNumberHelp, 'Please enter your room or flat number.');
@@ -603,107 +567,97 @@
             function setFieldHelp(el, message) {
                 el.textContent = message;
                 el.className = 'help-text error';
-                const input = el.closest('.form-group').querySelector('.form-input, .form-select');
+                const input = el.closest('.form-group').querySelector('.form-input');
                 if (input) input.classList.add('error');
             }
 
             function clearFieldHelp(el) {
                 el.textContent = '';
                 el.className = 'help-text';
-                const input = el.closest('.form-group').querySelector('.form-input, .form-select');
+                const input = el.closest('.form-group').querySelector('.form-input');
                 if (input) input.classList.remove('error');
             }
 
             // ─── Submit handler ────────────────────────────────────────
-            function handleSubmit(e) {
+
+            async function handleSubmit(e) {
                 e.preventDefault();
                 if (!validateForm()) return;
 
-                const formData = {
-                    hall: hallNameInput.value.trim(),
-                    room: roomNumberInput.value.trim(),
-                    hostel_type: hostelTypeSelect.value,
+                const payload = {
+                    hall_residence: hallNameInput.value.trim(),
+                    hall_number: roomNumberInput.value.trim(),
                 };
 
-                // Confirm submission if status was rejected (re-submission)
-                const doSubmit = () => {
-                    submitBtn.disabled = true;
-                    submitBtn.classList.add('loading');
+                // Show loading
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
 
-                    // Simulate API call
-                    setTimeout(() => {
-                        // On success, update status to pending
-                        DUMMY_DATA.status = 'pending';
-                        DUMMY_DATA.reason = null;
-                        DUMMY_DATA.hall = formData.hall;
-                        DUMMY_DATA.room = formData.room;
-                        DUMMY_DATA.hostel_type = formData.hostel_type;
-
-                        renderHallVerification(DUMMY_DATA);
-
-                        if (typeof showAlert !== 'undefined') {
-                            showAlert.success('Hall verification submitted! We\'ll review it shortly.', { duration: 3000 });
-                        } else {
-                            alert('Hall verification submitted!');
-                        }
-                    }, 1500);
-                };
-
-                // If rejected, show confirmation
-                if (DUMMY_DATA.status === 'rejected') {
-                    if (typeof Modal !== 'undefined') {
-                        const modal = new Modal({
-                            title: 'Resubmit Hall Verification',
-                            body: `
-                                    <p>You are resubmitting your hall verification for <strong>${formData.hall}</strong>.</p>
-                                    <p style="color:var(--text-muted); font-size:13px;">We will review your updated information and notify you of the decision.</p>
-                                `,
-                            type: 'info',
-                            confirmText: 'Submit',
-                            cancelText: 'Cancel',
-                            onConfirm: doSubmit
-                        });
-                        modal.open();
-                    } else {
-                        if (confirm('Resubmit hall verification?')) {
-                            doSubmit();
-                        }
+                try {
+                    await submitHallDetails(payload);
+                    // On success, re‑fetch the updated status
+                    const updated = await fetchHallStatus();
+                    renderHallStatus(updated);
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.success('Hall verification submitted! We\'ll review it shortly.', { duration: 3000 });
                     }
-                } else {
-                    // If pending or new, submit directly
-                    doSubmit();
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error(error.message || 'Submission failed. Please try again.');
+                    } else {
+                        alert('Submission failed: ' + error.message);
+                    }
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                } finally {
+                    // In case the status didn't change and form is still shown, re‑validate
+                    if (hallForm.style.display !== 'none') {
+                        validateForm();
+                    }
                 }
             }
 
             // ─── Cancel ─────────────────────────────────────────────────
-            function handleCancel() {
+
+            async function handleCancel() {
                 if (typeof showAlert !== 'undefined') {
                     showAlert.info('Changes discarded.', { duration: 1500 });
                 }
-                // Re-fetch and reset
-                fetchHallVerification().then(data => {
-                    renderHallVerification(data);
-                });
+                // Re‑fetch and reset to current status
+                try {
+                    const data = await fetchHallStatus();
+                    renderHallStatus(data);
+                } catch (err) {
+                    console.error('Error re‑fetching hall status:', err);
+                }
             }
 
             // ─── Init ──────────────────────────────────────────────────
-            function init() {
-                fetchHallVerification().then(data => {
-                    renderHallVerification(data);
-                }).catch(err => {
+
+            async function init() {
+                try {
+                    const data = await fetchHallStatus();
+                    renderHallStatus(data);
+                } catch (error) {
+                    console.error('Init error:', error);
                     loadingState.innerHTML = `
-                            <p style="color:var(--red);">❌ Failed to load hall verification. Please refresh.</p>
-                        `;
-                    console.error('Error fetching hall verification:', err);
-                });
+                        <p style="color:var(--red);">❌ ${error.message || 'Failed to load hall status. Please refresh.'}</p>
+                    `;
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error(error.message || 'Failed to load hall status.');
+                    }
+                }
 
                 // Event listeners
-                form.addEventListener('submit', handleSubmit);
+                hallForm.addEventListener('submit', handleSubmit);
                 cancelBtn.addEventListener('click', handleCancel);
                 hallNameInput.addEventListener('input', validateForm);
                 roomNumberInput.addEventListener('input', validateForm);
             }
 
+            // Start when ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {

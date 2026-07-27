@@ -10,6 +10,7 @@
 
     <!-- Global Styles -->
     <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
     <!-- Page-Specific Styles -->
     <style>
@@ -731,9 +732,9 @@
     </div>
 
     <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/global.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
-    <script src="/assets/js/global.js"></script>
 
     <script>
         (function() {
@@ -859,7 +860,9 @@
                     }
 
                     const response = await fetchWithAuth(url, {
-                        method: 'GET'
+                        method: 'GET',
+                        showSpinner: true,
+                        spinnerText: 'Loading notifications...'
                     });
 
                     if (!response.ok) {
