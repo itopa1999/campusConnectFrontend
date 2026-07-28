@@ -138,7 +138,8 @@ signupForm.addEventListener('submit', async (e) => {
       method: 'POST',
       headers: {
         'accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Key-Id': '1',
       },
       body: JSON.stringify({
         first_name: firstName,

@@ -11,65 +11,24 @@
   <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
-    /* ── Custom styles for 2FA page ── */
+    /* ── Override auth-wrapper for single card ── */
     .auth-wrapper {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--bg-app, #f6f8f7);
+      padding: 1.5rem;
     }
     .auth-shell {
-      max-width: 1100px;
+      max-width: 480px;
       width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      padding: 2rem;
       background: var(--bg-card, #ffffff);
-      border-radius: var(--card-radius, 24px);
+      border-radius: var(--card-radius, 28px);
       box-shadow: 0 20px 60px rgba(0,0,0,0.08);
       border: 1px solid var(--border-color, #eef2f0);
-    }
-    .auth-visual {
-      background: linear-gradient(145deg, #f0faf3, #e2f0e8);
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 1.5rem;
-    }
-    .auth-visual .auth-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 700;
-      color: var(--accent, #2c7a5e);
-      font-size: 1.2rem;
-    }
-    .auth-visual .auth-brand img {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-    .auth-visual h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--text-dark, #1e2a2c);
-      margin-bottom: 0.5rem;
-    }
-    .auth-visual p {
-      color: var(--text-muted, #5a6e6f);
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-    .auth-card {
-      padding: 2.5rem 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      padding: 2.5rem 2rem 2rem;
+      transition: all 0.3s ease;
     }
     .auth-card-header {
       text-align: center;
@@ -81,15 +40,24 @@
       border-radius: 16px;
       object-fit: cover;
       margin-bottom: 0.75rem;
+      box-shadow: 0 8px 24px rgba(44,122,94,0.12);
     }
     .auth-card-header h2 {
       font-size: 1.75rem;
       font-weight: 700;
       color: var(--text-dark, #1e2a2c);
+      margin-bottom: 0.25rem;
     }
     .auth-card-header p {
       color: var(--text-muted, #5a6e6f);
       font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+    .method-icon {
+      font-size: 3rem;
+      color: var(--accent, #2c7a5e);
+      margin-bottom: 0.5rem;
+      display: block;
     }
     .auth-form {
       display: flex;
@@ -98,7 +66,7 @@
     }
     .auth-form .form-floating-label {
       position: relative;
-      margin-top: 1.25rem;
+      margin-top: 1rem;
     }
     .auth-form .form-floating-label .form-label {
       position: absolute;
@@ -111,20 +79,21 @@
       font-weight: 700;
       color: var(--accent, #2c7a5e);
       pointer-events: none;
+      transition: color 0.2s;
     }
     .auth-form .form-control {
-      min-height: 52px;
+      min-height: 56px;
       border-radius: 16px;
-      border: 1px solid rgba(44,122,94,0.14);
-      background: #ffffff;
+      border: 1.5px solid rgba(44,122,94,0.14);
+      background: var(--bg-input, #ffffff);
       padding: 0.9rem 1rem;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 500;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .auth-form .form-control:focus {
-      border-color: rgba(44,122,94,0.45);
-      box-shadow: 0 0 0 4px rgba(44,122,94,0.12);
+      border-color: var(--accent, #2c7a5e);
+      box-shadow: 0 0 0 4px rgba(44,122,94,0.1);
       outline: none;
     }
     .auth-form .btn-primary-custom {
@@ -136,34 +105,22 @@
       color: white;
       transition: all 0.2s;
       font-size: 1rem;
+      width: 100%;
     }
-    .auth-form .btn-primary-custom:hover {
+    .auth-form .btn-primary-custom:hover:not(:disabled) {
       background: var(--accent-dark, #1f5e48);
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(44,122,94,0.2);
+      box-shadow: 0 12px 24px rgba(44,122,94,0.2);
     }
-    .auth-meta {
-      font-size: 0.85rem;
-      color: var(--text-muted, #5a6e6f);
-      text-align: center;
-    }
-    .auth-meta a {
-      color: var(--accent, #2c7a5e);
-      font-weight: 600;
-      text-decoration: none;
-    }
-    .auth-meta a:hover {
-      text-decoration: underline;
-    }
-    .method-icon {
-      font-size: 2.5rem;
-      color: var(--accent, #2c7a5e);
-      margin-bottom: 0.5rem;
+    .auth-form .btn-primary-custom:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
     .backup-link {
+      text-align: center;
       font-size: 0.85rem;
       color: var(--text-muted, #5a6e6f);
-      text-align: center;
+      margin-top: 0.25rem;
     }
     .backup-link button {
       background: none;
@@ -173,25 +130,56 @@
       text-decoration: underline;
       cursor: pointer;
       padding: 0;
+      transition: color 0.2s;
     }
     .backup-link button:hover {
       color: var(--accent-dark, #1f5e48);
     }
-    @media (max-width: 768px) {
+    .backup-link.hidden {
+      display: none;
+    }
+    .auth-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted, #5a6e6f);
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .auth-meta a {
+      color: var(--accent, #2c7a5e);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .auth-meta a:hover {
+      text-decoration: underline;
+    }
+    #verifyError {
+      color: var(--red, #dc3545);
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 0.75rem;
+      display: none;
+    }
+    .go-back-link {
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+    .go-back-link button {
+      background: none;
+      border: none;
+      color: var(--text-muted, #5a6e6f);
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+    .go-back-link button:hover {
+      color: var(--accent, #2c7a5e);
+    }
+    @media (max-width: 480px) {
       .auth-shell {
-        grid-template-columns: 1fr;
-        padding: 1.5rem;
-        gap: 1rem;
+        padding: 1.5rem 1.25rem;
       }
-      .auth-visual {
-        padding: 1.5rem;
-        order: 2;
-      }
-      .auth-card {
-        padding: 1.5rem;
-        order: 1;
-      }
-      .auth-visual h1 {
+      .auth-card-header h2 {
         font-size: 1.5rem;
       }
     }
@@ -199,55 +187,38 @@
 </head>
 <body>
 <main class="auth-wrapper">
-  <div class="auth-shell" data-aos="fade-up" data-aos-duration="800">
-    <!-- Left panel: visual -->
-    <section class="auth-visual" aria-label="2FA verification">
-      <div class="auth-brand">
-        <img src="../assets/img/icon.jpg" alt="CampusConnect">
-        <span>CampusConnect</span>
-      </div>
-      <div>
-        <div class="method-icon" id="methodIcon">
-          <i class="fas fa-mobile-screen-button"></i>
-        </div>
-        <h1 id="methodTitle">Two-Factor Authentication</h1>
-        <p id="methodDescription">Enter the 6-digit code from your authenticator app</p>
-      </div>
-      <div class="auth-proof-grid" style="display:flex; gap:1rem; flex-wrap:wrap;">
-        <span style="background:rgba(44,122,94,0.1); padding:0.25rem 1rem; border-radius:30px; font-size:0.8rem; font-weight:600; color:var(--accent);">🔒 Extra security</span>
-        <span style="background:rgba(44,122,94,0.1); padding:0.25rem 1rem; border-radius:30px; font-size:0.8rem; font-weight:600; color:var(--accent);">✅ One-time code</span>
-      </div>
-    </section>
+  <div class="auth-shell" data-aos="fade-up" data-aos-duration="600">
+    <div class="auth-card-header">
+      <img src="../assets/img/icon.jpg" alt="CampusConnect" class="auth-logo">
+      <span class="method-icon" id="methodIcon"><i class="fas fa-mobile-screen-button"></i></span>
+      <h2 id="authHeaderTitle">Two‑Factor Authentication</h2>
+      <p id="authHeaderSub">Enter the code from your authenticator app</p>
+    </div>
 
-    <!-- Right panel: form -->
-    <section class="auth-card" aria-label="Verification form">
-      <div class="auth-card-header">
-        <img src="../assets/img/icon.jpg" alt="CampusConnect" class="auth-logo">
-        <h2>Verify your identity</h2>
-        <p>We sent a code to your <span id="methodDisplay">authenticator app</span></p>
+    <form id="verify2faForm" class="auth-form">
+      <div class="form-floating-label">
+        <input type="text" class="form-control" id="verificationCode" placeholder=" " required autocomplete="off" inputmode="numeric" maxlength="8">
+        <label class="form-label required" for="verificationCode" id="codeLabel">Verification code</label>
       </div>
+      <button type="submit" class="btn btn-primary-custom" id="verifyBtn">Verify</button>
+    </form>
 
-      <form id="verify2faForm" class="auth-form">
-        <div class="form-floating-label">
-          <input type="text" class="form-control" id="verificationCode" placeholder=" " required autocomplete="off" inputmode="numeric" maxlength="8">
-          <label class="form-label required" for="verificationCode">Verification code</label>
-        </div>
-        <button type="submit" class="btn btn-primary-custom w-100" id="verifyBtn">Verify</button>
-      </form>
+    <!-- Backup link (visible only for TOTP) -->
+    <div class="backup-link" id="backupLink">
+      <span>Lost access? </span>
+      <button type="button" id="useBackupBtn">Use a backup code</button>
+    </div>
 
-      <!-- Backup code option -->
-      <div class="backup-link mt-3">
-        <span>Lost access? </span>
-        <button type="button" id="useBackupBtn">Use a backup code</button>
-      </div>
+    <!-- Go back to TOTP (visible only in backup mode) -->
+    <div class="go-back-link hidden" id="goBackLink">
+      <button type="button" id="goBackBtn">← Back to verification code</button>
+    </div>
 
-      <div class="auth-meta text-center mt-4">
-        <a href="../auth/auth.html" class="auth-home-link">← Back to sign in</a>
-      </div>
+    <div class="auth-meta">
+      <a href="../auth/auth.html">← Back to sign in</a>
+    </div>
 
-      <!-- Error display -->
-      <div id="verifyError" class="mt-2" style="color:var(--red); font-size:0.9rem; display:none;"></div>
-    </section>
+    <div id="verifyError"></div>
   </div>
 </main>
 
@@ -257,74 +228,145 @@
   AOS.init();
 
   (function() {
-    // ─── Load 2FA data from session ────────────────────────────
+    // ─── Load 2FA data ────────────────────────────────────────────
     const stored = sessionStorage.getItem('2fa_data');
     if (!stored) {
-      // No 2FA data – redirect to login
-      window.location.href = '/auth/auth.html';
+      window.location.href = 'auth.html';
       return;
     }
 
     const data = JSON.parse(stored);
     const { user_id, active_method, platform } = data;
 
-    // ─── Update UI based on method ──────────────────────────────
+    let isBackupMode = false;
+
+    // ─── DOM refs ──────────────────────────────────────────────────
+    const methodIcon = document.getElementById('methodIcon');
+    const authHeaderTitle = document.getElementById('authHeaderTitle');
+    const authHeaderSub = document.getElementById('authHeaderSub');
+    const codeLabel = document.getElementById('codeLabel');
+    const codeInput = document.getElementById('verificationCode');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const errorEl = document.getElementById('verifyError');
+    const backupLink = document.getElementById('backupLink');
+    const useBackupBtn = document.getElementById('useBackupBtn');
+    const goBackLink = document.getElementById('goBackLink');
+    const goBackBtn = document.getElementById('goBackBtn');
+    const form = document.getElementById('verify2faForm');
+
+    const originalBtnText = verifyBtn.textContent;
+
+    // ─── Method config ──────────────────────────────────────────────
     const methodMap = {
       'totp': {
         icon: 'fa-mobile-screen-button',
         title: 'Authenticator App',
         display: 'authenticator app',
-        description: 'Enter the 6-digit code from your authenticator app (Google Authenticator, Authy, etc.)',
+        description: 'Enter the 6‑digit code from your authenticator app',
         placeholder: '6-digit code',
-        maxlength: 6
+        maxlength: 6,
+        backupAvailable: true
       },
       'sms': {
         icon: 'fa-comment-sms',
         title: 'SMS Verification',
         display: 'phone',
-        description: 'We sent a code to your registered phone number. Enter it below.',
+        description: 'We sent a code to your phone. Enter it below.',
         placeholder: '6-digit code',
-        maxlength: 6
+        maxlength: 6,
+        backupAvailable: false
       },
       'email': {
         icon: 'fa-envelope',
         title: 'Email Verification',
         display: 'email',
-        description: 'We sent a code to your registered email address. Check your inbox.',
+        description: 'We sent a code to your email. Check your inbox.',
         placeholder: '6-digit code',
-        maxlength: 6
+        maxlength: 6,
+        backupAvailable: false
       },
       'hardware': {
         icon: 'fa-usb',
         title: 'Hardware Token',
         display: 'security key',
-        description: 'Tap your YubiKey or hardware token and enter the generated code.',
+        description: 'Tap your hardware token and enter the code.',
         placeholder: '6-8 digit code',
-        maxlength: 8
+        maxlength: 8,
+        backupAvailable: false
       }
     };
 
     const methodInfo = methodMap[active_method] || methodMap['totp'];
-    document.getElementById('methodIcon').innerHTML = `<i class="fas ${methodInfo.icon}"></i>`;
-    document.getElementById('methodTitle').textContent = methodInfo.title;
-    document.getElementById('methodDescription').textContent = methodInfo.description;
-    document.getElementById('methodDisplay').textContent = methodInfo.display;
 
-    const codeInput = document.getElementById('verificationCode');
-    codeInput.placeholder = methodInfo.placeholder;
-    codeInput.maxLength = methodInfo.maxlength;
-    codeInput.setAttribute('inputmode', 'numeric');
-    // Only allow digits
+    // ─── Apply UI ───────────────────────────────────────────────────
+    function applyMethodUI() {
+      methodIcon.innerHTML = `<i class="fas ${methodInfo.icon}"></i>`;
+      authHeaderTitle.textContent = methodInfo.title;
+      authHeaderSub.textContent = methodInfo.description;
+      codeLabel.textContent = 'Verification code';
+      codeInput.placeholder = methodInfo.placeholder;
+      codeInput.maxLength = methodInfo.maxlength;
+      codeInput.setAttribute('inputmode', 'numeric');
+      verifyBtn.textContent = 'Verify';
+      backupLink.classList.toggle('hidden', !methodInfo.backupAvailable);
+      goBackLink.classList.add('hidden');
+      isBackupMode = false;
+      errorEl.style.display = 'none';
+      codeInput.value = '';
+      codeInput.focus();
+    }
+
+    // ─── Switch to backup mode ─────────────────────────────────────
+    function switchToBackupMode() {
+      isBackupMode = true;
+      methodIcon.innerHTML = '<i class="fas fa-key"></i>';
+      authHeaderTitle.textContent = 'Backup Code';
+      authHeaderSub.textContent = 'Enter one of your unused backup codes. Each code can only be used once.';
+      codeLabel.textContent = 'Backup code';
+      codeInput.placeholder = '8-character backup code';
+      codeInput.maxLength = 8;
+      codeInput.setAttribute('inputmode', 'text');
+      verifyBtn.textContent = 'Verify Backup Code';
+      backupLink.classList.add('hidden');
+      goBackLink.classList.remove('hidden');
+      errorEl.style.display = 'none';
+      codeInput.value = '';
+      codeInput.focus();
+    }
+
+    // ─── Go back to TOTP mode ──────────────────────────────────────
+    function goBackToTOTP() {
+      isBackupMode = false;
+      // Re‑apply the original method UI (not backup)
+      applyMethodUI();
+    }
+
+    // ─── Apply initial UI ──────────────────────────────────────────
+    applyMethodUI();
+
+    // ─── Input filtering ───────────────────────────────────────────
     codeInput.addEventListener('input', function() {
-      this.value = this.value.replace(/\D/g, '').slice(0, this.maxLength);
+      if (!isBackupMode) {
+        this.value = this.value.replace(/\D/g, '').slice(0, this.maxLength);
+      } else {
+        // Allow only hex characters (0-9, A-F, a-f)
+        this.value = this.value.replace(/[^0-9A-Fa-f]/g, '').slice(0, this.maxLength);
+      }
     });
 
-    // ─── Submit verification ──────────────────────────────────────
-    const form = document.getElementById('verify2faForm');
-    const verifyBtn = document.getElementById('verifyBtn');
-    const errorEl = document.getElementById('verifyError');
-    const originalBtnText = verifyBtn.textContent;
+    // ─── Backup button ─────────────────────────────────────────────
+    useBackupBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      switchToBackupMode();
+    });
 
+    // ─── Go back button ────────────────────────────────────────────
+    goBackBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      goBackToTOTP();
+    });
+
+    // ─── Form submission ──────────────────────────────────────────
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const code = codeInput.value.trim();
@@ -338,24 +380,28 @@
       verifyBtn.disabled = true;
       verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…';
 
+      const method = isBackupMode ? 'backup' : active_method;
+
       try {
-        const response = await fetch('/user/api/auth/2fa/verify-login/', {
+        const response = await fetchWithAuth(`${AUTH_URL}2fa/login-totp`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'X-Key-Id': '1',
           },
           body: JSON.stringify({
             user_id: user_id,
             platform: platform,
-            code: code
+            code: code,
+            method: method,
           })
         });
 
         const result = await response.json();
 
         if (response.ok && result.is_success === true) {
-          // Login successful – store user data and redirect
+          // ─── Success – store user, clear 2fa_data, redirect ──
           const user = result.data.user;
           const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
           const storage = rememberMe ? localStorage : sessionStorage;
@@ -369,7 +415,9 @@
             is_hall_verified: user.is_hall_verified,
           }));
           sessionStorage.removeItem('2fa_data');
-          showToast('Login successful! Redirecting…', 'success');
+          if (typeof showToast === 'function') {
+            showToast('Login successful! Redirecting…', 'success');
+          }
           setTimeout(() => {
             window.location.href = '/student/dashboard.html';
           }, 1000);
@@ -377,32 +425,20 @@
           errorEl.textContent = result.message || 'Invalid code. Please try again.';
           errorEl.style.display = 'block';
           verifyBtn.disabled = false;
-          verifyBtn.textContent = originalBtnText;
+          verifyBtn.textContent = isBackupMode ? 'Verify Backup Code' : 'Verify';
         }
       } catch (err) {
         console.error('Verification error:', err);
         errorEl.textContent = 'Network error. Please try again.';
         errorEl.style.display = 'block';
         verifyBtn.disabled = false;
-        verifyBtn.textContent = originalBtnText;
-      }
-    });
-
-    // ─── Use backup code ──────────────────────────────────────────
-    document.getElementById('useBackupBtn').addEventListener('click', function() {
-      // Redirect to backup code login page if needed, or toggle input
-      // For simplicity, we could change the placeholder and description.
-      // But a dedicated backup page is better. For now, we'll show a prompt.
-      const useBackup = confirm('Do you want to use a backup code?');
-      if (useBackup) {
-        // Redirect to backup code page (if exists) or update UI.
-        window.location.href = '/auth/2fa-backup.html';
+        verifyBtn.textContent = isBackupMode ? 'Verify Backup Code' : 'Verify';
       }
     });
 
   })();
 </script>
-<!-- Toast script (showToast) is assumed available from main.js -->
+<!-- Toast script from main.js -->
 <script src="../assets/js/main.js"></script>
 </body>
 </html>

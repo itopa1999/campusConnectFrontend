@@ -562,54 +562,6 @@ async function fetchWithAuth(url, options = {}) {
 
   let response = await fetch(url, options);
 
-  if (response.status === 429) {
-    const errorData = await response.json();
-    const retryAfter = errorData.retry_after || 60;
-    showRateLimitModal(errorData.message, retryAfter);
-    throw new Error('Rate limit exceeded');
-  }
-
-  if (options.public) {
-    return response;
-  }
-
-  if (response.status === 401) {
-    if (isRefreshing) {
-      return new Promise((resolve, reject) => {
-        subscribeTokenRefresh((newToken) => {
-          options.headers['Authorization'] = `Bearer ${newToken}`;
-          resolve(fetch(url, options));
-        });
-      });
-    }
-
-    isRefreshing = true;
-    try {
-      await refreshAccessToken();
-      onTokenRefreshed();
-      response = await fetch(url, options);
-      isRefreshing = false;
-      return response;
-    } catch (refreshError) {
-      isRefreshing = false;
-      localStorage.removeItem('user');
-      sessionStorage.removeItem('user');
-      const currentPath = window.location.pathname + window.location.search + window.location.hash;
-      if (currentPath && !currentPath.includes('index.html') && currentPath !== '/') {
-        setCookie('redirect_after_login', currentPath, 1);
-      }
-      showToast('Session expired. Please log in again.', 'error');
-      setTimeout(() => {
-        window.location.href = '../index.html';
-      }, 2000);
-      throw refreshError;
-    }
-  }
-
-  if (response.status === 403) {
-    window.location.href = '403.html';
-    throw new Error('Forbidden');
-  }
   return response;
 }
 

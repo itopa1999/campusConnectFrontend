@@ -776,6 +776,55 @@
                 min-width: 100px;
             }
         }
+
+        /* ─── Hot Sale Card & Badge ─── */
+        .product-card.hot-sale {
+            border: 2px solid #e67e22 !important;
+            box-shadow: 0 0 20px rgba(230, 126, 34, 0.25) !important;
+            animation: hotPulse 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-card.hot-sale:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(230, 126, 34, 0.4) !important;
+            animation-play-state: paused;
+        }
+
+        @keyframes hotPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(230, 126, 34, 0.25); }
+            50% { box-shadow: 0 0 40px rgba(230, 126, 34, 0.45); }
+        }
+
+        .hot-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            text-transform: uppercase;
+            animation: fireBounce 1.5s ease-in-out infinite;
+        }
+
+        .hot-badge i {
+            font-size: 0.7rem;
+        }
+
+        @keyframes fireBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
     </style>
 </head>
 <body>
@@ -1226,44 +1275,42 @@
                     return;
                 }
 
-                grid.innerHTML = items.map(item => {
-                    const badgeClass = item.badge === 'freebie' ? 'free' : (item.badge === 'sell' ? 'hot' : '');
-                    const badgeText = item.badge ? item.badge.toUpperCase() : '';
-                    const categoryName = item.category || 'Uncategorized';
+grid.innerHTML = items.map(item => {
+    const badgeClass = item.badge === 'freebie' ? 'free' : (item.badge === 'sell' ? 'hot' : '');
+    const badgeText = item.badge ? item.badge.toUpperCase() : '';
+    const categoryName = item.category || 'Uncategorized';
+    const isHot = item.is_hot_sales === true;
 
-                    // Find category icon from lookup
-                    let catIcon = 'fas fa-tag';
-                    if (allCategories.length > 0) {
-                        const found = allCategories.find(c => c.name === categoryName);
-                        if (found && found.icon) catIcon = found.icon;
-                    }
+    // Find category icon from lookup
+    let catIcon = 'fas fa-tag';
+    if (allCategories.length > 0) {
+        const found = allCategories.find(c => c.name === categoryName);
+        if (found && found.icon) catIcon = found.icon;
+    }
 
-                    const priceDisplay = item.price === 0 ? 'Free' : '₦' + item.price.toLocaleString();
-                    const isFree = item.price === 0;
+    const priceDisplay = item.price === 0 ? 'Free' : '₦' + item.price.toLocaleString();
+    const isFree = item.price === 0;
 
-                    
-
-                    return `
-                        <div class="product-card" data-id="${item.id}" data-title="${item.title}">
-                            <div class="img-wrap">
-                                <img src="${getImageUrl(item)}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-                                
-                                ${badgeText ? `<span class="tag ${badgeClass}">${badgeText}</span>` : ''}
-                                ${isFree ? `<span class="tag free">FREE</span>` : ''}
-                                <span class="wishlist-btn"><i class="fas fa-heart" style="color:#e74c3c;"></i></span>
-                            </div>
-                            <div class="info">
-                                <div class="name" title="${item.title}">${item.title}</div>
-                                <div class="price">${priceDisplay}</div>
-                                <div class="meta">
-                                    <span class="location"><i class="fas fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
-                                    <span class="category-tag"><i class="${catIcon}"></i> ${categoryName}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
+    return `
+        <div class="product-card ${isHot ? 'hot-sale' : ''}" data-id="${item.id}" data-title="${item.title}">
+            <div class="img-wrap">
+                <img src="${getImageUrl(item)}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                ${badgeText ? `<span class="tag ${badgeClass}">${badgeText}</span>` : ''}
+                ${isFree ? `<span class="tag free">FREE</span>` : ''}
+                ${isHot ? `<span class="hot-badge"><i class="fas fa-fire"></i> Hot</span>` : ''}
+                <span class="wishlist-btn"><i class="fas fa-heart" style="color:#e74c3c;"></i></span>
+            </div>
+            <div class="info">
+                <div class="name" title="${item.title}">${item.title}</div>
+                <div class="price">${priceDisplay}</div>
+                <div class="meta">
+                    <span class="location"><i class="fas fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
+                    <span class="category-tag"><i class="${catIcon}"></i> ${categoryName}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}).join('');
                 // ─── Click on card → navigate to listing details ───
                 grid.querySelectorAll('.product-card').forEach(card => {
                     card.addEventListener('click', function() {
