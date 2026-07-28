@@ -43,6 +43,18 @@ loginForm.addEventListener('submit', async (e) => {
     const result = await response.json();
 
     if (response.ok && result.is_success === true) {
+
+      if (result.data && result.data.requires_2fa === true) {
+        // Store 2FA data in sessionStorage
+        sessionStorage.setItem('2fa_data', JSON.stringify({
+          user_id: result.data.user_id,
+          active_method: result.data.active_method,
+          platform: result.data.platform
+        }));
+        // Redirect to 2FA verification page
+        window.location.href = '2fa-verify.html';
+        return;
+      }
       
       const user = result.data.user;
       const storage = rememberMe ? localStorage : sessionStorage;

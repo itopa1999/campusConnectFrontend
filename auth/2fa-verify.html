@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>2FA Verification – CampusConnect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    /* ── Custom styles for 2FA page ── */
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-app, #f6f8f7);
+    }
+    .auth-shell {
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      padding: 2rem;
+      background: var(--bg-card, #ffffff);
+      border-radius: var(--card-radius, 24px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+      border: 1px solid var(--border-color, #eef2f0);
+    }
+    .auth-visual {
+      background: linear-gradient(145deg, #f0faf3, #e2f0e8);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .auth-visual .auth-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      color: var(--accent, #2c7a5e);
+      font-size: 1.2rem;
+    }
+    .auth-visual .auth-brand img {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+    .auth-visual h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-dark, #1e2a2c);
+      margin-bottom: 0.5rem;
+    }
+    .auth-visual p {
+      color: var(--text-muted, #5a6e6f);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .auth-card {
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .auth-card-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .auth-card-header .auth-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      object-fit: cover;
+      margin-bottom: 0.75rem;
+    }
+    .auth-card-header h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-dark, #1e2a2c);
+    }
+    .auth-card-header p {
+      color: var(--text-muted, #5a6e6f);
+      font-size: 0.95rem;
+    }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .auth-form .form-floating-label {
+      position: relative;
+      margin-top: 1.25rem;
+    }
+    .auth-form .form-floating-label .form-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translateY(-50%);
+      background: var(--bg-card, #ffffff);
+      padding: 0 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent, #2c7a5e);
+      pointer-events: none;
+    }
+    .auth-form .form-control {
+      min-height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(44,122,94,0.14);
+      background: #ffffff;
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .auth-form .form-control:focus {
+      border-color: rgba(44,122,94,0.45);
+      box-shadow: 0 0 0 4px rgba(44,122,94,0.12);
+      outline: none;
+    }
+    .auth-form .btn-primary-custom {
+      background: var(--accent, #2c7a5e);
+      border: none;
+      padding: 14px 30px;
+      font-weight: 700;
+      border-radius: 40px;
+      color: white;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+    .auth-form .btn-primary-custom:hover {
+      background: var(--accent-dark, #1f5e48);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(44,122,94,0.2);
+    }
+    .auth-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted, #5a6e6f);
+      text-align: center;
+    }
+    .auth-meta a {
+      color: var(--accent, #2c7a5e);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .auth-meta a:hover {
+      text-decoration: underline;
+    }
+    .method-icon {
+      font-size: 2.5rem;
+      color: var(--accent, #2c7a5e);
+      margin-bottom: 0.5rem;
+    }
+    .backup-link {
+      font-size: 0.85rem;
+      color: var(--text-muted, #5a6e6f);
+      text-align: center;
+    }
+    .backup-link button {
+      background: none;
+      border: none;
+      color: var(--accent, #2c7a5e);
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+    }
+    .backup-link button:hover {
+      color: var(--accent-dark, #1f5e48);
+    }
+    @media (max-width: 768px) {
+      .auth-shell {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 1rem;
+      }
+      .auth-visual {
+        padding: 1.5rem;
+        order: 2;
+      }
+      .auth-card {
+        padding: 1.5rem;
+        order: 1;
+      }
+      .auth-visual h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<main class="auth-wrapper">
+  <div class="auth-shell" data-aos="fade-up" data-aos-duration="800">
+    <!-- Left panel: visual -->
+    <section class="auth-visual" aria-label="2FA verification">
+      <div class="auth-brand">
+        <img src="../assets/img/icon.jpg" alt="CampusConnect">
+        <span>CampusConnect</span>
+      </div>
+      <div>
+        <div class="method-icon" id="methodIcon">
+          <i class="fas fa-mobile-screen-button"></i>
+        </div>
+        <h1 id="methodTitle">Two-Factor Authentication</h1>
+        <p id="methodDescription">Enter the 6-digit code from your authenticator app</p>
+      </div>
+      <div class="auth-proof-grid" style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <span style="background:rgba(44,122,94,0.1); padding:0.25rem 1rem; border-radius:30px; font-size:0.8rem; font-weight:600; color:var(--accent);">🔒 Extra security</span>
+        <span style="background:rgba(44,122,94,0.1); padding:0.25rem 1rem; border-radius:30px; font-size:0.8rem; font-weight:600; color:var(--accent);">✅ One-time code</span>
+      </div>
+    </section>
+
+    <!-- Right panel: form -->
+    <section class="auth-card" aria-label="Verification form">
+      <div class="auth-card-header">
+        <img src="../assets/img/icon.jpg" alt="CampusConnect" class="auth-logo">
+        <h2>Verify your identity</h2>
+        <p>We sent a code to your <span id="methodDisplay">authenticator app</span></p>
+      </div>
+
+      <form id="verify2faForm" class="auth-form">
+        <div class="form-floating-label">
+          <input type="text" class="form-control" id="verificationCode" placeholder=" " required autocomplete="off" inputmode="numeric" maxlength="8">
+          <label class="form-label required" for="verificationCode">Verification code</label>
+        </div>
+        <button type="submit" class="btn btn-primary-custom w-100" id="verifyBtn">Verify</button>
+      </form>
+
+      <!-- Backup code option -->
+      <div class="backup-link mt-3">
+        <span>Lost access? </span>
+        <button type="button" id="useBackupBtn">Use a backup code</button>
+      </div>
+
+      <div class="auth-meta text-center mt-4">
+        <a href="../auth/auth.html" class="auth-home-link">← Back to sign in</a>
+      </div>
+
+      <!-- Error display -->
+      <div id="verifyError" class="mt-2" style="color:var(--red); font-size:0.9rem; display:none;"></div>
+    </section>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init();
+
+  (function() {
+    // ─── Load 2FA data from session ────────────────────────────
+    const stored = sessionStorage.getItem('2fa_data');
+    if (!stored) {
+      // No 2FA data – redirect to login
+      window.location.href = '/auth/auth.html';
+      return;
+    }
+
+    const data = JSON.parse(stored);
+    const { user_id, active_method, platform } = data;
+
+    // ─── Update UI based on method ──────────────────────────────
+    const methodMap = {
+      'totp': {
+        icon: 'fa-mobile-screen-button',
+        title: 'Authenticator App',
+        display: 'authenticator app',
+        description: 'Enter the 6-digit code from your authenticator app (Google Authenticator, Authy, etc.)',
+        placeholder: '6-digit code',
+        maxlength: 6
+      },
+      'sms': {
+        icon: 'fa-comment-sms',
+        title: 'SMS Verification',
+        display: 'phone',
+        description: 'We sent a code to your registered phone number. Enter it below.',
+        placeholder: '6-digit code',
+        maxlength: 6
+      },
+      'email': {
+        icon: 'fa-envelope',
+        title: 'Email Verification',
+        display: 'email',
+        description: 'We sent a code to your registered email address. Check your inbox.',
+        placeholder: '6-digit code',
+        maxlength: 6
+      },
+      'hardware': {
+        icon: 'fa-usb',
+        title: 'Hardware Token',
+        display: 'security key',
+        description: 'Tap your YubiKey or hardware token and enter the generated code.',
+        placeholder: '6-8 digit code',
+        maxlength: 8
+      }
+    };
+
+    const methodInfo = methodMap[active_method] || methodMap['totp'];
+    document.getElementById('methodIcon').innerHTML = `<i class="fas ${methodInfo.icon}"></i>`;
+    document.getElementById('methodTitle').textContent = methodInfo.title;
+    document.getElementById('methodDescription').textContent = methodInfo.description;
+    document.getElementById('methodDisplay').textContent = methodInfo.display;
+
+    const codeInput = document.getElementById('verificationCode');
+    codeInput.placeholder = methodInfo.placeholder;
+    codeInput.maxLength = methodInfo.maxlength;
+    codeInput.setAttribute('inputmode', 'numeric');
+    // Only allow digits
+    codeInput.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '').slice(0, this.maxLength);
+    });
+
+    // ─── Submit verification ──────────────────────────────────────
+    const form = document.getElementById('verify2faForm');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const errorEl = document.getElementById('verifyError');
+    const originalBtnText = verifyBtn.textContent;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = codeInput.value.trim();
+      if (!code) {
+        errorEl.textContent = 'Please enter the verification code.';
+        errorEl.style.display = 'block';
+        return;
+      }
+      errorEl.style.display = 'none';
+
+      verifyBtn.disabled = true;
+      verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…';
+
+      try {
+        const response = await fetch('/user/api/auth/2fa/verify-login/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user_id,
+            platform: platform,
+            code: code
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.is_success === true) {
+          // Login successful – store user data and redirect
+          const user = result.data.user;
+          const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
+          const storage = rememberMe ? localStorage : sessionStorage;
+          storage.setItem('user', JSON.stringify({
+            user_id: user.user_id,
+            email: user.email,
+            profile_pic: user.profile_pic,
+            point_bal: user.point_bal,
+            trusting_score: user.trusting_score,
+            is_student_id_verified: user.is_student_id_verified,
+            is_hall_verified: user.is_hall_verified,
+          }));
+          sessionStorage.removeItem('2fa_data');
+          showToast('Login successful! Redirecting…', 'success');
+          setTimeout(() => {
+            window.location.href = '/student/dashboard.html';
+          }, 1000);
+        } else {
+          errorEl.textContent = result.message || 'Invalid code. Please try again.';
+          errorEl.style.display = 'block';
+          verifyBtn.disabled = false;
+          verifyBtn.textContent = originalBtnText;
+        }
+      } catch (err) {
+        console.error('Verification error:', err);
+        errorEl.textContent = 'Network error. Please try again.';
+        errorEl.style.display = 'block';
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = originalBtnText;
+      }
+    });
+
+    // ─── Use backup code ──────────────────────────────────────────
+    document.getElementById('useBackupBtn').addEventListener('click', function() {
+      // Redirect to backup code login page if needed, or toggle input
+      // For simplicity, we could change the placeholder and description.
+      // But a dedicated backup page is better. For now, we'll show a prompt.
+      const useBackup = confirm('Do you want to use a backup code?');
+      if (useBackup) {
+        // Redirect to backup code page (if exists) or update UI.
+        window.location.href = '/auth/2fa-backup.html';
+      }
+    });
+
+  })();
+</script>
+<!-- Toast script (showToast) is assumed available from main.js -->
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
