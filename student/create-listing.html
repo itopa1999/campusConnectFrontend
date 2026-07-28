@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Create Listing</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+
+    <!-- Page-Specific Styles -->
+    <style>
+        .create-wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .create-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 24px 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .create-card .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition);
+        }
+        .create-card .card-title i {
+            color: var(--green);
+            font-size: 22px;
+        }
+        .create-card .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Steps Progress ─── */
+        .steps-progress {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 24px;
+            padding: 0 4px;
+        }
+        .steps-progress .step-dot {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .steps-progress .step-dot .dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: var(--bg-input);
+            transition: all 0.3s ease;
+        }
+        .steps-progress .step-dot.active .dot {
+            border-color: var(--green);
+            background: var(--green);
+            color: #fff;
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.15);
+        }
+        .steps-progress .step-dot.completed .dot {
+            border-color: var(--green);
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .steps-progress .step-dot .label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color var(--transition);
+            display: none;
+        }
+        .steps-progress .step-dot.active .label,
+        .steps-progress .step-dot.completed .label {
+            color: var(--text-primary);
+        }
+        .steps-progress .step-line {
+            flex: 1;
+            height: 2px;
+            background: var(--border-color);
+            min-width: 16px;
+            transition: background var(--transition);
+        }
+        .steps-progress .step-line.completed {
+            background: var(--green);
+        }
+
+        @media (min-width: 480px) {
+            .steps-progress .step-dot .label {
+                display: inline;
+            }
+            .steps-progress .step-dot {
+                gap: 8px;
+            }
+        }
+        @media (max-width: 480px) {
+            .steps-progress .step-dot .dot {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            .steps-progress .step-dot .label {
+                display: none;
+            }
+        }
+
+        /* ─── Step Content ─── */
+        .step-content {
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+        .step-content.active {
+            display: block;
+        }
+
+        .step-content .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .step-content .step-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Form Elements ─── */
+        .create-card .form-group {
+            margin-bottom: 18px;
+        }
+        .create-card .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .create-card .form-group label .required-star {
+            color: var(--red);
+            margin-left: 2px;
+        }
+        .create-card .form-group .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+        .create-card .form-group .help-text.error {
+            color: var(--red);
+        }
+
+        .create-card .form-input,
+        .create-card .form-textarea,
+        .create-card .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.25s ease;
+            outline: none;
+        }
+        .create-card .form-input:focus,
+        .create-card .form-textarea:focus,
+        .create-card .form-select:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
+            background: var(--bg-card);
+        }
+        .create-card .form-input.error,
+        .create-card .form-textarea.error,
+        .create-card .form-select.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
+        }
+        .create-card .form-input:disabled,
+        .create-card .form-textarea:disabled,
+        .create-card .form-select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ─── Price with Naira Icon ─── */
+        .price-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .price-wrapper .naira-icon {
+            position: absolute;
+            left: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: color var(--transition);
+        }
+        .price-wrapper input {
+            padding-left: 36px;
+        }
+        .price-wrapper input:focus+.naira-icon {
+            color: var(--green);
+        }
+
+        /* ─── Custom Multi-Select (Locations) ─── */
+        .location-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .location-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .location-chip:hover {
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .location-chip.selected {
+            border-color: var(--green);
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .location-chip .chip-check {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .location-chip.selected .chip-check {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+        }
+        .location-chip .chip-check i {
+            font-size: 11px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .location-chip.selected .chip-check i {
+            opacity: 1;
+        }
+        .location-chip .chip-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-left: auto;
+        }
+        .dark-mode .location-chip.selected {
+            background: rgba(46, 204, 113, 0.06);
+        }
+
+        @media (max-width: 480px) {
+            .location-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ─── Badges (Step 3) ─── */
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .badge-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .badge-chip:hover {
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .badge-chip.selected {
+            border-color: var(--green);
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .badge-chip .badge-radio {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .badge-chip.selected .badge-radio {
+            border-color: var(--green);
+        }
+        .badge-chip .badge-radio i {
+            font-size: 10px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: var(--green);
+        }
+        .badge-chip.selected .badge-radio i {
+            opacity: 1;
+        }
+        .dark-mode .badge-chip.selected {
+            background: rgba(46, 204, 113, 0.06);
+        }
+
+        /* ─── Custom Checkboxes (Ads) ─── */
+        .ads-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .ads-check {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ads-check:hover {
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .ads-check.checked {
+            border-color: var(--green);
+            background: var(--green-bg);
+        }
+        .ads-check .check-box {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            background: var(--bg-card);
+        }
+        .ads-check.checked .check-box {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+        }
+        .ads-check .check-box i {
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .ads-check.checked .check-box i {
+            opacity: 1;
+        }
+        .ads-check .ads-label {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .ads-check .ads-label small {
+            display: block;
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        .dark-mode .ads-check.checked {
+            background: rgba(46, 204, 113, 0.06);
+        }
+
+        /* ─── File Upload (reuse) ─── */
+        .file-drop-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 28px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-input);
+            position: relative;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .file-drop-zone:hover {
+            border-color: var(--green);
+            background: var(--bg-card);
+        }
+        .file-drop-zone.dragover {
+            border-color: var(--green);
+            background: var(--green-bg);
+            transform: scale(1.01);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08);
+        }
+        .file-drop-zone.has-file {
+            border-color: var(--green);
+            background: var(--green-bg);
+            border-style: solid;
+        }
+        .file-drop-zone .drop-icon {
+            font-size: 36px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .file-drop-zone:hover .drop-icon {
+            color: var(--green);
+        }
+        .file-drop-zone .drop-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+        .file-drop-zone .drop-text strong {
+            color: var(--green);
+            cursor: pointer;
+        }
+        .file-drop-zone .drop-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .file-drop-zone .file-preview-container {
+            width: 100%;
+            max-width: 280px;
+            margin-top: 4px;
+        }
+        .file-drop-zone .file-preview {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+        }
+        .file-drop-zone .file-preview-image {
+            flex-direction: column;
+            padding: 12px;
+        }
+        .file-drop-zone .file-preview-image img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .file-drop-zone .file-preview .file-icon {
+            font-size: 28px;
+            color: var(--green);
+        }
+        .file-drop-zone .file-preview .file-info {
+            flex: 1;
+            text-align: left;
+        }
+        .file-drop-zone .file-preview .file-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+        .file-drop-zone .file-preview .file-size {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .file-drop-zone .file-preview .file-remove {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .file-drop-zone .file-preview .file-remove:hover {
+            background: rgba(231, 76, 60, 0.10);
+        }
+        .file-drop-zone .drop-error {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .file-drop-zone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .dark-mode .file-drop-zone {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .file-drop-zone:hover {
+            background: var(--bg-card);
+        }
+        .dark-mode .file-drop-zone.dragover {
+            background: var(--green-bg);
+        }
+        .dark-mode .file-drop-zone.has-file {
+            background: var(--green-bg);
+        }
+        .dark-mode .file-drop-zone .file-preview {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        /* ─── Step 4: Review ─── */
+        .review-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color var(--transition);
+        }
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        .review-item .review-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .review-item .review-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+            transition: color var(--transition);
+        }
+        .review-item .review-value .badge-pill {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .review-item .review-value .badge-pill.selected {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .review-item .review-value .location-pill {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            margin: 2px 4px 2px 0;
+        }
+        .review-item .review-value .location-pill.selected {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .review-item .review-value .file-preview-small {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        .review-item .review-value .file-preview-small img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        .review-item .review-value .file-preview-small span {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .review-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 0;
+            transition: background var(--transition);
+        }
+
+        /* ─── Step Actions ─── */
+        .step-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .step-actions button {
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+        .step-actions .btn-next {
+            background: var(--green);
+            color: #ffffff;
+        }
+        .step-actions .btn-next:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .step-actions .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .step-actions .btn-prev {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+        }
+        .step-actions .btn-prev:hover {
+            background: var(--border-color);
+        }
+        .step-actions .btn-submit {
+            background: var(--green);
+            color: #ffffff;
+        }
+        .step-actions .btn-submit:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .step-actions .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-submit .spinner-btn {
+            display: none;
+        }
+        .btn-submit.loading .spinner-btn {
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .btn-submit.loading .btn-text {
+            display: none;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .create-card {
+                padding: 16px 18px;
+            }
+            .create-card .card-title {
+                font-size: 17px;
+            }
+            .step-actions button {
+                min-width: 100px;
+                font-size: 13px;
+                padding: 10px 16px;
+                flex: 1;
+            }
+            .badge-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="create-wrapper">
+
+                <!-- ===== CREATE CARD ===== -->
+                <div class="create-card">
+                    <div class="card-title">
+                        <i class="fa-regular fa-plus"></i> Create Listing
+                    </div>
+                    <div class="card-subtitle">List an item for sale, swap, or give away for free</div>
+
+                    <!-- Steps Progress -->
+                    <div class="steps-progress" id="stepsProgress">
+                        <div class="step-dot active" data-step="1">
+                            <span class="dot">1</span>
+                            <span class="label">Details</span>
+                        </div>
+                        <span class="step-line" id="line1"></span>
+                        <div class="step-dot" data-step="2">
+                            <span class="dot">2</span>
+                            <span class="label">Location</span>
+                        </div>
+                        <span class="step-line" id="line2"></span>
+                        <div class="step-dot" data-step="3">
+                            <span class="dot">3</span>
+                            <span class="label">Badges &amp; Image</span>
+                        </div>
+                        <span class="step-line" id="line3"></span>
+                        <div class="step-dot" data-step="4">
+                            <span class="dot">4</span>
+                            <span class="label">Review</span>
+                        </div>
+                    </div>
+
+                    <!-- ===== STEP 1: Details ===== -->
+                    <div class="step-content active" id="step1">
+                        <div class="step-title">📝 Listing Details</div>
+                        <div class="step-desc">Tell us what you're listing. All fields marked with * are required.</div>
+
+                        <form id="step1Form">
+                            <!-- Title -->
+                            <div class="form-group">
+                                <label for="listingTitle">Listing Title <span class="required-star">*</span></label>
+                                <input type="text" id="listingTitle" class="form-input" placeholder="e.g., MacBook Pro 14-inch M3" required />
+                                <div class="help-text" id="titleHelp">Be specific – include brand, model, condition.</div>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="form-group">
+                                <label for="listingCategory">Category <span class="required-star">*</span></label>
+                                <div class="form-select-wrap">
+                                    <select id="listingCategory" class="form-select" required>
+                                        <option value="">Select a category...</option>
+                                        <!-- Populated from dummy backend -->
+                                    </select>
+                                </div>
+                                <div class="help-text" id="categoryHelp">Choose the category that best fits your item.</div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group">
+                                <label for="listingDescription">Description</label>
+                                <textarea id="listingDescription" class="form-textarea" rows="3" placeholder="Describe your item in detail – condition, specs, reason for selling…"></textarea>
+                                <div class="help-text" id="descHelp">Help buyers understand what you're offering.</div>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="form-group">
+                                <label for="listingPrice">Price <span class="required-star">*</span></label>
+                                <div class="price-wrapper">
+                                    <span class="naira-icon">₦</span>
+                                    <input type="number" id="listingPrice" class="form-input" placeholder="0" min="0" step="100" required />
+                                </div>
+                                <div class="help-text" id="priceHelp">Enter the price in Naira (₦). Set to 0 for free items.</div>
+                            </div>
+
+                            <!-- Listing Type -->
+                            <div class="form-group">
+                                <label for="listingType">Listing Type <span class="required-star">*</span></label>
+                                <div class="form-select-wrap">
+                                    <select id="listingType" class="form-select" required>
+                                        <option value="">Select type...</option>
+                                        <option value="sell">🛒 Sell</option>
+                                        <option value="freebie">🎁 Freebie</option>
+                                        <option value="wanted">🔍 Wanted</option>
+                                        <option value="swap">🔄 Swap</option>
+                                    </select>
+                                </div>
+                                <div class="help-text" id="typeHelp">Choose "Freebie" if you're giving it away for free.</div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn-next" id="step1Next">Next <i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- ===== STEP 2: Location ===== -->
+                    <div class="step-content" id="step2">
+                        <div class="step-title">📍 Location / Hotspot</div>
+                        <div class="step-desc">Select where on campus this item is located. You can select multiple spots.</div>
+
+                        <div class="form-group">
+                            <label>Select Locations <span class="required-star">*</span></label>
+                            <div class="location-grid" id="locationGrid">
+                                <!-- Populated from dummy backend -->
+                            </div>
+                            <div class="help-text" id="locationHelp">Select at least one location where the item can be found.</div>
+                        </div>
+
+                        <div class="step-actions">
+                            <button type="button" class="btn-prev" id="step2Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
+                            <button type="button" class="btn-next" id="step2Next">Next <i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- ===== STEP 3: Badges & Image ===== -->
+                    <div class="step-content" id="step3">
+                        <div class="step-title">🏷️ Badges &amp; Image</div>
+                        <div class="step-desc">Add a badge to highlight your listing, and upload an image.</div>
+
+                        <!-- Badge -->
+                        <div class="form-group">
+                            <label>Badge <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
+                            <div class="badge-grid" id="badgeGrid">
+                                <!-- Populated from dummy backend -->
+                            </div>
+                            <div class="help-text" id="badgeHelp">A badge helps your listing stand out.</div>
+                        </div>
+
+                        <!-- Ads Checkboxes -->
+                        <div class="form-group">
+                            <label>Promotion Options</label>
+                            <div class="ads-group" id="adsGroup">
+                                <div class="ads-check" data-ads="banner">
+                                    <span class="check-box"><i class="fa-solid fa-check"></i></span>
+                                    <span class="ads-label">
+                                        📢 Banner Ad
+                                        <small>Feature your listing as a banner ad on the home page.</small>
+                                    </span>
+                                </div>
+                                <div class="ads-check" data-ads="hot_sale">
+                                    <span class="check-box"><i class="fa-solid fa-check"></i></span>
+                                    <span class="ads-label">
+                                        🔥 Hot Sale
+                                        <small>Tag your listing as a hot deal for extra visibility.</small>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="help-text" id="adsHelp">Boost your listing's visibility with these options.</div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="form-group">
+                            <label>Listing Image <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
+                            <div class="file-drop-zone" id="fileDropZone">
+                                <div class="drop-icon"><i class="fa-regular fa-cloud-arrow-up"></i></div>
+                                <div class="drop-text">
+                                    Drop your image here or <strong>browse</strong>
+                                </div>
+                                <div class="drop-hint">JPG, PNG • Max 5MB</div>
+                                <div class="file-preview-container"></div>
+                                <div class="drop-error"></div>
+                                <input type="file" id="listingImage" accept=".jpg,.jpeg,.png,image/*" />
+                            </div>
+                            <div class="help-text" id="imageHelp">Upload a clear photo of your item (optional).</div>
+                        </div>
+
+                        <div class="step-actions">
+                            <button type="button" class="btn-prev" id="step3Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
+                            <button type="button" class="btn-next" id="step3Next">Next <i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- ===== STEP 4: Review ===== -->
+                    <div class="step-content" id="step4">
+                        <div class="step-title">✅ Review &amp; Submit</div>
+                        <div class="step-desc">Please review all the details below before submitting your listing.</div>
+
+                        <div id="reviewContainer">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <div class="step-actions">
+                            <button type="button" class="btn-prev" id="step4Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
+                            <button type="button" class="btn-submit" id="submitBtn">
+                                <span class="btn-text"><i class="fa-regular fa-paper-plane"></i> Create Listing</span>
+                                <span class="spinner-btn"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div><!-- /create-card -->
+
+            </div><!-- /create-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Create Listing • 4-step form with dummy data
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/global.js"></script>
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+<script src="/assets/js/form-helper.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // DUMMY BACKEND DATA
+            // ============================================================
+
+            const DUMMY_CATEGORIES = [
+                { id: 1, name: 'Books & Textbooks' },
+                { id: 2, name: 'Laptops & Computers' },
+                { id: 3, name: 'Electronics' },
+                { id: 4, name: 'Fashion & Clothing' },
+                { id: 5, name: 'Food & Groceries' },
+                { id: 6, name: 'Sports & Fitness' },
+                { id: 7, name: 'Services' },
+                { id: 8, name: 'Roommates & Shared Apartments' },
+                { id: 9, name: 'Furniture' },
+                { id: 10, name: 'Other' },
+            ];
+
+            const DUMMY_LOCATIONS = [
+                { id: 1, name: 'Main Gate', description: 'Main entrance' },
+                { id: 2, name: 'Lecture Theatres Complex', description: 'All lecture halls' },
+                { id: 3, name: 'Library', description: 'University library' },
+                { id: 4, name: 'Student Union Building', description: 'SUB' },
+                { id: 5, name: 'Cafeteria', description: 'Main dining area' },
+                { id: 6, name: 'Faculty of Engineering', description: 'Engineering block' },
+                { id: 7, name: 'Faculty of Science', description: 'Science block' },
+                { id: 8, name: 'Faculty of Arts', description: 'Arts block' },
+                { id: 9, name: 'Sports Complex', description: 'Stadium & gym' },
+                { id: 10, name: 'Health Centre', description: 'Clinic' },
+            ];
+
+            const DUMMY_BADGES = [
+                { id: 1, name: '🔥 Hot', value: 'hot' },
+                { id: 2, name: '💰 Bargain', value: 'bargain' },
+                { id: 3, name: '✨ New', value: 'new' },
+                { id: 4, name: '🆓 Free', value: 'free' },
+                { id: 5, name: '⭐ Featured', value: 'featured' },
+            ];
+
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+
+            const steps = {
+                1: document.getElementById('step1'),
+                2: document.getElementById('step2'),
+                3: document.getElementById('step3'),
+                4: document.getElementById('step4'),
+            };
+
+            const dots = document.querySelectorAll('.step-dot');
+            const lines = {
+                1: document.getElementById('line1'),
+                2: document.getElementById('line2'),
+                3: document.getElementById('line3'),
+            };
+
+            const step1Next = document.getElementById('step1Next');
+            const step2Prev = document.getElementById('step2Prev');
+            const step2Next = document.getElementById('step2Next');
+            const step3Prev = document.getElementById('step3Prev');
+            const step3Next = document.getElementById('step3Next');
+            const step4Prev = document.getElementById('step4Prev');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Step 1 fields
+            const titleInput = document.getElementById('listingTitle');
+            const categorySelect = document.getElementById('listingCategory');
+            const descInput = document.getElementById('listingDescription');
+            const priceInput = document.getElementById('listingPrice');
+            const typeSelect = document.getElementById('listingType');
+
+            // Step 2
+            const locationGrid = document.getElementById('locationGrid');
+
+            // Step 3
+            const badgeGrid = document.getElementById('badgeGrid');
+            const adsChecks = document.querySelectorAll('.ads-check');
+            const fileInput = document.getElementById('listingImage');
+            const fileDropZone = document.getElementById('fileDropZone');
+
+            // Step 4
+            const reviewContainer = document.getElementById('reviewContainer');
+
+            // ============================================================
+            // STATE
+            // ============================================================
+
+            let currentStep = 1;
+            const formData = {
+                title: '',
+                category: '',
+                description: '',
+                price: 0,
+                type: '',
+                locations: [], // array of location ids
+                badge: '',
+                ads: {
+                    banner: false,
+                    hot_sale: false,
+                },
+                image: null,
+                imageName: '',
+            };
+
+            // ============================================================
+            // INIT: Populate dropdowns & grids
+            // ============================================================
+
+            function populateCategories() {
+                categorySelect.innerHTML = '<option value="">Select a category...</option>';
+                DUMMY_CATEGORIES.forEach(cat => {
+                    categorySelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                });
+            }
+
+            function populateLocations() {
+                locationGrid.innerHTML = '';
+                DUMMY_LOCATIONS.forEach(loc => {
+                    const chip = document.createElement('div');
+                    chip.className = 'location-chip';
+                    chip.dataset.id = loc.id;
+                    chip.innerHTML = `
+                            <span class="chip-check"><i class="fa-solid fa-check"></i></span>
+                            ${loc.name}
+                            <span class="chip-desc">${loc.description}</span>
+                        `;
+                    chip.addEventListener('click', function() {
+                        this.classList.toggle('selected');
+                        updateLocations();
+                    });
+                    locationGrid.appendChild(chip);
+                });
+            }
+
+            function populateBadges() {
+                badgeGrid.innerHTML = '';
+                DUMMY_BADGES.forEach(badge => {
+                    const chip = document.createElement('div');
+                    chip.className = 'badge-chip';
+                    chip.dataset.value = badge.value;
+                    chip.innerHTML = `
+                            <span class="badge-radio"><i class="fa-solid fa-check"></i></span>
+                            ${badge.name}
+                        `;
+                    chip.addEventListener('click', function() {
+                        document.querySelectorAll('.badge-chip').forEach(b => b.classList.remove('selected'));
+                        this.classList.add('selected');
+                        formData.badge = this.dataset.value;
+                    });
+                    badgeGrid.appendChild(chip);
+                });
+            }
+
+            function initAds() {
+                adsChecks.forEach(check => {
+                    check.addEventListener('click', function() {
+                        this.classList.toggle('checked');
+                        const key = this.dataset.ads;
+                        formData.ads[key] = this.classList.contains('checked');
+                    });
+                });
+            }
+
+            // ============================================================
+            // FILE UPLOAD HANDLER
+            // ============================================================
+
+            function initFileUpload() {
+                const input = fileInput;
+                const zone = fileDropZone;
+
+                // Drag events
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    zone.addEventListener(eventName, e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        zone.classList.add('dragover');
+                    });
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    zone.addEventListener(eventName, e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        zone.classList.remove('dragover');
+                    });
+                });
+
+                zone.addEventListener('drop', e => {
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        input.files = files;
+                        handleFileSelection();
+                    }
+                });
+
+                zone.addEventListener('click', e => {
+                    if (e.target.closest('.file-remove')) return;
+                    if (e.target.closest('.file-preview')) return;
+                    input.click();
+                });
+
+                input.addEventListener('change', handleFileSelection);
+
+                zone.addEventListener('click', function(e) {
+                    const removeBtn = e.target.closest('.file-remove');
+                    if (removeBtn) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        input.value = '';
+                        clearFilePreview();
+                        zone.classList.remove('has-file');
+                        formData.image = null;
+                        formData.imageName = '';
+                        const errorEl = zone.querySelector('.drop-error');
+                        if (errorEl) errorEl.textContent = '';
+                    }
+                });
+            }
+
+            function handleFileSelection() {
+                const input = fileInput;
+                const zone = fileDropZone;
+                const file = input.files[0];
+                const errorEl = zone.querySelector('.drop-error');
+                const container = zone.querySelector('.file-preview-container');
+
+                if (!file) {
+                    clearFilePreview();
+                    zone.classList.remove('has-file');
+                    if (errorEl) errorEl.textContent = '';
+                    return;
+                }
+
+                // Validate size (5MB)
+                const maxSize = 5 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    if (errorEl) {
+                        errorEl.textContent = 'File too large. Max 5MB.';
+                    }
+                    input.value = '';
+                    clearFilePreview();
+                    zone.classList.remove('has-file');
+                    return;
+                }
+
+                // Validate type
+                const validTypes = ['image/jpeg', 'image/png'];
+                if (!validTypes.includes(file.type)) {
+                    if (errorEl) {
+                        errorEl.textContent = 'Invalid file type. Please upload JPG or PNG.';
+                    }
+                    input.value = '';
+                    clearFilePreview();
+                    zone.classList.remove('has-file');
+                    return;
+                }
+
+                if (errorEl) errorEl.textContent = '';
+                zone.classList.add('has-file');
+
+                // Store in formData
+                formData.image = file;
+                formData.imageName = file.name;
+
+                // Show preview
+                const isImage = file.type.startsWith('image/');
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    container.innerHTML = `
+                            <div class="file-preview file-preview-image">
+                                <img src="${e.target.result}" alt="${file.name}" />
+                                <div class="file-info" style="text-align:center; margin-top:4px;">
+                                    <div class="file-name">${file.name}</div>
+                                    <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
+                                </div>
+                                <button type="button" class="file-remove" aria-label="Remove file">&times;</button>
+                            </div>
+                        `;
+                    container.querySelector('.file-remove')?.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        input.value = '';
+                        clearFilePreview();
+                        zone.classList.remove('has-file');
+                        formData.image = null;
+                        formData.imageName = '';
+                        if (errorEl) errorEl.textContent = '';
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function clearFilePreview() {
+                const container = fileDropZone.querySelector('.file-preview-container');
+                if (container) container.innerHTML = '';
+            }
+
+            // ============================================================
+            // STEP NAVIGATION
+            // ============================================================
+
+            function goToStep(step) {
+                // Validate current step before proceeding
+                if (step > currentStep) {
+                    if (!validateStep(currentStep)) {
+                        return;
+                    }
+                }
+
+                // Update visibility
+                Object.keys(steps).forEach(key => {
+                    steps[key].classList.toggle('active', parseInt(key) === step);
+                });
+
+                // Update dots
+                dots.forEach((dot, index) => {
+                    const num = index + 1;
+                    dot.classList.remove('active', 'completed');
+                    if (num === step) dot.classList.add('active');
+                    else if (num < step) dot.classList.add('completed');
+                });
+
+                // Update lines
+                for (let i = 1; i <= 3; i++) {
+                    lines[i].classList.toggle('completed', i < step);
+                }
+
+                currentStep = step;
+
+                // If step 4, render review
+                if (step === 4) {
+                    renderReview();
+                }
+
+                // Scroll to top of card
+                document.querySelector('.create-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // ============================================================
+            // VALIDATION
+            // ============================================================
+
+            function validateStep(step) {
+                if (step === 1) {
+                    let valid = true;
+
+                    // Title
+                    const title = titleInput.value.trim();
+                    if (!title) {
+                        setHelp('titleHelp', 'Please enter a listing title.', true);
+                        titleInput.classList.add('error');
+                        valid = false;
+                    } else {
+                        setHelp('titleHelp', 'Be specific – include brand, model, condition.', false);
+                        titleInput.classList.remove('error');
+                        formData.title = title;
+                    }
+
+                    // Category
+                    if (!categorySelect.value) {
+                        setHelp('categoryHelp', 'Please select a category.', true);
+                        categorySelect.classList.add('error');
+                        valid = false;
+                    } else {
+                        setHelp('categoryHelp', 'Choose the category that best fits your item.', false);
+                        categorySelect.classList.remove('error');
+                        formData.category = categorySelect.value;
+                    }
+
+                    // Description
+                    formData.description = descInput.value.trim();
+
+                    // Price
+                    const price = parseFloat(priceInput.value);
+                    if (isNaN(price) || price < 0) {
+                        setHelp('priceHelp', 'Please enter a valid price.', true);
+                        priceInput.classList.add('error');
+                        valid = false;
+                    } else {
+                        setHelp('priceHelp', 'Enter the price in Naira (₦). Set to 0 for free items.', false);
+                        priceInput.classList.remove('error');
+                        formData.price = price;
+                    }
+
+                    // Listing Type
+                    if (!typeSelect.value) {
+                        setHelp('typeHelp', 'Please select a listing type.', true);
+                        typeSelect.classList.add('error');
+                        valid = false;
+                    } else {
+                        setHelp('typeHelp', 'Choose "Freebie" if you\'re giving it away for free.', false);
+                        typeSelect.classList.remove('error');
+                        formData.type = typeSelect.value;
+
+                        // If freebie, price = 0 and disable
+                        if (typeSelect.value === 'freebie') {
+                            priceInput.value = 0;
+                            priceInput.disabled = true;
+                            formData.price = 0;
+                            setHelp('priceHelp', 'Price is set to 0 for free items.', false);
+                        } else {
+                            priceInput.disabled = false;
+                        }
+                    }
+
+                    return valid;
+                }
+
+                if (step === 2) {
+                    const selected = document.querySelectorAll('.location-chip.selected');
+                    if (selected.length === 0) {
+                        setHelp('locationHelp', 'Please select at least one location.', true);
+                        return false;
+                    } else {
+                        setHelp('locationHelp', 'Select at least one location where the item can be found.', false);
+                        return true;
+                    }
+                }
+
+                if (step === 3) {
+                    // Badge is optional, image is optional
+                    return true;
+                }
+
+                return true;
+            }
+
+            function setHelp(id, message, isError) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.textContent = message;
+                el.className = 'help-text' + (isError ? ' error' : '');
+            }
+
+            function updateLocations() {
+                const selected = document.querySelectorAll('.location-chip.selected');
+                formData.locations = Array.from(selected).map(el => parseInt(el.dataset.id));
+            }
+
+            // ============================================================
+            // RENDER REVIEW
+            // ============================================================
+
+            function renderReview() {
+                // Gather latest data
+                formData.title = titleInput.value.trim();
+                formData.category = categorySelect.value;
+                formData.description = descInput.value.trim();
+                formData.price = parseFloat(priceInput.value) || 0;
+                formData.type = typeSelect.value;
+
+                const categoryName = DUMMY_CATEGORIES.find(c => c.id == formData.category)?.name || 'Not selected';
+                const typeLabels = {
+                    'sell': '🛒 Sell',
+                    'freebie': '🎁 Freebie',
+                    'wanted': '🔍 Wanted',
+                    'swap': '🔄 Swap'
+                };
+                const typeLabel = typeLabels[formData.type] || formData.type;
+
+                const locationNames = DUMMY_LOCATIONS
+                    .filter(l => formData.locations.includes(l.id))
+                    .map(l => l.name);
+
+                const badgeName = DUMMY_BADGES.find(b => b.value === formData.badge)?.name || 'None selected';
+
+                const adsList = [];
+                if (formData.ads.banner) adsList.push('📢 Banner Ad');
+                if (formData.ads.hot_sale) adsList.push('🔥 Hot Sale');
+
+                const priceDisplay = formData.type === 'freebie' ? '₦0 (Free)' : '₦' + formData.price.toLocaleString();
+
+                reviewContainer.innerHTML = `
+                        <div class="review-item">
+                            <span class="review-label">Title</span>
+                            <span class="review-value">${formData.title || '—'}</span>
+                        </div>
+                        <div class="review-divider"></div>
+                        <div class="review-item">
+                            <span class="review-label">Category</span>
+                            <span class="review-value">${categoryName}</span>
+                        </div>
+                        <div class="review-divider"></div>
+                        <div class="review-item">
+                            <span class="review-label">Description</span>
+                            <span class="review-value">${formData.description || '—'}</span>
+                        </div>
+                        <div class="review-divider"></div>
+                        <div class="review-item">
+                            <span class="review-label">Price</span>
+                            <span class="review-value">${priceDisplay}</span>
+                        </div>
+                        <div class="review-divider"></div>
+                        <div class="review-item">
+                            <span class="review-label">Listing Type</span>
+                            <span class="review-value">${typeLabel}</span>
+                        </div>
+                        <div class="review-divider"></div>
+                        <div class="review-item">
+                            <span class="review-label">Locations</span>
+                            <span class="review-value">
+                                ${locationNames.length > 0 ? locationNames.map(n => `<span class="location-pill selected">${n}</span>`).join('') : '—'}
+                            </span>
+                        </div>
+                        <div class="review-divider"></div>
+                        <div class="review-item">
+                            <span class="review-label">Badge</span>
+                            <span class="review-value"><span class="badge-pill ${formData.badge ? 'selected' : ''}">${badgeName}</span></span>
+                        </div>
+                        <div class="review-divider"></div>
+                        <div class="review-item">
+                            <span class="review-label">Promotions</span>
+                            <span class="review-value">${adsList.length > 0 ? adsList.join(', ') : 'None'}</span>
+                        </div>
+                        <div class="review-divider"></div>
+                        <div class="review-item">
+                            <span class="review-label">Image</span>
+                            <span class="review-value">
+                                ${formData.image ? `
+                                    <div class="file-preview-small">
+                                        <img src="${URL.createObjectURL(formData.image)}" alt="${formData.imageName}" />
+                                        <span>${formData.imageName}</span>
+                                    </div>
+                                ` : 'No image uploaded'}
+                            </span>
+                        </div>
+                    `;
+            }
+
+            // ============================================================
+            // SUBMIT
+            // ============================================================
+
+            function submitListing() {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
+
+                const payload = {
+                    title: formData.title,
+                    category: formData.category,
+                    description: formData.description,
+                    price: formData.price,
+                    type: formData.type,
+                    locations: formData.locations,
+                    badge: formData.badge,
+                    ads: formData.ads,
+                    image: formData.image ? formData.image.name : null,
+                };
+
+                console.log('📦 Listing payload:', payload);
+
+                setTimeout(() => {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.success('🎉 Listing created successfully!', { duration: 4000 });
+                    } else {
+                        alert('Listing created successfully!');
+                    }
+
+                    // Reset form (optional)
+                    // window.location.href = '/explore.html';
+                }, 1500);
+            }
+
+            // ============================================================
+            // EVENT LISTENERS
+            // ============================================================
+
+            // Step 1 → 2
+            step1Next.addEventListener('click', function() {
+                if (validateStep(1)) {
+                    goToStep(2);
+                }
+            });
+
+            // Step 2 → 1
+            step2Prev.addEventListener('click', function() {
+                goToStep(1);
+            });
+
+            // Step 2 → 3
+            step2Next.addEventListener('click', function() {
+                if (validateStep(2)) {
+                    goToStep(3);
+                }
+            });
+
+            // Step 3 → 2
+            step3Prev.addEventListener('click', function() {
+                goToStep(2);
+            });
+
+            // Step 3 → 4
+            step3Next.addEventListener('click', function() {
+                if (validateStep(3)) {
+                    goToStep(4);
+                }
+            });
+
+            // Step 4 → 3
+            step4Prev.addEventListener('click', function() {
+                goToStep(3);
+            });
+
+            // Submit
+            submitBtn.addEventListener('click', function() {
+                // Final validation
+                if (!validateStep(1)) {
+                    goToStep(1);
+                    return;
+                }
+                if (!validateStep(2)) {
+                    goToStep(2);
+                    return;
+                }
+                // Confirm with modal
+                if (typeof Modal !== 'undefined') {
+                    const modal = new Modal({
+                        title: 'Create Listing?',
+                        body: `
+                                <p>You are about to create a listing for <strong>${formData.title}</strong>.</p>
+                                <p style="color:var(--text-muted); font-size:13px;">Please review all details before confirming.</p>
+                            `,
+                        type: 'info',
+                        confirmText: 'Create Listing',
+                        cancelText: 'Cancel',
+                        onConfirm: submitListing
+                    });
+                    modal.open();
+                } else {
+                    if (confirm(`Create listing for "${formData.title}"?`)) {
+                        submitListing();
+                    }
+                }
+            });
+
+            // Enter key on inputs in step 1
+            document.querySelectorAll('#step1 input, #step1 select, #step1 textarea').forEach(el => {
+                el.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                        e.preventDefault();
+                        step1Next.click();
+                    }
+                });
+            });
+
+            // Enter key on step 2 locations (select first)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && currentStep === 2 && !e.target.closest('input, select, textarea, button')) {
+                    e.preventDefault();
+                    step2Next.click();
+                }
+                if (e.key === 'Enter' && currentStep === 3 && !e.target.closest('input, select, textarea, button')) {
+                    e.preventDefault();
+                    step3Next.click();
+                }
+            });
+
+            // Price validation with type
+            typeSelect.addEventListener('change', function() {
+                if (this.value === 'freebie') {
+                    priceInput.value = 0;
+                    priceInput.disabled = true;
+                    setHelp('priceHelp', 'Price is set to 0 for free items.', false);
+                } else {
+                    priceInput.disabled = false;
+                    if (priceInput.value === '0') priceInput.value = '';
+                    setHelp('priceHelp', 'Enter the price in Naira (₦). Set to 0 for free items.', false);
+                }
+            });
+
+            // ============================================================
+            // INIT
+            // ============================================================
+
+            function init() {
+                populateCategories();
+                populateLocations();
+                populateBadges();
+                initAds();
+                initFileUpload();
+
+                // Set initial form data from step 1
+                titleInput.value = '';
+                priceInput.value = '';
+                descInput.value = '';
+
+                console.log('📝 Create Listing page initialized');
+                console.log('💡 4-step form ready');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                setTimeout(init, 200);
+            }
+
+        })();
+    </script>
+
+</body>
+</html>

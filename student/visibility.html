@@ -50,7 +50,6 @@
             transition: color var(--transition);
         }
 
-        /* ─── Current Status Display ─── */
         .vis-status {
             display: flex;
             align-items: center;
@@ -91,7 +90,6 @@
             color: #e74c3c;
         }
 
-        /* ─── Toggle Switch ─── */
         .toggle-container {
             display: flex;
             align-items: center;
@@ -114,7 +112,6 @@
             transition: color var(--transition);
         }
 
-        /* Custom Toggle Switch */
         .toggle-switch {
             position: relative;
             width: 52px;
@@ -173,7 +170,6 @@
             border-color: #2ecc71;
         }
 
-        /* ─── Warning Banner ─── */
         .warning-banner {
             display: none;
             padding: 14px 18px;
@@ -211,7 +207,6 @@
             color: #ff6b6b;
         }
 
-        /* ─── Action Buttons ─── */
         .vis-actions {
             display: flex;
             gap: 12px;
@@ -250,7 +245,6 @@
             background: var(--border-color);
         }
 
-        /* ─── Loading ─── */
         .vis-loading {
             display: flex;
             flex-direction: column;
@@ -267,16 +261,13 @@
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
         .vis-loading p {
             font-size: 14px;
             color: var(--text-muted);
         }
 
-        /* ─── Responsive ─── */
         @media (max-width: 480px) {
             .vis-card {
                 padding: 16px 18px;
@@ -302,7 +293,6 @@
             }
         }
 
-        /* ─── Demo note ─── */
         .demo-note {
             text-align: center;
             font-size: 10px;
@@ -400,7 +390,7 @@
 
         <!-- ===== DEMO NOTE ===== -->
         <div class="demo-note">
-            <span>CampusHub</span> • Profile Visibility • dummy data for preview
+            <span>CampusHub</span> • Profile Visibility • real API integration
         </div>
 
     </div>
@@ -425,51 +415,55 @@
             const saveBtn = document.getElementById('saveBtn');
             const cancelBtn = document.getElementById('cancelBtn');
 
-            // ─── Dummy data (simulate endpoint) ──────────────────────
-            // You can change this to test different initial statuses: 'public' or 'private'
-            const DUMMY_VISIBILITY = {
-                status: 'public', // 'public' | 'private'
-                message: 'Your profile is currently visible to all students.'
-            };
+            // ─── State ──────────────────────────────────────────────────
+            let currentVisibility = 'public';   // 'public' or 'private'
+            let initialVisibility = 'public';
+            let isDirty = false;
 
-            // ─── Fetch visibility status (simulated) ──────────────────
-            function fetchVisibility() {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        // For demo, you can randomize:
-                        // const statuses = ['public', 'private'];
-                        // DUMMY_VISIBILITY.status = statuses[Math.floor(Math.random() * statuses.length)];
-                        resolve(DUMMY_VISIBILITY);
-                    }, 600);
+
+            // ─── API Calls ──────────────────────────────────────────────
+
+            // 1. Fetch current visibility
+            async function fetchVisibility() {
+                const response = await fetchWithAuth(`${AUTH_URL}get-visibility`, { 
+                    method: 'GET',
+                    showSpinner: true,
+                    spinnerText: 'Loading Visibilty...'
                 });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `HTTP ${response.status}`);
+                }
+                const result = await response.json();
+                if (!result.is_success) {
+                    throw new Error(result.message || 'Failed to fetch visibility');
+                }
+                // API returns { data: { is_visibility: false } }
+                const isPublic = result.data.is_visibility === true;
+                return isPublic ? 'public' : 'private';
             }
 
-            // ─── Update UI based on status ─────────────────────────────
-            function renderVisibility(data) {
-                const status = data.status || 'public';
-
-                // Hide loading, show content
-                loadingState.style.display = 'none';
-                content.style.display = 'block';
-
-                // Update status badge
-                currentStatusValue.textContent = status;
-                currentStatusValue.className = 'status-value ' + status;
-
-                // Update toggle
-                const isPublic = status === 'public';
-                toggle.checked = isPublic;
-                updateToggleUI(isPublic);
-
-                // Warning banner: show only if toggling to private (i.e., when unchecked)
-                // We'll manage via change event
-                warningBanner.classList.remove('visible');
-
-                // Enable save only if changed (initially disabled)
-                saveBtn.disabled = true;
+            // 2. Toggle visibility (POST)
+            async function toggleVisibility() {
+                // No body needed – the endpoint toggles based on current state
+                const response = await fetchWithAuth(`${AUTH_URL}toggle-visibility`, {
+                    method: 'PATCH',
+                });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `HTTP ${response.status}`);
+                }
+                const result = await response.json();
+                if (!result.is_success) {
+                    throw new Error(result.message || 'Toggle failed');
+                }
+                // API returns { data: { is_visibilty: true } } – note misspelling
+                const newIsPublic = result.data?.is_visibilty === true;
+                return newIsPublic ? 'public' : 'private';
             }
 
-            // ─── Update toggle label and subtext ──────────────────────
+            // ─── UI Update ──────────────────────────────────────────────
+
             function updateToggleUI(isPublic) {
                 if (isPublic) {
                     toggleLabelText.textContent = 'Public';
@@ -480,115 +474,174 @@
                 }
             }
 
-            // ─── Save visibility change ────────────────────────────────
-            function saveVisibility(newStatus) {
+            function renderVisibility(status) {
+                // status: 'public' or 'private'
+                currentVisibility = status;
+                initialVisibility = status;
+
+                // Update status badge
+                currentStatusValue.textContent = status;
+                currentStatusValue.className = 'status-value ' + status;
+
+                // Update toggle
+                const isPublic = status === 'public';
+                toggle.checked = isPublic;
+                updateToggleUI(isPublic);
+
+                // Hide warning banner initially
+                warningBanner.classList.remove('visible');
+
+                // Reset dirty state
+                isDirty = false;
+                saveBtn.disabled = true;
+
+                // Show content, hide loading
+                loadingState.style.display = 'none';
+                content.style.display = 'block';
+            }
+
+            // ─── Toggle change handler ────────────────────────────────
+            toggle.addEventListener('change', function() {
+                const isChecked = this.checked;
+                updateToggleUI(isChecked);
+
+                // Show warning if switching to private
+                if (!isChecked) {
+                    warningBanner.classList.add('visible');
+                } else {
+                    warningBanner.classList.remove('visible');
+                }
+
+                // Enable save button if the new state differs from initial
+                const newStatus = isChecked ? 'public' : 'private';
+                isDirty = (newStatus !== initialVisibility);
+                saveBtn.disabled = !isDirty;
+            });
+
+            // ─── Save changes ──────────────────────────────────────────
+
+            async function saveChanges() {
+                // Double-check – are we really changing?
+                const newStatus = toggle.checked ? 'public' : 'private';
+                if (newStatus === initialVisibility) {
+                    saveBtn.disabled = true;
+                    return;
+                }
+
+                // If switching to private, ask for confirmation
+                if (newStatus === 'private') {
+                    const confirmMessage = `
+                        ⚠️ Setting your profile to Private will hide your listings and profile from other students.
+                        This may reduce trust and discourage buyers.
+                        Are you sure you want to continue?
+                    `;
+                    // Try to use Modal if available, else fallback to confirm
+                    if (typeof Modal !== 'undefined') {
+                        const modal = new Modal({
+                            title: 'Confirm Private Profile',
+                            body: `
+                                <p><strong>⚠️ Important:</strong> Setting your profile to <strong>Private</strong> will hide your profile and listings from other students.</p>
+                                <p style="color:var(--text-muted); font-size:13px;">This may reduce trust and discourage buyers from purchasing your items.</p>
+                                <p style="color:var(--text-muted); font-size:13px;">Are you sure you want to continue?</p>
+                            `,
+                            type: 'warning',
+                            confirmText: 'Yes, make it Private',
+                            cancelText: 'Cancel',
+                            onConfirm: performToggle
+                        });
+                        modal.open();
+                        return;
+                    } else {
+                        if (!confirm(confirmMessage)) {
+                            // Revert toggle to original state
+                            toggle.checked = (initialVisibility === 'public');
+                            updateToggleUI(initialVisibility === 'public');
+                            warningBanner.classList.remove('visible');
+                            saveBtn.disabled = true;
+                            return;
+                        }
+                    }
+                }
+
+                // Proceed with toggle
+                await performToggle();
+            }
+
+            async function performToggle() {
                 saveBtn.disabled = true;
                 saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
 
-                // Simulate API call
-                setTimeout(() => {
-                    // Update dummy data
-                    DUMMY_VISIBILITY.status = newStatus;
-                    // Re-render with new status
-                    renderVisibility(DUMMY_VISIBILITY);
-                    saveBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Changes';
-                    saveBtn.disabled = true;
+                try {
+                    const newStatus = await toggleVisibility();
+                    // Re-fetch to ensure fresh state (in case the API returns stale)
+                    const freshStatus = await fetchVisibility();
+                    renderVisibility(freshStatus);
 
-                    // Show success
                     if (typeof showAlert !== 'undefined') {
-                        showAlert.success(`Profile visibility updated to ${newStatus}!`, { duration: 3000 });
+                        showAlert.success(`Profile visibility updated to ${freshStatus}!`, { duration: 3000 });
                     } else {
-                        alert(`Profile visibility updated to ${newStatus}!`);
+                        alert(`Profile visibility updated to ${freshStatus}!`);
                     }
 
-                    // Reset warning banner
-                    warningBanner.classList.remove('visible');
-                }, 1200);
-            }
-
-            // ─── Cancel / reset ─────────────────────────────────────────
-            function cancelChanges() {
-                // Re-fetch current status and reset UI
-                fetchVisibility().then(data => {
-                    renderVisibility(data);
-                    // Reset warning
+                } catch (error) {
+                    console.error('Toggle error:', error);
+                    // Revert toggle to original state
+                    toggle.checked = (initialVisibility === 'public');
+                    updateToggleUI(initialVisibility === 'public');
                     warningBanner.classList.remove('visible');
                     saveBtn.disabled = true;
+
                     if (typeof showAlert !== 'undefined') {
-                        showAlert.info('Changes discarded.', { duration: 1500 });
+                        showAlert.error(error.message || 'Failed to update visibility. Please try again.');
+                    } else {
+                        alert('Error: ' + error.message);
                     }
-                });
+                } finally {
+                    saveBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Changes';
+                    // Re-evaluate dirty state
+                    const currentStatus = toggle.checked ? 'public' : 'private';
+                    isDirty = (currentStatus !== initialVisibility);
+                    saveBtn.disabled = !isDirty;
+                }
             }
+
+            // ─── Cancel / Reset ─────────────────────────────────────────
+
+            function cancelChanges() {
+                // Revert toggle to initial state
+                toggle.checked = (initialVisibility === 'public');
+                updateToggleUI(initialVisibility === 'public');
+                warningBanner.classList.remove('visible');
+                isDirty = false;
+                saveBtn.disabled = true;
+
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.info('Changes discarded.', { duration: 1500 });
+                }
+            }
+
+            // ─── Event Listeners ──────────────────────────────────────
+
+            saveBtn.addEventListener('click', saveChanges);
+            cancelBtn.addEventListener('click', cancelChanges);
 
             // ─── Init ──────────────────────────────────────────────────
-            function init() {
-                fetchVisibility().then(data => {
-                    renderVisibility(data);
-                }).catch(err => {
+
+            async function init() {
+                try {
+                    const status = await fetchVisibility();
+                    renderVisibility(status);
+                } catch (error) {
+                    console.error('Init error:', error);
                     loadingState.innerHTML = `
-                            <p style="color:var(--red);">❌ Failed to load visibility settings. Please refresh.</p>
-                        `;
-                    console.error('Error fetching visibility:', err);
-                });
-
-                // ─── Toggle change ──────────────────────────────────────
-                toggle.addEventListener('change', function() {
-                    const isChecked = this.checked;
-                    updateToggleUI(isChecked);
-
-                    // Show warning if switching to private
-                    if (!isChecked) {
-                        warningBanner.classList.add('visible');
-                    } else {
-                        warningBanner.classList.remove('visible');
+                        <p style="color:var(--red);">❌ ${error.message || 'Failed to load visibility settings. Please refresh.'}</p>
+                    `;
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error(error.message || 'Failed to load visibility.');
                     }
-
-                    // Enable save button (since we have a change)
-                    saveBtn.disabled = false;
-                });
-
-                // ─── Save ───────────────────────────────────────────────
-                saveBtn.addEventListener('click', function() {
-                    const newStatus = toggle.checked ? 'public' : 'private';
-                    // Warn again if switching to private (optional)
-                    if (newStatus === 'private') {
-                        // Additional confirmation via modal if available
-                        const doSave = () => {
-                            saveVisibility(newStatus);
-                        };
-                        // If Modal is available, use it
-                        if (typeof Modal !== 'undefined') {
-                            const modal = new Modal({
-                                title: 'Confirm Private Profile',
-                                body: `
-                                        <p><strong>⚠️ Important:</strong> Setting your profile to <strong>Private</strong> will hide your profile and listings from other students.</p>
-                                        <p style="color:var(--text-muted); font-size:13px;">This may reduce trust and discourage buyers from purchasing your items.</p>
-                                        <p style="color:var(--text-muted); font-size:13px;">Are you sure you want to continue?</p>
-                                    `,
-                                type: 'warning',
-                                confirmText: 'Yes, make it Private',
-                                cancelText: 'Cancel',
-                                onConfirm: doSave
-                            });
-                            modal.open();
-                            return;
-                        } else {
-                            // Fallback to confirm
-                            if (confirm('⚠️ Setting your profile to Private will hide your listings. Are you sure?')) {
-                                doSave();
-                            }
-                        }
-                    } else {
-                        // Switching to public: save directly
-                        saveVisibility(newStatus);
-                    }
-                });
-
-                // ─── Cancel ──────────────────────────────────────────────
-                cancelBtn.addEventListener('click', cancelChanges);
+                }
             }
 
-            // Wait for DOM ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {

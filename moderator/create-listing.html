@@ -2,1684 +2,2346 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CampusHub – Create Listing</title>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-    <!-- Global Styles -->
-    <link rel="stylesheet" href="/assets/css/style.css" />
-    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
-
-    <!-- Page-Specific Styles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>CampusConnect Demo University · Create a Listing</title>
+    <!-- Bootstrap 5 + Icons + Fonts + AOS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
     <style>
-        .create-wrapper {
-            max-width: 720px;
+
+        .dashboard-card {
+            background: #ffffff;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(44, 122, 94, 0.06);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #4aa882, var(--accent));
+            opacity: 0.6;
+        }
+
+        .dashboard-card:hover {
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   BADGE & HEADER
+                   ────────────────────────────────────────────────────────────── */
+        .badge-verify {
+            background: rgba(44, 122, 94, 0.10);
+            color: var(--accent-dark);
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            display: inline-block;
+            border: 1px solid rgba(44, 122, 94, 0.10);
+            backdrop-filter: blur(4px);
+        }
+
+        .badge-verify i {
+            margin-right: 6px;
+        }
+
+        .page-headline h1 {
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            color: #14211f;
+        }
+
+        .page-headline p {
+            color: #5f7775;
+            font-size: 0.95rem;
+            max-width: 480px;
             margin: 0 auto;
         }
 
-        .create-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-card);
-            padding: 24px 28px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-card);
-            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
-            margin-bottom: 20px;
+        /* ──────────────────────────────────────────────────────────────
+                   POINTS CARD – INTERACTIVE
+                   ────────────────────────────────────────────────────────────── */
+        .points-card {
+            background: linear-gradient(145deg, #f6fbf9, #edf5f1);
+            border-radius: 16px;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid rgba(44, 122, 94, 0.10);
+            transition: var(--transition-smooth);
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        .create-card .card-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: color var(--transition);
-        }
-        .create-card .card-title i {
-            color: var(--green);
-            font-size: 22px;
-        }
-        .create-card .card-subtitle {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            transition: color var(--transition);
+        .points-card:hover {
+            border-color: rgba(44, 122, 94, 0.25);
+            box-shadow: 0 4px 16px rgba(44, 122, 94, 0.06);
+            transform: translateY(-1px);
         }
 
-        /* ─── Steps Progress ─── */
-        .steps-progress {
+        .points-card .points-label {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 24px;
-            padding: 0 4px;
-        }
-        .steps-progress .step-dot {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
+            gap: 0.5rem;
             font-weight: 600;
-            color: var(--text-muted);
-            transition: color var(--transition);
+            color: #1e2a2a;
+            font-size: 0.85rem;
         }
-        .steps-progress .step-dot .dot {
-            width: 28px;
-            height: 28px;
+
+        .points-card .points-label i {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .points-card .points-value {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--accent-dark);
+            letter-spacing: -0.02em;
+            transition: var(--transition-smooth);
+        }
+
+        .points-card .points-value.pulse {
+            animation: pointsPulse 0.4s ease;
+        }
+
+        @keyframes pointsPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+                color: #1f8a64;
+            }
+        }
+
+        .points-card .points-hint {
+            font-size: 0.75rem;
+            color: #6f8a82;
+            font-weight: 500;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   STEP INDICATOR – PROGRESS BAR STYLE
+                   ────────────────────────────────────────────────────────────── */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            padding: 0 0.25rem;
+            margin-bottom: 2.25rem;
+        }
+
+        .step-indicator-track {
+            position: absolute;
+            top: 50%;
+            left: 32px;
+            right: 32px;
+            height: 3px;
+            background: #e6eeea;
+            transform: translateY(-50%);
+            border-radius: 4px;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .step-indicator-track .step-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #4aa882);
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .step {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: default;
+            flex: 1;
+        }
+
+        .step .step-dot {
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            border: 2px solid var(--border-color);
+            background: #ffffff;
+            border: 2.5px solid #dce6e2;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
             font-weight: 700;
-            color: var(--text-muted);
-            background: var(--bg-input);
-            transition: all 0.3s ease;
-        }
-        .steps-progress .step-dot.active .dot {
-            border-color: var(--green);
-            background: var(--green);
-            color: #fff;
-            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.15);
-        }
-        .steps-progress .step-dot.completed .dot {
-            border-color: var(--green);
-            background: var(--green-bg);
-            color: var(--green);
-        }
-        .steps-progress .step-dot .label {
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--text-muted);
-            transition: color var(--transition);
-            display: none;
-        }
-        .steps-progress .step-dot.active .label,
-        .steps-progress .step-dot.completed .label {
-            color: var(--text-primary);
-        }
-        .steps-progress .step-line {
-            flex: 1;
-            height: 2px;
-            background: var(--border-color);
-            min-width: 16px;
-            transition: background var(--transition);
-        }
-        .steps-progress .step-line.completed {
-            background: var(--green);
+            font-size: 0.9rem;
+            color: #9aaea8;
+            transition: var(--transition-smooth);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            position: relative;
         }
 
-        @media (min-width: 480px) {
-            .steps-progress .step-dot .label {
-                display: inline;
-            }
-            .steps-progress .step-dot {
-                gap: 8px;
-            }
-        }
-        @media (max-width: 480px) {
-            .steps-progress .step-dot .dot {
-                width: 24px;
-                height: 24px;
-                font-size: 10px;
-            }
-            .steps-progress .step-dot .label {
-                display: none;
-            }
+        .step .step-dot .step-icon {
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: var(--transition-smooth);
+            position: absolute;
         }
 
-        /* ─── Step Content ─── */
-        .step-content {
-            display: none;
-            animation: fadeUp 0.4s ease;
-        }
-        .step-content.active {
-            display: block;
+        .step .step-dot .step-number {
+            transition: var(--transition-smooth);
         }
 
-        .step-content .step-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            transition: color var(--transition);
-        }
-        .step-content .step-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            transition: color var(--transition);
-        }
-
-        /* ─── Form Elements ─── */
-        .create-card .form-group {
-            margin-bottom: 18px;
-        }
-        .create-card .form-group label {
-            display: block;
-            font-size: 14px;
+        .step .step-label {
+            font-size: 0.7rem;
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            transition: color var(--transition);
-        }
-        .create-card .form-group label .required-star {
-            color: var(--red);
-            margin-left: 2px;
-        }
-        .create-card .form-group .help-text {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-            transition: color var(--transition);
-        }
-        .create-card .form-group .help-text.error {
-            color: var(--red);
+            color: #9aaea8;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            transition: var(--transition-smooth);
+            white-space: nowrap;
         }
 
-        .create-card .form-input,
-        .create-card .form-textarea,
-        .create-card .form-select {
+        /* Active state */
+        .step.active .step-dot {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 4px 16px rgba(44, 122, 94, 0.25);
+            transform: scale(1.05);
+        }
+
+        .step.active .step-dot .step-number {
+            opacity: 0;
+        }
+
+        .step.active .step-dot .step-icon {
+            opacity: 1;
+        }
+
+        .step.active .step-label {
+            color: var(--accent-dark);
+            font-weight: 700;
+        }
+
+        /* Completed state */
+        .step.completed .step-dot {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 2px 12px rgba(44, 122, 94, 0.15);
+        }
+
+        .step.completed .step-dot .step-number {
+            opacity: 0;
+        }
+
+        .step.completed .step-dot .step-icon {
+            opacity: 1;
+        }
+
+        .step.completed .step-label {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Hover on completed/active steps */
+        .step.completed .step-dot:hover,
+        .step.active .step-dot:hover {
+            transform: scale(1.08);
+        }
+
+        @media (max-width: 576px) {
+            .step .step-label {
+                font-size: 0.55rem;
+                letter-spacing: 0.2px;
+            }
+            .step .step-dot {
+                width: 34px;
+                height: 34px;
+                font-size: 0.75rem;
+            }
+            .step-indicator-track {
+                left: 20px;
+                right: 20px;
+            }
+            .step-indicator {
+                padding: 0 0.1rem;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   FORM STEPS – SMOOTH TRANSITIONS
+                   ────────────────────────────────────────────────────────────── */
+        .form-step {
+            display: none;
+            animation: stepFadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .form-step.active-step {
+            display: block;
+        }
+
+        @keyframes stepFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-step-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #14211f;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .form-step-title i {
+            color: var(--accent);
+            font-size: 1rem;
+            width: 1.5rem;
+            text-align: center;
+        }
+
+        .form-step-sub {
+            color: #5f7775;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   FLOATING LABEL GROUPS – FIXED HELPER POSITION
+                   ────────────────────────────────────────────────────────────── */
+        .form-floating-group {
+            position: relative;
+            margin-bottom: 1.75rem;
+        }
+
+        .form-floating-group .form-label {
+            position: absolute;
+            top: 0;
+            left: 1rem;
+            transform: translateY(-50%);
+            background: #ffffff;
+            padding: 0 0.5rem;
+            margin: 0;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+            pointer-events: none;
+            z-index: 2;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            transition: var(--transition-smooth);
+        }
+
+        .form-floating-group .form-control,
+        .form-floating-group .form-select,
+        .form-floating-group textarea.form-control {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.25s ease;
+            padding: 0.9rem 1rem;
+            border: 1.5px solid rgba(44, 122, 94, 0.10);
+            border-radius: 14px;
+            background: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1e2a2a;
+            transition: var(--transition-smooth);
+        }
+
+        .form-floating-group .form-control:focus,
+        .form-floating-group .form-select:focus,
+        .form-floating-group textarea.form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.08);
             outline: none;
+            background: #fcfefe;
         }
-        .create-card .form-input:focus,
-        .create-card .form-textarea:focus,
-        .create-card .form-select:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
-            background: var(--bg-card);
+
+        .form-floating-group .form-control:hover,
+        .form-floating-group .form-select:hover,
+        .form-floating-group textarea.form-control:hover {
+            border-color: rgba(44, 122, 94, 0.25);
         }
-        .create-card .form-input.error,
-        .create-card .form-textarea.error,
-        .create-card .form-select.error {
-            border-color: var(--red);
-            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
-        }
-        .create-card .form-input:disabled,
-        .create-card .form-textarea:disabled,
-        .create-card .form-select:disabled {
-            opacity: 0.6;
+
+        .form-floating-group .form-control:disabled {
+            background: #f4f7f6;
+            opacity: 0.7;
             cursor: not-allowed;
         }
 
-        /* ─── Price with Naira Icon ─── */
-        .price-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .price-wrapper .naira-icon {
-            position: absolute;
-            left: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-muted);
-            pointer-events: none;
-            transition: color var(--transition);
-        }
-        .price-wrapper input {
-            padding-left: 36px;
-        }
-        .price-wrapper input:focus+.naira-icon {
-            color: var(--green);
+        /* ─── HELPER TEXT – FIXED POSITIONING ─── */
+        .form-floating-group .helper-text {
+            display: block;
+            font-size: 0.75rem;
+            color: #7a9490;
+            margin-top: 0.5rem;
+            padding-left: 0.25rem;
+            font-weight: 450;
+            line-height: 1.4;
+            transition: var(--transition-smooth);
         }
 
-        /* ─── Custom Multi-Select (Locations) ─── */
-        .location-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 4px;
+        .form-floating-group .helper-text i {
+            margin-right: 4px;
+            font-size: 0.7rem;
+            color: var(--accent);
+            opacity: 0.6;
         }
-        .location-chip {
+
+        .form-floating-group .helper-text.error {
+            color: #dc3545;
+        }
+
+        .form-floating-group .helper-text.success {
+            color: var(--accent);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   LISTING TYPE – CARD SELECTOR
+                   ────────────────────────────────────────────────────────────── */
+        .listing-type-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 0.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .listing-type-group .form-check-custom {
+            flex: 1 1 auto;
+            min-width: 100px;
+            margin: 0;
+            background: #f6faf8;
+            padding: 0.6rem 0.8rem;
+            border-radius: 14px;
+            border: 1.5px solid transparent;
+            transition: var(--transition-smooth);
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-input);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            gap: 0.5rem;
+            justify-content: center;
         }
-        .location-chip:hover {
-            border-color: var(--green);
-            background: var(--bg-card);
+
+        .listing-type-group .form-check-custom:hover {
+            border-color: rgba(44, 122, 94, 0.20);
+            background: #f0f7f3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 122, 94, 0.06);
         }
-        .location-chip.selected {
-            border-color: var(--green);
-            background: var(--green-bg);
-            color: var(--green);
+
+        .listing-type-group .form-check-custom input:checked~.label-text {
+            color: var(--accent-dark);
+            font-weight: 700;
         }
-        .location-chip .chip-check {
+
+        .listing-type-group .form-check-custom input:checked+.checkmark {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .listing-type-group .form-check-custom input:checked~.checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .listing-type-group .form-check-custom .checkmark {
             width: 18px;
             height: 18px;
-            border-radius: 4px;
-            border: 2px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 6px;
+            border: 2px solid rgba(44, 122, 94, 0.25);
+            background: white;
             flex-shrink: 0;
-            transition: all 0.2s;
-        }
-        .location-chip.selected .chip-check {
-            background: var(--green);
-            border-color: var(--green);
-            color: #fff;
-        }
-        .location-chip .chip-check i {
-            font-size: 11px;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .location-chip.selected .chip-check i {
-            opacity: 1;
-        }
-        .location-chip .chip-desc {
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 400;
-            margin-left: auto;
-        }
-        .dark-mode .location-chip.selected {
-            background: rgba(46, 204, 113, 0.06);
+            position: relative;
+            transition: var(--transition-smooth);
         }
 
-        @media (max-width: 480px) {
-            .location-grid {
+        .listing-type-group .form-check-custom .label-text {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #2d403d;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .listing-type-group .form-check-custom input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        @media (max-width: 576px) {
+            .listing-type-group {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .listing-type-group .form-check-custom .label-text {
+                font-size: 0.75rem;
+                white-space: normal;
+            }
+        }
+
+        #listingTypeDescription {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-dark);
+            padding: 0.25rem 0.5rem;
+            background: rgba(44, 122, 94, 0.05);
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   HOTSPOTS – GRID LAYOUT
+                   ────────────────────────────────────────────────────────────── */
+        .hotspot-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.5rem;
+            max-height: 260px;
+            overflow-y: auto;
+            padding: 0.25rem 0.1rem;
+            border: none;
+        }
+
+        .hotspot-checkboxes .form-check-custom {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 0.8rem;
+            background: #f6faf8;
+            border-radius: 12px;
+            border: 1.5px solid transparent;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .hotspot-checkboxes .form-check-custom:hover {
+            border-color: rgba(44, 122, 94, 0.15);
+            background: #f0f7f3;
+            transform: translateX(2px);
+        }
+
+        .hotspot-checkboxes .form-check-custom input:checked~.checkmark {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .hotspot-checkboxes .form-check-custom input:checked~.checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .hotspot-checkboxes .form-check-custom .checkmark {
+            width: 18px;
+            height: 18px;
+            border-radius: 6px;
+            border: 2px solid rgba(44, 122, 94, 0.20);
+            background: white;
+            flex-shrink: 0;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .hotspot-checkboxes .form-check-custom .label-text {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #1e2a2a;
+            user-select: none;
+        }
+
+        .hotspot-checkboxes .form-check-custom .label-text strong {
+            font-weight: 700;
+            color: #14211f;
+        }
+
+        .hotspot-checkboxes .form-check-custom input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .hotspot-checkboxes::-webkit-scrollbar {
+            width: 4px;
+        }
+        .hotspot-checkboxes::-webkit-scrollbar-track {
+            background: #eef4f1;
+            border-radius: 4px;
+        }
+        .hotspot-checkboxes::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 576px) {
+            .hotspot-checkboxes {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* ─── Badges (Step 3) ─── */
-        .badge-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-            margin-top: 4px;
+        /* ──────────────────────────────────────────────────────────────
+                   PROMOTION CARDS
+                   ────────────────────────────────────────────────────────────── */
+        #advertTypeContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
         }
-        .badge-chip {
+
+        #advertTypeContainer .form-check-custom {
+            flex: 1 1 auto;
+            min-width: 140px;
+            max-width: 220px;
+            margin: 0;
+            padding: 0.6rem 0.8rem;
+            background: #f6faf8;
+            border-radius: 12px;
+            border: 1.5px solid transparent;
+            transition: var(--transition-smooth);
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-input);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            gap: 0.5rem;
         }
-        .badge-chip:hover {
-            border-color: var(--green);
-            background: var(--bg-card);
+
+        #advertTypeContainer .form-check-custom:hover {
+            border-color: rgba(44, 122, 94, 0.15);
+            background: #f0f7f3;
+            transform: translateY(-2px);
         }
-        .badge-chip.selected {
-            border-color: var(--green);
-            background: var(--green-bg);
-            color: var(--green);
+
+        #advertTypeContainer .form-check-custom input:checked~.checkmark {
+            background: var(--accent);
+            border-color: var(--accent);
         }
-        .badge-chip .badge-radio {
+
+        #advertTypeContainer .form-check-custom input:checked~.checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        #advertTypeContainer .form-check-custom .checkmark {
             width: 18px;
             height: 18px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.2s;
-        }
-        .badge-chip.selected .badge-radio {
-            border-color: var(--green);
-        }
-        .badge-chip .badge-radio i {
-            font-size: 10px;
-            opacity: 0;
-            transition: opacity 0.2s;
-            color: var(--green);
-        }
-        .badge-chip.selected .badge-radio i {
-            opacity: 1;
-        }
-        .dark-mode .badge-chip.selected {
-            background: rgba(46, 204, 113, 0.06);
-        }
-
-        /* ─── Custom Checkboxes (Ads) ─── */
-        .ads-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 4px;
-        }
-        .ads-check {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-input);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .ads-check:hover {
-            border-color: var(--green);
-            background: var(--bg-card);
-        }
-        .ads-check.checked {
-            border-color: var(--green);
-            background: var(--green-bg);
-        }
-        .ads-check .check-box {
-            width: 22px;
-            height: 22px;
             border-radius: 6px;
-            border: 2px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: 2px solid rgba(44, 122, 94, 0.20);
+            background: white;
             flex-shrink: 0;
-            transition: all 0.2s;
-            background: var(--bg-card);
-        }
-        .ads-check.checked .check-box {
-            background: var(--green);
-            border-color: var(--green);
-            color: #fff;
-        }
-        .ads-check .check-box i {
-            font-size: 12px;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .ads-check.checked .check-box i {
-            opacity: 1;
-        }
-        .ads-check .ads-label {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-        .ads-check .ads-label small {
-            display: block;
-            font-size: 12px;
-            font-weight: 400;
-            color: var(--text-muted);
-        }
-        .dark-mode .ads-check.checked {
-            background: rgba(46, 204, 113, 0.06);
+            position: relative;
+            transition: var(--transition-smooth);
         }
 
-        /* ─── File Upload (reuse) ─── */
-        .file-drop-zone {
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 28px 20px;
+        #advertTypeContainer .form-check-custom .label-text {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #1e2a2a;
+            user-select: none;
+        }
+
+        #advertTypeContainer .form-check-custom input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        @media (max-width: 576px) {
+            #advertTypeContainer .form-check-custom {
+                flex: 1 1 100%;
+                max-width: none;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   POINTS SUMMARY BAR – ENHANCED
+                   ────────────────────────────────────────────────────────────── */
+        .points-summary {
+            background: linear-gradient(135deg, #f6fbf9, #edf5f1);
+            border-radius: 14px;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid rgba(44, 122, 94, 0.10);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .points-summary:hover {
+            border-color: rgba(44, 122, 94, 0.20);
+        }
+
+        .points-summary .label {
+            font-weight: 700;
+            color: #1e2a2a;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .points-summary .label i {
+            color: var(--accent);
+        }
+
+        .points-summary .total-cost {
+            font-weight: 700;
+            color: var(--accent-dark);
+            font-size: 1rem;
+        }
+
+        .points-summary .total-cost.insufficient {
+            color: #dc3545;
+        }
+
+        .points-summary .balance {
+            font-weight: 600;
+            color: #1e2a2a;
+        }
+
+        .points-summary .balance.insufficient {
+            color: #dc3545;
+        }
+
+        .points-summary .points-badge {
+            background: rgba(44, 122, 94, 0.10);
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent-dark);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   IMAGE DROP AREA – ENHANCED
+                   ────────────────────────────────────────────────────────────── */
+        .drop-area {
+            border: 2px dashed rgba(44, 122, 94, 0.20);
+            border-radius: 16px;
+            padding: 2.5rem 1.5rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: var(--bg-input);
+            transition: var(--transition-smooth);
+            background: #fafcfa;
             position: relative;
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 4px;
-        }
-        .file-drop-zone:hover {
-            border-color: var(--green);
-            background: var(--bg-card);
-        }
-        .file-drop-zone.dragover {
-            border-color: var(--green);
-            background: var(--green-bg);
-            transform: scale(1.01);
-            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08);
-        }
-        .file-drop-zone.has-file {
-            border-color: var(--green);
-            background: var(--green-bg);
-            border-style: solid;
-        }
-        .file-drop-zone .drop-icon {
-            font-size: 36px;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-        .file-drop-zone:hover .drop-icon {
-            color: var(--green);
-        }
-        .file-drop-zone .drop-text {
-            font-size: 14px;
-            color: var(--text-secondary);
-            transition: color var(--transition);
-        }
-        .file-drop-zone .drop-text strong {
-            color: var(--green);
-            cursor: pointer;
-        }
-        .file-drop-zone .drop-hint {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .file-drop-zone .file-preview-container {
-            width: 100%;
-            max-width: 280px;
-            margin-top: 4px;
-        }
-        .file-drop-zone .file-preview {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 10px 16px;
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            width: 100%;
-        }
-        .file-drop-zone .file-preview-image {
-            flex-direction: column;
-            padding: 12px;
-        }
-        .file-drop-zone .file-preview-image img {
-            max-width: 80px;
-            max-height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-        .file-drop-zone .file-preview .file-icon {
-            font-size: 28px;
-            color: var(--green);
-        }
-        .file-drop-zone .file-preview .file-info {
-            flex: 1;
-            text-align: left;
-        }
-        .file-drop-zone .file-preview .file-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            word-break: break-all;
-        }
-        .file-drop-zone .file-preview .file-size {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .file-drop-zone .file-preview .file-remove {
-            background: none;
-            border: none;
-            color: var(--red);
-            cursor: pointer;
-            font-size: 18px;
-            padding: 4px 8px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-        .file-drop-zone .file-preview .file-remove:hover {
-            background: rgba(231, 76, 60, 0.10);
-        }
-        .file-drop-zone .drop-error {
-            color: var(--red);
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: 4px;
-        }
-        .file-drop-zone input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .dark-mode .file-drop-zone {
-            background: var(--bg-input);
-            border-color: var(--border-color);
-        }
-        .dark-mode .file-drop-zone:hover {
-            background: var(--bg-card);
-        }
-        .dark-mode .file-drop-zone.dragover {
-            background: var(--green-bg);
-        }
-        .dark-mode .file-drop-zone.has-file {
-            background: var(--green-bg);
-        }
-        .dark-mode .file-drop-zone .file-preview {
-            background: var(--bg-card);
-            border-color: var(--border-color);
         }
 
-        /* ─── Step 4: Review ─── */
-        .review-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-            transition: border-color var(--transition);
+        .drop-area:hover {
+            border-color: rgba(44, 122, 94, 0.40);
+            background: #f4f9f6;
         }
-        .review-item:last-child {
+
+        .drop-area.drag-over {
+            border-color: var(--accent);
+            background: #eaf7f0;
+            box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.06);
+            transform: scale(1.01);
+        }
+
+        .drop-area i {
+            font-size: 2.8rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: block;
+            opacity: 0.7;
+            transition: var(--transition-smooth);
+        }
+
+        .drop-area:hover i {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .drop-area p {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #3a534e;
+        }
+
+        .drop-area .small {
+            font-size: 0.75rem;
+            color: #7a9490;
+            font-weight: 400;
+        }
+
+        .drop-area .browse-btn {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.3rem 1.2rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+        }
+
+        .drop-area .browse-btn:hover {
+            background: var(--accent-dark);
+            transform: scale(1.02);
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .image-preview img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 12px;
+            border: 2px solid rgba(44, 122, 94, 0.10);
+            object-fit: cover;
+            transition: var(--transition-smooth);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .image-preview img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   REVIEW STEP – CLEAN LAYOUT
+                   ────────────────────────────────────────────────────────────── */
+        #reviewContent {
+            background: #f6faf8;
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid rgba(44, 122, 94, 0.06);
+        }
+
+        #reviewContent .review-item {
+            display: flex;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+        }
+
+        #reviewContent .review-item:last-child {
             border-bottom: none;
         }
-        .review-item .review-label {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-        .review-item .review-value {
-            font-size: 14px;
+
+        #reviewContent .review-label {
             font-weight: 600;
-            color: var(--text-primary);
-            text-align: right;
-            max-width: 60%;
-            word-break: break-word;
-            transition: color var(--transition);
-        }
-        .review-item .review-value .badge-pill {
-            display: inline-block;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            background: var(--bg-input);
-            color: var(--text-secondary);
-        }
-        .review-item .review-value .badge-pill.selected {
-            background: var(--green-bg);
-            color: var(--green);
-        }
-        .review-item .review-value .location-pill {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 500;
-            background: var(--bg-input);
-            color: var(--text-secondary);
-            margin: 2px 4px 2px 0;
-        }
-        .review-item .review-value .location-pill.selected {
-            background: var(--green-bg);
-            color: var(--green);
-        }
-        .review-item .review-value .file-preview-small {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: flex-end;
-        }
-        .review-item .review-value .file-preview-small img {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            object-fit: cover;
-        }
-        .review-item .review-value .file-preview-small span {
-            font-size: 12px;
-            color: var(--text-muted);
+            color: #1e2a2a;
+            min-width: 100px;
+            font-size: 0.82rem;
         }
 
-        .review-divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 4px 0;
-            transition: background var(--transition);
+        #reviewContent .review-value {
+            color: #2d403d;
+            font-weight: 500;
+            font-size: 0.85rem;
         }
 
-        /* ─── Step Actions ─── */
-        .step-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        .step-actions button {
-            padding: 12px 28px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
+        /* ──────────────────────────────────────────────────────────────
+                   BUTTONS – ENHANCED
+                   ────────────────────────────────────────────────────────────── */
+        .btn-primary-custom {
+            background: var(--accent);
             border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            min-width: 120px;
+            padding: 12px 32px;
+            font-weight: 700;
+            border-radius: 40px;
+            transition: var(--transition-smooth);
+            color: white;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 16px rgba(44, 122, 94, 0.18);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: 0.2px;
+            position: relative;
+            overflow: hidden;
         }
-        .step-actions .btn-next {
-            background: var(--green);
-            color: #ffffff;
+
+        .btn-primary-custom::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent);
+            pointer-events: none;
         }
-        .step-actions .btn-next:hover {
-            opacity: 0.9;
-            transform: scale(0.98);
+
+        .btn-primary-custom:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+            color: white;
         }
-        .step-actions .btn-next:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+
+        .btn-primary-custom:active {
+            transform: translateY(0px);
+        }
+
+        .btn-primary-custom:disabled {
+            opacity: 0.6;
             transform: none;
-        }
-        .step-actions .btn-prev {
-            background: var(--bg-input);
-            color: var(--text-secondary);
-        }
-        .step-actions .btn-prev:hover {
-            background: var(--border-color);
-        }
-        .step-actions .btn-submit {
-            background: var(--green);
-            color: #ffffff;
-        }
-        .step-actions .btn-submit:hover {
-            opacity: 0.9;
-            transform: scale(0.98);
-        }
-        .step-actions .btn-submit:disabled {
-            opacity: 0.5;
+            box-shadow: none;
             cursor: not-allowed;
-            transform: none;
         }
 
-        .btn-submit .spinner-btn {
-            display: none;
-        }
-        .btn-submit.loading .spinner-btn {
-            display: inline-block;
-            margin-right: 6px;
-        }
-        .btn-submit.loading .btn-text {
-            display: none;
-        }
-
-        /* ─── Responsive ─── */
-        @media (max-width: 480px) {
-            .create-card {
-                padding: 16px 18px;
-            }
-            .create-card .card-title {
-                font-size: 17px;
-            }
-            .step-actions button {
-                min-width: 100px;
-                font-size: 13px;
-                padding: 10px 16px;
-                flex: 1;
-            }
-            .badge-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        /* ─── Demo note ─── */
-        .demo-note {
-            text-align: center;
-            font-size: 10px;
-            color: var(--text-muted);
-            padding: 8px 0 4px;
-            letter-spacing: 0.3px;
-            background: var(--bg-app);
-            border-top: 1px solid var(--border-color);
-            transition: background var(--transition), color var(--transition), border-color var(--transition);
-        }
-        .demo-note span {
+        .btn-outline-custom {
+            background: transparent;
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 24px;
+            border-radius: 40px;
             font-weight: 600;
-            color: var(--green);
-            transition: color var(--transition);
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline-custom:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            border-color: var(--accent-dark);
+            color: var(--accent-dark);
+            box-shadow: 0 4px 16px rgba(44, 122, 94, 0.08);
+        }
+
+        .btn-outline-custom:active {
+            transform: translateY(0px);
+        }
+
+        .btn-group-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   SKELETON – KEPT CONSISTENT
+                   ────────────────────────────────────────────────────────────── */
+        .skeleton {
+            background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-stat {
+            height: 70px;
+            border-radius: 1rem;
+        }
+        .skeleton-heading {
+            height: 28px;
+            width: 60%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .skeleton-text {
+            height: 16px;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .skeleton-text.short {
+            width: 60%;
+        }
+        .skeleton-text.medium {
+            width: 80%;
+        }
+        .skeleton-btn {
+            height: 48px;
+            width: 120px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        .skeleton-step {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+        }
+        .skeleton-checkbox {
+            height: 20px;
+            width: 20px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   RESPONSIVE TWEAKS
+                   ────────────────────────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .page-headline h1 {
+                font-size: 1.5rem;
+            }
+            .dashboard-card {
+                border-radius: 16px;
+                padding: 1.25rem !important;
+            }
+            .points-card .points-value {
+                font-size: 1.1rem;
+            }
+            #reviewContent .review-label {
+                min-width: 70px;
+                font-size: 0.75rem;
+            }
+            #reviewContent .review-value {
+                font-size: 0.78rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .btn-group-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-group-nav .btn {
+                justify-content: center;
+            }
+            .points-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 0.75rem;
+            }
+            .points-card .points-hint {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   TOOLTIP OVERRIDE (Bootstrap)
+                   ────────────────────────────────────────────────────────────── */
+        .tooltip-inner {
+            background: #14211f;
+            font-weight: 500;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+        }
+        .tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+        .tooltip.bs-tooltip-top .tooltip-arrow::before {
+            border-top-color: #14211f;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   SCROLL TO TOP – refined
+                   ────────────────────────────────────────────────────────────── */
+        .scroll-top-btn {
+            position: fixed;
+            right: 1.5rem;
+            bottom: 1.5rem;
+            z-index: 1080;
+            width: 52px;
+            height: 52px;
+            border: none;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(14px);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .scroll-top-btn:hover {
+            background: var(--accent-dark);
+            transform: translateY(10px) scale(1.05);
+            box-shadow: 0 12px 36px rgba(44, 122, 94, 0.30);
+        }
+
+        .scroll-top-btn.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-top-btn i {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        @media (max-width: 768px) {
+            .scroll-top-btn {
+                right: 1rem;
+                bottom: 5.5rem;
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   BREADCRUMB – preserve
+                   ────────────────────────────────────────────────────────────── */
+        #breadcrumb-placeholder nav {
+            background: transparent !important;
+            padding: 0.75rem 0 0.25rem 0 !important;
+        }
+        #breadcrumb-placeholder .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+        #breadcrumb-placeholder .breadcrumb-item a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        #breadcrumb-placeholder .breadcrumb-item a:hover {
+            color: var(--accent-dark);
+            text-decoration: underline;
+        }
+        #breadcrumb-placeholder .breadcrumb-item.active {
+            color: #5f7775;
+            font-weight: 500;
+        }
+        #breadcrumb-placeholder .breadcrumb-item+.breadcrumb-item::before {
+            color: #b0c6c0;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+                   MISC – extra polish
+                   ────────────────────────────────────────────────────────────── */
+        .form-check-custom {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .form-check-custom input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+        .bg-accent-light {
+            background: var(--accent-light);
+        }
+        .border-accent-light {
+            border-color: rgba(44, 122, 94, 0.10) !important;
+        }
+        .fw-600 {
+            font-weight: 600;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+        .gap-3 {
+            gap: 1rem;
+        }
+
+        /* animated checkmark pulse when selected */
+        .form-check-custom input:checked~.checkmark {
+            animation: checkPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes checkPop {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* subtle floating animation for the card */
+        @keyframes floatIn {
+            0% {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-card {
+            animation: floatIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        /* price input currency prefix */
+        .price-input-wrap {
+            position: relative;
+        }
+
+        .price-input-wrap .currency-prefix {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 700;
+            color: #5f7775;
+            font-size: 0.9rem;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .price-input-wrap .form-control {
+            padding-left: 2.4rem;
+        }
+
+        .price-input-wrap .form-control:focus+.currency-prefix {
+            color: var(--accent);
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
+    <div id="particles-js"></div>
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+    <div id="breadcrumb-placeholder"></div>
 
-        <!-- ===== LOCATION ===== -->
-        <div class="location-bar">
-            <i class="fa-solid fa-location-dot"></i>
-            <div class="loc-text">
-                University of Benin <span>• Ugbowo</span>
+    <main>
+        <div class="container py-4 mb-3">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-xl-9">
+
+                    <!-- ===== SKELETON LOADER ===== -->
+                    <div id="skeletonLoader">
+                        <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5">
+                            <div class="text-center mb-4">
+                                <div class="skeleton" style="width:120px; height:24px; border-radius:40px; margin:0 auto 0.5rem;"></div>
+                                <div class="skeleton skeleton-heading" style="width:60%; margin:0 auto;"></div>
+                                <div class="skeleton skeleton-text" style="width:80%; margin:0.5rem auto;"></div>
+                            </div>
+                            <div class="step-indicator">
+                                <div class="skeleton skeleton-step"></div>
+                                <div class="skeleton skeleton-step"></div>
+                                <div class="skeleton skeleton-step"></div>
+                                <div class="skeleton skeleton-step"></div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="skeleton skeleton-heading" style="width:30%;"></div>
+                                <div class="skeleton" style="height:50px; border-radius:16px; margin-bottom:1rem;"></div>
+                                <div class="skeleton" style="height:50px; border-radius:16px; margin-bottom:1rem;"></div>
+                                <div class="skeleton" style="height:120px; border-radius:16px; margin-bottom:1rem;"></div>
+                                <div class="skeleton" style="height:50px; border-radius:16px; margin-bottom:1rem;"></div>
+                                <div class="d-flex gap-3 mb-3">
+                                    <div class="skeleton" style="height:40px; width:100px; border-radius:30px;"></div>
+                                    <div class="skeleton" style="height:40px; width:100px; border-radius:30px;"></div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div class="skeleton skeleton-btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== REAL CONTENT ===== -->
+                    <div id="realContent" style="display:none;">
+                        <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5" data-aos="fade-up">
+
+                            <!-- HEADER -->
+                            <div class="text-center mb-4">
+                                <span class="badge-verify mb-3"><i class="fas fa-plus-circle me-1"></i> Sell or Request</span>
+                                <div class="page-headline">
+                                    <h1>Create a new listing</h1>
+                                    <p>Fill in the details about your item. We'll help you connect with buyers safely on campus.</p>
+                                </div>
+                            </div>
+
+                            <!-- POINTS CARD -->
+                            <div class="row justify-content-center mb-4">
+                                <div class="col-12 col-sm-8 col-md-6">
+                                    <div class="points-card">
+                                        <span class="points-label">
+                                            <i class="fas fa-coins"></i> Your Points
+                                        </span>
+                                        <span class="points-value" id="pointsBalanceDisplay">0</span>
+                                        <span class="points-hint" id="pointsMessage">Each listing costs 1 point</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP INDICATOR -->
+                            <div class="step-indicator">
+                                <div class="step-indicator-track">
+                                    <div class="step-progress-fill" id="stepProgressFill"></div>
+                                </div>
+
+                                <div class="step active" id="step1Indicator">
+                                    <div class="step-dot">
+                                        <span class="step-number">1</span>
+                                        <span class="step-icon"><i class="fas fa-pen"></i></span>
+                                    </div>
+                                    <span class="step-label">Basic info</span>
+                                </div>
+
+                                <div class="step" id="step2Indicator">
+                                    <div class="step-dot">
+                                        <span class="step-number">2</span>
+                                        <span class="step-icon"><i class="fas fa-map-pin"></i></span>
+                                    </div>
+                                    <span class="step-label">Location</span>
+                                </div>
+
+                                <div class="step" id="step3Indicator">
+                                    <div class="step-dot">
+                                        <span class="step-number">3</span>
+                                        <span class="step-icon"><i class="fas fa-sliders-h"></i></span>
+                                    </div>
+                                    <span class="step-label">Options</span>
+                                </div>
+
+                                <div class="step" id="step4Indicator">
+                                    <div class="step-dot">
+                                        <span class="step-number">4</span>
+                                        <span class="step-icon"><i class="fas fa-check"></i></span>
+                                    </div>
+                                    <span class="step-label">Review</span>
+                                </div>
+                            </div>
+
+                            <!-- FORM STEPS -->
+                            <form id="listingForm" class="mt-4">
+
+                                <!-- STEP 1 -->
+                                <div id="step1" class="form-step active-step">
+                                    <div class="form-step-title"><i class="fas fa-info-circle"></i> Basic information</div>
+                                    <p class="form-step-sub">Tell us what you're selling or looking for.</p>
+
+                                    <div class="form-floating-group">
+                                        <input type="text" class="form-control" name="title" id="title"
+                                        placeholder="e.g., HP Laptop, ECO 211 Textbook" required />
+                                        <label class="form-label" for="title">Title *</label>
+                                        <span class="helper-text"><i class="fas fa-lightbulb"></i> Be specific — include brand, model, or key feature.</span>
+                                    </div>
+
+                                    <div class="form-floating-group">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span id="categoryIconDisplay" style="font-size:1.1rem; width:24px; text-align:center;"></span>
+                                            <select class="form-select" name="category" id="category" required>
+                                                <option value="">Loading categories…</option>
+                                            </select>
+                                        </div>
+                                        <label class="form-label" for="category">Category *</label>
+                                        <span class="helper-text"><i class="fas fa-tag"></i> Choose the most relevant category for your item.</span>
+                                    </div>
+
+                                    <div class="form-floating-group">
+                                        <textarea class="form-control" name="description" id="description"
+                                        rows="4" placeholder="Describe condition, reason for selling, any defects, etc." required></textarea>
+                                        <label class="form-label" for="description">Description *</label>
+                                        <span class="helper-text"><i class="fas fa-pencil-alt"></i> Detailed descriptions help buyers trust you.</span>
+                                    </div>
+
+                                    <div class="form-floating-group">
+                                        <div class="price-input-wrap">
+                                            <input type="text" class="form-control" name="price" id="price"
+                                            placeholder="e.g., 3500" required inputmode="decimal" />
+                                            <span class="currency-prefix">₦</span>
+                                        </div>
+                                        <label class="form-label" for="price">Price (₦) *</label>
+                                        <span class="helper-text" id="priceHelper"><i class="fas fa-coins"></i> Enter amount in Naira. Be fair — students love good deals.</span>
+                                    </div>
+
+                                    <!-- Listing Type -->
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-2" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.3px; color:#1e2a2a;">Listing type *</label>
+                                        <div id="listingTypeGroup" class="listing-type-group"></div>
+                                        <div id="listingTypeDescription" class="helper-text mt-2" style="font-weight:600; color:var(--accent-dark);">
+                                            Selling an item you own.
+                                        </div>
+                                        <span class="helper-text mt-1" style="display:block; font-size:0.7rem; color:#7a9490;"><i class="fas fa-info-circle"></i> Select the type that best describes your listing.</span>
+                                    </div>
+
+                                    <div class="btn-group-nav">
+                                        <span></span>
+                                        <button type="button" class="btn btn-primary-custom next-step" data-bs-toggle="tooltip" title="Next step">
+                                            Next <i class="fas fa-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 2 -->
+                                <div id="step2" class="form-step">
+                                    <div class="form-step-title"><i class="fas fa-map-marker-alt"></i> Where can you meet?</div>
+                                    <p class="form-step-sub">Select one or more safe campus spots where you're comfortable meeting the buyer.</p>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-2" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.3px; color:#1e2a2a;">Campus hotspots *</label>
+                                        <div id="hotspotsContainer" class="hotspot-checkboxes">
+                                            <div class="text-muted">Loading safe meeting spots…</div>
+                                        </div>
+                                        <span class="helper-text mt-2" style="display:block; font-size:0.75rem; color:#7a9490;"><i class="fas fa-shield-alt"></i> Choose locations with CCTV, well-lit, and public — like library, cafeteria, faculty buildings.</span>
+                                    </div>
+
+                                    <div class="btn-group-nav">
+                                        <button type="button" class="btn btn-outline-custom prev-step" data-bs-toggle="tooltip" title="Previous step">
+                                            <i class="fas fa-arrow-left me-2"></i>Previous
+                                        </button>
+                                        <button type="button" class="btn btn-primary-custom next-step" data-bs-toggle="tooltip" title="Next step">
+                                            Next <i class="fas fa-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 3 -->
+                                <div id="step3" class="form-step">
+                                    <div class="form-step-title"><i class="fas fa-tag"></i> Optional extras</div>
+                                    <p class="form-step-sub">Boost your listing's visibility with these options.</p>
+
+                                    <div class="form-floating-group">
+                                        <select class="form-select" name="badge" id="badge">
+                                            <option value=""></option>
+                                        </select>
+                                        <label class="form-label" for="badge">Badge (Optional)</label>
+                                        <span class="helper-text"><i class="fas fa-medal"></i> Badges help your listing stand out.</span>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold mb-2" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.3px; color:#1e2a2a;">Promote your listing</label>
+                                        <div id="advertTypeContainer"></div>
+                                        <span class="helper-text mt-2" style="display:block; font-size:0.75rem; color:#7a9490;"><i class="fas fa-rocket"></i> Select one or both to increase visibility. Points will be deducted from your balance.</span>
+                                        <div id="advertPointsInfo" class="mt-2 small text-muted"></div>
+
+                                        <!-- Points summary bar -->
+                                        <div id="pointsSummaryBar" class="points-summary mt-3" style="display:none;">
+                                            <span class="label"><i class="fas fa-coins"></i> Total cost:</span>
+                                            <span>
+                                                <span class="total-cost" id="totalPointsCost">0</span> point(s)
+                                                <span class="points-badge">base 1 + promotions</span>
+                                            </span>
+                                            <span>
+                                                Balance: <span class="balance" id="pointsBalanceSummary">0</span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-floating-group">
+                                        <label class="form-label fw-bold mb-2" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.3px; color:#1e2a2a; display:block;">Images (Optional)</label>
+                                        <div class="drop-area" id="imageDropArea" data-bs-toggle="tooltip" title="Upload image">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Drag &amp; drop an image here or <span class="browse-btn">Browse</span></p>
+                                            <div class="small text-muted">JPEG, PNG, WEBP up to 2MB</div>
+                                            <input type="file" id="imageInput" accept="image/*" hidden>
+                                        </div>
+                                        <div class="image-preview" id="imagePreview"></div>
+                                        <span class="helper-text mt-1"><i class="fas fa-image"></i> Upload a clear image of your item (optional).</span>
+                                    </div>
+
+                                    <div class="btn-group-nav">
+                                        <button type="button" class="btn btn-outline-custom prev-step" data-bs-toggle="tooltip" title="Previous step">
+                                            <i class="fas fa-arrow-left me-2"></i>Previous
+                                        </button>
+                                        <button type="button" class="btn btn-primary-custom next-step" data-bs-toggle="tooltip" title="Review listing">
+                                            Review <i class="fas fa-eye ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 4 -->
+                                <div id="step4" class="form-step">
+                                    <div class="form-step-title"><i class="fas fa-clipboard-list"></i> Review your listing</div>
+                                    <p class="form-step-sub">Double-check everything before posting.</p>
+
+                                    <div id="reviewContent" class="mb-3"></div>
+
+                                    <div id="reviewPointsSummary" class="points-summary mb-3" style="display:none;">
+                                        <span class="label"><i class="fas fa-coins"></i> Total cost:</span>
+                                        <span>
+                                            <span class="total-cost" id="reviewTotalPointsCost">0</span> point(s)
+                                            <span class="points-badge">base 1 + promotions</span>
+                                        </span>
+                                        <span>
+                                            Balance: <span class="balance" id="reviewPointsBalance">0</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="btn-group-nav col-md-5">
+                                        <button type="button" class="btn btn-outline-custom prev-step" data-bs-toggle="tooltip" title="Previous step">
+                                            <i class="fas fa-arrow-left me-2"></i>Previous
+                                        </button>
+                                        <button type="button" class="btn btn-primary-custom" id="submitListingBtn" data-bs-toggle="tooltip" title="Post listing">
+                                            Post Listing <i class="fas fa-paper-plane ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div> <br><br><br>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </main>
 
-        <!-- ===== MAIN ===== -->
-        <main class="main-content" style="padding-top: 12px;">
-
-            <div class="create-wrapper">
-
-                <!-- ===== CREATE CARD ===== -->
-                <div class="create-card">
-                    <div class="card-title">
-                        <i class="fa-regular fa-plus"></i> Create Listing
-                    </div>
-                    <div class="card-subtitle">List an item for sale, swap, or give away for free</div>
-
-                    <!-- Steps Progress -->
-                    <div class="steps-progress" id="stepsProgress">
-                        <div class="step-dot active" data-step="1">
-                            <span class="dot">1</span>
-                            <span class="label">Details</span>
-                        </div>
-                        <span class="step-line" id="line1"></span>
-                        <div class="step-dot" data-step="2">
-                            <span class="dot">2</span>
-                            <span class="label">Location</span>
-                        </div>
-                        <span class="step-line" id="line2"></span>
-                        <div class="step-dot" data-step="3">
-                            <span class="dot">3</span>
-                            <span class="label">Badges &amp; Image</span>
-                        </div>
-                        <span class="step-line" id="line3"></span>
-                        <div class="step-dot" data-step="4">
-                            <span class="dot">4</span>
-                            <span class="label">Review</span>
-                        </div>
-                    </div>
-
-                    <!-- ===== STEP 1: Details ===== -->
-                    <div class="step-content active" id="step1">
-                        <div class="step-title">📝 Listing Details</div>
-                        <div class="step-desc">Tell us what you're listing. All fields marked with * are required.</div>
-
-                        <form id="step1Form">
-                            <!-- Title -->
-                            <div class="form-group">
-                                <label for="listingTitle">Listing Title <span class="required-star">*</span></label>
-                                <input type="text" id="listingTitle" class="form-input" placeholder="e.g., MacBook Pro 14-inch M3" required />
-                                <div class="help-text" id="titleHelp">Be specific – include brand, model, condition.</div>
-                            </div>
-
-                            <!-- Category -->
-                            <div class="form-group">
-                                <label for="listingCategory">Category <span class="required-star">*</span></label>
-                                <div class="form-select-wrap">
-                                    <select id="listingCategory" class="form-select" required>
-                                        <option value="">Select a category...</option>
-                                        <!-- Populated from dummy backend -->
-                                    </select>
-                                </div>
-                                <div class="help-text" id="categoryHelp">Choose the category that best fits your item.</div>
-                            </div>
-
-                            <!-- Description -->
-                            <div class="form-group">
-                                <label for="listingDescription">Description</label>
-                                <textarea id="listingDescription" class="form-textarea" rows="3" placeholder="Describe your item in detail – condition, specs, reason for selling…"></textarea>
-                                <div class="help-text" id="descHelp">Help buyers understand what you're offering.</div>
-                            </div>
-
-                            <!-- Price -->
-                            <div class="form-group">
-                                <label for="listingPrice">Price <span class="required-star">*</span></label>
-                                <div class="price-wrapper">
-                                    <span class="naira-icon">₦</span>
-                                    <input type="number" id="listingPrice" class="form-input" placeholder="0" min="0" step="100" required />
-                                </div>
-                                <div class="help-text" id="priceHelp">Enter the price in Naira (₦). Set to 0 for free items.</div>
-                            </div>
-
-                            <!-- Listing Type -->
-                            <div class="form-group">
-                                <label for="listingType">Listing Type <span class="required-star">*</span></label>
-                                <div class="form-select-wrap">
-                                    <select id="listingType" class="form-select" required>
-                                        <option value="">Select type...</option>
-                                        <option value="sell">🛒 Sell</option>
-                                        <option value="freebie">🎁 Freebie</option>
-                                        <option value="wanted">🔍 Wanted</option>
-                                        <option value="swap">🔄 Swap</option>
-                                    </select>
-                                </div>
-                                <div class="help-text" id="typeHelp">Choose "Freebie" if you're giving it away for free.</div>
-                            </div>
-
-                            <div class="step-actions">
-                                <button type="button" class="btn-next" id="step1Next">Next <i class="fa-solid fa-chevron-right"></i></button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- ===== STEP 2: Location ===== -->
-                    <div class="step-content" id="step2">
-                        <div class="step-title">📍 Location / Hotspot</div>
-                        <div class="step-desc">Select where on campus this item is located. You can select multiple spots.</div>
-
-                        <div class="form-group">
-                            <label>Select Locations <span class="required-star">*</span></label>
-                            <div class="location-grid" id="locationGrid">
-                                <!-- Populated from dummy backend -->
-                            </div>
-                            <div class="help-text" id="locationHelp">Select at least one location where the item can be found.</div>
-                        </div>
-
-                        <div class="step-actions">
-                            <button type="button" class="btn-prev" id="step2Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
-                            <button type="button" class="btn-next" id="step2Next">Next <i class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                    </div>
-
-                    <!-- ===== STEP 3: Badges & Image ===== -->
-                    <div class="step-content" id="step3">
-                        <div class="step-title">🏷️ Badges &amp; Image</div>
-                        <div class="step-desc">Add a badge to highlight your listing, and upload an image.</div>
-
-                        <!-- Badge -->
-                        <div class="form-group">
-                            <label>Badge <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
-                            <div class="badge-grid" id="badgeGrid">
-                                <!-- Populated from dummy backend -->
-                            </div>
-                            <div class="help-text" id="badgeHelp">A badge helps your listing stand out.</div>
-                        </div>
-
-                        <!-- Ads Checkboxes -->
-                        <div class="form-group">
-                            <label>Promotion Options</label>
-                            <div class="ads-group" id="adsGroup">
-                                <div class="ads-check" data-ads="banner">
-                                    <span class="check-box"><i class="fa-solid fa-check"></i></span>
-                                    <span class="ads-label">
-                                        📢 Banner Ad
-                                        <small>Feature your listing as a banner ad on the home page.</small>
-                                    </span>
-                                </div>
-                                <div class="ads-check" data-ads="hot_sale">
-                                    <span class="check-box"><i class="fa-solid fa-check"></i></span>
-                                    <span class="ads-label">
-                                        🔥 Hot Sale
-                                        <small>Tag your listing as a hot deal for extra visibility.</small>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="help-text" id="adsHelp">Boost your listing's visibility with these options.</div>
-                        </div>
-
-                        <!-- Image Upload -->
-                        <div class="form-group">
-                            <label>Listing Image <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
-                            <div class="file-drop-zone" id="fileDropZone">
-                                <div class="drop-icon"><i class="fa-regular fa-cloud-arrow-up"></i></div>
-                                <div class="drop-text">
-                                    Drop your image here or <strong>browse</strong>
-                                </div>
-                                <div class="drop-hint">JPG, PNG • Max 5MB</div>
-                                <div class="file-preview-container"></div>
-                                <div class="drop-error"></div>
-                                <input type="file" id="listingImage" accept=".jpg,.jpeg,.png,image/*" />
-                            </div>
-                            <div class="help-text" id="imageHelp">Upload a clear photo of your item (optional).</div>
-                        </div>
-
-                        <div class="step-actions">
-                            <button type="button" class="btn-prev" id="step3Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
-                            <button type="button" class="btn-next" id="step3Next">Next <i class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                    </div>
-
-                    <!-- ===== STEP 4: Review ===== -->
-                    <div class="step-content" id="step4">
-                        <div class="step-title">✅ Review &amp; Submit</div>
-                        <div class="step-desc">Please review all the details below before submitting your listing.</div>
-
-                        <div id="reviewContainer">
-                            <!-- Populated by JS -->
-                        </div>
-
-                        <div class="step-actions">
-                            <button type="button" class="btn-prev" id="step4Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
-                            <button type="button" class="btn-submit" id="submitBtn">
-                                <span class="btn-text"><i class="fa-regular fa-paper-plane"></i> Create Listing</span>
-                                <span class="spinner-btn"><i class="fa-solid fa-spinner fa-spin"></i></span>
-                            </button>
-                        </div>
-                    </div>
-
-                </div><!-- /create-card -->
-
-            </div><!-- /create-wrapper -->
-
-        </main>
-
-        <!-- ===== DEMO NOTE ===== -->
-        <div class="demo-note">
-            <span>CampusHub</span> • Create Listing • 4-step form with dummy data
-        </div>
-
+    <!-- Mobile bottom nav -->
+    <div class="dashboard-mobile-actions d-md-none mt-5">
+        <a href="main.html" class="action-link" data-bs-toggle="tooltip" title="Go to dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="create-listing.html" class="action-link active" data-bs-toggle="tooltip" title="Post listing">
+            <i class="fas fa-plus-circle"></i>
+            <span>Post</span>
+        </a>
+        <a href="listings.html" class="action-link" data-bs-toggle="tooltip" title="View listings">
+            <i class="fas fa-list"></i>
+            <span>Listings</span>
+        </a>
     </div>
 
-    <!-- ===== SCRIPTS ===== -->
-    <script src="/assets/js/global.js"></script>
-    <script src="/assets/js/modal.js"></script>
-    <script src="/assets/js/showAlert.js"></script>
-<script src="/assets/js/form-helper.js"></script>
+    <!-- Modals -->
+    <div id="formModal" class="modal-overlay" style="display:none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="formModalTitle">Form Title</h3>
+                <button class="modal-close" id="closeFormModalBtn" data-bs-toggle="tooltip" title="Close form">&times;</button>
+            </div>
+            <div class="modal-body" id="formModalBody"></div>
+            <div class="modal-footer" id="formModalFooter"></div>
+        </div>
+    </div>
+    <div id="confirmModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container confirm-modal-container">
+            <div class="modal-header">
+                <h3 id="confirmModalTitle">Confirm Action</h3>
+                <button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
+            </div>
+            <div class="modal-body" id="confirmModalBody"><p id="confirmMessage"></p></div>
+            <div class="modal-footer" id="confirmModalFooter"></div>
+        </div>
+    </div>
+
+    <button class="scroll-top-btn" type="button" data-scroll-top aria-label="Scroll to top" data-bs-toggle="tooltip" title="Scroll to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js">
+    </script>
+    <script src="../assets/js/main.js">
+    </script>
+
     <script>
-        (function() {
-            'use strict';
+        // ──────────────────────────────────────────────────────────────
+        //  MAIN SCRIPT – UNCHANGED (only UI CSS/HTML was redesigned)
+        // ──────────────────────────────────────────────────────────────
 
-            // ============================================================
-            // DUMMY BACKEND DATA
-            // ============================================================
+        isAuthenticated();
 
-            const DUMMY_CATEGORIES = [
-                { id: 1, name: 'Books & Textbooks' },
-                { id: 2, name: 'Laptops & Computers' },
-                { id: 3, name: 'Electronics' },
-                { id: 4, name: 'Fashion & Clothing' },
-                { id: 5, name: 'Food & Groceries' },
-                { id: 6, name: 'Sports & Fitness' },
-                { id: 7, name: 'Services' },
-                { id: 8, name: 'Roommates & Shared Apartments' },
-                { id: 9, name: 'Furniture' },
-                { id: 10, name: 'Other' },
-            ];
+        let selectedImageFile = null;
 
-            const DUMMY_LOCATIONS = [
-                { id: 1, name: 'Main Gate', description: 'Main entrance' },
-                { id: 2, name: 'Lecture Theatres Complex', description: 'All lecture halls' },
-                { id: 3, name: 'Library', description: 'University library' },
-                { id: 4, name: 'Student Union Building', description: 'SUB' },
-                { id: 5, name: 'Cafeteria', description: 'Main dining area' },
-                { id: 6, name: 'Faculty of Engineering', description: 'Engineering block' },
-                { id: 7, name: 'Faculty of Science', description: 'Science block' },
-                { id: 8, name: 'Faculty of Arts', description: 'Arts block' },
-                { id: 9, name: 'Sports Complex', description: 'Stadium & gym' },
-                { id: 10, name: 'Health Centre', description: 'Clinic' },
-            ];
+        const LOOKUP_URL = CAMPUS_URL + 'get-lookup';
+        const BASE_POINTS_COST = 1;
 
-            const DUMMY_BADGES = [
-                { id: 1, name: '🔥 Hot', value: 'hot' },
-                { id: 2, name: '💰 Bargain', value: 'bargain' },
-                { id: 3, name: '✨ New', value: 'new' },
-                { id: 4, name: '🆓 Free', value: 'free' },
-                { id: 5, name: '⭐ Featured', value: 'featured' },
-            ];
+        injectBreadcrumb('Create Listing');
 
-            // ============================================================
-            // DOM REFS
-            // ============================================================
+        // ---- helpers ----
+        function updateTypeDescription(value) {
+            const map = {
+                'sell': 'Selling an item you own.',
+                'wanted': 'You are looking to buy an item.',
+                'freebie': 'Giving away an item for free.',
+                'service': 'Offering a service (tutoring, repairs, etc.)'
+            };
+            const el = document.getElementById('listingTypeDescription');
+            if (el) el.textContent = map[value] || 'Select the type that best describes your listing.';
+        }
 
-            const steps = {
-                1: document.getElementById('step1'),
-                2: document.getElementById('step2'),
-                3: document.getElementById('step3'),
-                4: document.getElementById('step4'),
+        // ---- Price formatting helpers ----
+        function getRawPrice() {
+            const input = document.getElementById('price');
+            if (!input) return '';
+            let val = input.value;
+            let raw = val.replace(/[^\d.]/g, '');
+            if (raw === '') return '';
+            let num = parseFloat(raw);
+            if (isNaN(num)) return '';
+            return num.toString();
+        }
+
+        function formatNaira(value) {
+            if (value === '' || value === null || value === undefined) return '';
+            let num = parseFloat(value);
+            if (isNaN(num)) return '';
+            return '₦' + num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        }
+
+        function setupPriceInput() {
+            const priceInput = document.getElementById('price');
+            if (!priceInput) return;
+
+            priceInput.addEventListener('input', function(e) {
+                let val = this.value;
+                val = val.replace(/[^\d.]/g, '');
+                let parts = val.split('.');
+                if (parts.length > 2) {
+                    val = parts[0] + '.' + parts.slice(1).join('');
+                }
+                this.value = val;
+            });
+
+            priceInput.addEventListener('blur', function(e) {
+                let val = this.value;
+                if (val === '') return;
+                let num = parseFloat(val);
+                if (isNaN(num)) return;
+                this.value = formatNaira(num);
+            });
+
+            priceInput.addEventListener('focus', function(e) {
+                let val = this.value;
+                let raw = val.replace(/[^\d.]/g, '');
+                this.value = raw;
+                this.select();
+            });
+        }
+
+        // ---- Get current points balance from cookie ----
+        function getPointsBalance() {
+            const user = getUser();
+            return parseInt(user?.point_bal || '0', 10);
+        }
+
+        // ---- Calculate total points needed (base + promotions) ----
+        function calculateTotalPoints() {
+            const container = document.getElementById('advertTypeContainer');
+            if (!container) return BASE_POINTS_COST;
+            const selected = container.querySelectorAll('input[type="checkbox"]:checked');
+            let promoPoints = 0;
+            selected.forEach(cb => promoPoints += parseInt(cb.dataset.points, 10) || 0);
+            return BASE_POINTS_COST + promoPoints;
+        }
+
+        // ---- Update points display and summary bar ----
+        function updatePointsDisplay() {
+            const balance = getPointsBalance();
+            const el = document.getElementById('pointsBalanceDisplay');
+            if (el) el.textContent = balance;
+
+            const total = calculateTotalPoints();
+            const hasPromo = total > BASE_POINTS_COST;
+
+            // Update summary bar (step 3)
+            const summaryBar = document.getElementById('pointsSummaryBar');
+            const totalCostEl = document.getElementById('totalPointsCost');
+            const balanceSummaryEl = document.getElementById('pointsBalanceSummary');
+
+            if (summaryBar) {
+                if (total > 0) {
+                    summaryBar.style.display = 'flex';
+                    if (totalCostEl) {
+                        totalCostEl.textContent = total;
+                        totalCostEl.className = 'total-cost' + (total > balance ? ' insufficient' : '');
+                    }
+                    if (balanceSummaryEl) {
+                        balanceSummaryEl.textContent = balance;
+                        balanceSummaryEl.className = 'balance' + (total > balance ? ' insufficient' : '');
+                    }
+                } else {
+                    summaryBar.style.display = 'none';
+                }
+            }
+
+            // Update review summary (step 4)
+            const reviewSummary = document.getElementById('reviewPointsSummary');
+            const reviewTotalEl = document.getElementById('reviewTotalPointsCost');
+            const reviewBalanceEl = document.getElementById('reviewPointsBalance');
+            if (reviewSummary) {
+                if (total > 0) {
+                    reviewSummary.style.display = 'flex';
+                    if (reviewTotalEl) {
+                        reviewTotalEl.textContent = total;
+                        reviewTotalEl.className = 'total-cost' + (total > balance ? ' insufficient' : '');
+                    }
+                    if (reviewBalanceEl) {
+                        reviewBalanceEl.textContent = balance;
+                        reviewBalanceEl.className = 'balance' + (total > balance ? ' insufficient' : '');
+                    }
+                } else {
+                    reviewSummary.style.display = 'none';
+                }
+            }
+
+            const msgEl = document.getElementById('pointsMessage');
+            if (msgEl) {
+                if (hasPromo) {
+                    msgEl.textContent = `Total: ${total} points (base 1 + promotions)`;
+                } else {
+                    msgEl.textContent = 'Each listing costs 1 point';
+                }
+            }
+
+            updateAdvertPointsInfo();
+            updateStepProgress();
+        }
+
+        // ---- Update step progress bar ----
+        function updateStepProgress() {
+            const fill = document.getElementById('stepProgressFill');
+            if (!fill) return;
+            const pct = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            fill.style.width = pct + '%';
+        }
+
+        // ---- Populate advert types (Banner / Hot Sale) ----
+        function populateAdvertTypes(advertTypes) {
+            const container = document.getElementById('advertTypeContainer');
+            if (!container) return;
+            if (!advertTypes || !advertTypes.length) {
+                container.innerHTML = '<p class="text-muted">No promotion options available.</p>';
+                return;
+            }
+            let html = '';
+            advertTypes.forEach(advert => {
+                html += `
+                        <label class="form-check-custom">
+                            <input type="checkbox" id="advert_${advert.value}" value="${advert.value}" data-points="${advert.points}">
+                            <span class="checkmark"></span>
+                            <span class="label-text">${advert.label} <span class="small text-muted">(${advert.points} pts)</span></span>
+                        </label>
+                    `;
+            });
+            container.innerHTML = html;
+
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    updatePointsDisplay();
+                });
+            });
+            updatePointsDisplay();
+        }
+
+        // ---- Legacy advert points info ----
+        function updateAdvertPointsInfo() {
+            const container = document.getElementById('advertTypeContainer');
+            const info = document.getElementById('advertPointsInfo');
+            if (!container || !info) return;
+
+            const selected = container.querySelectorAll('input[type="checkbox"]:checked');
+            let promoTotal = 0;
+            selected.forEach(cb => promoTotal += parseInt(cb.dataset.points, 10) || 0);
+            const total = BASE_POINTS_COST + promoTotal;
+            const balance = getPointsBalance();
+
+            if (promoTotal > 0) {
+                info.textContent = `Base cost: 1 point + ${promoTotal} promotion point(s) = ${total} total. You have ${balance} points.`;
+                if (total > balance) {
+                    info.style.color = '#dc3545';
+                    info.textContent += ' (Insufficient points!)';
+                } else {
+                    info.style.color = '#2c7a5e';
+                }
+            } else {
+                info.textContent = `Base cost: 1 point. You have ${balance} points.`;
+                info.style.color = '#5f7775';
+            }
+        }
+
+        // ---- Populate listing type radios ----
+        function populateListingTypes(typeChoices) {
+            const container = document.getElementById('listingTypeGroup');
+            if (!container) return;
+            if (!typeChoices || !typeChoices.length) {
+                container.innerHTML = '<p class="text-muted">No listing types available.</p>';
+                return;
+            }
+            let html = '';
+            typeChoices.forEach((type, index) => {
+                const checked = index === 0 ? 'checked' : '';
+                html += `
+                        <label class="form-check-custom radio">
+                            <input type="radio" name="listing_type" value="${escapeHtml(type.value)}" ${checked}>
+                            <span class="checkmark"></span>
+                            <span class="label-text">${escapeHtml(type.label)}</span>
+                        </label>
+                    `;
+            });
+            container.innerHTML = html;
+
+            const first = container.querySelector('input[name="listing_type"]:checked');
+            if (first) {
+                updateTypeDescription(first.value);
+                handlePriceForFreebie(first.value);
+            }
+            container.querySelectorAll('input[name="listing_type"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateTypeDescription(this.value);
+                    handlePriceForFreebie(this.value);
+                });
+            });
+        }
+
+        // ---- Handle freebie price ----
+        function handlePriceForFreebie(value) {
+            const priceInput = document.getElementById('price');
+            if (!priceInput) return;
+            const helper = document.getElementById('priceHelper');
+            if (value === 'freebie') {
+                priceInput.value = '₦0';
+                priceInput.disabled = true;
+                priceInput.style.opacity = '0.6';
+                priceInput.style.cursor = 'not-allowed';
+                priceInput.removeAttribute('required');
+                if (helper) helper.textContent = 'Price is set to ₦0 for freebies.';
+            } else {
+                if (priceInput.disabled) {
+                    priceInput.disabled = false;
+                    priceInput.style.opacity = '1';
+                    priceInput.style.cursor = 'text';
+                    priceInput.value = '';
+                    priceInput.setAttribute('required', 'required');
+                    if (helper) helper.textContent = 'Enter amount in Naira. Be fair – students love good deals.';
+                }
+            }
+        }
+
+        // ---- Wizard state ----
+        let currentStep = 1;
+        const totalSteps = 4;
+        let steps, indicators;
+
+        function initWizard() {
+            steps = document.querySelectorAll('.form-step');
+            indicators = {
+                1: document.getElementById('step1Indicator'),
+                2: document.getElementById('step2Indicator'),
+                3: document.getElementById('step3Indicator'),
+                4: document.getElementById('step4Indicator')
             };
 
-            const dots = document.querySelectorAll('.step-dot');
-            const lines = {
-                1: document.getElementById('line1'),
-                2: document.getElementById('line2'),
-                3: document.getElementById('line3'),
-            };
+            currentStep = 1;
+            updateStepUI();
 
-            const step1Next = document.getElementById('step1Next');
-            const step2Prev = document.getElementById('step2Prev');
-            const step2Next = document.getElementById('step2Next');
-            const step3Prev = document.getElementById('step3Prev');
-            const step3Next = document.getElementById('step3Next');
-            const step4Prev = document.getElementById('step4Prev');
-            const submitBtn = document.getElementById('submitBtn');
-
-            // Step 1 fields
-            const titleInput = document.getElementById('listingTitle');
-            const categorySelect = document.getElementById('listingCategory');
-            const descInput = document.getElementById('listingDescription');
-            const priceInput = document.getElementById('listingPrice');
-            const typeSelect = document.getElementById('listingType');
-
-            // Step 2
-            const locationGrid = document.getElementById('locationGrid');
-
-            // Step 3
-            const badgeGrid = document.getElementById('badgeGrid');
-            const adsChecks = document.querySelectorAll('.ads-check');
-            const fileInput = document.getElementById('listingImage');
-            const fileDropZone = document.getElementById('fileDropZone');
-
-            // Step 4
-            const reviewContainer = document.getElementById('reviewContainer');
-
-            // ============================================================
-            // STATE
-            // ============================================================
-
-            let currentStep = 1;
-            const formData = {
-                title: '',
-                category: '',
-                description: '',
-                price: 0,
-                type: '',
-                locations: [], // array of location ids
-                badge: '',
-                ads: {
-                    banner: false,
-                    hot_sale: false,
-                },
-                image: null,
-                imageName: '',
-            };
-
-            // ============================================================
-            // INIT: Populate dropdowns & grids
-            // ============================================================
-
-            function populateCategories() {
-                categorySelect.innerHTML = '<option value="">Select a category...</option>';
-                DUMMY_CATEGORIES.forEach(cat => {
-                    categorySelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
-                });
-            }
-
-            function populateLocations() {
-                locationGrid.innerHTML = '';
-                DUMMY_LOCATIONS.forEach(loc => {
-                    const chip = document.createElement('div');
-                    chip.className = 'location-chip';
-                    chip.dataset.id = loc.id;
-                    chip.innerHTML = `
-                            <span class="chip-check"><i class="fa-solid fa-check"></i></span>
-                            ${loc.name}
-                            <span class="chip-desc">${loc.description}</span>
-                        `;
-                    chip.addEventListener('click', function() {
-                        this.classList.toggle('selected');
-                        updateLocations();
-                    });
-                    locationGrid.appendChild(chip);
-                });
-            }
-
-            function populateBadges() {
-                badgeGrid.innerHTML = '';
-                DUMMY_BADGES.forEach(badge => {
-                    const chip = document.createElement('div');
-                    chip.className = 'badge-chip';
-                    chip.dataset.value = badge.value;
-                    chip.innerHTML = `
-                            <span class="badge-radio"><i class="fa-solid fa-check"></i></span>
-                            ${badge.name}
-                        `;
-                    chip.addEventListener('click', function() {
-                        document.querySelectorAll('.badge-chip').forEach(b => b.classList.remove('selected'));
-                        this.classList.add('selected');
-                        formData.badge = this.dataset.value;
-                    });
-                    badgeGrid.appendChild(chip);
-                });
-            }
-
-            function initAds() {
-                adsChecks.forEach(check => {
-                    check.addEventListener('click', function() {
-                        this.classList.toggle('checked');
-                        const key = this.dataset.ads;
-                        formData.ads[key] = this.classList.contains('checked');
-                    });
-                });
-            }
-
-            // ============================================================
-            // FILE UPLOAD HANDLER
-            // ============================================================
-
-            function initFileUpload() {
-                const input = fileInput;
-                const zone = fileDropZone;
-
-                // Drag events
-                ['dragenter', 'dragover'].forEach(eventName => {
-                    zone.addEventListener(eventName, e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        zone.classList.add('dragover');
-                    });
-                });
-
-                ['dragleave', 'drop'].forEach(eventName => {
-                    zone.addEventListener(eventName, e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        zone.classList.remove('dragover');
-                    });
-                });
-
-                zone.addEventListener('drop', e => {
-                    const files = e.dataTransfer.files;
-                    if (files.length > 0) {
-                        input.files = files;
-                        handleFileSelection();
-                    }
-                });
-
-                zone.addEventListener('click', e => {
-                    if (e.target.closest('.file-remove')) return;
-                    if (e.target.closest('.file-preview')) return;
-                    input.click();
-                });
-
-                input.addEventListener('change', handleFileSelection);
-
-                zone.addEventListener('click', function(e) {
-                    const removeBtn = e.target.closest('.file-remove');
-                    if (removeBtn) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        input.value = '';
-                        clearFilePreview();
-                        zone.classList.remove('has-file');
-                        formData.image = null;
-                        formData.imageName = '';
-                        const errorEl = zone.querySelector('.drop-error');
-                        if (errorEl) errorEl.textContent = '';
-                    }
-                });
-            }
-
-            function handleFileSelection() {
-                const input = fileInput;
-                const zone = fileDropZone;
-                const file = input.files[0];
-                const errorEl = zone.querySelector('.drop-error');
-                const container = zone.querySelector('.file-preview-container');
-
-                if (!file) {
-                    clearFilePreview();
-                    zone.classList.remove('has-file');
-                    if (errorEl) errorEl.textContent = '';
-                    return;
-                }
-
-                // Validate size (5MB)
-                const maxSize = 5 * 1024 * 1024;
-                if (file.size > maxSize) {
-                    if (errorEl) {
-                        errorEl.textContent = 'File too large. Max 5MB.';
-                    }
-                    input.value = '';
-                    clearFilePreview();
-                    zone.classList.remove('has-file');
-                    return;
-                }
-
-                // Validate type
-                const validTypes = ['image/jpeg', 'image/png'];
-                if (!validTypes.includes(file.type)) {
-                    if (errorEl) {
-                        errorEl.textContent = 'Invalid file type. Please upload JPG or PNG.';
-                    }
-                    input.value = '';
-                    clearFilePreview();
-                    zone.classList.remove('has-file');
-                    return;
-                }
-
-                if (errorEl) errorEl.textContent = '';
-                zone.classList.add('has-file');
-
-                // Store in formData
-                formData.image = file;
-                formData.imageName = file.name;
-
-                // Show preview
-                const isImage = file.type.startsWith('image/');
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    container.innerHTML = `
-                            <div class="file-preview file-preview-image">
-                                <img src="${e.target.result}" alt="${file.name}" />
-                                <div class="file-info" style="text-align:center; margin-top:4px;">
-                                    <div class="file-name">${file.name}</div>
-                                    <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
-                                </div>
-                                <button type="button" class="file-remove" aria-label="Remove file">&times;</button>
-                            </div>
-                        `;
-                    container.querySelector('.file-remove')?.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        input.value = '';
-                        clearFilePreview();
-                        zone.classList.remove('has-file');
-                        formData.image = null;
-                        formData.imageName = '';
-                        if (errorEl) errorEl.textContent = '';
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-
-            function clearFilePreview() {
-                const container = fileDropZone.querySelector('.file-preview-container');
-                if (container) container.innerHTML = '';
-            }
-
-            // ============================================================
-            // STEP NAVIGATION
-            // ============================================================
-
-            function goToStep(step) {
-                // Validate current step before proceeding
-                if (step > currentStep) {
-                    if (!validateStep(currentStep)) {
-                        return;
-                    }
-                }
-
-                // Update visibility
-                Object.keys(steps).forEach(key => {
-                    steps[key].classList.toggle('active', parseInt(key) === step);
-                });
-
-                // Update dots
-                dots.forEach((dot, index) => {
-                    const num = index + 1;
-                    dot.classList.remove('active', 'completed');
-                    if (num === step) dot.classList.add('active');
-                    else if (num < step) dot.classList.add('completed');
-                });
-
-                // Update lines
-                for (let i = 1; i <= 3; i++) {
-                    lines[i].classList.toggle('completed', i < step);
-                }
-
-                currentStep = step;
-
-                // If step 4, render review
-                if (step === 4) {
-                    renderReview();
-                }
-
-                // Scroll to top of card
-                document.querySelector('.create-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-
-            // ============================================================
-            // VALIDATION
-            // ============================================================
-
-            function validateStep(step) {
-                if (step === 1) {
-                    let valid = true;
-
-                    // Title
-                    const title = titleInput.value.trim();
-                    if (!title) {
-                        setHelp('titleHelp', 'Please enter a listing title.', true);
-                        titleInput.classList.add('error');
-                        valid = false;
-                    } else {
-                        setHelp('titleHelp', 'Be specific – include brand, model, condition.', false);
-                        titleInput.classList.remove('error');
-                        formData.title = title;
-                    }
-
-                    // Category
-                    if (!categorySelect.value) {
-                        setHelp('categoryHelp', 'Please select a category.', true);
-                        categorySelect.classList.add('error');
-                        valid = false;
-                    } else {
-                        setHelp('categoryHelp', 'Choose the category that best fits your item.', false);
-                        categorySelect.classList.remove('error');
-                        formData.category = categorySelect.value;
-                    }
-
-                    // Description
-                    formData.description = descInput.value.trim();
-
-                    // Price
-                    const price = parseFloat(priceInput.value);
-                    if (isNaN(price) || price < 0) {
-                        setHelp('priceHelp', 'Please enter a valid price.', true);
-                        priceInput.classList.add('error');
-                        valid = false;
-                    } else {
-                        setHelp('priceHelp', 'Enter the price in Naira (₦). Set to 0 for free items.', false);
-                        priceInput.classList.remove('error');
-                        formData.price = price;
-                    }
-
-                    // Listing Type
-                    if (!typeSelect.value) {
-                        setHelp('typeHelp', 'Please select a listing type.', true);
-                        typeSelect.classList.add('error');
-                        valid = false;
-                    } else {
-                        setHelp('typeHelp', 'Choose "Freebie" if you\'re giving it away for free.', false);
-                        typeSelect.classList.remove('error');
-                        formData.type = typeSelect.value;
-
-                        // If freebie, price = 0 and disable
-                        if (typeSelect.value === 'freebie') {
-                            priceInput.value = 0;
-                            priceInput.disabled = true;
-                            formData.price = 0;
-                            setHelp('priceHelp', 'Price is set to 0 for free items.', false);
-                        } else {
-                            priceInput.disabled = false;
+            document.querySelectorAll('.next-step').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (validateStep(currentStep)) {
+                        if (currentStep < totalSteps) {
+                            currentStep++;
+                            updateStepUI();
+                            if (currentStep === 4) {
+                                populateReview();
+                                updatePointsDisplay();
+                            }
+                            if (currentStep === 3 || currentStep === 4) {
+                                updatePointsDisplay();
+                            }
                         }
                     }
+                });
+            });
 
-                    return valid;
-                }
-
-                if (step === 2) {
-                    const selected = document.querySelectorAll('.location-chip.selected');
-                    if (selected.length === 0) {
-                        setHelp('locationHelp', 'Please select at least one location.', true);
-                        return false;
-                    } else {
-                        setHelp('locationHelp', 'Select at least one location where the item can be found.', false);
-                        return true;
+            document.querySelectorAll('.prev-step').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (currentStep > 1) {
+                        currentStep--;
+                        updateStepUI();
+                        if (currentStep === 3 || currentStep === 4) {
+                            updatePointsDisplay();
+                        }
                     }
-                }
+                });
+            });
 
-                if (step === 3) {
-                    // Badge is optional, image is optional
-                    return true;
-                }
+            document.getElementById('submitListingBtn').addEventListener('click', onSubmitListing);
+            updateStepProgress();
+        }
 
+        function updateStepUI() {
+            steps.forEach((step, idx) => {
+                step.classList.toggle('active-step', idx + 1 === currentStep);
+            });
+            for (let i = 1; i <= totalSteps; i++) {
+                const ind = indicators[i];
+                if (!ind) continue;
+                if (i < currentStep) {
+                    ind.classList.add('completed');
+                    ind.classList.remove('active');
+                } else if (i === currentStep) {
+                    ind.classList.add('active');
+                    ind.classList.remove('completed');
+                } else {
+                    ind.classList.remove('active', 'completed');
+                }
+            }
+            updateStepProgress();
+            document.querySelector('.dashboard-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ---- VALIDATION ----
+        function validateStep(step) {
+            if (step === 1) {
+                const title = document.querySelector('input[name="title"]')?.value.trim();
+                const category = document.querySelector('select[name="category"]')?.value;
+                const desc = document.querySelector('textarea[name="description"]')?.value.trim();
+                const priceRaw = getRawPrice();
+                if (!title) { showToast('Please enter a title.', 'error'); return false; }
+                if (!category) { showToast('Please select a category.', 'error'); return false; }
+                if (!desc) { showToast('Please enter a description.', 'error'); return false; }
+                if (priceRaw === '' || isNaN(parseFloat(priceRaw))) { showToast('Please enter a valid price.', 'error'); return false; }
                 return true;
             }
 
-            function setHelp(id, message, isError) {
-                const el = document.getElementById(id);
-                if (!el) return;
-                el.textContent = message;
-                el.className = 'help-text' + (isError ? ' error' : '');
-            }
-
-            function updateLocations() {
-                const selected = document.querySelectorAll('.location-chip.selected');
-                formData.locations = Array.from(selected).map(el => parseInt(el.dataset.id));
-            }
-
-            // ============================================================
-            // RENDER REVIEW
-            // ============================================================
-
-            function renderReview() {
-                // Gather latest data
-                formData.title = titleInput.value.trim();
-                formData.category = categorySelect.value;
-                formData.description = descInput.value.trim();
-                formData.price = parseFloat(priceInput.value) || 0;
-                formData.type = typeSelect.value;
-
-                const categoryName = DUMMY_CATEGORIES.find(c => c.id == formData.category)?.name || 'Not selected';
-                const typeLabels = {
-                    'sell': '🛒 Sell',
-                    'freebie': '🎁 Freebie',
-                    'wanted': '🔍 Wanted',
-                    'swap': '🔄 Swap'
-                };
-                const typeLabel = typeLabels[formData.type] || formData.type;
-
-                const locationNames = DUMMY_LOCATIONS
-                    .filter(l => formData.locations.includes(l.id))
-                    .map(l => l.name);
-
-                const badgeName = DUMMY_BADGES.find(b => b.value === formData.badge)?.name || 'None selected';
-
-                const adsList = [];
-                if (formData.ads.banner) adsList.push('📢 Banner Ad');
-                if (formData.ads.hot_sale) adsList.push('🔥 Hot Sale');
-
-                const priceDisplay = formData.type === 'freebie' ? '₦0 (Free)' : '₦' + formData.price.toLocaleString();
-
-                reviewContainer.innerHTML = `
-                        <div class="review-item">
-                            <span class="review-label">Title</span>
-                            <span class="review-value">${formData.title || '—'}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Category</span>
-                            <span class="review-value">${categoryName}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Description</span>
-                            <span class="review-value">${formData.description || '—'}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Price</span>
-                            <span class="review-value">${priceDisplay}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Listing Type</span>
-                            <span class="review-value">${typeLabel}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Locations</span>
-                            <span class="review-value">
-                                ${locationNames.length > 0 ? locationNames.map(n => `<span class="location-pill selected">${n}</span>`).join('') : '—'}
-                            </span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Badge</span>
-                            <span class="review-value"><span class="badge-pill ${formData.badge ? 'selected' : ''}">${badgeName}</span></span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Promotions</span>
-                            <span class="review-value">${adsList.length > 0 ? adsList.join(', ') : 'None'}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Image</span>
-                            <span class="review-value">
-                                ${formData.image ? `
-                                    <div class="file-preview-small">
-                                        <img src="${URL.createObjectURL(formData.image)}" alt="${formData.imageName}" />
-                                        <span>${formData.imageName}</span>
-                                    </div>
-                                ` : 'No image uploaded'}
-                            </span>
-                        </div>
-                    `;
-            }
-
-            // ============================================================
-            // SUBMIT
-            // ============================================================
-
-            function submitListing() {
-                submitBtn.disabled = true;
-                submitBtn.classList.add('loading');
-
-                const payload = {
-                    title: formData.title,
-                    category: formData.category,
-                    description: formData.description,
-                    price: formData.price,
-                    type: formData.type,
-                    locations: formData.locations,
-                    badge: formData.badge,
-                    ads: formData.ads,
-                    image: formData.image ? formData.image.name : null,
-                };
-
-                console.log('📦 Listing payload:', payload);
-
-                setTimeout(() => {
-                    submitBtn.classList.remove('loading');
-                    submitBtn.disabled = false;
-
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert.success('🎉 Listing created successfully!', { duration: 4000 });
-                    } else {
-                        alert('Listing created successfully!');
-                    }
-
-                    // Reset form (optional)
-                    // window.location.href = '/explore.html';
-                }, 1500);
-            }
-
-            // ============================================================
-            // EVENT LISTENERS
-            // ============================================================
-
-            // Step 1 → 2
-            step1Next.addEventListener('click', function() {
-                if (validateStep(1)) {
-                    goToStep(2);
-                }
-            });
-
-            // Step 2 → 1
-            step2Prev.addEventListener('click', function() {
-                goToStep(1);
-            });
-
-            // Step 2 → 3
-            step2Next.addEventListener('click', function() {
-                if (validateStep(2)) {
-                    goToStep(3);
-                }
-            });
-
-            // Step 3 → 2
-            step3Prev.addEventListener('click', function() {
-                goToStep(2);
-            });
-
-            // Step 3 → 4
-            step3Next.addEventListener('click', function() {
-                if (validateStep(3)) {
-                    goToStep(4);
-                }
-            });
-
-            // Step 4 → 3
-            step4Prev.addEventListener('click', function() {
-                goToStep(3);
-            });
-
-            // Submit
-            submitBtn.addEventListener('click', function() {
-                // Final validation
-                if (!validateStep(1)) {
-                    goToStep(1);
-                    return;
-                }
-                if (!validateStep(2)) {
-                    goToStep(2);
-                    return;
-                }
-                // Confirm with modal
-                if (typeof Modal !== 'undefined') {
-                    const modal = new Modal({
-                        title: 'Create Listing?',
-                        body: `
-                                <p>You are about to create a listing for <strong>${formData.title}</strong>.</p>
-                                <p style="color:var(--text-muted); font-size:13px;">Please review all details before confirming.</p>
-                            `,
-                        type: 'info',
-                        confirmText: 'Create Listing',
-                        cancelText: 'Cancel',
-                        onConfirm: submitListing
+            if (step === 2) {
+                const container = document.getElementById('hotspotsContainer');
+                if (!container) {
+                    confirmModal.open({
+                        title: 'Error',
+                        message: 'Hotspot container not found. Please refresh the page.',
+                        confirmText: 'Okay',
+                        onConfirm: () => formModal.close()
                     });
-                    modal.open();
-                } else {
-                    if (confirm(`Create listing for "${formData.title}"?`)) {
-                        submitListing();
-                    }
+                    return false;
                 }
-            });
+                const checked = container.querySelectorAll('input[type="checkbox"]:checked');
+                if (checked.length === 0) {
+                    showToast('Please select at least one safe meeting spot.', 'error');
+                    return false;
+                }
+                return true;
+            }
 
-            // Enter key on inputs in step 1
-            document.querySelectorAll('#step1 input, #step1 select, #step1 textarea').forEach(el => {
-                el.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-                        e.preventDefault();
-                        step1Next.click();
+            return true;
+        }
+
+        // ---- Review ----
+        function populateReview() {
+            const title = document.querySelector('input[name="title"]')?.value || '';
+            const catSelect = document.querySelector('select[name="category"]');
+            const catText = catSelect?.options[catSelect.selectedIndex]?.text || '';
+            const desc = document.querySelector('textarea[name="description"]')?.value || '';
+            const priceRaw = getRawPrice();
+            const formattedPrice = formatNaira(priceRaw);
+            const typeRadio = document.querySelector('input[name="listing_type"]:checked');
+            let typeLabel = typeRadio?.value || '';
+            if (typeRadio) {
+                const parent = typeRadio.closest('.form-check-custom');
+                if (parent) {
+                    const lbl = parent.querySelector('.label-text');
+                    if (lbl) typeLabel = lbl.innerText;
+                }
+            }
+            const badgeSelect = document.getElementById('badge');
+            const badge = badgeSelect?.value ? badgeSelect.options[badgeSelect.selectedIndex].text : 'None';
+
+            const container = document.getElementById('hotspotsContainer');
+            const checkedLabels = [];
+            if (container) {
+                container.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                    const parent = cb.closest('.form-check-custom');
+                    if (parent) {
+                        const strong = parent.querySelector('.label-text strong');
+                        if (strong) checkedLabels.push(strong.innerText);
                     }
                 });
-            });
+            }
 
-            // Enter key on step 2 locations (select first)
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && currentStep === 2 && !e.target.closest('input, select, textarea, button')) {
-                    e.preventDefault();
-                    step2Next.click();
-                }
-                if (e.key === 'Enter' && currentStep === 3 && !e.target.closest('input, select, textarea, button')) {
-                    e.preventDefault();
-                    step3Next.click();
-                }
-            });
+            const images = document.getElementById('imageInput')?.files?.length || 0;
+            const hasImage = selectedImageFile !== null || images > 0;
 
-            // Price validation with type
-            typeSelect.addEventListener('change', function() {
-                if (this.value === 'freebie') {
-                    priceInput.value = 0;
-                    priceInput.disabled = true;
-                    setHelp('priceHelp', 'Price is set to 0 for free items.', false);
+            const promoContainer = document.getElementById('advertTypeContainer');
+            let promoLabels = [];
+            if (promoContainer) {
+                promoContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                    const parent = cb.closest('.form-check-custom');
+                    if (parent) {
+                        const lbl = parent.querySelector('.label-text');
+                        if (lbl) promoLabels.push(lbl.textContent.trim());
+                    }
+                });
+            }
+
+            document.getElementById('reviewContent').innerHTML = `
+                    <div class="row g-2">
+                        <div class="col-md-6 review-item"><span class="review-label">Title</span><span class="review-value">${escapeHtml(title)}</span></div>
+                        <div class="col-md-6 review-item"><span class="review-label">Category</span><span class="review-value">${escapeHtml(catText)}</span></div>
+                        <div class="col-12 review-item"><span class="review-label">Description</span><span class="review-value">${escapeHtml(desc)}</span></div>
+                        <div class="col-md-4 review-item"><span class="review-label">Price</span><span class="review-value">${escapeHtml(formattedPrice || '₦0')}</span></div>
+                        <div class="col-md-4 review-item"><span class="review-label">Type</span><span class="review-value">${escapeHtml(typeLabel)}</span></div>
+                        <div class="col-md-4 review-item"><span class="review-label">Badge</span><span class="review-value">${escapeHtml(badge)}</span></div>
+                        <div class="col-12 review-item"><span class="review-label">Meeting spots</span><span class="review-value">${checkedLabels.length ? checkedLabels.join(', ') : 'None'}</span></div>
+                        <div class="col-12 review-item"><span class="review-label">Images</span><span class="review-value">${hasImage ? '✅ Uploaded' : 'None'}</span></div>
+                        ${promoLabels.length ? `<div class="col-12 review-item"><span class="review-label">Promotions</span><span class="review-value">${promoLabels.join(', ')}</span></div>` : ''}
+                    </div>
+                `;
+        }
+
+        // ---- POINTS VALIDATION before submit ----
+        function validatePointsBalance() {
+            const balance = getPointsBalance();
+            const total = calculateTotalPoints();
+
+            if (balance < total) {
+                showToast(
+                    `Insufficient points! You need ${total} point(s) but you only have ${balance}. ` +
+                    `Earn more points by completing transactions or engaging on CampusConnect.`,
+                    'error'
+                );
+                return false;
+            }
+            return true;
+        }
+
+        // ---- Submit ----
+        async function onSubmitListing() {
+            if (!validatePointsBalance()) {
+                const display = document.getElementById('pointsBalanceDisplay');
+                if (display) {
+                    display.style.color = '#dc3545';
+                    setTimeout(() => display.style.color = 'var(--accent)', 3000);
+                }
+                if (currentStep !== 3) {
+                    currentStep = 3;
+                    updateStepUI();
+                    updatePointsDisplay();
+                }
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitListingBtn');
+            const originalHTML = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Posting...';
+
+            const form = document.getElementById('listingForm');
+            const formData = new FormData(form);
+
+            const rawPrice = getRawPrice();
+            formData.set('price', rawPrice);
+
+            if (selectedImageFile) {
+                formData.append('image', selectedImageFile);
+            }
+
+            const type = formData.get('listing_type');
+            if (type === 'freebie') formData.set('price', '0');
+
+            const container = document.getElementById('hotspotsContainer');
+            const hotspotIds = [];
+            if (container) {
+                container.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                    hotspotIds.push(parseInt(cb.value, 10));
+                });
+            }
+            formData.set('hotspot_ids', JSON.stringify(hotspotIds));
+
+            const isBanner = document.querySelector('#advertTypeContainer input[value="banner"]:checked') ? true : false;
+            const isHotSale = document.querySelector('#advertTypeContainer input[value="hot_sale"]:checked') ? true : false;
+            formData.append('is_ads_banner', isBanner ? 'true' : 'false');
+            formData.append('is_hot_sales', isHotSale ? 'true' : 'false');
+
+            const totalPoints = calculateTotalPoints();
+            formData.append('total_points_cost', totalPoints);
+
+            try {
+                const response = await fetchWithAuth(CAMPUS_URL + 'create-listing', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.is_success) {
+                    showToast(result.message || 'Your item has been posted successfully. It will appear in the marketplace within a few minutes.', 'success');
+                    updatePointsDisplay();
+                    resetForm();
+                    fetchAndRenderNotifications();
+                    return;
                 } else {
-                    priceInput.disabled = false;
-                    if (priceInput.value === '0') priceInput.value = '';
-                    setHelp('priceHelp', 'Enter the price in Naira (₦). Set to 0 for free items.', false);
+                    const errors = result.data?.errors || {};
+                    let msg = result.message || 'Failed to create listing.';
+                    if (Object.keys(errors).length) {
+                        msg += '\n\n' + Object.entries(errors)
+                            .map(([field, msgs]) => `${field}: ${msgs.join(', ')}`)
+                            .join('\n');
+                    }
+                    if (msg.toLowerCase().includes('points') || msg.toLowerCase().includes('balance')) {
+                        updatePointsDisplay();
+                    }
+                    showToast(msg, 'error');
+                }
+            } catch (err) {
+                console.error('Error creating listing:', err);
+                showToast('An unexpected error occurred. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalHTML;
+            }
+        }
+
+        // ---- Reset form ----
+        function resetForm() {
+            document.getElementById('listingForm').reset();
+
+            selectedImageFile = null;
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('imageInput').value = '';
+
+            document.querySelectorAll('#hotspotsContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+            const firstRadio = document.querySelector('input[name="listing_type"]');
+            if (firstRadio) {
+                firstRadio.checked = true;
+                const evt = new Event('change', { bubbles: true });
+                firstRadio.dispatchEvent(evt);
+            }
+
+            const badgeSelect = document.getElementById('badge');
+            if (badgeSelect) badgeSelect.value = '';
+
+            const priceInput = document.getElementById('price');
+            if (priceInput) {
+                priceInput.value = '';
+                priceInput.disabled = false;
+                priceInput.style.opacity = '1';
+                priceInput.style.cursor = 'text';
+                priceInput.setAttribute('required', 'required');
+            }
+
+            currentStep = 1;
+            updateStepUI();
+
+            document.getElementById('reviewContent').innerHTML = '';
+
+            document.querySelectorAll('#advertTypeContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updatePointsDisplay();
+
+            const display = document.getElementById('pointsBalanceDisplay');
+            if (display) display.style.color = 'var(--accent)';
+
+            document.querySelector('.dashboard-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ---- Load page data ----
+        async function loadPageData() {
+            const skeleton = document.getElementById('skeletonLoader');
+            const realContent = document.getElementById('realContent');
+            if (!skeleton || !realContent) return;
+
+            skeleton.style.display = 'block';
+            realContent.style.display = 'none';
+
+            try {
+                const response = await fetchWithAuth(LOOKUP_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    deleteAuthCookies();
+                    window.location.href = '../index.html';
+                    return;
+                }
+                if (!response.ok) throw new Error('Failed to fetch lookup data');
+
+                const result = await response.json();
+                if (!result.is_success || !result.data) throw new Error(result.message || 'Invalid response');
+
+                const data = result.data;
+
+                // Categories
+                const catSelect = document.querySelector('select[name="category"]');
+                if (catSelect) {
+                    catSelect.innerHTML = '<option value="">Select a category</option>' +
+                        data.categories.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+                }
+
+                // Hotspots
+                const container = document.getElementById('hotspotsContainer');
+                if (container) {
+                    if (data.hotspots && data.hotspots.length) {
+                        container.innerHTML = data.hotspots.map(hs => `
+                                <label class="form-check-custom">
+                                    <input type="checkbox" name="hotspots" value="${hs.id}">
+                                    <span class="checkmark"></span>
+                                    <span class="label-text">
+                                        <strong>${escapeHtml(hs.name)}</strong> – <span class="small text-muted">${escapeHtml(hs.description)}</span>
+                                    </span>
+                                </label>
+                            `).join('');
+                    } else {
+                        container.innerHTML = '<p class="text-muted mb-0">No hotspots available. Please contact support.</p>';
+                    }
+                }
+
+                // Badges
+                const badgeSelect = document.getElementById('badge');
+                if (badgeSelect) {
+                    badgeSelect.innerHTML = '<option value="">None</option>' +
+                        data.badge_choices.map(b => `<option value="${b.value}">${escapeHtml(b.label)}</option>`).join('');
+                }
+
+                // Listing types
+                populateListingTypes(data.type_choices);
+
+                if (data.advert_type) {
+                    populateAdvertTypes(data.advert_type);
+                }
+
+                setupPriceInput();
+                updatePointsDisplay();
+
+                skeleton.style.display = 'none';
+                realContent.style.display = 'block';
+
+                initWizard();
+                setupImageUpload();
+
+                setTimeout(updatePointsDisplay, 100);
+
+            } catch (err) {
+                console.error('Error loading page data:', err);
+                skeleton.style.display = 'none';
+                if (err.message.includes('Failed to fetch') ||
+                    err.name === 'TypeError' ||
+                    err.message.includes('NetworkError') ||
+                    err.message.includes('network')) {
+                    showNetworkError();
+                } else {
+                    realContent.style.display = 'block';
+                    const errDiv = document.createElement('div');
+                    errDiv.className = 'alert alert-danger m-4';
+                    errDiv.textContent = 'Unable to load categories and hotspots. Please refresh the page.';
+                    document.querySelector('.dashboard-card')?.prepend(errDiv);
+                }
+            }
+        }
+
+        function setupImageUpload() {
+            const dropArea = document.getElementById('imageDropArea');
+            const fileInput = document.getElementById('imageInput');
+            const previewContainer = document.getElementById('imagePreview');
+            if (!dropArea || !fileInput) return;
+
+            const handleFile = (file) => {
+                if (!file) return;
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('Image must be less than 2MB.', 'error');
+                    return false;
+                }
+                const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!allowed.includes(file.type)) {
+                    showToast('Only JPG, PNG, and WEBP images are allowed.', 'error');
+                    return false;
+                }
+                selectedImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                };
+                reader.readAsDataURL(file);
+                return true;
+            };
+
+            dropArea.addEventListener('click', () => fileInput.click());
+
+            dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropArea.classList.add('drag-over');
+            });
+            dropArea.addEventListener('dragleave', () => {
+                dropArea.classList.remove('drag-over');
+            });
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.classList.remove('drag-over');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (handleFile(file)) {
+                        const dt = new DataTransfer();
+                        dt.items.add(file);
+                        fileInput.files = dt.files;
+                    }
                 }
             });
 
-            // ============================================================
-            // INIT
-            // ============================================================
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    handleFile(fileInput.files[0]);
+                } else {
+                    previewContainer.innerHTML = '';
+                    selectedImageFile = null;
+                }
+            });
+        }
 
-            function init() {
-                populateCategories();
-                populateLocations();
-                populateBadges();
-                initAds();
-                initFileUpload();
-
-                // Set initial form data from step 1
-                titleInput.value = '';
-                priceInput.value = '';
-                descInput.value = '';
-
-                console.log('📝 Create Listing page initialized');
-                console.log('💡 4-step form ready');
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                setTimeout(init, 200);
-            }
-
-        })();
+        // ---- Bootstrap ----
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPageData();
+            setInterval(updatePointsDisplay, 5000);
+        });
     </script>
 
 </body>

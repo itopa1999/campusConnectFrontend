@@ -66,7 +66,7 @@ loginForm.addEventListener('submit', async (e) => {
       setTimeout(() => {
         const redirectCookie = getCookie("redirect_after_login");
           if (!redirectCookie) {
-            window.location.href = "/moderator/dashboard.html";
+            window.location.href = "/student/dashboard.html";
             return;
         }
 

@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CampusConnect · Manage Listing</title>
+  <!-- Bootstrap + Icons + Fonts + AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/modal.css">
+  <style>
+
+
+    /* ──────────────────────────────────────────────────────────────
+       DASHBOARD CARD
+       ────────────────────────────────────────────────────────────── */
+    .dashboard-card {
+      background: #ffffff;
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(44, 122, 94, 0.05);
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+    .dashboard-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #4aa882, var(--accent));
+      opacity: 0.4;
+    }
+    .dashboard-card:hover {
+      box-shadow: var(--shadow-card-hover);
+    }
+
+    .card-header-custom {
+      padding: 1rem 1.25rem 0.5rem;
+      border-bottom: none;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .card-header-custom h6 {
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #5f7775;
+      margin: 0;
+    }
+    .card-header-custom i {
+      color: var(--accent);
+      opacity: 0.7;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       POINTS BADGE
+       ────────────────────────────────────────────────────────────── */
+    .points-badge {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      border-radius: 2rem;
+      padding: 0.5rem 1.2rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid rgba(44, 122, 94, 0.08);
+    }
+    .points-badge i {
+      color: var(--accent);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TOGGLE SWITCH – ENHANCED
+       ────────────────────────────────────────────────────────────── */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-switch .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #d1d5db;
+      transition: 0.3s;
+      border-radius: 34px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .toggle-switch .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .toggle-switch input:checked + .slider {
+      background-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(44, 122, 94, 0.2);
+    }
+    .toggle-switch input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    .toggle-switch input:disabled + .slider {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       LISTING IMAGE
+       ────────────────────────────────────────────────────────────── */
+    .listing-image-wrapper {
+      position: relative;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      background: #f1f3f2;
+      aspect-ratio: 4 / 3;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      box-shadow: var(--shadow-soft);
+    }
+    .listing-image-wrapper:hover {
+      transform: scale(1.008);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+    }
+    .listing-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .listing-image-wrapper .image-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #adb5bd;
+    }
+    .listing-image-wrapper .image-placeholder i {
+      font-size: 3.5rem;
+      opacity: 0.3;
+      margin-bottom: 0.5rem;
+    }
+    .listing-image-wrapper .image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.15));
+      pointer-events: none;
+      opacity: 0;
+      transition: var(--transition-smooth);
+    }
+    .listing-image-wrapper:hover .image-overlay {
+      opacity: 1;
+    }
+    .listing-image-wrapper .image-actions {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: var(--transition-smooth);
+    }
+    .listing-image-wrapper:hover .image-actions {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .listing-image-wrapper .image-actions .btn-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      border: none;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+    .listing-image-wrapper .image-actions .btn-icon:hover {
+      background: var(--accent);
+      transform: scale(1.08);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       IMAGE UPLOAD AREA
+       ────────────────────────────────────────────────────────────── */
+    .image-upload-area {
+      border: 2px dashed rgba(44, 122, 94, 0.25);
+      border-radius: 1rem;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      background: #fafcfb;
+    }
+    .image-upload-area:hover {
+      border-color: var(--accent);
+      background: rgba(44, 122, 94, 0.02);
+      transform: translateY(-2px);
+    }
+    .image-upload-area i {
+      color: var(--accent);
+      opacity: 0.6;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       STATUS BADGE
+       ────────────────────────────────────────────────────────────── */
+    .badge-status {
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .badge-active { background: #e3f5ec; color: #1e7b4a; }
+    .badge-sold   { background: #f0f0f0; color: #5a6268; }
+    .badge-expired{ background: #ffe6e5; color: #c23d2e; }
+    .badge-pending { background: #eef2f0; color: #697ce7; }
+
+    /* ──────────────────────────────────────────────────────────────
+       VIEW MODE – LABEL & VALUE
+       ────────────────────────────────────────────────────────────── */
+    .detail-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #7a9490;
+      margin-bottom: 0.15rem;
+    }
+    .detail-value {
+      font-weight: 600;
+      color: #14211f;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .detail-value.price {
+      font-size: 1.4rem;
+      color: var(--accent-dark);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       HOTSPOT CHIPS
+       ────────────────────────────────────────────────────────────── */
+    .hotspot-chip {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      border-radius: 50px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid rgba(44, 122, 94, 0.06);
+      transition: var(--transition-smooth);
+    }
+    .hotspot-chip:hover {
+      background: #d4ece2;
+      transform: translateY(-2px);
+    }
+    .hotspot-chip i {
+      color: var(--accent);
+      font-size: 0.7rem;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       PROMOTION TOGGLES
+       ────────────────────────────────────────────────────────────── */
+    .promotion-toggle-group {
+      background: #f8faf9;
+      border-radius: 1rem;
+      padding: 0.75rem 1.25rem;
+      border: 1px solid rgba(44, 122, 94, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 2rem;
+    }
+    .promotion-toggle-group .toggle-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .promotion-toggle-group .toggle-item .label-text {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #14211f;
+    }
+    .promotion-toggle-group .toggle-item .points-cost {
+      font-size: 0.7rem;
+      color: #7a9490;
+      font-weight: 500;
+    }
+    .promotion-toggle-group .toggle-item .active-promotion-badge {
+      background: var(--accent-light);
+      border: 1px solid var(--accent);
+      border-radius: 2rem;
+      padding: 0.1rem 0.6rem;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--accent-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .promotion-info-text {
+      font-size: 0.8rem;
+      color: #5f7775;
+      margin-top: 0.5rem;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       RESTRICTION WARNING
+       ────────────────────────────────────────────────────────────── */
+    .restriction-warning {
+      background: #fff8e7;
+      border-left: 4px solid #f5b042;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .restriction-warning i {
+      color: #f5b042;
+      font-size: 1.1rem;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       REVIEW ITEM
+       ────────────────────────────────────────────────────────────── */
+    .review-item {
+      padding: 0.75rem 0.25rem;
+      border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+      transition: var(--transition-smooth);
+      border-radius: 10px;
+      margin: 0 -0.25rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    .review-item:last-child { border-bottom: none; }
+    .review-item:hover {
+      background: rgba(44, 122, 94, 0.02);
+      transform: translateX(3px);
+    }
+    .review-item .review-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.15rem;
+    }
+    .review-item .review-header .reviewer {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #14211f;
+    }
+    .review-item .review-header .review-date {
+      font-size: 0.65rem;
+      color: #7a9490;
+    }
+    .review-item .review-header .review-stars {
+      display: inline-flex;
+      gap: 1px;
+      font-size: 0.7rem;
+    }
+    .review-item .review-header .review-stars i {
+      color: #f5b042;
+    }
+    .review-item .review-header .review-stars i.empty {
+      color: #dce0dd;
+    }
+    .review-item .review-comment {
+      font-size: 0.85rem;
+      color: #2d403d;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       EDIT MODE – FORM FLOATING LABELS
+       ────────────────────────────────────────────────────────────── */
+    .form-floating-label {
+      position: relative;
+      margin-bottom: 1.75rem;
+    }
+    .form-floating-label .form-label {
+      position: absolute;
+      top: 0;
+      left: 1rem;
+      transform: translateY(-50%);
+      background: #ffffff;
+      padding: 0 0.5rem;
+      margin: 0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      pointer-events: none;
+      z-index: 2;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      transition: var(--transition-smooth);
+    }
+    .form-floating-label .form-control,
+    .form-floating-label .form-select,
+    .form-floating-label textarea.form-control {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1.5px solid rgba(44, 122, 94, 0.10);
+      border-radius: 14px;
+      background: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #1e2a2a;
+      transition: var(--transition-smooth);
+    }
+    .form-floating-label .form-control:focus,
+    .form-floating-label .form-select:focus,
+    .form-floating-label textarea.form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.08);
+      outline: none;
+      background: #fcfefe;
+    }
+    .form-floating-label .form-control:hover,
+    .form-floating-label .form-select:hover,
+    .form-floating-label textarea.form-control:hover {
+      border-color: rgba(44, 122, 94, 0.25);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       HOTSPOT CHECKBOXES IN EDIT MODE
+       ────────────────────────────────────────────────────────────── */
+    .hotspot-checkboxes {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid rgba(44, 122, 94, 0.08);
+      border-radius: 1rem;
+      padding: 0.75rem;
+      background: white;
+    }
+    .hotspot-checkboxes .form-check {
+      padding: 0.2rem 0;
+      margin: 0;
+    }
+    .hotspot-checkboxes .form-check-input:checked {
+      background-color: var(--accent);
+      border-color: var(--accent);
+    }
+    .hotspot-checkboxes .form-check-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #2d403d;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       BUTTONS
+       ────────────────────────────────────────────────────────────── */
+    .btn-primary-custom {
+      background: var(--accent);
+      border: none;
+      padding: 0.7rem 1.8rem;
+      font-weight: 700;
+      border-radius: 40px;
+      transition: var(--transition-smooth);
+      color: white;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 16px rgba(44, 122, 94, 0.18);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      letter-spacing: 0.2px;
+    }
+    .btn-primary-custom:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(44, 122, 94, 0.25);
+      color: white;
+    }
+    .btn-primary-custom:disabled {
+      opacity: 0.6;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-outline-custom {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .btn-outline-custom:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      border-color: var(--accent-dark);
+      color: var(--accent-dark);
+    }
+    .btn-outline-danger {
+      border-color: #dc3545;
+      color: #dc3545;
+      background: transparent;
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+    }
+    .btn-outline-danger:hover {
+      background: #dc3545;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       LIGHTBOX
+       ────────────────────────────────────────────────────────────── */
+    .image-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(20px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      padding: 2rem;
+      cursor: pointer;
+    }
+    .image-lightbox.active {
+      display: flex;
+      opacity: 1;
+    }
+    .image-lightbox .lightbox-content {
+      max-width: 92vw;
+      max-height: 85vh;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+      transform: scale(0.92) translateY(12px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+      cursor: default;
+      position: relative;
+      background: #111;
+      opacity: 0;
+    }
+    .image-lightbox.active .lightbox-content {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+    .image-lightbox .lightbox-content img {
+      display: block;
+      max-width: 92vw;
+      max-height: 85vh;
+      object-fit: contain;
+      width: auto;
+      height: auto;
+    }
+    .image-lightbox .lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+    .image-lightbox .lightbox-close:hover {
+      background: rgba(255,255,255,0.20);
+      transform: rotate(90deg);
+    }
+    .image-lightbox .lightbox-caption {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.8rem;
+      pointer-events: none;
+      padding: 0 1.5rem;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       SKELETON
+       ────────────────────────────────────────────────────────────── */
+    .skeleton {
+      background: linear-gradient(90deg, #e8e6df 25%, #f0eee8 50%, #e8e6df 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .skeleton-image {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: var(--card-radius);
+    }
+    .skeleton-title { height: 30px; width: 70%; margin-bottom: 1rem; }
+    .skeleton-text { height: 14px; margin-bottom: 0.5rem; }
+    .skeleton-text.short { width: 60%; }
+    .skeleton-text.medium { width: 80%; }
+    .skeleton-price { height: 38px; width: 40%; margin-bottom: 1rem; }
+    .skeleton-seller { height: 120px; border-radius: var(--card-radius); margin-bottom: 1rem; }
+    .skeleton-badge { height: 26px; width: 80px; border-radius: 50px; display: inline-block; margin-right: 0.4rem; }
+    .skeleton-review { height: 72px; border-radius: 10px; margin-bottom: 0.5rem; }
+    .skeleton-chip { height: 30px; width: 100px; border-radius: 50px; display: inline-block; margin-right: 0.3rem; margin-bottom: 0.3rem; }
+
+    /* ──────────────────────────────────────────────────────────────
+       SCROLL TOP
+       ────────────────────────────────────────────────────────────── */
+    .scroll-top-btn {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 1080;
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 28px rgba(44,122,94,0.25);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px);
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+    .scroll-top-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(10px) scale(1.05);
+      box-shadow: 0 12px 36px rgba(44,122,94,0.30);
+    }
+    .scroll-top-btn.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    @media (max-width: 768px) {
+      .scroll-top-btn {
+        right: 1rem;
+        bottom: 5.5rem;
+        width: 44px;
+        height: 44px;
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       RESPONSIVE
+       ────────────────────────────────────────────────────────────── */
+    @media (max-width: 992px) {
+      .listing-detail-sidebar { margin-top: 2rem; }
+    }
+    @media (max-width: 768px) {
+      .price-display .amount { font-size: 1.5rem; }
+      .promotion-toggle-group { flex-direction: column; gap: 0.75rem; }
+      .image-lightbox { padding: 1rem; }
+      .image-lightbox .lightbox-content { max-width: 98vw; max-height: 80vh; }
+      .image-lightbox .lightbox-content img { max-width: 98vw; max-height: 80vh; }
+      .image-lightbox .lightbox-close { top: 10px; right: 12px; width: 36px; height: 36px; font-size: 1.2rem; }
+      .listing-image-wrapper .image-actions { opacity: 1; transform: translateY(0); }
+      .listing-image-wrapper .image-actions .btn-icon { width: 34px; height: 34px; font-size: 0.7rem; }
+    }
+    @media (max-width: 576px) {
+      .dashboard-card { border-radius: 16px; padding: 0.75rem !important; }
+      .points-badge { font-size: 0.8rem; padding: 0.3rem 0.8rem; }
+      .detail-value.price { font-size: 1.2rem; }
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       BREADCRUMB – preserve
+       ────────────────────────────────────────────────────────────── */
+    #breadcrumb-placeholder nav {
+      background: transparent !important;
+      padding: 0.75rem 0 0.25rem 0 !important;
+    }
+    #breadcrumb-placeholder .breadcrumb {
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      font-size: 0.8rem;
+    }
+    #breadcrumb-placeholder .breadcrumb-item a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    #breadcrumb-placeholder .breadcrumb-item a:hover {
+      color: var(--accent-dark);
+      text-decoration: underline;
+    }
+    #breadcrumb-placeholder .breadcrumb-item.active {
+      color: #5f7775;
+      font-weight: 500;
+    }
+    #breadcrumb-placeholder .breadcrumb-item+.breadcrumb-item::before {
+      color: #b0c6c0;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       TOOLTIP
+       ────────────────────────────────────────────────────────────── */
+    .tooltip-inner {
+      background: #14211f;
+      font-weight: 500;
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+    }
+    .tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+    .tooltip.bs-tooltip-top .tooltip-arrow::before {
+      border-top-color: #14211f;
+    }
+
+    /* ──────────────────────────────────────────────────────────────
+       MISC
+       ────────────────────────────────────────────────────────────── */
+    .text-accent { color: var(--accent); }
+    .fw-700 { font-weight: 700; }
+    .gap-1 { gap: 0.25rem; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 1rem; }
+    .error-icon { font-size: 4rem; color: #f5b042; }
+    .divider-dash { border: none; border-top: 1.5px dashed rgba(44,122,94,0.10); margin: 1rem 0; }
+
+    /* ─── Mobile nav tweaks ─── */
+    .dashboard-mobile-actions .action-link.active {
+      background: var(--accent);
+      color: white;
+    }
+    .dashboard-mobile-actions .action-link.active i {
+      color: white;
+    }
+
+    .expires-soon {
+      color: #dc3545;
+      font-weight: 600;
+    }
+    .expires-soon i {
+      color: #dc3545;
+    }
+    .expires-normal {
+      color: #5f7775;
+    }
+  </style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<div id="nav-placeholder"></div>
+<div id="breadcrumb-placeholder"></div>
+
+<main>
+  <div class="container py-4 mb-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+
+        <!-- SKELETON LOADER -->
+        <div id="skeletonLoader">
+          <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+              <div class="skeleton" style="width:140px; height:48px; border-radius:40px;"></div>
+              <div class="d-flex align-items-center gap-3">
+                <div class="skeleton" style="width:80px; height:24px;"></div>
+                <div class="skeleton" style="width:52px; height:26px; border-radius:34px;"></div>
+              </div>
+            </div>
+            <div class="skeleton skeleton-text" style="width:40%;"></div>
+            <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 mb-4">
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="skeleton" style="height:220px; border-radius:1.25rem;"></div>
+                  <div class="skeleton" style="height:60px; border-radius:1rem; margin-top:1rem;"></div>
+                </div>
+                <div class="col-md-7">
+                  <div class="skeleton skeleton-heading" style="width:70%;"></div>
+                  <div class="skeleton skeleton-text" style="width:50%;"></div>
+                  <div class="skeleton skeleton-text" style="width:40%;"></div>
+                  <div class="mt-3 d-flex gap-2">
+                    <div class="skeleton skeleton-btn"></div>
+                    <div class="skeleton skeleton-btn"></div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="skeleton skeleton-heading"></div>
+                  <div class="skeleton skeleton-text"></div>
+                  <div class="skeleton skeleton-text"></div>
+                </div>
+                <div class="col-md-6">
+                  <div class="skeleton skeleton-heading"></div>
+                  <div class="skeleton skeleton-text"></div>
+                  <div class="skeleton skeleton-text"></div>
+                </div>
+              </div>
+              <div class="skeleton skeleton-text" style="width:30%;"></div>
+              <div class="d-flex gap-2">
+                <div class="skeleton" style="height:36px; width:120px; border-radius:40px;"></div>
+                <div class="skeleton" style="height:36px; width:120px; border-radius:40px;"></div>
+                <div class="skeleton" style="height:36px; width:120px; border-radius:40px;"></div>
+              </div>
+              <div class="d-flex justify-content-end mt-4">
+                <div class="skeleton skeleton-btn"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ERROR STATE -->
+        <div id="errorState" class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 text-center" style="display: none;">
+          <div class="py-5">
+            <i class="fas fa-exclamation-triangle error-icon mb-4"></i>
+            <h3>Listing not found</h3>
+            <p class="text-muted" id="errorMessage">The listing you are looking for does not exist or you don't have permission to view it.</p>
+            <a href="main.html" class="btn btn-primary-custom mt-3" style="width:auto; padding:0.6rem 2rem;"><i class="fas fa-arrow-left me-2"></i>Go to Dashboard</a>
+          </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div id="listingContent" style="display: none;">
+
+          <!-- Header: Points & Edit Toggle -->
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <div class="points-badge"><i class="fas fa-coins"></i> Points: <span id="userPoints">0</span></div>
+            <div class="d-flex align-items-center gap-3">
+              <span class="fw-semibold" style="font-size:0.85rem; color:#5f7775;">Edit mode</span>
+              <label class="toggle-switch" data-bs-toggle="tooltip" title="Toggle edit mode">
+                <input type="checkbox" id="editModeToggle" disabled>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Restriction warning (edit mode) -->
+          <div id="editRestrictionWarning" class="restriction-warning" style="display: none;"></div>
+
+          <!-- Main card -->
+          <div class="dashboard-card shadow-sm rounded-4 p-4 p-md-5 mb-4">
+
+            <!-- Image + Quick actions row -->
+            <div class="row mb-4">
+              <div class="col-md-5">
+                <div class="listing-image-wrapper" id="imageContainer" role="button" tabindex="0" aria-label="View listing image full size">
+                  <img id="listingImage" src="" alt="Listing image" style="display: none;">
+                  <div id="imagePlaceholder" class="image-placeholder">
+                    <i class="fas fa-image"></i>
+                    <p>No image uploaded</p>
+                  </div>
+                  <div class="image-overlay"></div>
+                  <div class="image-actions">
+                    <button class="btn-icon" id="expandImageBtn" data-bs-toggle="tooltip" title="View full size">
+                      <i class="fas fa-expand"></i>
+                    </button>
+                  </div>
+                </div>
+                <div id="imageUploadArea" class="image-upload-area mt-3 d-none" data-bs-toggle="tooltip" title="Change image">
+                  <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                  <p class="mb-0 small">Click to change image (JPEG, PNG)</p>
+                  <input type="file" id="imageInput" accept="image/*" hidden>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="d-flex justify-content-between align-items-start flex-wrap">
+                  <div class="d-flex align-items-center flex-wrap gap-2">
+                    <h2 class="fw-bold mb-0" id="listingTitleDisplay" style="font-size:1.4rem; color:#14211f;"></h2>
+                    <div id="promotionBadges" class="d-flex gap-1"></div>
+                  </div>
+                  <span class="badge-status" id="statusBadge">Active</span>
+                </div>
+                <div class="text-muted small mb-3">Listing ID: <span id="listingIdBadge">--</span> · Created: <span id="createdDate">--</span>
+                <span>· Expires: <span id="expiresDate">--</span></span>
+                <span id="expiresIcon" class="ms-1"></span></div>
+                <div class="mt-3 d-flex flex-wrap gap-2">
+                  <button id="statusActionBtn" class="btn btn-outline-custom" data-bs-toggle="tooltip" title="Update status">Mark as sold</button>
+                  <button id="deleteListingBtn" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Delete listing">Delete listing</button>
+                </div>
+              </div>
+            </div>
+
+            <hr class="divider-dash">
+
+            <!-- ─── VIEW MODE ─── -->
+            <div id="viewMode">
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div><div class="detail-label">Title</div><div class="detail-value" id="titleView"></div></div>
+                  <div><div class="detail-label">Category</div><div class="detail-value" id="categoryView"></div></div>
+                  <div><div class="detail-label">Price</div><div class="detail-value price" id="priceView"></div></div>
+                  <div><div class="detail-label">Type</div><div class="detail-value" id="listingTypeView"></div></div>
+                </div>
+                <div class="col-md-6">
+                  <div><div class="detail-label">Description</div><div class="detail-value" id="descView" style="white-space: pre-wrap; font-weight:400;"></div></div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div class="detail-label">Current badge</div>
+                <div><span id="currentBadge" class="badge bg-secondary" style="font-size:0.85rem; padding:0.4rem 1rem;">None</span></div>
+              </div>
+
+              <div class="mb-4">
+                <div class="detail-label">Safe meeting spots</div>
+                <div id="hotspotsView" class="d-flex flex-wrap gap-2 mt-1"></div>
+              </div>
+
+              <!-- Promotions -->
+              <div class="mt-4 pt-3 border-top">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+                  <h5 class="mb-0 fw-bold" style="font-size:1rem; color:#14211f;"><i class="fas fa-bullhorn me-2 text-accent"></i>Promotions</h5>
+                  <div class="promotion-toggle-group">
+                    <div class="toggle-item">
+                      <span class="label-text">Banner</span>
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="bannerToggle" disabled>
+                        <span class="slider"></span>
+                      </label>
+                      <span class="points-cost" id="bannerCost"></span>
+                      <span class="active-promotion-badge" id="bannerActiveBadge" style="display:none;">Active</span>
+                    </div>
+                    <div class="toggle-item">
+                      <span class="label-text">Hot Sale</span>
+                      <label class="toggle-switch">
+                        <input type="checkbox" id="hotSaleToggle" disabled>
+                        <span class="slider"></span>
+                      </label>
+                      <span class="points-cost" id="hotSaleCost"></span>
+                      <span class="active-promotion-badge" id="hotSaleActiveBadge" style="display:none;">Active</span>
+                    </div>
+                  </div>
+                </div>
+                <div id="promotionInfo" class="promotion-info-text"></div>
+              </div>
+
+              <!-- Auto-Reactivation -->
+              <div class="mt-3 pt-3 border-top">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                  <div>
+                    <h5 class="mb-1 fw-bold" style="font-size:0.95rem; color:#14211f;"><i class="fas fa-sync-alt me-2 text-warning"></i>Auto-Reactivation</h5>
+                    <p class="text-muted small mb-0">Automatically reactivate when expired (costs 1 point each time).</p>
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-light text-dark" id="autoReactivateStatus" style="font-size:0.7rem; padding:0.3rem 0.8rem;">Off</span>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="autoReactivateToggle" disabled>
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reviews -->
+              <div class="mt-4 pt-3 border-top">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <h5 class="mb-0 fw-bold" style="font-size:1rem; color:#14211f;"><i class="fas fa-star me-2" style="color:#f5b042;"></i>Reviews</h5>
+                  <div>
+                    <span class="fw-bold" id="avgRatingDisplay">0.0</span>
+                    <span class="text-muted small">(avg)</span>
+                    <span class="ms-2 text-muted small" id="reviewCountDisplay">0 reviews</span>
+                  </div>
+                </div>
+                <div id="reviewsList" class="mt-2"></div>
+              </div> <br><br>
+            </div>
+
+            <!-- ─── EDIT MODE ─── -->
+            <div id="editMode" class="d-none">
+              <div class="restriction-warning" id="editRestrictionWarning" style="display: none;"></div>
+
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="form-floating-label">
+                    <input type="text" class="form-control" id="titleEdit" placeholder=" ">
+                    <label class="form-label required" for="titleEdit">Title</label>
+                  </div>
+                  <div class="form-floating-label">
+                    <select class="form-select" id="categoryEdit">
+                      <option value="">Select category</option>
+                    </select>
+                    <label class="form-label required" for="categoryEdit">Category</label>
+                  </div>
+                  <div class="form-floating-label">
+                    <input type="number" class="form-control" id="priceEdit" step="0.01" placeholder=" ">
+                    <label class="form-label required" for="priceEdit">Price (₦)</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating-label">
+                    <textarea class="form-control" id="descEdit" rows="4" placeholder=" "></textarea>
+                    <label class="form-label required" for="descEdit">Description</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Badge dropdown -->
+              <div class="form-floating-label mt-3">
+                <select class="form-select" id="badgeSelect">
+                  <option value="">None</option>
+                </select>
+                <label class="form-label" for="badgeSelect">Badge</label>
+              </div>
+
+              <!-- Hotspots in edit mode -->
+              <div class="mt-4">
+                <label class="form-label fw-semibold" style="font-size:0.85rem; color:#14211f;">Safe meeting spots</label>
+                <div id="hotspotsEditArea">
+                  <div class="hotspot-checkboxes" id="hotspotsCheckboxes"></div>
+                </div>
+              </div>
+
+              <!-- Save button -->
+              <div class="d-flex justify-content-end gap-3 mt-4">
+                <button id="saveBasicBtn" class="btn btn-primary-custom px-4 d-none" data-bs-toggle="tooltip" title="Save changes">Save changes</button>
+              </div>
+            </div>
+          </div> <!-- end main card -->
+        </div> <!-- end listingContent -->
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Mobile bottom nav -->
+<div class="dashboard-mobile-actions d-md-none mt-5">
+  <a href="main.html" class="action-link" data-bs-toggle="tooltip" title="Go home"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="create-listing.html" class="action-link" data-bs-toggle="tooltip" title="Post listing"><i class="fas fa-plus-circle"></i><span>Post</span></a>
+  <a href="listings.html" class="action-link" data-bs-toggle="tooltip" title="View listings"><i class="fas fa-list"></i><span>Listings</span></a>
+</div>
+
+<!-- Modals -->
+<div id="formModal" class="modal-overlay" style="display: none;"><div class="modal-container"><div class="modal-header"><h3 id="formModalTitle">Form</h3><button class="modal-close" data-bs-toggle="tooltip" title="Close form">&times;</button></div><div class="modal-body"></div><div class="modal-footer"></div></div></div>
+<div id="confirmModal" class="modal-overlay" style="display: none;">
+  <div class="modal-container confirm-modal-container">
+    <div class="modal-header">
+      <h3 id="confirmModalTitle">Confirm Action</h3>
+      <button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button>
+    </div>
+    <div class="modal-body" id="confirmModalBody">
+      <p id="confirmMessage"></p>
+    </div>
+    <div class="modal-footer" id="confirmModalFooter"></div>
+  </div>
+</div>
+
+<!-- Image Lightbox -->
+<div id="imageLightbox" class="image-lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="lightbox-content" onclick="event.stopPropagation();">
+    <button class="lightbox-close" id="lightboxCloseBtn" aria-label="Close image viewer">
+      <i class="fas fa-times"></i>
+    </button>
+    <img id="lightboxImg" src="" alt="Enlarged view" />
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
+<button class="scroll-top-btn" data-scroll-top data-bs-toggle="tooltip" title="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+<!-- Scripts (unchanged logic) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+  // ──────────────────────────────────────────────────────────────
+  //  ALL JAVASCRIPT REMAINS EXACTLY AS PROVIDED
+  //  (Only the HTML/CSS have been redesigned)
+  // ──────────────────────────────────────────────────────────────
+
+  isAuthenticated();
+  injectBreadcrumb('Manage Listing');
+  const user = getUser();
+  const LOOKUP_URL = CAMPUS_URL + 'get-lookup';
+  const LISTING_DETAIL_URL = CAMPUS_URL + 'listing';
+  const AUTO_REACTIVATE_URL = CAMPUS_URL + 'listing-auto-reactivate';
+
+  let listingData = {};
+  let userPoints = 0;
+  let allCategories = [];
+  let allHotspots = [];
+  let allBadgeChoices = [];
+  let allAdvertTypes = [];
+
+  // ─── Lightbox controls ──────────────────────────────────────
+  const lightbox = document.getElementById('imageLightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxCaption = document.getElementById('lightboxCaption');
+  let lightboxOpen = false;
+
+  function openLightbox(src, caption) {
+    if (!src) return;
+    lightboxImg.src = src;
+    lightboxImg.alt = caption || 'Enlarged view';
+    lightboxCaption.textContent = caption || '';
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    lightboxOpen = true;
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+    lightboxOpen = false;
+  }
+
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  document.getElementById('lightboxCloseBtn').addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && lightboxOpen) {
+      closeLightbox();
+    }
+  });
+
+  // ─── Helpers ────────────────────────────────────────────────
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+  }
+
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+  }
+
+  function showErrorState(message) {
+    const el = document.getElementById('errorState');
+    if (el) {
+      el.style.display = 'block';
+      document.getElementById('errorMessage').innerText = message;
+    } else {
+      showToast(message, 'error');
+    }
+  }
+
+  // ─── Advert (promotion) helpers ────────────────────────────
+  function populateAdvertTypes(advertTypes, currentFlags) {
+    const container = document.getElementById('advertTypeContainer');
+    if (!container) return;
+    if (!advertTypes || !advertTypes.length) {
+      container.innerHTML = '<p class="text-muted">No promotion options available.</p>';
+      return;
+    }
+    let html = '';
+    advertTypes.forEach(advert => {
+      const value = advert.value;
+      const checked = (value === 'banner' && currentFlags.is_ads_banner) ||
+                      (value === 'hot_sale' && currentFlags.is_hot_sales) ? 'checked' : '';
+      html += `
+        <div class="form-check form-check-custom">
+          <input class="form-check-input" type="checkbox" id="advert_${value}" value="${value}" data-points="${advert.points}" ${checked}>
+          <label class="form-check-label" for="advert_${value}">
+            ${advert.label} (costs ${advert.points} points)
+          </label>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', updateAdvertPointsInfo);
+    });
+    updateAdvertPointsInfo();
+  }
+
+  function updateAdvertPointsInfo() {
+    const container = document.getElementById('advertTypeContainer');
+    const info = document.getElementById('advertPointsInfo');
+    if (!container || !info) return;
+    const selected = container.querySelectorAll('input[type="checkbox"]:checked');
+    let total = 0;
+    selected.forEach(cb => total += parseInt(cb.dataset.points, 10));
+    const points = parseInt(user?.point_bal || '0', 10);
+    if (total > 0) {
+      info.textContent = `Selected promotions will deduct ${total} point(s) from your balance. You have ${points} points.`;
+      info.style.color = total > points ? '#dc3545' : '#2c7a5e';
+    } else {
+      info.textContent = '';
+    }
+  }
+
+  // ─── Render view mode ──────────────────────────────────────
+  function renderViewMode() {
+    // --- Reviews ---
+    const avgRating = listingData.avg_rating || 0;
+    const reviews = listingData.reviews || [];
+    document.getElementById('avgRatingDisplay').innerText = avgRating.toFixed(1);
+    document.getElementById('reviewCountDisplay').innerText = reviews.length + ' reviews';
+    const reviewsContainer = document.getElementById('reviewsList');
+    if (reviews.length === 0) {
+      reviewsContainer.innerHTML = '<p class="text-muted small mb-0">No reviews yet.</p>';
+    } else {
+      reviewsContainer.innerHTML = reviews.map(r => `
+        <div class="review-item">
+          <div class="review-header">
+            <span class="reviewer">${escapeHtml(r.from_user)}</span>
+            <span class="review-stars">${renderStars(r.rating)}</span>
+            <span class="review-date">${r.created_at}</span>
+          </div>
+          <p class="review-comment">${escapeHtml(r.comment)}</p>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('titleView').innerText = listingData.title || '';
+    const cat = listingData.category || 'Uncategorized';
+    const icon = listingData.category_icon || '';
+    document.getElementById('categoryView').innerHTML = (icon ? `<i class="${icon} me-1"></i>` : '') + escapeHtml(cat);
+    document.getElementById('priceView').innerHTML = formatCurrency(listingData.price || 0);
+    document.getElementById('descView').innerText = listingData.description || '';
+    document.getElementById('listingTitleDisplay').innerText = listingData.title || '';
+
+    // Promotion badges
+    const badgesContainer = document.getElementById('promotionBadges');
+    let badgesHtml = '';
+    if (listingData.is_hot_sale) {
+      badgesHtml += '<span class="badge bg-danger"><i class="fas fa-fire me-1"></i>Hot Sale</span> ';
+    }
+    if (listingData.is_ads_banner) {
+      badgesHtml += '<span class="badge bg-primary"><i class="fas fa-bullhorn me-1"></i>Banner</span>';
+    }
+    badgesContainer.innerHTML = badgesHtml;
+
+    document.getElementById('listingIdBadge').innerText = listingData.id || '--';
+    document.getElementById('createdDate').innerText = listingData.created_at ? listingData.created_at: '--';
+    
+    // ─── Expiration ────────────────────────────────────────────────
+    const expiresDateEl = document.getElementById('expiresDate');
+    const expiresIconEl = document.getElementById('expiresIcon');
+    if (listingData.expires_at) {
+      const expiresDate = new Date(listingData.expires_at);
+      const now = new Date();
+      const diffDays = Math.ceil((expiresDate - now) / (1000 * 60 * 60 * 24));
+      
+      // Format date
+      const dateStr = expiresDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      expiresDateEl.textContent = dateStr;
+
+      // Apply style and icon
+      if (diffDays <= 3) {
+        expiresDateEl.className = 'expires-soon';
+        expiresIconEl.innerHTML = '<i class="fas fa-exclamation-triangle" title="Expiring soon!"></i>';
+      } else {
+        expiresDateEl.className = 'expires-normal';
+        expiresIconEl.innerHTML = '<i class="far fa-clock" title="Expiration date"></i>';
+      }
+    } else {
+      expiresDateEl.textContent = 'No expiry';
+      expiresIconEl.innerHTML = '';
+    }
+
+    // Status
+    const status = listingData.status || 'expired';
+    const statusEl = document.getElementById('statusBadge');
+    statusEl.className = `badge-status badge-${status}`;
+    statusEl.innerText = { active:'Active', sold:'Sold', expired:'Expired', pending:'Pending' }[status] || status;
+
+    // Status action button
+    const actionBtn = document.getElementById('statusActionBtn');
+    if (status === 'active') {
+      actionBtn.innerText = 'Mark as sold';
+      actionBtn.className = 'btn btn-outline-custom';
+      actionBtn.onclick = markAsSold;
+    } else if (status === 'sold' || status === 'expired') {
+      actionBtn.innerText = 'Reactivate (cost 1 point)';
+      actionBtn.className = 'btn btn-outline-warning';
+      actionBtn.onclick = reactivateListing;
+    } else if (status === 'pending') {
+      actionBtn.innerText = 'Awaiting approval';
+      actionBtn.className = 'btn btn-outline-secondary';
+    } else {
+      actionBtn.style.display = 'none';
+    }
+
+    // Badge display
+    const badgeInfo = typeof getConditionDisplay === 'function' 
+      ? getConditionDisplay(listingData.badge) 
+      : { text: listingData.badge || 'None', icon: '<i class="fas fa-tag me-1"></i>' };
+    document.getElementById('currentBadge').innerHTML = `${badgeInfo.icon} ${badgeInfo.text}`;
+
+    // Listing type
+    const typeMap = { sell:'Sell', wanted:'Wanted', freebie:'Freebie', service:'Service' };
+    document.getElementById('listingTypeView').innerText = typeMap[listingData.lisiting_type] || listingData.lisiting_type || '--';
+
+    // Hotspots
+    const selected = allHotspots.filter(h => (listingData.hotspots || []).includes(h.id));
+    document.getElementById('hotspotsView').innerHTML = selected.map(h =>
+      `<span class="hotspot-chip"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(h.name)}</span>`
+    ).join('') || '<span class="text-muted">No meeting spots</span>';
+
+    // Image - setup lightbox click
+    const imgContainer = document.getElementById('imageContainer');
+    const imgEl = document.getElementById('listingImage');
+    const placeholder = document.getElementById('imagePlaceholder');
+    let imageSrc = null;
+    if (listingData.image) {
+      imgEl.src = listingData.image;
+      imgEl.style.display = 'block';
+      placeholder.style.display = 'none';
+      imageSrc = listingData.image;
+    } else {
+      imgEl.style.display = 'none';
+      placeholder.style.display = 'block';
+      imageSrc = null;
+    }
+
+    // Attach click handler for lightbox
+    imgContainer.onclick = function() {
+      if (imageSrc) {
+        openLightbox(imageSrc, listingData.title || 'Listing image');
+      }
+    };
+    imgContainer.onkeydown = function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (imageSrc) {
+          openLightbox(imageSrc, listingData.title || 'Listing image');
+        }
+      }
+    };
+    // Expand button
+    document.getElementById('expandImageBtn').onclick = function(e) {
+      e.stopPropagation();
+      if (imageSrc) {
+        openLightbox(imageSrc, listingData.title || 'Listing image');
+      }
+    };
+
+    // Points
+    userPoints = parseInt(user?.point_bal || '0', 10);
+    document.getElementById('userPoints').innerText = userPoints;
+
+    setupPromotionToggles();
+    setupAutoReactivateToggle();
+    updateEditToggleState();
+  }
+
+  // ─── Render stars ──────────────────────────────────────────
+  function renderStars(rating) {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
+    let html = '';
+    for (let i = 0; i < full; i++) html += '<i class="fas fa-star"></i>';
+    if (half) html += '<i class="fas fa-star-half-alt"></i>';
+    for (let i = full + (half ? 1 : 0); i < 5; i++) html += '<i class="far fa-star empty"></i>';
+    return html;
+  }
+
+  // ─── Edit mode logic ────────────────────────────────────────
+  function isEditAllowed() {
+    const period = listingData.editing_period_day || 0;
+    if (period === 0) return true;
+    const lastMod = listingData.modified_at;
+    if (!lastMod) return true;
+    const nextEdit = new Date(new Date(lastMod).getTime() + (period * 24 * 60 * 60 * 1000));
+    return new Date() >= nextEdit;
+  }
+
+  function updateEditToggleState() {
+    const toggle = document.getElementById('editModeToggle');
+    const warningDiv = document.getElementById('editRestrictionWarning');
+    const period = listingData.editing_period_day || 0;
+    const lastMod = listingData.modified_at;
+
+    if (period === 0) {
+      toggle.disabled = false;
+      warningDiv.style.display = 'none';
+      return;
+    }
+
+    if (!isEditAllowed()) {
+      toggle.disabled = true;
+      toggle.checked = false;
+      if (lastMod) {
+        const nextDate = new Date(new Date(lastMod).getTime() + (period * 24 * 60 * 60 * 1000));
+        warningDiv.style.display = 'block';
+        warningDiv.innerHTML = `
+          <i class="fas fa-clock"></i>
+          ${period}‑day restriction: You can only edit this listing once every ${period} days. Last edit was ${new Date(lastMod).toLocaleDateString()}. Next edit allowed: ${nextDate.toLocaleDateString()}.
+        `;
+      } else {
+        warningDiv.style.display = 'none';
+      }
+      document.getElementById('viewMode').classList.remove('d-none');
+      document.getElementById('editMode').classList.add('d-none');
+      document.getElementById('saveBasicBtn').classList.add('d-none');
+    } else {
+      toggle.disabled = false;
+      warningDiv.style.display = 'none';
+    }
+  }
+
+  function populateEditFields() {
+    document.getElementById('titleEdit').value = listingData.title || '';
+    const catSelect = document.getElementById('categoryEdit');
+    catSelect.innerHTML = allCategories.map(c =>
+      `<option value="${c.id}" ${c.name === listingData.category ? 'selected' : ''}>${c.name}</option>`
+    ).join('');
+    document.getElementById('priceEdit').value = listingData.price || '';
+    document.getElementById('descEdit').value = listingData.description || '';
+
+    const badgeSelect = document.getElementById('badgeSelect');
+    badgeSelect.innerHTML = '<option value="">None</option>' +
+      allBadgeChoices.map(b => `<option value="${b.value}" ${b.value === listingData.badge ? 'selected' : ''}>${b.label}</option>`).join('');
+
+    const currentFlags = {
+      is_ads_banner: listingData.is_ads_banner || false,
+      is_hot_sales: listingData.is_hot_sale || false
+    };
+    populateAdvertTypes(allAdvertTypes, currentFlags);
+
+    const container = document.getElementById('hotspotsCheckboxes');
+    container.innerHTML = allHotspots.map(h => `
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="${h.id}" id="hs_${h.id}" ${(listingData.hotspots || []).includes(h.id) ? 'checked' : ''}>
+        <label class="form-check-label" for="hs_${h.id}">${escapeHtml(h.name)} – ${escapeHtml(h.description)}</label>
+      </div>
+    `).join('');
+  }
+
+  function toggleEditMode() {
+    const isEdit = document.getElementById('editModeToggle').checked;
+    if (isEdit && !isEditAllowed()) {
+      const period = listingData.editing_period_day || 7;
+      showToast(`You can only edit this listing once every ${period} days.`, 'error');
+      document.getElementById('editModeToggle').checked = false;
+      return;
+    }
+    document.getElementById('viewMode').classList.toggle('d-none', isEdit);
+    document.getElementById('editMode').classList.toggle('d-none', !isEdit);
+    document.getElementById('saveBasicBtn').classList.toggle('d-none', !isEdit);
+    if (isEdit) {
+      populateEditFields();
+      const firstInput = document.getElementById('titleEdit');
+      if (firstInput) {
+        firstInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => firstInput.focus(), 500);
+      }
+    }
+  }
+
+  // ─── API Calls ──────────────────────────────────────────────
+
+  async function saveAllChanges() {
+    const saveBtn = document.getElementById('saveBasicBtn');
+    if (saveBtn.disabled) return;
+
+    const originalText = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...';
+    const newTitle = document.getElementById('titleEdit').value.trim();
+    const newCategoryId = document.getElementById('categoryEdit').value;
+    const newPrice = parseFloat(document.getElementById('priceEdit').value);
+    const newDesc = document.getElementById('descEdit').value.trim();
+    if (!newTitle || !newCategoryId || isNaN(newPrice) || !newDesc) {
+      showToast('Please fill all required fields.', 'error');
+      return;
+    }
+
+    const checkboxes = document.querySelectorAll('#hotspotsCheckboxes input');
+    const selectedHotspots = Array.from(checkboxes).filter(cb => cb.checked).map(cb => parseInt(cb.value));
+    const badge = document.getElementById('badgeSelect').value;
+
+    const isBanner = document.querySelector('#advertTypeContainer input[value="banner"]:checked') ? true : false;
+    const isHotSale = document.querySelector('#advertTypeContainer input[value="hot_sale"]:checked') ? true : false;
+
+    const payload = {
+      title: newTitle,
+      category_id: parseInt(newCategoryId),
+      price: newPrice,
+      description: newDesc,
+      hotspots: selectedHotspots,
+      badge: badge
+    };
+
+    try {
+      const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + listingData.id, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || 'Update failed');
+      }
+
+      const result = await response.json();
+      if (result.is_success) {
+        showToast('Listing updated successfully!');
+        await fetchListingData(listingData.id);
+        fetchAndRenderNotifications();
+        renderViewMode();
+        if (document.getElementById('editModeToggle').checked) {
+          populateEditFields();
+        }
+      } else {
+        throw new Error(result.message || 'Update failed');
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      showToast('Failed to update: ' + err.message, 'error');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = originalText;
+    }
+  }
+
+  async function performMarkAsSold() {
+    try {
+      const response = await fetchWithAuth(CAMPUS_URL + 'mark-sold' + '/' + listingData.id, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      const result = await response.json();
+      if (result.is_success) {
+        fetchAndRenderNotifications();
+        showToast('Listing marked as sold.');
+        await fetchListingData(listingData.id);
+        renderViewMode();
+      } else {
+        throw new Error(result.message || 'Update failed');
+      }
+    } catch (err) {
+      console.error('Mark sold error:', err);
+      showToast('Failed to mark as sold: ' + err.message, 'error');
+    }
+  }
+
+  async function markAsSold() {
+    if (listingData.status !== 'active') {
+      showToast('Only active listings can be marked as sold.', 'error');
+      return;
+    }
+    if (typeof confirmModal !== 'undefined' && confirmModal) {
+      confirmModal.open({
+        title: 'Mark ' + listingData.title + ' as Sold',
+        message: 'Mark this listing as sold? This action can be undone by reactivating.',
+        confirmText: 'Yes, Mark as Sold',
+        cancelText: 'Cancel',
+        onConfirm: performMarkAsSold
+      });
+    } else {
+      if (confirm('Mark this listing as sold?')) {
+        await performMarkAsSold();
+      }
+    }
+  }
+
+  async function performReactivate() {
+    try {
+      const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + listingData.id, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'active' })
+      });
+      const result = await response.json();
+      if (result.is_success) {
+        const newPoints = userPoints - 1;
+        document.cookie = `point_bal=${newPoints}; path=/`;
+        userPoints = newPoints;
+        document.getElementById('userPoints').innerText = userPoints;
+        fetchAndRenderNotifications();
+        showToast('Listing reactivated!');
+        await fetchListingData(listingData.id);
+        renderViewMode();
+      } else {
+        throw new Error(result.message || 'Reactivate failed');
+      }
+    } catch (err) {
+      console.error('Reactivate error:', err);
+      showToast('Failed to reactivate: ' + err.message, 'error');
+    }
+  }
+
+  async function reactivateListing() {
+    if (listingData.status !== 'sold' && listingData.status !== 'expired') {
+      showToast('Only sold or expired listings can be reactivated.', 'error');
+      return;
+    }
+    if (userPoints < 1) {
+      showToast('You need 1 point to reactivate.', 'error');
+      return;
+    }
+    if (typeof confirmModal !== 'undefined' && confirmModal) {
+      confirmModal.open({
+        title: 'Reactivate ' + listingData.title,
+        message: 'Reactivate this listing for 1 point?',
+        confirmText: 'Yes, Reactivate',
+        cancelText: 'Cancel',
+        onConfirm: performReactivate
+      });
+    } else {
+      if (confirm('Reactivate this listing for 1 point?')) {
+        await performReactivate();
+      }
+    }
+  }
+
+  async function performdeleteListing() {
+    try {
+      const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + listingData.id, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+      const result = await response.json();
+      if (result.is_success) {
+        fetchAndRenderNotifications();
+        showToast('Listing deleted. Redirecting...');
+        setTimeout(() => window.location.href = 'main.html', 1500);
+      } else {
+        throw new Error(result.message || 'Delete failed');
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      showToast('Failed to delete: ' + err.message, 'error');
+    }
+  }
+
+  async function deleteListing() {
+    if (typeof confirmModal !== 'undefined' && confirmModal) {
+      confirmModal.open({
+        title: 'Delete ' + listingData.title,
+        message: 'Delete this listing permanently.',
+        confirmText: 'Yes, Delete',
+        cancelText: 'Cancel',
+        onConfirm: performdeleteListing
+      });
+    } else {
+      if (confirm('Delete this listing?')) {
+        await performdeleteListing();
+      }
+    }
+  }
+
+  // ─── Fetch listing data ─────────────────────────────────────
+  async function fetchListingData(id) {
+    const response = await fetchWithAuth(LISTING_DETAIL_URL + '/' + id, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('Listing not found');
+      } else if (response.status === 401 || response.status === 403) {
+        deleteAuthCookies();
+        window.location.href = '../index.html';
+        return;
+      }
+      throw new Error('Failed to fetch listing');
+    }
+
+    const result = await response.json();
+    if (!result.is_success) throw new Error(result.message || 'Invalid response');
+
+    listingData = result.data;
+    if (!listingData.hotspots) listingData.hotspots = [];
+    listingData.is_hot_sales = listingData.is_hot_sale || false;
+    listingData.is_ads_banner = listingData.is_ads_banner || false;
+    listingData.auto_reactivate = listingData.auto_reactivate || false;
+    listingData.editing_period_day = listingData.editing_period_day || 0;
+    userPoints = parseInt(user?.point_bal || '0', 10);
+  }
+
+  // ─── Promotion toggles ──────────────────────────────────────
+  function setupPromotionToggles() {
+    const bannerToggle = document.getElementById('bannerToggle');
+    const hotToggle = document.getElementById('hotSaleToggle');
+    const bannerCost = document.getElementById('bannerCost');
+    const hotCost = document.getElementById('hotSaleCost');
+    const bannerBadge = document.getElementById('bannerActiveBadge');
+    const hotBadge = document.getElementById('hotSaleActiveBadge');
+
+    const bannerPoints = allAdvertTypes.find(a => a.value === 'banner')?.points || 0;
+    const hotPoints = allAdvertTypes.find(a => a.value === 'hot_sale')?.points || 0;
+    bannerCost.textContent = bannerPoints > 0 ? `(${bannerPoints} pts)` : '';
+    hotCost.textContent = hotPoints > 0 ? `(${hotPoints} pts)` : '';
+
+    bannerToggle.checked = listingData.is_ads_banner || false;
+    hotToggle.checked = listingData.is_hot_sale || false;
+
+    bannerBadge.style.display = bannerToggle.checked ? 'inline-block' : 'none';
+    hotBadge.style.display = hotToggle.checked ? 'inline-block' : 'none';
+
+    const isActive = listingData.status === 'active';
+    bannerToggle.disabled = !isActive;
+    hotToggle.disabled = !isActive;
+
+    bannerToggle.removeEventListener('change', handleBannerToggle);
+    hotToggle.removeEventListener('change', handleHotToggle);
+    bannerToggle.addEventListener('change', handleBannerToggle);
+    hotToggle.addEventListener('change', handleHotToggle);
+
+    const info = document.getElementById('promotionInfo');
+    if (!isActive) {
+      info.textContent = 'Promotions can only be changed when the listing is active.';
+    } else if (bannerToggle.checked || hotToggle.checked) {
+      info.textContent = 'Toggle off to disable a promotion (no points refunded).';
+    } else {
+      info.textContent = 'Toggle on to promote your listing (points will be deducted).';
+    }
+  }
+
+  async function handleBannerToggle(e) {
+    await handlePromotionToggle('banner', e.target.checked);
+  }
+
+  async function handleHotToggle(e) {
+    await handlePromotionToggle('hot_sale', e.target.checked);
+  }
+
+  async function handlePromotionToggle(type, enable) {
+    const toggleId = type === 'banner' ? 'bannerToggle' : 'hotSaleToggle';
+    const toggle = document.getElementById(toggleId);
+    const badgeId = type === 'banner' ? 'bannerActiveBadge' : 'hotSaleActiveBadge';
+    const badge = document.getElementById(badgeId);
+
+    const newState = enable;
+    const oldState = !newState;
+
+    if (newState) {
+      const advert = allAdvertTypes.find(a => a.value === type);
+      const cost = advert ? advert.points : 0;
+      const points = parseInt(user?.point_bal || '0', 10);
+      if (points < cost) {
+        showToast(`Not enough points. You need ${cost} points for ${type}.`, 'error');
+        toggle.checked = oldState;
+        return;
+      }
+    }
+
+    toggle.disabled = true;
+
+    const label = type === 'banner' ? 'Banner' : 'Hot Sale';
+    const cost = allAdvertTypes.find(a => a.value === type)?.points || 0;
+    let title, message, confirmText;
+
+    if (newState) {
+      title = `Enable ${label} Promotion`;
+      message = `This will cost ${cost} point(s). Are you sure you want to enable ${label} for this listing?`;
+      confirmText = 'Yes, Enable';
+    } else {
+      title = `Disable ${label} Promotion`;
+      message = `Are you sure you want to disable ${label} for this listing? No points will be refunded.`;
+      confirmText = 'Yes, Disable';
+    }
+
+    async function performUpdate() {
+      try {
+        const payload = {};
+        if (type === 'banner') payload.is_ads_banner = newState;
+        else if (type === 'hot_sale') payload.is_hot_sales = newState;
+        const response = await fetchWithAuth(CAMPUS_URL + 'listing-update-ads/' + listingData.id, {
+          method: 'PATCH',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.message || 'Update failed');
+        }
+
+        const result = await response.json();
+        if (result.is_success) {
+          fetchAndRenderNotifications();
+          showToast(`${label} ${newState ? 'enabled' : 'disabled'} successfully!`, 'success');
+          await fetchListingData(listingData.id);
+          renderViewMode();
+          if (newState) {
+            const newPoints = parseInt(user?.point_bal || '0', 10) - cost;
+            setCookie('point_bal', newPoints, 3);
+            document.getElementById('userPoints').innerText = newPoints;
+            userPoints = newPoints;
+          }
+        } else {
+          throw new Error(result.message || 'Update failed');
+        }
+      } catch (err) {
+        console.error('Toggle promotion error:', err);
+        showToast('Failed to toggle: ' + err.message, 'error');
+        toggle.checked = oldState;
+      } finally {
+        toggle.disabled = false;
+      }
+    }
+
+    if (typeof confirmModal !== 'undefined' && confirmModal) {
+      confirmModal.open({
+        title: title,
+        message: message,
+        confirmText: confirmText,
+        cancelText: 'Cancel',
+        onConfirm: performUpdate,
+        onCancel: () => {
+          toggle.checked = oldState;
+          toggle.disabled = false;
+        },
+        onClose: () => {
+          toggle.checked = oldState;
+          toggle.disabled = false;
+        }
+      });
+    } else {
+      const userConfirmed = confirm(`${title}\n${message.replace(/<[^>]*>/g, '')}`);
+      if (userConfirmed) {
+        await performUpdate();
+      } else {
+        toggle.checked = oldState;
+        toggle.disabled = false;
+      }
+    }
+  }
+
+  function setupAutoReactivateToggle() {
+    const toggle = document.getElementById('autoReactivateToggle');
+    const statusBadge = document.getElementById('autoReactivateStatus');
+
+    const isActive = listingData.status === 'active';
+    const isExpired = listingData.status === 'expired';
+    toggle.disabled = !(isActive || isExpired);
+    if (!(isActive || isExpired)) {
+      statusBadge.innerText = 'N/A';
+      toggle.checked = false;
+      return;
+    }
+
+    const autoReactivate = listingData.auto_reactivate || false;
+    toggle.checked = autoReactivate;
+    statusBadge.innerText = autoReactivate ? 'On' : 'Off';
+    statusBadge.className = `badge ${autoReactivate ? 'bg-success' : 'bg-secondary'}`;
+
+    toggle.removeEventListener('change', handleAutoReactivateToggle);
+    toggle.addEventListener('change', handleAutoReactivateToggle);
+  }
+
+  async function handleAutoReactivateToggle(e) {
+    const toggle = e.target;
+    const newState = toggle.checked;
+    const oldState = !newState;
+
+    toggle.disabled = true;
+
+    if (typeof confirmModal !== 'undefined' && confirmModal) {
+      const userConfirmed = await new Promise((resolve) => {
+        confirmModal.open({
+          title: newState ? 'Enable Auto-Reactivation' : 'Disable Auto-Reactivation',
+          message: newState
+            ? 'When this listing expires, it will be automatically reactivated (cost 1 point each time). Are you sure?'
+            : 'Auto-reactivation will be disabled. No points will be deducted. Are you sure?',
+          confirmText: newState ? 'Yes, Enable' : 'Yes, Disable',
+          cancelText: 'Cancel',
+          onConfirm: () => resolve(true),
+          onCancel: () => resolve(false),
+          onClose: () => resolve(false)
+        });
+      });
+      if (!userConfirmed) {
+        toggle.checked = oldState;
+        toggle.disabled = false;
+        return;
+      }
+    }
+
+    try {
+      const payload = { auto_reactivate: newState };
+      const response = await fetchWithAuth(`${AUTO_REACTIVATE_URL}/${listingData.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || 'Update failed');
+      }
+
+      const result = await response.json();
+      if (result.is_success) {
+        fetchAndRenderNotifications();
+        showToast(`Auto-reactivation ${newState ? 'enabled' : 'disabled'} successfully!`, 'success');
+        await fetchListingData(listingData.id);
+        renderViewMode();
+      } else {
+        throw new Error(result.message || 'Update failed');
+      }
+    } catch (err) {
+      console.error('Auto-react toggle error:', err);
+      showToast('Failed to update: ' + err.message, 'error');
+      toggle.checked = oldState;
+    } finally {
+      toggle.disabled = false;
+    }
+  }
+
+  // ─── Image upload ──────────────────────────────────────────
+  function setupImageUpload() {
+    const uploadArea = document.getElementById('imageUploadArea');
+    const fileInput = document.getElementById('imageInput');
+    const imgEl = document.getElementById('listingImage');
+    const placeholder = document.getElementById('imagePlaceholder');
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', async (e) => {
+      if (!e.target.files.length) return;
+      const file = e.target.files[0];
+
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Image must be less than 2MB.', 'error');
+        fileInput.value = '';
+        return;
+      }
+      const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowed.includes(file.type)) {
+        showToast('Only JPG, PNG, and WEBP images are allowed.', 'error');
+        fileInput.value = '';
+        return;
+      }
+
+      const originalHtml = uploadArea.innerHTML;
+      uploadArea.innerHTML = `
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Uploading...</span>
+        </div>
+        <p class="mt-2 small">Uploading…</p>
+      `;
+      uploadArea.style.pointerEvents = 'none';
+
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+        const uploadUrl = CAMPUS_URL + 'listing-upload-image/' + listingData.id;
+        const response = await fetchWithAuth(uploadUrl, {
+          method: 'PATCH',
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Upload failed');
+        }
+
+        if (result.is_success) {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            imgEl.src = ev.target.result;
+            imgEl.style.display = 'block';
+            placeholder.style.display = 'none';
+          };
+          reader.readAsDataURL(file);
+
+          showToast('Image uploaded successfully!', 'success');
+          await fetchListingData(listingData.id);
+          renderViewMode();
+        } else {
+          throw new Error(result.message || 'Upload failed');
+        }
+      } catch (err) {
+        console.error('Image upload error:', err);
+        showToast('Failed to upload image: ' + err.message, 'error');
+      } finally {
+        uploadArea.innerHTML = originalHtml;
+        uploadArea.style.pointerEvents = 'auto';
+        fileInput.value = '';
+      }
+    });
+  }
+
+  // ─── Main load ──────────────────────────────────────────────
+  async function loadListing() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    const skeleton = document.getElementById('skeletonLoader');
+    const content = document.getElementById('listingContent');
+    const errorState = document.getElementById('errorState');
+
+    if (!skeleton || !content || !errorState) {
+      showToast('Page elements missing. Please refresh.', 'error');
+      return;
+    }
+
+    if (!id || id.trim() === '' || id === 'null' || id === 'undefined') {
+      skeleton.style.display = 'none';
+      content.style.display = 'none';
+      showErrorState('No listing ID provided.');
+      return;
+    }
+
+    errorState.style.display = 'none';
+    skeleton.style.display = 'block';
+    content.style.display = 'none';
+
+    try {
+      // Fetch lookup data
+      const lookupRes = await fetchWithAuth(LOOKUP_URL, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!lookupRes.ok) throw new Error('Failed to fetch lookup');
+      const lookupData = await lookupRes.json();
+      if (lookupData.is_success) {
+        allCategories = lookupData.data.categories || [];
+        allHotspots = lookupData.data.hotspots || [];
+        allBadgeChoices = lookupData.data.badge_choices || [];
+        allAdvertTypes = lookupData.data.advert_type || [];
+      }
+
+      await fetchListingData(id);
+
+      document.getElementById('listingIdBadge').innerText = listingData.id;
+      renderViewMode();
+      document.getElementById('imageUploadArea').classList.remove('d-none');
+
+      skeleton.style.display = 'none';
+      content.style.display = 'block';
+
+      document.getElementById('editModeToggle').addEventListener('change', toggleEditMode);
+      document.getElementById('saveBasicBtn').addEventListener('click', saveAllChanges);
+      document.getElementById('deleteListingBtn').addEventListener('click', deleteListing);
+
+      setupImageUpload();
+
+    } catch (err) {
+      console.error('Load error:', err);
+      skeleton.style.display = 'none';
+      const errorMsg = err.message || 'An unexpected error occurred.';
+      if (errorMsg === 'Listing not found' || errorMsg.includes('404')) {
+        showErrorState(errorMsg);
+      } else if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
+        showNetworkError();
+      } else {
+        showErrorState('An unexpected error occurred. Please try again.');
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadListing);
+</script>
+</body>
+</html>
