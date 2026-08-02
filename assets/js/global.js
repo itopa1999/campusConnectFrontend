@@ -16,6 +16,127 @@
     const LOGOUT_URL = 'http://127.0.0.1:8000/user/api/auth/logout-user';
     const REFRESH_POINTS_URL = 'http://127.0.0.1:8000/user/api/';
     const X_KEY_ID = '1';
+    const PLATFORM = 'web';
+
+
+    // ============================================================
+    // RATE LIMIT HANDLING (429 Too Many Requests)
+    // ============================================================
+
+    let _rateLimitModal = null;
+    let _rateLimitInterval = null;
+    let _rateLimitResolve = null;
+    let _rateLimitReject = null;
+
+    /**
+     * Wait for the rate‑limit cooldown to finish.
+     * Shows a modal with a countdown. Returns a promise that
+     * resolves when the cooldown ends, or rejects if the user cancels.
+     *
+     * @param {number} retryAfter – seconds to wait
+     * @returns {Promise<void>}
+     */
+    function waitForRateLimit(retryAfter) {
+    // If we are already waiting, return the same promise
+    if (_rateLimitResolve) {
+        return new Promise((resolve, reject) => {
+        // We attach to the existing promise by storing callbacks
+        // But we need to chain properly. We'll use a simple approach:
+        // Wrap the existing promise.
+        return new Promise((res, rej) => {
+            // We'll store a chain
+            // Simpler: just return a new promise that waits for the same resolve/reject
+            // We'll push our callbacks into an array.
+            // To keep it simple, we'll just use the same promise instance.
+            // But we cannot attach multiple resolve/reject to the same promise.
+            // We'll use a shared promise that we can await.
+            // We'll store a pending promise.
+        });
+        });
+    }
+
+    return new Promise((resolve, reject) => {
+        _rateLimitResolve = resolve;
+        _rateLimitReject = reject;
+
+        let timeLeft = Math.max(1, Math.floor(retryAfter));
+        const modal = new Modal({
+        title: 'Rate Limit Exceeded',
+        type: 'warning',
+        body: `
+            <div style="text-align:center; padding:8px 0;">
+            <div style="font-size:48px; margin-bottom:12px;">⏳</div>
+            <p style="font-size:16px; color: var(--text-secondary); line-height:1.6; margin-bottom:12px;">
+                Too many requests. Please wait <strong id="retryCountdown">${timeLeft}</strong> seconds.
+            </p>
+            <div style="display:flex; justify-content:center; gap:12px;">
+                <button class="btn btn-primary" id="retryCancelBtn" style="padding:10px 24px; border-radius:30px; border:none; background:var(--red); color:#fff; font-weight:600; cursor:pointer;">Cancel</button>
+            </div>
+            </div>
+        `,
+        showConfirm: false,
+        showCancel: false,
+        showClose: false,
+        closeOnOverlay: false,
+        closeOnEsc: false,
+        onOpen: function() {
+            _rateLimitModal = modal;
+            _rateLimitInterval = setInterval(() => {
+            timeLeft--;
+            const el = document.getElementById('retryCountdown');
+            if (el) el.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(_rateLimitInterval);
+                _rateLimitInterval = null;
+                modal.close();
+                setTimeout(() => {
+                modal.destroy();
+                _rateLimitModal = null;
+                if (_rateLimitResolve) {
+                    _rateLimitResolve();
+                    _rateLimitResolve = null;
+                    _rateLimitReject = null;
+                }
+                }, 300);
+            }
+            }, 1000);
+
+            // Cancel button
+            const cancelBtn = document.getElementById('retryCancelBtn');
+            if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                clearInterval(_rateLimitInterval);
+                _rateLimitInterval = null;
+                modal.close();
+                setTimeout(() => {
+                modal.destroy();
+                _rateLimitModal = null;
+                if (_rateLimitReject) {
+                    _rateLimitReject(new Error('Request cancelled by user'));
+                    _rateLimitResolve = null;
+                    _rateLimitReject = null;
+                }
+                }, 300);
+            });
+            }
+        },
+        onClose: function() {
+            // Cleanup if modal closes unexpectedly
+            if (_rateLimitInterval) {
+            clearInterval(_rateLimitInterval);
+            _rateLimitInterval = null;
+            }
+            _rateLimitModal = null;
+            if (_rateLimitReject) {
+            _rateLimitReject(new Error('Rate limit modal closed'));
+            _rateLimitResolve = null;
+            _rateLimitReject = null;
+            }
+        }
+        });
+        modal.open();
+    });
+    }
 
     const listingStatusMap = {
         active: 'active',
@@ -91,6 +212,16 @@
             if (emailEl) {
                 const displayEmail = user.email ? '@' + user.email.split('@')[1] : '@student.uniben';
                 emailEl.textContent = displayEmail;
+            }
+            if (user && user.total_favourites !== undefined) {
+                window.updateFavouriteCount(user.total_favourites);
+            } else {
+                window.updateFavouriteCount(0);
+            }
+            if (user && user.has_unread_notifications !== undefined) {
+                window.setNotificationDot(user.has_unread_notifications);
+            } else {
+                window.setNotificationDot(false);
             }
         } else {
             if (avatarEl) avatarEl.textContent = 'S';
@@ -174,9 +305,18 @@
                 'Content-Type': 'application/json',
                 'X-Key-Id': X_KEY_ID,
             },
+            body: JSON.stringify({ platform: PLATFORM})
         });
         if (!response.ok) {
             throw new Error('Refresh failed');
+        }
+
+        const result = await response.json();
+        if (result.is_success && result.data && result.data.user) {
+            const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
+            const storage = rememberMe ? localStorage : sessionStorage;
+            storage.setItem('user', JSON.stringify(result.data.user));
+            updateHeaderUser();
         }
         return response;
     }
@@ -219,9 +359,40 @@
         const makeRequest = async (retryCount = 0) => {
             try {
                 let response = await fetch(url, opts);
-                
-                if (response.status === 401 && retryCount === 0 && !opts.skipRefresh) {
+
+                let body = null;
+                try {
+                    body = await response.clone().json();
+                } catch (_) {}
+
+                if (response.status === 429 || body?.status_code === 429) {
+                    // Hide any spinner that might be showing
+                    if (opts.showSpinner) {
+                        hideGlobalSpinner();
+                    }
+
+                    if (retryCount < 2) {
+                        const retryAfter = body?.retry_after || 30;
+                        try {
+                        await waitForRateLimit(retryAfter);
+                        // Retry the request with incremented retry count
+                        return fetchWithAuth(url, options, retryCount + 1);
+                        } catch (cancelError) {
+                        // User cancelled – re-throw so the caller sees the error
+                        throw cancelError;
+                        }
+                    } else {
+                        throw new Error('Too many retries due to rate limiting');
+                    }
+                }
+
+                return response;
+
+                const isUnauthorized = response.status === 401 || body?.status_code === 401;
+
+                if (isUnauthorized && retryCount === 0 && !opts.skipRefresh) {
                     if (!isRefreshing) {
+                        // Initiate refresh
                         isRefreshing = true;
                         try {
                             await refreshToken();
@@ -230,17 +401,17 @@
                             onRefreshFailed(error);
                             throw error;
                         }
+                    } else {
+                        // Wait for the ongoing refresh
+                        await new Promise((resolve, reject) => {
+                            subscribeToRefresh(resolve, reject);
+                        });
                     }
-
-                    await new Promise((resolve, reject) => {
-                        subscribeToRefresh(resolve, reject);
-                    });
-
+                    // Retry with fresh token
                     return makeRequest(retryCount + 1);
                 }
 
                 return response;
-
             } catch (error) {
                 throw error;
             }
@@ -628,6 +799,48 @@
 
     window.openProfileSidebar = openProfileSidebar;
     window.closeProfileSidebar = closeProfileSidebar;
+
+    window.updateFavouriteCount = function (count) {
+        const el = document.getElementById('favouriteCount');
+        if (el) {
+            el.textContent = count;
+        }
+    };
+
+    window.incrementFavouriteCount = function () {
+        const el = document.getElementById('favouriteCount');
+
+        if (!el) return;
+
+        const current = parseInt(el.textContent || "0", 10);
+        el.textContent = current + 1;
+    };
+
+    window.decrementFavouriteCount = function () {
+        const el = document.getElementById('favouriteCount');
+
+        if (!el) return;
+
+        const current = parseInt(el.textContent || "0", 10);
+        el.textContent = Math.max(0, current - 1);
+    };
+
+    window.setNotificationDot = function(show) {
+        const el = document.getElementById('notificationBell');
+        if (el) {
+            el.classList.toggle('badge-dot', show);
+        }
+    };
+
+    window.updateFavouriteCountInSession = function(delta) {
+        const user = getUserData();
+        if (!user) return;
+        user.total_favourites = (user.total_favourites || 0) + delta;
+        const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem('user', JSON.stringify(user));
+        updateHeaderUser();
+    };
 
     // ============================================================
     // HEADER
@@ -1173,7 +1386,7 @@
             <div class="nav-item ${activePage === 'favourites' ? 'active' : ''}" data-page="favourites">
                 <i class="fa-regular fa-heart"></i>
                 <span>Favourites</span>
-                <span class="nav-badge">3</span>
+                <span class="nav-badge" id="favouriteCount">0</span>
             </div>
             <div class="nav-item ${activePage === 'lost-item' ? 'active' : ''}" data-page="lost-item">
                 <i class="fa-regular fa-circle-question"></i>

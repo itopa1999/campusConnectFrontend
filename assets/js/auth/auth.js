@@ -66,6 +66,8 @@ loginForm.addEventListener('submit', async (e) => {
         trusting_score: user.trusting_score,
         is_student_id_verified: user.is_student_id_verified,
         is_hall_verified: user.is_hall_verified,
+        total_favourites: user.total_favourites,
+        has_unread_notifications: user.has_unread_notifications
       }));
 
       sessionStorage.setItem('rememberMe', rememberMe ? 'true' : 'false');

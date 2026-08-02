@@ -14,16 +14,6 @@
 
     <!-- Page-Specific Styles -->
     <style>
-        /* ---- Banner gradients ---- */
-        .carousel-slide:nth-child(1) {
-            background: linear-gradient(135deg, #0d8a3e, #1a3a2a);
-        }
-        .carousel-slide:nth-child(2) {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-        }
-        .carousel-slide:nth-child(3) {
-            background: linear-gradient(135deg, #4a0e4e, #1a0b2e);
-        }
 
         /* ============================================================
            ENHANCED TABS
@@ -585,6 +575,73 @@
             color: var(--green);
         }
 
+        /* ─── Category Scroll Arrows ─── */
+        .categories {
+            position: relative;
+            overflow: hidden; /* hide overflow to contain arrows */
+            padding: 4px 0 16px;
+            background: var(--bg-app);
+            border-bottom: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .categories .cat-scroll {
+            display: flex;
+            gap: 6px;
+            padding: 0 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+        .categories .cat-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Arrow buttons */
+        .cat-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.2s;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .categories:hover .cat-arrow {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .cat-arrow:hover {
+            background: var(--green);
+            color: #fff;
+            border-color: var(--green);
+            transform: translateY(-50%) scale(1.05);
+        }
+        .cat-arrow.left {
+            left: 4px;
+        }
+        .cat-arrow.right {
+            right: 4px;
+        }
+
+        @media (max-width: 1023px) {
+            .cat-arrow {
+                display: none;
+            }
+        }
+
         .dark-mode .product-card .info .meta .category-tag {
             background: var(--bg-input);
             color: var(--text-muted2);
@@ -863,44 +920,6 @@
 
         <!-- ===== MAIN ===== -->
         <main class="main-content">
-
-            <!-- Banner Carousel -->
-            <div class="banner-carousel">
-                <div class="carousel-track" id="carouselTrack">
-                    <div class="carousel-slide">
-                        <div class="slide-content">
-                            <h2>📚 Textbook Exchange</h2>
-                            <p>Save up to 50% on your next textbook</p>
-                            <span class="slide-cta">Shop Now</span>
-                        </div>
-                    </div>
-                    <div class="carousel-slide">
-                        <div class="slide-content">
-                            <h2>💻 Tech Deals</h2>
-                            <p>Get the best gadgets on campus</p>
-                            <span class="slide-cta">Explore</span>
-                        </div>
-                    </div>
-                    <div class="carousel-slide">
-                        <div class="slide-content">
-                            <h2>🍕 Food &amp; More</h2>
-                            <p>Order from your favorite spots</p>
-                            <span class="slide-cta">Order Now</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-dots" id="carouselDots"></div>
-            </div>
-
-            <!-- Mini Banner -->
-            <div class="mini-banner">
-                <div class="banner-text">
-                    <h3>🎓 Fresher's Deal</h3>
-                    <p>Get 15% off your first purchase</p>
-                </div>
-                <span class="banner-cta">Shop now</span>
-            </div>
-
             <!-- ===== ENHANCED TABS ===== -->
             <div class="section-tabs" id="sectionTabs">
                 <button class="tab-btn active" data-section="hot_sales">
@@ -1073,6 +1092,26 @@
             const LISTINGS_API = `${CAMPUS_URL}listings/categorized`;
             const LOOKUP_API = `${CAMPUS_URL}get-lookup`;
 
+            async function toggleFavourite(listingId) {
+                try {
+                    const response = await fetchWithAuth(
+                        `${CAMPUS_URL}toggle-favourite/${listingId}`,
+                        {
+                            method: 'POST',
+                            headers: { 'Accept': 'application/json' },
+                        }
+                    );
+                    if (!response.ok) throw new Error('Failed to toggle favourite');
+                    const result = await response.json();
+                    if (!result.is_success) throw new Error(result.message || 'Toggle failed');
+                    return result.data.action; // 'added' or 'removed'
+                } catch (error) {
+                    console.error('Toggle favourite error:', error);
+                    throw error;
+                }
+            }
+
+
             // ─── Fetch Lookup Data ────────────────────────────────
             async function fetchLookup() {
                 try {
@@ -1139,7 +1178,11 @@
                         url += `&date_to=${filters.dateTo}`;
                     }
 
-                    const response = await fetchWithAuth(url, { method: 'GET' });
+                    const response = await fetchWithAuth(url, { 
+                        method: 'GET',
+                        showSpinner: true,
+                        spinnerText: 'Loading listing...'
+                    });
                     if (!response.ok) throw new Error('Failed to fetch listings');
                     const result = await response.json();
                     if (!result.is_success) throw new Error(result.message || 'Listings fetch failed');
@@ -1171,47 +1214,117 @@
                 }
             }
 
-            // ─── Populate category chips from lookup ──────────────
-            function populateCategories(data) {
-                const categories = data.categories || [];
-                if (categories.length === 0) {
-                    categoryScroll.innerHTML = `<span class="cat-item active" data-category="all"><i class="fas fa-house"></i> All</span>`;
+            // ─── Setup category scroll arrows ─────────────────────
+            function setupCategoryArrows() {
+                // Remove existing arrows if any (to avoid duplicates)
+                const existingArrows = document.querySelectorAll('.cat-arrow');
+                existingArrows.forEach(el => el.remove());
+
+                const categoriesContainer = document.querySelector('.categories');
+                const scrollContainer = document.getElementById('categoryScroll');
+                if (!categoriesContainer || !scrollContainer) return;
+                if (scrollContainer.scrollWidth <= scrollContainer.clientWidth) {
+                    // No overflow, no need for arrows
                     return;
                 }
 
-                let html = `<span class="cat-item active" data-category="all" data-id="all"><i class="fas fa-house"></i> All</span>`;
-                categories.forEach(cat => {
-                    const icon = cat.icon || 'fas fa-tag';
-                    html += `<span class="cat-item" data-category="${cat.name}" data-id="${cat.id}"><i class="${icon}"></i> ${cat.name}</span>`;
+                // Create left arrow
+                const leftArrow = document.createElement('button');
+                leftArrow.className = 'cat-arrow left';
+                leftArrow.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                leftArrow.setAttribute('aria-label', 'Scroll categories left');
+
+                // Create right arrow
+                const rightArrow = document.createElement('button');
+                rightArrow.className = 'cat-arrow right';
+                rightArrow.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                rightArrow.setAttribute('aria-label', 'Scroll categories right');
+
+                categoriesContainer.appendChild(leftArrow);
+                categoriesContainer.appendChild(rightArrow);
+
+                // Scroll amount: width of one category item + gap
+                const scrollAmount = () => {
+                    const firstItem = scrollContainer.querySelector('.cat-item');
+                    if (!firstItem) return 150;
+                    return firstItem.offsetWidth + 6; // 6px gap
+                };
+
+                leftArrow.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    scrollContainer.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
                 });
-                categoryScroll.innerHTML = html;
 
-                document.querySelectorAll('.cat-item').forEach(function(item) {
-                    item.addEventListener('click', function() {
-                        document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
-                        this.classList.add('active');
-
-                        const categoryId = this.dataset.id;
-                        const categoryName = this.dataset.category;
-
-                        if (categoryId === 'all') {
-                            delete activeFilters.categoryId;
-                            delete activeFilters.categoryName;
-                        } else {
-                            activeFilters.categoryId = categoryId;
-                            activeFilters.categoryName = categoryName;
-                        }
-
-                        if (!isSearchMode && !tabsContainer.classList.contains('hidden')) {
-                            isSearchMode = true;
-                            tabsContainer.classList.add('hidden');
-                        }
-
-                        applyAllFilters();
-                    });
+                rightArrow.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    scrollContainer.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
                 });
+
+                // Update arrow visibility on scroll
+                function updateArrows() {
+                    const left = scrollContainer.scrollLeft;
+                    const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+                    leftArrow.style.opacity = (left > 0) ? '1' : '0.3';
+                    rightArrow.style.opacity = (left < maxScroll - 1) ? '1' : '0.3';
+                }
+
+                scrollContainer.addEventListener('scroll', updateArrows);
+                // Also update on resize
+                let resizeTimeout;
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(updateArrows, 200);
+                });
+
+                // Initial update
+                setTimeout(updateArrows, 100);
             }
 
+            // ─── Populate category chips from lookup ──────────────
+            function populateCategories(data) {
+    const categories = data.categories || [];
+    if (categories.length === 0) {
+        categoryScroll.innerHTML = `<span class="cat-item active" data-category="all"><i class="fas fa-house"></i> All</span>`;
+        setupCategoryArrows(); // still call in case we want arrows? but no overflow
+        return;
+    }
+
+    let html = `<span class="cat-item active" data-category="all" data-id="all"><i class="fas fa-house"></i> All</span>`;
+    categories.forEach(cat => {
+        const icon = cat.icon || 'fas fa-tag';
+        html += `<span class="cat-item" data-category="${cat.name}" data-id="${cat.id}"><i class="${icon}"></i> ${cat.name}</span>`;
+    });
+    categoryScroll.innerHTML = html;
+
+    // ─── Setup scroll arrows ──────────────────────────
+    setupCategoryArrows();
+
+    // ─── Attach click listeners ──────────────────────
+    document.querySelectorAll('.cat-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+
+            const categoryId = this.dataset.id;
+            const categoryName = this.dataset.category;
+
+            if (categoryId === 'all') {
+                delete activeFilters.categoryId;
+                delete activeFilters.categoryName;
+            } else {
+                activeFilters.categoryId = categoryId;
+                activeFilters.categoryName = categoryName;
+            }
+
+            if (!isSearchMode && !tabsContainer.classList.contains('hidden')) {
+                isSearchMode = true;
+                tabsContainer.classList.add('hidden');
+            }
+
+            applyAllFilters();
+        });
+    });
+}
             // ─── Price Slider logic ───────────────────────────────
             function updatePriceSlider() {
                 const minVal = parseInt(priceMinSlider.value);
@@ -1265,6 +1378,23 @@
 
                 if (items.length === 0) {
                     const isFiltered = Object.keys(activeFilters).some(k => activeFilters[k] && activeFilters[k] !== 'all' && activeFilters[k] !== '');
+                    
+                    if (currentSection === 'departmental' && !isFiltered && !isSearchMode) {
+                        grid.innerHTML = `
+                            <div class="empty-state" style="grid-column:1/-1;">
+                                <span class="empty-icon">🏛️</span>
+                                <h3>No Departmental Listings Yet</h3>
+                                <p style="max-width:400px; margin:0 auto;">
+                                    You haven't set your department in your profile. 
+                                    Update your department to see listings from your classmates.
+                                </p>
+                                <br>
+                                <a href="profile.html" class="btn-apply" style="display:inline-block; padding:10px 32px; border-radius:30px; background:var(--green); color:#fff; text-decoration:none; font-weight:600; transition:all 0.2s;">Go to Profile</a>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
                     grid.innerHTML = `
                         <div class="empty-state">
                             <span class="empty-icon">🔍</span>
@@ -1275,42 +1405,46 @@
                     return;
                 }
 
-grid.innerHTML = items.map(item => {
-    const badgeClass = item.badge === 'freebie' ? 'free' : (item.badge === 'sell' ? 'hot' : '');
-    const badgeText = item.badge ? item.badge.toUpperCase() : '';
-    const categoryName = item.category || 'Uncategorized';
-    const isHot = item.is_hot_sales === true;
+                grid.innerHTML = items.map(item => {
+                    const badgeClass = item.badge === 'freebie' ? 'free' : (item.badge === 'sell' ? 'hot' : '');
+                    const badgeText = item.badge ? item.badge.toUpperCase() : '';
+                    const categoryName = item.category || 'Uncategorized';
+                    const isHot = item.is_hot_sales === true;
 
-    // Find category icon from lookup
-    let catIcon = 'fas fa-tag';
-    if (allCategories.length > 0) {
-        const found = allCategories.find(c => c.name === categoryName);
-        if (found && found.icon) catIcon = found.icon;
-    }
+                    // Find category icon from lookup
+                    let catIcon = 'fas fa-tag';
+                    if (allCategories.length > 0) {
+                        const found = allCategories.find(c => c.name === categoryName);
+                        if (found && found.icon) catIcon = found.icon;
+                    }
 
-    const priceDisplay = item.price === 0 ? 'Free' : '₦' + item.price.toLocaleString();
-    const isFree = item.price === 0;
+                    const priceDisplay = item.price === 0 ? 'Free' : '₦' + item.price.toLocaleString();
+                    const isFree = item.price === 0;
 
-    return `
-        <div class="product-card ${isHot ? 'hot-sale' : ''}" data-id="${item.id}" data-title="${item.title}">
-            <div class="img-wrap">
-                <img src="${getImageUrl(item)}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-                ${badgeText ? `<span class="tag ${badgeClass}">${badgeText}</span>` : ''}
-                ${isFree ? `<span class="tag free">FREE</span>` : ''}
-                ${isHot ? `<span class="hot-badge"><i class="fas fa-fire"></i> Hot</span>` : ''}
-                <span class="wishlist-btn"><i class="fas fa-heart" style="color:#e74c3c;"></i></span>
-            </div>
-            <div class="info">
-                <div class="name" title="${item.title}">${item.title}</div>
-                <div class="price">${priceDisplay}</div>
-                <div class="meta">
-                    <span class="location"><i class="fas fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
-                    <span class="category-tag"><i class="${catIcon}"></i> ${categoryName}</span>
-                </div>
-            </div>
-        </div>
-    `;
-}).join('');
+                    const hasLiked = item.has_liked || false;
+                    const heartClass = hasLiked ? 'fas' : 'far';
+                    const heartColor = hasLiked ? 'style="color:#e74c3c;"' : '';
+
+                    return `
+                        <div class="product-card ${isHot ? 'hot-sale' : ''}" data-id="${item.id}" data-title="${item.title}">
+                            <div class="img-wrap">
+                                <img src="${getImageUrl(item)}" alt="${item.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                                ${badgeText ? `<span class="tag ${badgeClass}">${badgeText}</span>` : ''}
+                                ${isFree ? `<span class="tag free">FREE</span>` : ''}
+                                ${isHot ? `<span class="hot-badge"><i class="fas fa-fire"></i> Hot</span>` : ''}
+                                <span class="wishlist-btn"><i class="${heartClass} fa-heart" ${heartColor}></i></span>
+                            </div>
+                            <div class="info">
+                                <div class="name" title="${item.title}">${item.title}</div>
+                                <div class="price">${priceDisplay}</div>
+                                <div class="meta">
+                                    <span class="location"><i class="fas fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
+                                    <span class="category-tag"><i class="${catIcon}"></i> ${categoryName}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
                 // ─── Click on card → navigate to listing details ───
                 grid.querySelectorAll('.product-card').forEach(card => {
                     card.addEventListener('click', function() {
@@ -1318,18 +1452,47 @@ grid.innerHTML = items.map(item => {
                         const title = this.dataset.title || 'Listing';
                         window.location.href = `listing-details.html?id=${id}&title=${encodeURIComponent(title)}`;
                     });
+                    
 
-                    // Wishlist button
+                    const listingId = card.dataset.id;
+                    // Wishlist
                     const wishlistBtn = card.querySelector('.wishlist-btn');
                     if (wishlistBtn) {
-                        wishlistBtn.addEventListener('click', function(e) {
+                        wishlistBtn.addEventListener('click', async function(e) {
                             e.stopPropagation();
                             const icon = this.querySelector('i');
-                            icon.classList.toggle('fas');
-                            icon.classList.toggle('far');
-                            icon.style.color = icon.classList.contains('fas') ? '#e74c3c' : '';
-                            if (typeof showAlert !== 'undefined') {
-                                showAlert.info(icon.classList.contains('fas') ? 'Added to favourites ❤️' : 'Removed from favourites', { duration: 1500 });
+                            const isFilled = icon.classList.contains('fas');
+                            this.style.pointerEvents = 'none';
+
+                            try {
+                                const action = await toggleFavourite(listingId);
+                                if (action === 'added') {
+                                    icon.classList.remove('far');
+                                    icon.classList.add('fas');
+                                    icon.style.color = '#e74c3c';
+                                    showAlert.success('Added to favourites ❤️', { duration: 1500 });
+                                    window.updateFavouriteCountInSession(+1);
+                                } else {
+                                    icon.classList.remove('fas');
+                                    icon.classList.add('far');
+                                    icon.style.color = '';
+                                    showAlert.info('Removed from favourites', { duration: 1500 });
+                                    window.updateFavouriteCountInSession(-1);
+                                }
+                            } catch (error) {
+                                // Revert
+                                if (isFilled) {
+                                    icon.classList.remove('far');
+                                    icon.classList.add('fas');
+                                    icon.style.color = '#e74c3c';
+                                } else {
+                                    icon.classList.remove('fas');
+                                    icon.classList.add('far');
+                                    icon.style.color = '';
+                                }
+                                showAlert.error('Could not update favourites', { duration: 2000 });
+                            } finally {
+                                this.style.pointerEvents = '';
                             }
                         });
                     }
@@ -1765,62 +1928,6 @@ grid.innerHTML = items.map(item => {
                 }
             });
 
-            // ─── Carousel ──────────────────────────────────────────
-            const track = document.getElementById('carouselTrack');
-            const dotsContainer = document.getElementById('carouselDots');
-            if (track && dotsContainer) {
-                const slides = track.querySelectorAll('.carousel-slide');
-                let currentIndex = 0;
-                const totalSlides = slides.length;
-                let intervalId = null;
-
-                slides.forEach(function(_, index) {
-                    const dot = document.createElement('span');
-                    dot.classList.add('dot');
-                    if (index === 0) dot.classList.add('active');
-                    dot.dataset.index = index;
-                    dot.addEventListener('click', function() {
-                        goToSlide(parseInt(this.dataset.index, 10));
-                    });
-                    dotsContainer.appendChild(dot);
-                });
-
-                const dots = dotsContainer.querySelectorAll('.dot');
-
-                function goToSlide(index) {
-                    if (index < 0) index = totalSlides - 1;
-                    if (index >= totalSlides) index = 0;
-                    currentIndex = index;
-                    track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
-                    dots.forEach(function(dot, i) {
-                        dot.classList.toggle('active', i === currentIndex);
-                    });
-                }
-
-                function nextSlide() {
-                    goToSlide(currentIndex + 1);
-                }
-
-                function startCarousel() {
-                    if (intervalId) clearInterval(intervalId);
-                    intervalId = setInterval(nextSlide, 4000);
-                }
-
-                function stopCarousel() {
-                    if (intervalId) {
-                        clearInterval(intervalId);
-                        intervalId = null;
-                    }
-                }
-
-                const carousel = track.closest('.banner-carousel');
-                carousel.addEventListener('mouseenter', stopCarousel);
-                carousel.addEventListener('mouseleave', startCarousel);
-                carousel.addEventListener('touchstart', stopCarousel);
-                carousel.addEventListener('touchend', startCarousel);
-
-                startCarousel();
-            }
 
             // ─── INIT ──────────────────────────────────────────────
             async function init() {

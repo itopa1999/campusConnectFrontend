@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="/assets/css/style.css" />
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
-    <!-- Page-Specific Styles -->
     <style>
         .create-wrapper {
             max-width: 720px;
@@ -50,7 +49,54 @@
             transition: color var(--transition);
         }
 
-        /* ─── Steps Progress ─── */
+        /* Points Balance Banner */
+        .points-balance-banner {
+            background: var(--green-bg);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border: 1px solid rgba(13, 138, 62, 0.15);
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .points-balance-banner .balance-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .points-balance-banner .balance-label i {
+            color: var(--green);
+        }
+        .points-balance-banner .balance-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--green);
+        }
+        .points-balance-banner .balance-refresh {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .points-balance-banner .balance-refresh:hover {
+            background: rgba(13, 138, 62, 0.08);
+            color: var(--green);
+        }
+        .dark-mode .points-balance-banner {
+            background: var(--green-bg);
+            border-color: rgba(46, 204, 113, 0.15);
+        }
+
+        /* Steps Progress */
         .steps-progress {
             display: flex;
             align-items: center;
@@ -113,7 +159,6 @@
         .steps-progress .step-line.completed {
             background: var(--green);
         }
-
         @media (min-width: 480px) {
             .steps-progress .step-dot .label {
                 display: inline;
@@ -133,7 +178,7 @@
             }
         }
 
-        /* ─── Step Content ─── */
+        /* Step Content */
         .step-content {
             display: none;
             animation: fadeUp 0.4s ease;
@@ -141,7 +186,6 @@
         .step-content.active {
             display: block;
         }
-
         .step-content .step-title {
             font-size: 17px;
             font-weight: 700;
@@ -156,7 +200,7 @@
             transition: color var(--transition);
         }
 
-        /* ─── Form Elements ─── */
+        /* Form Elements */
         .create-card .form-group {
             margin-bottom: 18px;
         }
@@ -216,29 +260,12 @@
             cursor: not-allowed;
         }
 
-        /* ─── Price with Naira Icon ─── */
-        .price-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .price-wrapper .naira-icon {
-            position: absolute;
-            left: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-muted);
-            pointer-events: none;
-            transition: color var(--transition);
-        }
-        .price-wrapper input {
-            padding-left: 36px;
-        }
-        .price-wrapper input:focus+.naira-icon {
-            color: var(--green);
+        /* ─── Price Input (no icon) ─── */
+        .price-input {
+            /* No special wrapper needed – just a normal input */
         }
 
-        /* ─── Custom Multi-Select (Locations) ─── */
+        /* Location Chips */
         .location-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -301,21 +328,43 @@
         .dark-mode .location-chip.selected {
             background: rgba(46, 204, 113, 0.06);
         }
-
         @media (max-width: 480px) {
             .location-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* ─── Badges (Step 3) ─── */
-        .badge-grid {
+        .location-grid {
+            max-height: 420px;    
+            overflow-y: auto;
+            padding-right: 6px;         /* prevent content from hiding under scrollbar */
+            scrollbar-width: thin;      /* Firefox */
+        }
+        .location-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .location-grid::-webkit-scrollbar-track {
+            background: var(--bg-input);
+            border-radius: 10px;
+        }
+        .location-grid::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        .location-grid::-webkit-scrollbar-thumb:hover {
+            background: var(--green);
+        }
+
+        /* Badge & Type Chips */
+        .badge-grid,
+        .type-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 10px;
             margin-top: 4px;
         }
-        .badge-chip {
+        .badge-chip,
+        .type-chip {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -329,16 +378,19 @@
             font-weight: 500;
             color: var(--text-secondary);
         }
-        .badge-chip:hover {
+        .badge-chip:hover,
+        .type-chip:hover {
             border-color: var(--green);
             background: var(--bg-card);
         }
-        .badge-chip.selected {
+        .badge-chip.selected,
+        .type-chip.selected {
             border-color: var(--green);
             background: var(--green-bg);
             color: var(--green);
         }
-        .badge-chip .badge-radio {
+        .badge-chip .badge-radio,
+        .type-chip .type-radio {
             width: 18px;
             height: 18px;
             border-radius: 50%;
@@ -349,23 +401,27 @@
             flex-shrink: 0;
             transition: all 0.2s;
         }
-        .badge-chip.selected .badge-radio {
+        .badge-chip.selected .badge-radio,
+        .type-chip.selected .type-radio {
             border-color: var(--green);
         }
-        .badge-chip .badge-radio i {
+        .badge-chip .badge-radio i,
+        .type-chip .type-radio i {
             font-size: 10px;
             opacity: 0;
             transition: opacity 0.2s;
             color: var(--green);
         }
-        .badge-chip.selected .badge-radio i {
+        .badge-chip.selected .badge-radio i,
+        .type-chip.selected .type-radio i {
             opacity: 1;
         }
-        .dark-mode .badge-chip.selected {
+        .dark-mode .badge-chip.selected,
+        .dark-mode .type-chip.selected {
             background: rgba(46, 204, 113, 0.06);
         }
 
-        /* ─── Custom Checkboxes (Ads) ─── */
+        /* Ads Checkboxes */
         .ads-group {
             display: flex;
             flex-direction: column;
@@ -428,11 +484,46 @@
             font-weight: 400;
             color: var(--text-muted);
         }
+        .ads-check .ads-points {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--green);
+            background: var(--green-bg);
+            padding: 2px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
         .dark-mode .ads-check.checked {
             background: rgba(46, 204, 113, 0.06);
         }
 
-        /* ─── File Upload (reuse) ─── */
+        /* Total Points Display */
+        .total-points-display {
+            margin-top: 12px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .total-points-display .label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .total-points-display .points-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--green);
+        }
+        .total-points-display .points-value.insufficient {
+            color: var(--red);
+        }
+
+        /* File Upload */
         .file-drop-zone {
             border: 2px dashed var(--border-color);
             border-radius: 12px;
@@ -575,7 +666,7 @@
             border-color: var(--border-color);
         }
 
-        /* ─── Step 4: Review ─── */
+        /* Review */
         .review-item {
             display: flex;
             justify-content: space-between;
@@ -644,7 +735,13 @@
             font-size: 12px;
             color: var(--text-muted);
         }
-
+        .review-item .review-value .points-cost {
+            color: var(--green);
+            font-weight: 700;
+        }
+        .review-item .review-value .points-cost.insufficient {
+            color: var(--red);
+        }
         .review-divider {
             height: 1px;
             background: var(--border-color);
@@ -652,7 +749,7 @@
             transition: background var(--transition);
         }
 
-        /* ─── Step Actions ─── */
+        /* Step Actions */
         .step-actions {
             display: flex;
             gap: 12px;
@@ -702,7 +799,6 @@
             cursor: not-allowed;
             transform: none;
         }
-
         .btn-submit .spinner-btn {
             display: none;
         }
@@ -713,8 +809,6 @@
         .btn-submit.loading .btn-text {
             display: none;
         }
-
-        /* ─── Responsive ─── */
         @media (max-width: 480px) {
             .create-card {
                 padding: 16px 18px;
@@ -728,12 +822,19 @@
                 padding: 10px 16px;
                 flex: 1;
             }
-            .badge-grid {
+            .badge-grid,
+            .type-grid {
                 grid-template-columns: 1fr 1fr;
+            }
+            .points-balance-banner {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .points-balance-banner .balance-value {
+                font-size: 18px;
             }
         }
 
-        /* ─── Demo note ─── */
         .demo-note {
             text-align: center;
             font-size: 10px;
@@ -772,6 +873,18 @@
 
                 <!-- ===== CREATE CARD ===== -->
                 <div class="create-card">
+
+                    <!-- Points Balance Banner -->
+                    <div class="points-balance-banner" id="pointsBalanceBanner">
+                        <span class="balance-label">
+                            <i class="fa-regular fa-coins"></i> Points Balance
+                        </span>
+                        <span class="balance-value" id="pointsBalanceDisplay">0</span>
+                        <button class="balance-refresh" id="refreshPointsBtn" title="Refresh balance">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+
                     <div class="card-title">
                         <i class="fa-regular fa-plus"></i> Create Listing
                     </div>
@@ -819,7 +932,7 @@
                                 <div class="form-select-wrap">
                                     <select id="listingCategory" class="form-select" required>
                                         <option value="">Select a category...</option>
-                                        <!-- Populated from dummy backend -->
+                                        <!-- Populated from API -->
                                     </select>
                                 </div>
                                 <div class="help-text" id="categoryHelp">Choose the category that best fits your item.</div>
@@ -827,32 +940,23 @@
 
                             <!-- Description -->
                             <div class="form-group">
-                                <label for="listingDescription">Description</label>
-                                <textarea id="listingDescription" class="form-textarea" rows="3" placeholder="Describe your item in detail – condition, specs, reason for selling…"></textarea>
+                                <label for="listingDescription">Description <span class="required-star">*</span></label>
+                                <textarea id="listingDescription" class="form-textarea" rows="3" placeholder="Describe your item in detail – condition, specs, reason for selling…" required></textarea>
                                 <div class="help-text" id="descHelp">Help buyers understand what you're offering.</div>
                             </div>
 
-                            <!-- Price -->
+                            <!-- Price (no icon, label shows currency) -->
                             <div class="form-group">
-                                <label for="listingPrice">Price <span class="required-star">*</span></label>
-                                <div class="price-wrapper">
-                                    <span class="naira-icon">₦</span>
-                                    <input type="number" id="listingPrice" class="form-input" placeholder="0" min="0" step="100" required />
-                                </div>
+                                <label for="listingPrice">Price (₦) <span class="required-star">*</span></label>
+                                <input type="text" id="listingPrice" class="form-input" placeholder="0" required />
                                 <div class="help-text" id="priceHelp">Enter the price in Naira (₦). Set to 0 for free items.</div>
                             </div>
 
-                            <!-- Listing Type -->
+                            <!-- Listing Type (radio chips) -->
                             <div class="form-group">
-                                <label for="listingType">Listing Type <span class="required-star">*</span></label>
-                                <div class="form-select-wrap">
-                                    <select id="listingType" class="form-select" required>
-                                        <option value="">Select type...</option>
-                                        <option value="sell">🛒 Sell</option>
-                                        <option value="freebie">🎁 Freebie</option>
-                                        <option value="wanted">🔍 Wanted</option>
-                                        <option value="swap">🔄 Swap</option>
-                                    </select>
+                                <label>Listing Type <span class="required-star">*</span></label>
+                                <div class="type-grid" id="typeGrid">
+                                    <!-- Populated from API -->
                                 </div>
                                 <div class="help-text" id="typeHelp">Choose "Freebie" if you're giving it away for free.</div>
                             </div>
@@ -871,7 +975,7 @@
                         <div class="form-group">
                             <label>Select Locations <span class="required-star">*</span></label>
                             <div class="location-grid" id="locationGrid">
-                                <!-- Populated from dummy backend -->
+                                <!-- Populated from API -->
                             </div>
                             <div class="help-text" id="locationHelp">Select at least one location where the item can be found.</div>
                         </div>
@@ -891,38 +995,31 @@
                         <div class="form-group">
                             <label>Badge <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
                             <div class="badge-grid" id="badgeGrid">
-                                <!-- Populated from dummy backend -->
+                                <!-- Populated from API -->
                             </div>
                             <div class="help-text" id="badgeHelp">A badge helps your listing stand out.</div>
                         </div>
 
-                        <!-- Ads Checkboxes -->
+                        <!-- Ads Checkboxes (with points) -->
                         <div class="form-group">
                             <label>Promotion Options</label>
                             <div class="ads-group" id="adsGroup">
-                                <div class="ads-check" data-ads="banner">
-                                    <span class="check-box"><i class="fa-solid fa-check"></i></span>
-                                    <span class="ads-label">
-                                        📢 Banner Ad
-                                        <small>Feature your listing as a banner ad on the home page.</small>
-                                    </span>
-                                </div>
-                                <div class="ads-check" data-ads="hot_sale">
-                                    <span class="check-box"><i class="fa-solid fa-check"></i></span>
-                                    <span class="ads-label">
-                                        🔥 Hot Sale
-                                        <small>Tag your listing as a hot deal for extra visibility.</small>
-                                    </span>
-                                </div>
+                                <!-- Populated from API -->
                             </div>
                             <div class="help-text" id="adsHelp">Boost your listing's visibility with these options.</div>
+                        </div>
+
+                        <!-- Total Points Deduction (base 1 + ads) -->
+                        <div class="total-points-display" id="totalPointsDisplay">
+                            <span class="label"><i class="fa-regular fa-coins"></i> Total points to deduct:</span>
+                            <span class="points-value" id="totalPointsValue">1</span>
                         </div>
 
                         <!-- Image Upload -->
                         <div class="form-group">
                             <label>Listing Image <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
                             <div class="file-drop-zone" id="fileDropZone">
-                                <div class="drop-icon"><i class="fa-regular fa-cloud-arrow-up"></i></div>
+                                <div class="drop-icon"><i class="fa-regular fas fa-cloud-arrow-up"></i></div>
                                 <div class="drop-text">
                                     Drop your image here or <strong>browse</strong>
                                 </div>
@@ -966,7 +1063,7 @@
 
         <!-- ===== DEMO NOTE ===== -->
         <div class="demo-note">
-            <span>CampusHub</span> • Create Listing • 4-step form with dummy data
+            <span>CampusHub</span> • Create Listing • 4-step form with real API data
         </div>
 
     </div>
@@ -975,48 +1072,9 @@
     <script src="/assets/js/global.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
-<script src="/assets/js/form-helper.js"></script>
     <script>
         (function() {
             'use strict';
-
-            // ============================================================
-            // DUMMY BACKEND DATA
-            // ============================================================
-
-            const DUMMY_CATEGORIES = [
-                { id: 1, name: 'Books & Textbooks' },
-                { id: 2, name: 'Laptops & Computers' },
-                { id: 3, name: 'Electronics' },
-                { id: 4, name: 'Fashion & Clothing' },
-                { id: 5, name: 'Food & Groceries' },
-                { id: 6, name: 'Sports & Fitness' },
-                { id: 7, name: 'Services' },
-                { id: 8, name: 'Roommates & Shared Apartments' },
-                { id: 9, name: 'Furniture' },
-                { id: 10, name: 'Other' },
-            ];
-
-            const DUMMY_LOCATIONS = [
-                { id: 1, name: 'Main Gate', description: 'Main entrance' },
-                { id: 2, name: 'Lecture Theatres Complex', description: 'All lecture halls' },
-                { id: 3, name: 'Library', description: 'University library' },
-                { id: 4, name: 'Student Union Building', description: 'SUB' },
-                { id: 5, name: 'Cafeteria', description: 'Main dining area' },
-                { id: 6, name: 'Faculty of Engineering', description: 'Engineering block' },
-                { id: 7, name: 'Faculty of Science', description: 'Science block' },
-                { id: 8, name: 'Faculty of Arts', description: 'Arts block' },
-                { id: 9, name: 'Sports Complex', description: 'Stadium & gym' },
-                { id: 10, name: 'Health Centre', description: 'Clinic' },
-            ];
-
-            const DUMMY_BADGES = [
-                { id: 1, name: '🔥 Hot', value: 'hot' },
-                { id: 2, name: '💰 Bargain', value: 'bargain' },
-                { id: 3, name: '✨ New', value: 'new' },
-                { id: 4, name: '🆓 Free', value: 'free' },
-                { id: 5, name: '⭐ Featured', value: 'featured' },
-            ];
 
             // ============================================================
             // DOM REFS
@@ -1044,24 +1102,23 @@
             const step4Prev = document.getElementById('step4Prev');
             const submitBtn = document.getElementById('submitBtn');
 
-            // Step 1 fields
             const titleInput = document.getElementById('listingTitle');
             const categorySelect = document.getElementById('listingCategory');
             const descInput = document.getElementById('listingDescription');
             const priceInput = document.getElementById('listingPrice');
-            const typeSelect = document.getElementById('listingType');
+            const typeGrid = document.getElementById('typeGrid');
 
-            // Step 2
             const locationGrid = document.getElementById('locationGrid');
-
-            // Step 3
             const badgeGrid = document.getElementById('badgeGrid');
-            const adsChecks = document.querySelectorAll('.ads-check');
+            const adsGroup = document.getElementById('adsGroup');
+            const totalPointsValue = document.getElementById('totalPointsValue');
+            const totalPointsDisplay = document.getElementById('totalPointsDisplay');
+
             const fileInput = document.getElementById('listingImage');
             const fileDropZone = document.getElementById('fileDropZone');
-
-            // Step 4
             const reviewContainer = document.getElementById('reviewContainer');
+            const pointsBalanceDisplay = document.getElementById('pointsBalanceDisplay');
+            const refreshPointsBtn = document.getElementById('refreshPointsBtn');
 
             // ============================================================
             // STATE
@@ -1074,38 +1131,152 @@
                 description: '',
                 price: 0,
                 type: '',
-                locations: [], // array of location ids
+                locations: [],
                 badge: '',
-                ads: {
-                    banner: false,
-                    hot_sale: false,
-                },
+                ads: {},
                 image: null,
                 imageName: '',
             };
 
+            let advertTypes = [];
+            let totalPoints = 1; // base cost
+            let userPoints = 0;
+
             // ============================================================
-            // INIT: Populate dropdowns & grids
+            // POINTS BALANCE
             // ============================================================
 
-            function populateCategories() {
+            function updatePointsBalance() {
+                const user = window.getUserData();
+                if (user && user.point_bal !== undefined) {
+                    userPoints = user.point_bal || 0;
+                } else {
+                    userPoints = 0;
+                }
+                pointsBalanceDisplay.textContent = userPoints;
+                updateTotalPointsDisplay();
+            }
+
+            refreshPointsBtn.addEventListener('click', function() {
+                if (typeof window.refreshPointBalance === 'function') {
+                    window.refreshPointBalance();
+                } else {
+                    updatePointsBalance();
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.success('Points balance refreshed', { duration: 1500 });
+                    }
+                }
+            });
+
+            // ============================================================
+            // PRICE FORMATTING (comma-separated, no icon)
+            // ============================================================
+
+            function formatPrice(value) {
+                let num = value.replace(/[^0-9]/g, '');
+                if (num === '') return '';
+                let intNum = parseInt(num, 10);
+                if (isNaN(intNum)) return '';
+                return intNum.toLocaleString('en-US');
+            }
+
+            function parsePrice(value) {
+                return parseInt(value.replace(/,/g, ''), 10) || 0;
+            }
+
+            priceInput.addEventListener('input', function() {
+                let raw = this.value;
+                let formatted = formatPrice(raw);
+                let cursorPos = this.selectionStart;
+                this.value = formatted;
+                let newPos = cursorPos + (formatted.length - raw.length);
+                this.setSelectionRange(newPos, newPos);
+            });
+
+            priceInput.addEventListener('blur', function() {
+                if (this.value === '') {
+                    this.value = '0';
+                }
+                this.value = formatPrice(this.value);
+                formData.price = parsePrice(this.value);
+            });
+
+            // ============================================================
+            // FETCH LOOKUP DATA
+            // ============================================================
+
+            const LOOKUP_API = `${CAMPUS_URL}get-lookup`;
+
+            async function fetchLookup() {
+                try {
+                    const response = await fetchWithAuth(
+                        `${LOOKUP_API}?is_category=true&is_hotspot=true&is_badge_choices=true&is_type_choices=true&is_advert_type=true`,
+                        { method: 'GET' }
+                    );
+                    if (!response.ok) throw new Error('Failed to fetch lookup');
+                    const result = await response.json();
+                    if (!result.is_success) throw new Error(result.message || 'Lookup failed');
+                    return result.data;
+                } catch (error) {
+                    console.error('Lookup error:', error);
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error('Failed to load data. Please refresh.');
+                    }
+                    return null;
+                }
+            }
+
+            // ============================================================
+            // POPULATE FORM ELEMENTS FROM API
+            // ============================================================
+
+            function populateCategories(categories) {
                 categorySelect.innerHTML = '<option value="">Select a category...</option>';
-                DUMMY_CATEGORIES.forEach(cat => {
+                categories.forEach(cat => {
                     categorySelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
                 });
             }
 
-            function populateLocations() {
+            function populateTypes(types) {
+                typeGrid.innerHTML = '';
+                types.forEach(t => {
+                    const chip = document.createElement('div');
+                    chip.className = 'type-chip';
+                    chip.dataset.value = t.value;
+                    chip.innerHTML = `
+                        <span class="type-radio"><i class="fa-solid fa-check"></i></span>
+                        ${t.label}
+                    `;
+                    chip.addEventListener('click', function() {
+                        document.querySelectorAll('.type-chip').forEach(el => el.classList.remove('selected'));
+                        this.classList.add('selected');
+                        formData.type = this.dataset.value;
+                        // If freebie, set price to 0 and disable
+                        if (formData.type === 'freebie') {
+                            priceInput.value = '0';
+                            priceInput.disabled = true;
+                            setHelp('priceHelp', 'Price is set to 0 for free items.', false);
+                        } else {
+                            priceInput.disabled = false;
+                            if (priceInput.value === '0') priceInput.value = '';
+                            setHelp('priceHelp', 'Enter the price in Naira (₦). Set to 0 for free items.', false);
+                        }
+                    });
+                    typeGrid.appendChild(chip);
+                });
+            }
+
+            function populateLocations(hotspots) {
                 locationGrid.innerHTML = '';
-                DUMMY_LOCATIONS.forEach(loc => {
+                hotspots.forEach(loc => {
                     const chip = document.createElement('div');
                     chip.className = 'location-chip';
                     chip.dataset.id = loc.id;
                     chip.innerHTML = `
-                            <span class="chip-check"><i class="fa-solid fa-check"></i></span>
-                            ${loc.name}
-                            <span class="chip-desc">${loc.description}</span>
-                        `;
+                        <span class="chip-check"><i class="fa-solid fa-check"></i></span>
+                        ${loc.name}
+                        <span class="chip-desc">${loc.description || ''}</span>
+                    `;
                     chip.addEventListener('click', function() {
                         this.classList.toggle('selected');
                         updateLocations();
@@ -1114,18 +1285,18 @@
                 });
             }
 
-            function populateBadges() {
+            function populateBadges(badges) {
                 badgeGrid.innerHTML = '';
-                DUMMY_BADGES.forEach(badge => {
+                badges.forEach(b => {
                     const chip = document.createElement('div');
                     chip.className = 'badge-chip';
-                    chip.dataset.value = badge.value;
+                    chip.dataset.value = b.value;
                     chip.innerHTML = `
-                            <span class="badge-radio"><i class="fa-solid fa-check"></i></span>
-                            ${badge.name}
-                        `;
+                        <span class="badge-radio"><i class="fa-solid fa-check"></i></span>
+                        ${b.label}
+                    `;
                     chip.addEventListener('click', function() {
-                        document.querySelectorAll('.badge-chip').forEach(b => b.classList.remove('selected'));
+                        document.querySelectorAll('.badge-chip').forEach(el => el.classList.remove('selected'));
                         this.classList.add('selected');
                         formData.badge = this.dataset.value;
                     });
@@ -1133,25 +1304,65 @@
                 });
             }
 
-            function initAds() {
-                adsChecks.forEach(check => {
-                    check.addEventListener('click', function() {
+            function populateAds(adverts) {
+                advertTypes = adverts;
+                adsGroup.innerHTML = '';
+                adverts.forEach(ad => {
+                    const div = document.createElement('div');
+                    div.className = 'ads-check';
+                    div.dataset.value = ad.value;
+                    div.innerHTML = `
+                        <span class="check-box"><i class="fa-solid fa-check"></i></span>
+                        <span class="ads-label">
+                            ${ad.label}
+                            <small>${ad.description || 'Boost your listing'}</small>
+                        </span>
+                        <span class="ads-points">${ad.points} pts</span>
+                    `;
+                    div.addEventListener('click', function() {
                         this.classList.toggle('checked');
-                        const key = this.dataset.ads;
-                        formData.ads[key] = this.classList.contains('checked');
+                        const value = this.dataset.value;
+                        formData.ads[value] = this.classList.contains('checked');
+                        updateTotalPointsDisplay();
                     });
+                    adsGroup.appendChild(div);
                 });
             }
 
             // ============================================================
-            // FILE UPLOAD HANDLER
+            // LOCATIONS UPDATE
+            // ============================================================
+
+            function updateLocations() {
+                const selected = document.querySelectorAll('.location-chip.selected');
+                formData.locations = Array.from(selected).map(el => parseInt(el.dataset.id));
+            }
+
+            // ============================================================
+            // TOTAL POINTS CALCULATION (base 1 + ads)
+            // ============================================================
+
+            function updateTotalPointsDisplay() {
+                let total = 1; // base cost
+                advertTypes.forEach(ad => {
+                    if (formData.ads[ad.value]) {
+                        total += ad.points || 0;
+                    }
+                });
+                totalPoints = total;
+                totalPointsValue.textContent = total;
+                totalPointsValue.classList.toggle('insufficient', total > userPoints);
+                totalPointsDisplay.style.borderColor = (total > userPoints && total > 0) ? 'var(--red)' : 'var(--border-color)';
+            }
+
+            // ============================================================
+            // FILE UPLOAD
             // ============================================================
 
             function initFileUpload() {
                 const input = fileInput;
                 const zone = fileDropZone;
 
-                // Drag events
                 ['dragenter', 'dragover'].forEach(eventName => {
                     zone.addEventListener(eventName, e => {
                         e.preventDefault();
@@ -1214,24 +1425,18 @@
                     return;
                 }
 
-                // Validate size (5MB)
                 const maxSize = 5 * 1024 * 1024;
                 if (file.size > maxSize) {
-                    if (errorEl) {
-                        errorEl.textContent = 'File too large. Max 5MB.';
-                    }
+                    if (errorEl) errorEl.textContent = 'File too large. Max 5MB.';
                     input.value = '';
                     clearFilePreview();
                     zone.classList.remove('has-file');
                     return;
                 }
 
-                // Validate type
                 const validTypes = ['image/jpeg', 'image/png'];
                 if (!validTypes.includes(file.type)) {
-                    if (errorEl) {
-                        errorEl.textContent = 'Invalid file type. Please upload JPG or PNG.';
-                    }
+                    if (errorEl) errorEl.textContent = 'Invalid file type. Please upload JPG or PNG.';
                     input.value = '';
                     clearFilePreview();
                     zone.classList.remove('has-file');
@@ -1240,25 +1445,21 @@
 
                 if (errorEl) errorEl.textContent = '';
                 zone.classList.add('has-file');
-
-                // Store in formData
                 formData.image = file;
                 formData.imageName = file.name;
 
-                // Show preview
-                const isImage = file.type.startsWith('image/');
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     container.innerHTML = `
-                            <div class="file-preview file-preview-image">
-                                <img src="${e.target.result}" alt="${file.name}" />
-                                <div class="file-info" style="text-align:center; margin-top:4px;">
-                                    <div class="file-name">${file.name}</div>
-                                    <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
-                                </div>
-                                <button type="button" class="file-remove" aria-label="Remove file">&times;</button>
+                        <div class="file-preview file-preview-image">
+                            <img src="${e.target.result}" alt="${file.name}" />
+                            <div class="file-info" style="text-align:center; margin-top:4px;">
+                                <div class="file-name">${file.name}</div>
+                                <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
                             </div>
-                        `;
+                            <button type="button" class="file-remove" aria-label="Remove file">&times;</button>
+                        </div>
+                    `;
                     container.querySelector('.file-remove')?.addEventListener('click', function(e) {
                         e.stopPropagation();
                         input.value = '';
@@ -1282,19 +1483,14 @@
             // ============================================================
 
             function goToStep(step) {
-                // Validate current step before proceeding
                 if (step > currentStep) {
-                    if (!validateStep(currentStep)) {
-                        return;
-                    }
+                    if (!validateStep(currentStep)) return;
                 }
 
-                // Update visibility
                 Object.keys(steps).forEach(key => {
                     steps[key].classList.toggle('active', parseInt(key) === step);
                 });
 
-                // Update dots
                 dots.forEach((dot, index) => {
                     const num = index + 1;
                     dot.classList.remove('active', 'completed');
@@ -1302,19 +1498,12 @@
                     else if (num < step) dot.classList.add('completed');
                 });
 
-                // Update lines
                 for (let i = 1; i <= 3; i++) {
                     lines[i].classList.toggle('completed', i < step);
                 }
 
                 currentStep = step;
-
-                // If step 4, render review
-                if (step === 4) {
-                    renderReview();
-                }
-
-                // Scroll to top of card
+                if (step === 4) renderReview();
                 document.querySelector('.create-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
 
@@ -1338,6 +1527,18 @@
                         formData.title = title;
                     }
 
+                    // Description
+                    const description = descInput.value.trim();
+                    if (!description) {
+                        setHelp('descHelp', 'Please enter a description.', true);
+                        descInput.classList.add('error');
+                        valid = false;
+                    } else {
+                        setHelp('descHelp', 'Help buyers understand what you\'re offering.', false);
+                        descInput.classList.remove('error');
+                        formData.description = description;
+                    }
+
                     // Category
                     if (!categorySelect.value) {
                         setHelp('categoryHelp', 'Please select a category.', true);
@@ -1349,11 +1550,8 @@
                         formData.category = categorySelect.value;
                     }
 
-                    // Description
-                    formData.description = descInput.value.trim();
-
                     // Price
-                    const price = parseFloat(priceInput.value);
+                    const price = parsePrice(priceInput.value);
                     if (isNaN(price) || price < 0) {
                         setHelp('priceHelp', 'Please enter a valid price.', true);
                         priceInput.classList.add('error');
@@ -1365,24 +1563,11 @@
                     }
 
                     // Listing Type
-                    if (!typeSelect.value) {
+                    if (!formData.type) {
                         setHelp('typeHelp', 'Please select a listing type.', true);
-                        typeSelect.classList.add('error');
                         valid = false;
                     } else {
                         setHelp('typeHelp', 'Choose "Freebie" if you\'re giving it away for free.', false);
-                        typeSelect.classList.remove('error');
-                        formData.type = typeSelect.value;
-
-                        // If freebie, price = 0 and disable
-                        if (typeSelect.value === 'freebie') {
-                            priceInput.value = 0;
-                            priceInput.disabled = true;
-                            formData.price = 0;
-                            setHelp('priceHelp', 'Price is set to 0 for free items.', false);
-                        } else {
-                            priceInput.disabled = false;
-                        }
                     }
 
                     return valid;
@@ -1400,7 +1585,12 @@
                 }
 
                 if (step === 3) {
-                    // Badge is optional, image is optional
+                    if (totalPoints > userPoints) {
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.warning(`You don't have enough points. You need ${totalPoints} points but have ${userPoints}.`, { duration: 3000 });
+                        }
+                        return false;
+                    }
                     return true;
                 }
 
@@ -1414,197 +1604,284 @@
                 el.className = 'help-text' + (isError ? ' error' : '');
             }
 
-            function updateLocations() {
-                const selected = document.querySelectorAll('.location-chip.selected');
-                formData.locations = Array.from(selected).map(el => parseInt(el.dataset.id));
-            }
-
             // ============================================================
             // RENDER REVIEW
             // ============================================================
 
             function renderReview() {
-                // Gather latest data
                 formData.title = titleInput.value.trim();
                 formData.category = categorySelect.value;
                 formData.description = descInput.value.trim();
-                formData.price = parseFloat(priceInput.value) || 0;
-                formData.type = typeSelect.value;
+                formData.price = parsePrice(priceInput.value);
 
-                const categoryName = DUMMY_CATEGORIES.find(c => c.id == formData.category)?.name || 'Not selected';
+                const categories = Array.from(categorySelect.options)
+                    .find(opt => opt.value == formData.category);
+                const categoryName = categories ? categories.text : 'Not selected';
+
                 const typeLabels = {
                     'sell': '🛒 Sell',
                     'freebie': '🎁 Freebie',
                     'wanted': '🔍 Wanted',
-                    'swap': '🔄 Swap'
+                    'service': '🛠️ Service',
                 };
                 const typeLabel = typeLabels[formData.type] || formData.type;
 
-                const locationNames = DUMMY_LOCATIONS
-                    .filter(l => formData.locations.includes(l.id))
-                    .map(l => l.name);
+                const locationNames = Array.from(document.querySelectorAll('.location-chip.selected'))
+                    .map(el => el.textContent.trim());
 
-                const badgeName = DUMMY_BADGES.find(b => b.value === formData.badge)?.name || 'None selected';
+                const badgeEl = document.querySelector('.badge-chip.selected');
+                const badgeName = badgeEl ? badgeEl.textContent.trim() : 'None selected';
 
-                const adsList = [];
-                if (formData.ads.banner) adsList.push('📢 Banner Ad');
-                if (formData.ads.hot_sale) adsList.push('🔥 Hot Sale');
+                const selectedAds = advertTypes.filter(ad => formData.ads[ad.value]);
+                const adsList = selectedAds.map(ad => `${ad.label} (${ad.points} pts)`);
 
                 const priceDisplay = formData.type === 'freebie' ? '₦0 (Free)' : '₦' + formData.price.toLocaleString();
 
-                reviewContainer.innerHTML = `
-                        <div class="review-item">
-                            <span class="review-label">Title</span>
-                            <span class="review-value">${formData.title || '—'}</span>
-                        </div>
+                let pointsCostHtml = '';
+                if (totalPoints > 0) {
+                    const insufficient = totalPoints > userPoints;
+                    pointsCostHtml = `
                         <div class="review-divider"></div>
                         <div class="review-item">
-                            <span class="review-label">Category</span>
-                            <span class="review-value">${categoryName}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Description</span>
-                            <span class="review-value">${formData.description || '—'}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Price</span>
-                            <span class="review-value">${priceDisplay}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Listing Type</span>
-                            <span class="review-value">${typeLabel}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Locations</span>
-                            <span class="review-value">
-                                ${locationNames.length > 0 ? locationNames.map(n => `<span class="location-pill selected">${n}</span>`).join('') : '—'}
-                            </span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Badge</span>
-                            <span class="review-value"><span class="badge-pill ${formData.badge ? 'selected' : ''}">${badgeName}</span></span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Promotions</span>
-                            <span class="review-value">${adsList.length > 0 ? adsList.join(', ') : 'None'}</span>
-                        </div>
-                        <div class="review-divider"></div>
-                        <div class="review-item">
-                            <span class="review-label">Image</span>
-                            <span class="review-value">
-                                ${formData.image ? `
-                                    <div class="file-preview-small">
-                                        <img src="${URL.createObjectURL(formData.image)}" alt="${formData.imageName}" />
-                                        <span>${formData.imageName}</span>
-                                    </div>
-                                ` : 'No image uploaded'}
+                            <span class="review-label"><i class="fa-regular fa-coins"></i> Points to deduct</span>
+                            <span class="review-value points-cost ${insufficient ? 'insufficient' : ''}">
+                                ${totalPoints} pts (1 base + ${totalPoints - 1} ads) ${insufficient ? '⚠️ Insufficient balance' : ''}
                             </span>
                         </div>
                     `;
+                }
+
+                reviewContainer.innerHTML = `
+                    <div class="review-item">
+                        <span class="review-label">Title</span>
+                        <span class="review-value">${formData.title || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Category</span>
+                        <span class="review-value">${categoryName}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Description</span>
+                        <span class="review-value">${formData.description || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Price</span>
+                        <span class="review-value">${priceDisplay}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Listing Type</span>
+                        <span class="review-value">${typeLabel}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Locations</span>
+                        <span class="review-value">
+                            ${locationNames.length > 0 ? locationNames.map(n => `<span class="location-pill selected">${n}</span>`).join('') : '—'}
+                        </span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Badge</span>
+                        <span class="review-value"><span class="badge-pill ${formData.badge ? 'selected' : ''}">${badgeName}</span></span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Promotions</span>
+                        <span class="review-value">${adsList.length > 0 ? adsList.join(', ') : 'None'}</span>
+                    </div>
+                    ${pointsCostHtml}
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Image</span>
+                        <span class="review-value">
+                            ${formData.image ? `
+                                <div class="file-preview-small">
+                                    <img src="${URL.createObjectURL(formData.image)}" alt="${formData.imageName}" />
+                                    <span>${formData.imageName}</span>
+                                </div>
+                            ` : 'No image uploaded'}
+                        </span>
+                    </div>
+                `;
             }
 
             // ============================================================
-            // SUBMIT
+            // SUBMIT (UPDATED PAYLOAD + CORRECT ASYNC)
             // ============================================================
 
-            function submitListing() {
+            async function submitListing() {
+                // Final validation
+                if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
+                    goToStep(1);
+                    return;
+                }
+
+                // Disable button and show spinner
                 submitBtn.disabled = true;
                 submitBtn.classList.add('loading');
+                const originalText = submitBtn.querySelector('.btn-text').innerHTML;
+                submitBtn.querySelector('.btn-text').innerHTML = 'Creating...';
 
-                const payload = {
-                    title: formData.title,
-                    category: formData.category,
-                    description: formData.description,
-                    price: formData.price,
-                    type: formData.type,
-                    locations: formData.locations,
-                    badge: formData.badge,
-                    ads: formData.ads,
-                    image: formData.image ? formData.image.name : null,
-                };
+                try {
+                    // Build payload
+                    const payload = {
+                        title: formData.title,
+                        category: parseInt(formData.category, 10),
+                        description: formData.description,
+                        price: formData.price,
+                        listing_type: formData.type,
+                        hotspot_ids: formData.locations,
+                        badge: formData.badge || null,
+                        is_ads_banner: !!formData.ads.banner,
+                        is_hot_sales: !!formData.ads.hot_sale,
+                    };
 
-                console.log('📦 Listing payload:', payload);
-
-                setTimeout(() => {
-                    submitBtn.classList.remove('loading');
-                    submitBtn.disabled = false;
-
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert.success('🎉 Listing created successfully!', { duration: 4000 });
-                    } else {
-                        alert('Listing created successfully!');
+                    const formDataPayload = new FormData();
+                    for (const [key, value] of Object.entries(payload)) {
+                        if (Array.isArray(value)) {
+                            formDataPayload.append(key, JSON.stringify(value));
+                        } else if (value !== null && value !== undefined) {
+                            formDataPayload.append(key, value);
+                        }
+                    }
+                    if (formData.image) {
+                        formDataPayload.append('image', formData.image, formData.imageName);
                     }
 
-                    // Reset form (optional)
-                    // window.location.href = '/explore.html';
-                }, 1500);
+                    console.log('📦 Sending payload:', payload);
+
+                    const response = await fetchWithAuth(`${CAMPUS_URL}create-listing`, {
+                        method: 'POST',
+                        body: formDataPayload,
+                        showSpinner: true,
+                        spinnerText: 'Creating your listing...',
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.is_success) {
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.success(result.message || 'Your listing has been created successfully. It will appear in the marketplace once approved.');
+                        }
+                        // Refresh points balance after deduction
+                        if (typeof window.refreshPointBalance === 'function') {
+                            window.refreshPointBalance();
+                        } else {
+                            updatePointsBalance();
+                        }
+                        // Reset form (optional – redirect to dashboard or clear)
+                        resetForm();
+                    } else {
+                        // Error handling
+                        const errors = result.data?.errors || {};
+                        let msg = result.message || 'Failed to create listing.';
+                        if (Object.keys(errors).length) {
+                            msg += '\n\n' + Object.entries(errors)
+                                .map(([field, msgs]) => `${field}: ${msgs.join(', ')}`)
+                                .join('\n');
+                        }
+                        if (msg.toLowerCase().includes('points') || msg.toLowerCase().includes('balance')) {
+                            updatePointsBalance();
+                        }
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.error(msg);
+                        } else {
+                            alert(msg);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error creating listing:', err);
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error('An unexpected error occurred. Please try again.');
+                    } else {
+                        alert('An unexpected error occurred. Please try again.');
+                    }
+                } finally {
+                    // Re-enable button
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                    submitBtn.querySelector('.btn-text').innerHTML = originalText;
+                }
+            }
+
+            // ============================================================
+            // RESET FORM (optional)
+            // ============================================================
+
+            function resetForm() {
+                // Reset all fields to initial state
+                titleInput.value = '';
+                descInput.value = '';
+                priceInput.value = '0';
+                categorySelect.value = '';
+                // Clear chips
+                document.querySelectorAll('.type-chip, .badge-chip, .location-chip, .ads-check').forEach(el => {
+                    el.classList.remove('selected', 'checked');
+                });
+                formData.locations = [];
+                formData.badge = '';
+                formData.ads = {};
+                formData.image = null;
+                formData.imageName = '';
+                clearFilePreview();
+                fileDropZone.classList.remove('has-file');
+                // Reset total points
+                updateTotalPointsDisplay();
+                // Go back to step 1
+                goToStep(1);
+                if (typeof showAlert !== 'undefined') {
+                    showAlert.info('Form has been reset.');
+                }
             }
 
             // ============================================================
             // EVENT LISTENERS
             // ============================================================
 
-            // Step 1 → 2
             step1Next.addEventListener('click', function() {
-                if (validateStep(1)) {
-                    goToStep(2);
-                }
+                if (validateStep(1)) goToStep(2);
             });
 
-            // Step 2 → 1
             step2Prev.addEventListener('click', function() {
                 goToStep(1);
             });
 
-            // Step 2 → 3
             step2Next.addEventListener('click', function() {
-                if (validateStep(2)) {
-                    goToStep(3);
-                }
+                if (validateStep(2)) goToStep(3);
             });
 
-            // Step 3 → 2
             step3Prev.addEventListener('click', function() {
                 goToStep(2);
             });
 
-            // Step 3 → 4
             step3Next.addEventListener('click', function() {
-                if (validateStep(3)) {
-                    goToStep(4);
-                }
+                if (validateStep(3)) goToStep(4);
             });
 
-            // Step 4 → 3
             step4Prev.addEventListener('click', function() {
                 goToStep(3);
             });
 
-            // Submit
             submitBtn.addEventListener('click', function() {
-                // Final validation
-                if (!validateStep(1)) {
-                    goToStep(1);
+                if (totalPoints > userPoints) {
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error(`Insufficient points. Need ${totalPoints} pts, you have ${userPoints} pts.`);
+                    }
                     return;
                 }
-                if (!validateStep(2)) {
-                    goToStep(2);
-                    return;
-                }
-                // Confirm with modal
                 if (typeof Modal !== 'undefined') {
                     const modal = new Modal({
                         title: 'Create Listing?',
                         body: `
-                                <p>You are about to create a listing for <strong>${formData.title}</strong>.</p>
-                                <p style="color:var(--text-muted); font-size:13px;">Please review all details before confirming.</p>
-                            `,
+                            <p>You are about to create a listing for <strong>${formData.title}</strong>.</p>
+                            <p style="color:var(--text-muted); font-size:13px;">
+                                ${totalPoints > 0 ? `This will deduct <strong>${totalPoints}</strong> points (1 base + ${totalPoints - 1} ad points) from your balance.` : 'No points will be deducted.'}
+                            </p>
+                        `,
                         type: 'info',
                         confirmText: 'Create Listing',
                         cancelText: 'Cancel',
@@ -1618,7 +1895,6 @@
                 }
             });
 
-            // Enter key on inputs in step 1
             document.querySelectorAll('#step1 input, #step1 select, #step1 textarea').forEach(el => {
                 el.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
@@ -1628,49 +1904,24 @@
                 });
             });
 
-            // Enter key on step 2 locations (select first)
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && currentStep === 2 && !e.target.closest('input, select, textarea, button')) {
-                    e.preventDefault();
-                    step2Next.click();
-                }
-                if (e.key === 'Enter' && currentStep === 3 && !e.target.closest('input, select, textarea, button')) {
-                    e.preventDefault();
-                    step3Next.click();
-                }
-            });
-
-            // Price validation with type
-            typeSelect.addEventListener('change', function() {
-                if (this.value === 'freebie') {
-                    priceInput.value = 0;
-                    priceInput.disabled = true;
-                    setHelp('priceHelp', 'Price is set to 0 for free items.', false);
-                } else {
-                    priceInput.disabled = false;
-                    if (priceInput.value === '0') priceInput.value = '';
-                    setHelp('priceHelp', 'Enter the price in Naira (₦). Set to 0 for free items.', false);
-                }
-            });
-
             // ============================================================
             // INIT
             // ============================================================
 
-            function init() {
-                populateCategories();
-                populateLocations();
-                populateBadges();
-                initAds();
+            async function init() {
+                updatePointsBalance();
+
+                const lookup = await fetchLookup();
+                if (lookup.categories) populateCategories(lookup.categories);
+                if (lookup.type_choices) populateTypes(lookup.type_choices);
+                if (lookup.hotspots) populateLocations(lookup.hotspots);
+                if (lookup.badge_choices) populateBadges(lookup.badge_choices);
+                if (lookup.advert_type) populateAds(lookup.advert_type);
+                
+
                 initFileUpload();
-
-                // Set initial form data from step 1
-                titleInput.value = '';
-                priceInput.value = '';
-                descInput.value = '';
-
+                updateTotalPointsDisplay();
                 console.log('📝 Create Listing page initialized');
-                console.log('💡 4-step form ready');
             }
 
             if (document.readyState === 'loading') {
