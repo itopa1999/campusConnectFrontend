@@ -8,7 +8,7 @@
   <!-- Bootstrap 5 + Icons + Google Fonts + AOS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <link rel="icon" type="image/jpeg" href="assets/img/icon.jpg" />
   <link rel="stylesheet" href="assets/css/main.css" />
@@ -16,26 +16,17 @@
   <link rel="stylesheet" href="assets/css/modal.css" />
 
   <style>
+    /* ─── Base styles ──────────────────────────────────────────── */
+    body { overflow-x: hidden; }
+    h1, h2, h3, h4, h5, .fw-bold, .fw-semibold { color: #14211f; }
 
-    body {
-      overflow-x: hidden;
-    }
-
-    h1, h2, h3, h4, h5, .fw-bold, .fw-semibold {
-      color: #14211f;
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       HERO – MODERN & BOLD
-       ────────────────────────────────────────────────────────────── */
     .hero-section {
-      padding: 160px 0 100px;
+      padding: 160px 0 80px;
       position: relative;
       overflow: hidden;
       background: linear-gradient(160deg, #ffffff 0%, #f0f7f4 100%);
       border-bottom: 1px solid rgba(44, 122, 94, 0.06);
     }
-
     .hero-section::before {
       content: '';
       position: absolute;
@@ -47,7 +38,6 @@
       background: radial-gradient(circle, rgba(44, 122, 94, 0.05) 0%, transparent 70%);
       pointer-events: none;
     }
-
     .hero-section::after {
       content: '';
       position: absolute;
@@ -59,7 +49,6 @@
       background: radial-gradient(circle, rgba(44, 122, 94, 0.03) 0%, transparent 70%);
       pointer-events: none;
     }
-
     .hero-title {
       font-weight: 900;
       font-size: 3.2rem;
@@ -67,15 +56,13 @@
       letter-spacing: -0.02em;
       color: #14211f;
     }
-
     .hero-title .highlight {
       background: linear-gradient(135deg, var(--accent), #4aa882);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
-    .hero-section .badge-verify {
+    .badge-verify {
       background: rgba(44, 122, 94, 0.10);
       color: var(--accent-dark);
       padding: 0.3rem 1.2rem;
@@ -88,7 +75,6 @@
       border: 1px solid rgba(44, 122, 94, 0.08);
       backdrop-filter: blur(4px);
     }
-
     .hero-market-preview {
       position: relative;
       border-radius: var(--card-radius);
@@ -96,18 +82,13 @@
       box-shadow: 0 30px 80px rgba(31, 94, 72, 0.15);
       transition: var(--transition-smooth);
     }
-
-    .hero-market-preview:hover {
-      transform: scale(1.01);
-    }
-
+    .hero-market-preview:hover { transform: scale(1.01); }
     .hero-market-preview .hero-market-img {
       width: 100%;
       height: 380px;
       object-fit: cover;
       display: block;
     }
-
     .hero-floating-card {
       position: absolute;
       background: rgba(255, 255, 255, 0.92);
@@ -121,22 +102,12 @@
       border: 1px solid rgba(255, 255, 255, 0.5);
       transition: var(--transition-smooth);
     }
-
     .hero-floating-card:hover {
       transform: translateY(-4px);
       box-shadow: 0 20px 48px rgba(0, 0, 0, 0.10);
     }
-
-    .hero-card-top {
-      top: 20px;
-      left: 20px;
-    }
-
-    .hero-card-bottom {
-      bottom: 20px;
-      right: 20px;
-    }
-
+    .hero-card-top { top: 20px; left: 20px; }
+    .hero-card-bottom { bottom: 20px; right: 20px; }
     .hero-card-icon {
       width: 40px;
       height: 40px;
@@ -148,68 +119,60 @@
       color: var(--accent);
       font-size: 1rem;
     }
+    .hero-floating-card strong { display: block; font-size: 0.9rem; color: #14211f; }
+    .hero-floating-card small { font-size: 0.7rem; color: #5f7775; }
 
-    .hero-floating-card strong {
-      display: block;
-      font-size: 0.9rem;
+    /* ─── Hero Search ───────────────────────────────────────────── */
+    .hero-search {
+      background: white;
+      border-radius: 60px;
+      padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+      box-shadow: 0 8px 32px rgba(44, 122, 94, 0.08);
+      border: 1px solid rgba(44, 122, 94, 0.06);
+      transition: var(--transition-smooth);
+      max-width: 480px;
+    }
+    .hero-search:focus-within {
+      box-shadow: 0 8px 40px rgba(44, 122, 94, 0.15);
+      border-color: var(--accent);
+    }
+    .hero-search input {
+      border: none;
+      outline: none;
+      font-size: 0.95rem;
+      padding: 0.6rem 0;
+      width: 100%;
+      background: transparent;
       color: #14211f;
     }
-
-    .hero-floating-card small {
-      font-size: 0.7rem;
-      color: #5f7775;
+    .hero-search input::placeholder {
+      color: #8aa3a0;
+      font-weight: 400;
     }
-
-    @media (max-width: 992px) {
-      .hero-title {
-        font-size: 2.4rem;
-      }
-      .hero-market-preview .hero-market-img {
-        height: 280px;
-      }
-      .hero-floating-card {
-        padding: 0.5rem 1rem;
-      }
-      .hero-card-top {
-        top: 12px;
-        left: 12px;
-      }
-      .hero-card-bottom {
-        bottom: 12px;
-        right: 12px;
-      }
+    .hero-search .btn-search {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 40px;
+      padding: 0.6rem 1.5rem;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+    }
+    .hero-search .btn-search:hover {
+      background: var(--accent-dark);
+      transform: scale(1.02);
     }
 
     @media (max-width: 576px) {
-      .hero-title {
-        font-size: 2rem;
+      .hero-search {
+        border-radius: 40px;
+        padding: 0.3rem 0.3rem 0.3rem 1rem;
       }
-      .hero-section {
-        padding: 120px 0 60px;
-      }
-      .hero-market-preview .hero-market-img {
-        height: 200px;
-      }
-      .hero-floating-card {
-        padding: 0.4rem 0.8rem;
-        gap: 0.4rem;
-      }
-      .hero-card-icon {
-        width: 32px;
-        height: 32px;
-        font-size: 0.8rem;
-      }
-      .hero-floating-card strong {
-        font-size: 0.75rem;
-      }
-      .hero-floating-card small {
-        font-size: 0.6rem;
-      }
+      .hero-search input { font-size: 0.85rem; padding: 0.5rem 0; }
+      .hero-search .btn-search { padding: 0.4rem 1rem; font-size: 0.85rem; }
     }
 
-    /* ──────────────────────────────────────────────────────────────
-       STATS
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Stat cards ──────────────────────────────────────────── */
     .stat-card {
       background: white;
       border-radius: var(--card-radius);
@@ -220,35 +183,51 @@
       text-align: center;
       height: 100%;
     }
-
     .stat-card:hover {
       transform: translateY(-6px);
       box-shadow: var(--shadow-card-hover);
       border-color: rgba(44, 122, 94, 0.08);
     }
+    .stat-number { font-size: 2.4rem; font-weight: 800; color: var(--accent-dark); letter-spacing: -0.02em; line-height: 1.2; }
+    .stat-card .text-muted { font-size: 0.85rem; font-weight: 500; }
 
-    .stat-number {
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: var(--accent-dark);
-      letter-spacing: -0.02em;
-      line-height: 1.2;
+    /* ─── Pain cards ──────────────────────────────────────────── */
+    .pain-card {
+      background: white;
+      border-radius: var(--card-radius);
+      padding: 1.5rem;
+      border: 1px solid rgba(44, 122, 94, 0.04);
+      box-shadow: var(--shadow-card);
+      transition: var(--transition-smooth);
+      height: 100%;
+      text-align: center;
     }
-
-    .stat-card .text-muted {
-      font-size: 0.85rem;
-      font-weight: 500;
+    .pain-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(44, 122, 94, 0.08);
     }
+    .pain-card i { font-size: 2.2rem; color: #e67e22; margin-bottom: 0.75rem; display: inline-block; }
+    .pain-card h6 { font-weight: 700; color: #14211f; font-size: 0.95rem; }
+    .pain-card p { font-size: 0.9rem; color: #5f7775; margin-bottom: 0; }
 
-    @media (max-width: 576px) {
-      .stat-number {
-        font-size: 1.8rem;
-      }
+    /* ─── Comparison table ───────────────────────────────────── */
+    .compare-table {
+      background: white;
+      border-radius: var(--card-radius);
+      border: 1px solid rgba(44, 122, 94, 0.04);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
     }
+    .compare-table .row {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(44, 122, 94, 0.04);
+    }
+    .compare-table .row:last-child { border-bottom: none; }
+    .compare-table .fa-check-circle { color: #28a745; }
+    .compare-table .fa-times-circle { color: #dc3545; }
 
-    /* ──────────────────────────────────────────────────────────────
-       STEP CARDS – MODERN
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Step cards ──────────────────────────────────────────── */
     .step-card {
       background: white;
       border-radius: var(--card-radius);
@@ -261,29 +240,21 @@
       position: relative;
       overflow: hidden;
     }
-
     .step-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 4px;
       background: linear-gradient(90deg, var(--accent), #4aa882);
       opacity: 0;
       transition: var(--transition-smooth);
     }
-
     .step-card:hover {
       transform: translateY(-8px);
       box-shadow: var(--shadow-card-hover);
       border-color: rgba(44, 122, 94, 0.08);
     }
-
-    .step-card:hover::before {
-      opacity: 1;
-    }
-
+    .step-card:hover::before { opacity: 1; }
     .step-icon {
       width: 72px;
       height: 72px;
@@ -297,38 +268,19 @@
       margin-bottom: 1.25rem;
       transition: var(--transition-smooth);
     }
-
     .step-card:hover .step-icon {
       background: var(--accent);
       color: white;
       transform: scale(1.05) rotate(-2deg);
     }
+    .step-card h5 { font-weight: 700; color: #14211f; }
+    .step-card p { color: #5f7775; font-size: 0.9rem; line-height: 1.6; }
 
-    .step-card h5 {
-      font-weight: 700;
-      color: #14211f;
-    }
-
-    .step-card p {
-      color: #5f7775;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    .step-card .small {
-      font-size: 0.8rem;
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       BENEFITS SECTION
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Benefits ────────────────────────────────────────────── */
     .benefit-list {
       list-style: none;
       padding: 0;
     }
-
     .benefit-list li {
       padding: 0.6rem 0;
       border-bottom: 1px solid rgba(44, 122, 94, 0.04);
@@ -339,28 +291,15 @@
       color: #2d403d;
       transition: var(--transition-smooth);
     }
-
     .benefit-list li:hover {
       padding-left: 0.5rem;
       background: rgba(44, 122, 94, 0.01);
       border-radius: 8px;
     }
+    .benefit-list li i { color: var(--accent); font-size: 1.1rem; width: 24px; text-align: center; flex-shrink: 0; }
+    .benefit-list li strong { color: #14211f; }
 
-    .benefit-list li i {
-      color: var(--accent);
-      font-size: 1.1rem;
-      width: 24px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .benefit-list li strong {
-      color: #14211f;
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       CATEGORY BADGES
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Category badges ────────────────────────────────────── */
     .category-badge {
       background: white;
       border: 1px solid rgba(44, 122, 94, 0.08);
@@ -370,9 +309,10 @@
       font-weight: 600;
       color: #2d403d;
       transition: var(--transition-smooth);
-      cursor: default;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
     }
-
     .category-badge:hover {
       background: var(--accent-light);
       border-color: var(--accent);
@@ -380,9 +320,7 @@
       box-shadow: 0 8px 20px rgba(44, 122, 94, 0.06);
     }
 
-    /* ──────────────────────────────────────────────────────────────
-       FEATURED LISTING CARDS – ENHANCED
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Featured listing cards ──────────────────────────────── */
     .featured-listing-card {
       background: white;
       border-radius: var(--card-radius);
@@ -395,13 +333,11 @@
       display: flex;
       flex-direction: column;
     }
-
     .featured-listing-card:hover {
       transform: translateY(-8px);
       box-shadow: var(--shadow-card-hover);
       border-color: rgba(44, 122, 94, 0.08);
     }
-
     .listing-image {
       height: 180px;
       background: #f1f3f2;
@@ -411,24 +347,14 @@
       overflow: hidden;
       position: relative;
     }
-
     .listing-image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: var(--transition-smooth);
     }
-
-    .featured-listing-card:hover .listing-image img {
-      transform: scale(1.03);
-    }
-
-    .listing-image i {
-      font-size: 2.8rem;
-      color: #adb5bd;
-      opacity: 0.4;
-    }
-
+    .featured-listing-card:hover .listing-image img { transform: scale(1.03); }
+    .listing-image i { font-size: 2.8rem; color: #adb5bd; opacity: 0.4; }
     .badge-category {
       background: var(--accent-light);
       color: var(--accent-dark);
@@ -440,7 +366,6 @@
       letter-spacing: 0.3px;
       display: inline-block;
     }
-
     .condition-badge {
       background: white;
       border: 1px solid rgba(44, 122, 94, 0.08);
@@ -450,56 +375,45 @@
       font-weight: 600;
       color: #5f7775;
     }
+    .card-title { font-weight: 700; font-size: 1rem; color: #14211f; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.25rem; }
+    .listing-price { font-weight: 800; font-size: 1.1rem; color: var(--accent-dark); }
+    .listing-desc { font-size: 0.8rem; color: #5f7775; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .listing-location { font-size: 0.75rem; color: #7a9490; }
+    .listing-meta { font-size: 0.7rem; color: #8aa3a0; }
 
-    .card-title {
-      font-weight: 700;
-      font-size: 1rem;
-      color: #14211f;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      margin-bottom: 0.25rem;
+    /* ─── Recently Added ───────────────────────────────────────── */
+    .recent-item {
+      background: white;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(44, 122, 94, 0.04);
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
-
-    .listing-price {
-      font-weight: 800;
-      font-size: 1.1rem;
-      color: var(--accent-dark);
+    .recent-item:hover {
+      transform: translateX(4px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(44, 122, 94, 0.08);
     }
-
-    .listing-desc {
-      font-size: 0.8rem;
-      color: #5f7775;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+    .recent-item .recent-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      flex-shrink: 0;
     }
+    .recent-item .recent-info { flex: 1; }
+    .recent-item .recent-info strong { display: block; font-size: 0.9rem; color: #14211f; }
+    .recent-item .recent-info small { font-size: 0.7rem; color: #8aa3a0; }
+    .recent-item .recent-time { font-size: 0.7rem; color: #8aa3a0; white-space: nowrap; }
 
-    .listing-location {
-      font-size: 0.75rem;
-      color: #7a9490;
-    }
-
-    @media (max-width: 767px) {
-      .listing-image {
-        height: 140px;
-      }
-      .card-body {
-        padding: 0.75rem !important;
-      }
-      .listing-desc, .listing-location {
-        display: none;
-      }
-      .listing-price {
-        font-size: 0.95rem;
-      }
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       TESTIMONIAL CARDS
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Testimonials ────────────────────────────────────────── */
     .testimonial-card {
       background: white;
       border-radius: var(--card-radius);
@@ -509,50 +423,19 @@
       transition: var(--transition-smooth);
       height: 100%;
     }
-
     .testimonial-card:hover {
       transform: translateY(-6px);
       box-shadow: var(--shadow-card-hover);
       border-color: rgba(44, 122, 94, 0.08);
     }
+    .testimonial-card .stars { color: #f5b042; font-size: 0.9rem; letter-spacing: 2px; }
+    .testimonial-card p { font-size: 0.95rem; color: #2d403d; line-height: 1.7; font-style: italic; }
+    .testimonial-card .user { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+    .testimonial-card .user i { font-size: 2.2rem; color: #adb5bd; }
+    .testimonial-card .user strong { color: #14211f; }
+    .testimonial-card .user small { color: #5f7775; font-size: 0.8rem; }
 
-    .testimonial-card .stars {
-      color: #f5b042;
-      font-size: 0.9rem;
-      letter-spacing: 2px;
-    }
-
-    .testimonial-card p {
-      font-size: 0.95rem;
-      color: #2d403d;
-      line-height: 1.7;
-      font-style: italic;
-    }
-
-    .testimonial-card .user {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .testimonial-card .user i {
-      font-size: 2.2rem;
-      color: #adb5bd;
-    }
-
-    .testimonial-card .user strong {
-      color: #14211f;
-    }
-
-    .testimonial-card .user small {
-      color: #5f7775;
-      font-size: 0.8rem;
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       SAFETY CARDS
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Safety cards ────────────────────────────────────────── */
     .safety-card {
       background: white;
       border-radius: var(--card-radius);
@@ -563,34 +446,16 @@
       height: 100%;
       text-align: center;
     }
-
     .safety-card:hover {
       transform: translateY(-6px);
       box-shadow: var(--shadow-card-hover);
       border-color: rgba(44, 122, 94, 0.08);
     }
+    .safety-card i { color: var(--accent); font-size: 2.2rem; margin-bottom: 0.75rem; display: inline-block; }
+    .safety-card h6 { font-weight: 700; color: #14211f; }
+    .safety-card p { font-size: 0.85rem; color: #5f7775; margin-bottom: 0; }
 
-    .safety-card i {
-      color: var(--accent);
-      font-size: 2.2rem;
-      margin-bottom: 0.75rem;
-      display: inline-block;
-    }
-
-    .safety-card h6 {
-      font-weight: 700;
-      color: #14211f;
-    }
-
-    .safety-card p {
-      font-size: 0.85rem;
-      color: #5f7775;
-      margin-bottom: 0;
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       LOST & FOUND
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Lost & Found ────────────────────────────────────────── */
     .lost-found-section {
       background: linear-gradient(145deg, #fff9ef, #fdf6ed);
       border-radius: var(--card-radius);
@@ -600,7 +465,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .lost-found-section::before {
       content: '';
       position: absolute;
@@ -613,9 +477,27 @@
       pointer-events: none;
     }
 
-    /* ──────────────────────────────────────────────────────────────
-       CTA CARD
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Looking For ──────────────────────────────────────────── */
+    .looking-for-card {
+      background: white;
+      border-radius: var(--card-radius);
+      padding: 1.5rem;
+      border: 1px solid rgba(44, 122, 94, 0.04);
+      box-shadow: var(--shadow-card);
+      transition: var(--transition-smooth);
+      height: 100%;
+      text-align: center;
+    }
+    .looking-for-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(44, 122, 94, 0.08);
+    }
+    .looking-for-card i { font-size: 2rem; color: #f5b042; display: block; margin-bottom: 0.75rem; }
+    .looking-for-card h6 { font-weight: 700; color: #14211f; font-size: 0.95rem; }
+    .looking-for-card p { font-size: 0.85rem; color: #5f7775; margin-bottom: 0; }
+
+    /* ─── CTA card ────────────────────────────────────────────── */
     .cta-card {
       background: linear-gradient(145deg, #ffffff, #f6faf8);
       border-radius: var(--card-radius);
@@ -626,7 +508,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .cta-card::before {
       content: '';
       position: absolute;
@@ -639,9 +520,7 @@
       pointer-events: none;
     }
 
-    /* ──────────────────────────────────────────────────────────────
-       BUTTONS – ENHANCED
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Buttons ──────────────────────────────────────────────── */
     .btn-primary-custom {
       background: var(--accent);
       border: none;
@@ -657,19 +536,15 @@
       gap: 0.5rem;
       letter-spacing: 0.2px;
       text-decoration: none;
+      min-height: 48px;
+      cursor: pointer;
     }
-
     .btn-primary-custom:hover {
       background: var(--accent-dark);
       transform: translateY(-3px);
       box-shadow: 0 8px 32px rgba(44, 122, 94, 0.30);
       color: white;
     }
-
-    .btn-primary-custom:active {
-      transform: translateY(0);
-    }
-
     .btn-outline-custom {
       background: transparent;
       border: 1.5px solid var(--accent);
@@ -683,8 +558,9 @@
       gap: 0.5rem;
       font-size: 0.95rem;
       text-decoration: none;
+      min-height: 48px;
+      cursor: pointer;
     }
-
     .btn-outline-custom:hover {
       background: var(--accent-light);
       transform: translateY(-3px);
@@ -692,14 +568,58 @@
       color: var(--accent-dark);
       box-shadow: 0 8px 24px rgba(44, 122, 94, 0.08);
     }
+    .btn-sm-custom {
+      padding: 0.4rem 1.2rem;
+      font-size: 0.85rem;
+      min-height: 38px;
+    }
 
-    /* ──────────────────────────────────────────────────────────────
-       SCROLL TOP
-       ────────────────────────────────────────────────────────────── */
-    .scroll-top-btn {
+    /* ─── Sticky Sell Button ───────────────────────────────────── */
+    .sticky-sell-btn {
       position: fixed;
       right: 1.5rem;
       bottom: 1.5rem;
+      z-index: 1070;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 60px;
+      padding: 0.8rem 1.5rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      box-shadow: 0 8px 32px rgba(44, 122, 94, 0.30);
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 52px;
+    }
+    .sticky-sell-btn:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 12px 40px rgba(44, 122, 94, 0.40);
+      background: var(--accent-dark);
+      color: white;
+    }
+    @media (max-width: 576px) {
+      .sticky-sell-btn {
+        right: 1rem;
+        bottom: 5.5rem;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.8rem;
+        min-height: 44px;
+        border-radius: 40px;
+      }
+      .sticky-sell-btn span { display: none; }
+      .sticky-sell-btn i { font-size: 1.2rem; }
+    }
+
+    /* ─── Scroll top ───────────────────────────────────────────── */
+    .scroll-top-btn {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 6rem;
       z-index: 1080;
       width: 52px;
       height: 52px;
@@ -717,184 +637,107 @@
       transition: var(--transition-smooth);
       cursor: pointer;
     }
-
     .scroll-top-btn:hover {
       background: var(--accent-dark);
       transform: translateY(10px) scale(1.05);
       box-shadow: 0 12px 36px rgba(44, 122, 94, 0.30);
     }
-
-    .scroll-top-btn.is-visible {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
+    .scroll-top-btn.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    @media (max-width: 576px) {
+      .scroll-top-btn { right: 1rem; bottom: 5rem; width: 44px; height: 44px; }
     }
 
-    @media (max-width: 768px) {
-      .scroll-top-btn {
-        right: 1rem;
-        bottom: 5.5rem;
-        width: 44px;
-        height: 44px;
-      }
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       BREADCRUMB (not used here but keep)
-       ────────────────────────────────────────────────────────────── */
-    .badge-verify {
-      background: rgba(44, 122, 94, 0.10);
-      color: var(--accent-dark);
-      padding: 0.3rem 1.2rem;
-      border-radius: 40px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-      display: inline-block;
-      border: 1px solid rgba(44, 122, 94, 0.08);
-      backdrop-filter: blur(4px);
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       RESPONSIVE
-       ────────────────────────────────────────────────────────────── */
-    @media (max-width: 768px) {
-      .step-card, .testimonial-card, .safety-card {
-        padding: 1.5rem 1rem;
-      }
-      .lost-found-section {
-        padding: 2rem 1rem;
-      }
-      .cta-card {
-        padding: 2rem 1rem;
-      }
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       ANIMATIONS
-       ────────────────────────────────────────────────────────────── */
+    /* ─── Animations ───────────────────────────────────────────── */
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(24px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
     }
+    .animate-on-scroll { animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
 
-    .animate-on-scroll {
-      animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    }
-
-    /* ──────────────────────────────────────────────────────────────
-       TOOLTIP OVERRIDE
-       ────────────────────────────────────────────────────────────── */
-    .tooltip-inner {
-      background: #14211f;
-      font-weight: 500;
-      font-size: 0.75rem;
-      padding: 0.4rem 0.8rem;
-      border-radius: 8px;
-    }
-
+    /* ─── Tooltip override ────────────────────────────────────── */
+    .tooltip-inner { background: #14211f; font-weight: 500; font-size: 0.75rem; padding: 0.4rem 0.8rem; border-radius: 8px; }
     .tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
-    .tooltip.bs-tooltip-top .tooltip-arrow::before {
-      border-top-color: #14211f;
+    .tooltip.bs-tooltip-top .tooltip-arrow::before { border-top-color: #14211f; }
+
+    /* ─── FAQ ────────────────────────────────────────────────── */
+    .faq-item {
+      border-bottom: 1px solid rgba(44, 122, 94, 0.06);
+      padding: 1.25rem 0;
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-item .faq-question {
+      font-weight: 700;
+      color: #14211f;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-item .faq-answer {
+      display: none;
+      padding-top: 0.5rem;
+      color: #5f7775;
+      line-height: 1.7;
+    }
+    .faq-item .faq-answer.open { display: block; }
+
+    /* ─── Services grid ────────────────────────────────────────── */
+    .service-item {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem 0.75rem;
+      text-align: center;
+      border: 1px solid rgba(44, 122, 94, 0.04);
+      transition: var(--transition-smooth);
+    }
+    .service-item:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(44, 122, 94, 0.08);
+    }
+    .service-item i { font-size: 1.8rem; color: var(--accent); display: block; margin-bottom: 0.5rem; }
+    .service-item span { font-size: 0.85rem; font-weight: 500; color: #2d403d; }
+
+    /* ─── Misc ────────────────────────────────────────────────── */
+    .bg-soft-green { background-color: #f6faf8; }
+    .section-padding { padding: 4rem 0; }
+
+    /* ─── Mobile Optimisations ────────────────────────────────── */
+    @media (max-width: 992px) {
+      .hero-title { font-size: 2.4rem; }
+      .hero-market-preview .hero-market-img { height: 280px; }
+      .hero-floating-card { padding: 0.5rem 1rem; }
+      .hero-card-top { top: 12px; left: 12px; }
+      .hero-card-bottom { bottom: 12px; right: 12px; }
+    }
+    @media (max-width: 576px) {
+      .hero-title { font-size: 1.8rem; }
+      .hero-section { padding: 100px 0 50px; }
+      .hero-market-preview .hero-market-img { height: 180px; }
+      .hero-floating-card { padding: 0.3rem 0.6rem; gap: 0.3rem; }
+      .hero-card-icon { width: 28px; height: 28px; font-size: 0.7rem; }
+      .hero-floating-card strong { font-size: 0.7rem; }
+      .hero-floating-card small { font-size: 0.55rem; }
+      .stat-number { font-size: 1.8rem; }
+      .step-card, .testimonial-card, .safety-card { padding: 1.5rem 1rem; }
+      .lost-found-section { padding: 2rem 1rem; }
+      .cta-card { padding: 2rem 1rem; }
+      .section-padding { padding: 2.5rem 0; }
+      .listing-image { height: 140px; }
+      .card-body { padding: 0.75rem !important; }
+      .listing-desc, .listing-location { display: none; }
+      .listing-price { font-size: 0.95rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- Pre‑loader overlay (same as before) -->
+<!-- Pre‑loader overlay -->
 <div id="authPreloader" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.96); backdrop-filter: blur(4px); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1rem;">
   <div class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status"></div>
   <div style="font-size: 1.2rem; font-weight: 500; color: #2c7a5e;">Authenticating...</div>
   <div class="text-muted small">Please wait while we restore your session</div>
 </div>
-
-
-<script>
-  (function() {
-    function getUser() {
-      const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-      if (userStr) {
-        try { return JSON.parse(userStr); } catch(e) { return null; }
-      }
-      return null;
-    }
-    function setUser(user) {
-       if (localStorage.getItem('user')) {
-          localStorage.setItem('user', JSON.stringify(user));
-        } else {
-          sessionStorage.setItem('user', JSON.stringify(user));
-        }
-    }
-
-    const AUTHENTICATE_URL = 'http://127.0.0.1:8000/user/api/auth/refresh-token';
-    const preloader = document.getElementById('authPreloader');
-
-    const existingUser = getUser();
-    if (existingUser) {
-      window.location.href = '../dash/main.html';
-      return;
-    } else {
-      return;
-    }
-    if (preloader) preloader.style.display = 'flex';
-
-      fetch(`${AUTHENTICATE_URL}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({})
-      })
-        .then(res => {
-          if (!res.ok) throw new Error('Refresh failed');
-          return res.json();
-        })
-        .then(data => {
-          if (data.is_success === true && data.data) {
-            const d = data.data;
-            const user = d.user || d;
-            if (user){
-              setUser(user);
-              window.location.href = '../dash/main.html';
-            } else {
-              throw new Error('No user data');
-            }
-          } else {
-            throw new Error(data.message || 'Refresh failed');
-          }
-          })
-        .catch(err => {
-          console.error('Refresh failed:', err);
-          localStorage.removeItem('user');
-          sessionStorage.removeItem('user');
-          if (preloader) preloader.style.display = 'none';
-          const toastMsg = document.createElement('div');
-          toastMsg.textContent = 'Session expired. Please log in again.';
-          toastMsg.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #dc3545;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            z-index: 10000;
-            font-size: 0.9rem;
-            font-family: 'Inter', sans-serif;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-          `;
-          document.body.appendChild(toastMsg);
-          setTimeout(() => toastMsg.remove(), 4000);
-        });
-  })();
-</script>
 
 <div id="particles-js"></div>
 
@@ -909,18 +752,17 @@
           <span class="brand-short">CampusConnect</span>
         </span>
       </a>
-
       <button class="mobile-menu-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation" data-tooltip="true" title="Open menu">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div class="collapse navbar-collapse site-menu" id="navbarMain">
         <ul class="navbar-nav site-nav-list ms-lg-auto">
           <li class="nav-item"><a class="nav-link site-nav-link" href="/dash/listings.html">Marketplace</a></li>
-          <li class="nav-item"><a class="nav-link site-nav-link" href="#how-it-works">How it works</a></li>
-          <li class="nav-item"><a class="nav-link site-nav-link" href="#benefits">Why CampusConnect?</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="#categories">Categories</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="#how-it-works">How It Works</a></li>
           <li class="nav-item"><a class="nav-link site-nav-link" href="#safety">Safety</a></li>
-          <li class="nav-item"><a class="nav-link site-nav-link" href="#lost-and-found">Lost and Found</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="#lost-and-found">Lost & Found</a></li>
+          <li class="nav-item"><a class="nav-link site-nav-link" href="#faq">FAQ</a></li>
           <li class="nav-item site-nav-action"><a class="btn btn-outline-custom btn-sm site-signup-button" href="auth/auth.html" data-bs-toggle="tooltip" title="Create account"><i class="fas fa-user-plus me-1"></i>Sign up</a></li>
         </ul>
       </div>
@@ -934,24 +776,32 @@
     <div class="row align-items-center g-5">
       <div class="col-lg-6" data-aos="fade-up" data-aos-duration="800">
         <h1 class="hero-title">
-          The Safest Way to Buy and Sell with Verified Students.<br />
-          <span class="highlight">Demo University campus</span>
+          Stop Searching 50 WhatsApp Groups.<br />
+          <span class="highlight">Find What You Need on Campus in Minutes.</span>
         </h1>
         <p class="lead text-muted mt-3" style="font-size: 1.1rem; max-width: 480px;">
-          Only verified students can join CampusConnect using their
-           university email. Buy with confidence, sell with trust, and meet safely on campus.
+          Buy, sell, or find almost anything from verified students in your university — all in one trusted marketplace.
         </p>
-        <div class="d-flex flex-wrap gap-3 mt-4">
-          <a href="/dash/listings.html" class="btn btn-primary-custom">Browse Listings <i class="fas fa-arrow-right ms-2"></i></a>
-          <a href="auth/auth.html" class="btn btn-outline-custom"><i class="fas fa-user-plus me-2"></i>Join CampusConnect</a>
+
+        <!-- ✅ SEARCH BAR IN HERO -->
+        <form class="hero-search mt-3" action="/dash/listings.html" method="GET">
+          <div class="d-flex align-items-center">
+            <input type="text" name="q" placeholder="Search for Laptops, Textbooks, Phones..." aria-label="Search listings" />
+            <button type="submit" class="btn-search"><i class="fas fa-search me-1"></i> Search</button>
+          </div>
+        </form>
+
+        <div class="d-flex flex-wrap gap-3 mt-3">
+          <a href="/dash/listings.html" class="btn btn-primary-custom">Browse Marketplace <i class="fas fa-arrow-right ms-2"></i></a>
+          <a href="auth/auth.html" class="btn btn-outline-custom"><i class="fas fa-plus-circle me-2"></i>Sell an Item</a>
         </div>
-        <div class="mt-4">
-          <span class="text-muted small"><i class="fas fa-check-circle text-success me-1"></i>Join the growing community of verified students.</span>
+        <div class="mt-3">
+          <span class="text-muted small"><i class="fas fa-check-circle text-success me-1"></i> Join the growing community of verified students.</span>
         </div>
       </div>
       <div class="col-lg-6 text-center" data-aos="fade-left" data-aos-duration="800" data-aos-delay="100">
         <div class="hero-market-preview">
-          <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=80" alt="Students on campus" class="hero-market-img">
+          <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=80" alt="Students on campus" class="hero-market-img" loading="lazy">
           <div class="hero-floating-card hero-card-top">
             <span class="hero-card-icon"><i class="fas fa-shield-alt"></i></span>
             <div>
@@ -973,73 +823,47 @@
   </div>
 </section>
 
-<!-- ==================== STATS ==================== -->
-<div class="container mt-2 mb-4">
-  <div class="row text-center g-4 justify-content-center" data-aos="fade-up" data-aos-delay="100">
-    <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-number">35k+</div>
-        <div class="text-muted small">Demo University Students eligible</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-number"><i class="fa fa-gift"></i></div>
-        <div class="text-muted small">List your first 3 items at no cost</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-number"><i class="fas fa-shield-alt"></i></span></div>
-        <div class="text-muted small">University Email + Student ID</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-number"><i class="fas fa-bolt"></i></div>
-        <div class="text-muted small">Student-to-Student Trading</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== HOW IT WORKS ==================== -->
-<section id="how-it-works" class="py-5">
+<!-- ==================== PAIN SECTION ==================== -->
+<section class="py-4 bg-soft-green" id="pain">
   <div class="container">
-    <div class="text-center mb-5" data-aos="fade-up">
-      <span class="badge-verify mb-2">simple & secure</span>
-      <h2 class="display-6 fw-semibold">How CampusConnect works</h2>
-      <p class="text-muted col-lg-7 mx-auto">Built by an alunmi who understands the challenges of buying and selling on campus. CampusConnect makes trading safer, simpler, and more organized.</p>
+    <div class="text-center mb-4" data-aos="fade-up">
+      <span class="badge-verify mb-2">Ever Experienced This?</span>
     </div>
-    <div class="row g-4">
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
-        <div class="step-card">
-          <div class="step-icon"><i class="fas fa-search"></i></div>
-          <h5>1. Found something?</h5>
-          <p class="text-muted">Verify your university email.</p>
-          <div class="small">Only verified students can contact sellers.</div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-3 col-sm-6">
+        <div class="pain-card">
+          <i class="fas fa-book"></i>
+          <h6>"I needed a textbook but couldn't find anyone selling it."</h6>
         </div>
       </div>
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="step-card">
-          <div class="step-icon"><i class="fas fa-camera-retro"></i></div>
-          <h5>2. Post what you want to sell or need</h5>
-          <p class="text-muted">Add photos, set a price, choose category. Takes 1 minute.</p>
+      <div class="col-md-3 col-sm-6">
+        <div class="pain-card">
+          <i class="fas fa-laptop"></i>
+          <h6>"I posted my laptop in five WhatsApp groups and nobody replied."</h6>
         </div>
       </div>
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="step-card">
-          <div class="step-icon"><i class="fas fa-handshake"></i></div>
-          <h5>3. Meet at a safe campus spot</h5>
-          <p class="text-muted">Choose a public Demo University meetup point, Inspect Before Payment</p>
+      <div class="col-md-3 col-sm-6">
+        <div class="pain-card">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h6>"I almost got scammed buying from Facebook."</h6>
         </div>
       </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pain-card">
+          <i class="fas fa-search"></i>
+          <h6>"I kept scrolling Telegram groups looking for one item."</h6>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4" data-aos="fade-up">
+      <h4 class="fw-semibold">That's exactly why CampusConnect exists.</h4>
+      <p class="text-muted">A marketplace built by students, for students – verified, trusted, and organised.</p>
     </div>
   </div>
 </section>
 
-<!-- ==================== BENEFITS ==================== -->
-<section id="benefits" class="py-5" style="background-color: #fefcf8;">
+<!-- ==================== WHY CAMPUSCONNECT ==================== -->
+<section class="py-4" id="benefits">
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-lg-6" data-aos="fade-right">
@@ -1048,14 +872,13 @@
         <ul class="benefit-list list-unstyled mt-4">
           <li><i class="fas fa-user-check"></i> <strong>Only Demo University students (verified)</strong> Every buyer and seller is a verified student from your university.</li>
           <li><i class="fas fa-building"></i> <strong>Meet at recommended public locations on campus</strong> CCTV areas and open spaces.</li>
-          <li><i class="fas fa-money-check-alt"></i> <strong>Inspect the item before making payment.</strong>CampusConnect connects buyers and sellers but never holds your money.</li>
-          <li><i class="fas fa-truck-fast"></i> <strong>Search Products Instantly</strong> Instead of scrolling through hundreds of social media messages</li>
+          <li><i class="fas fa-money-check-alt"></i> <strong>Inspect the item before making payment.</strong> CampusConnect connects buyers and sellers but never holds your money.</li>
+          <li><i class="fas fa-truck-fast"></i> <strong>Search Products Instantly</strong> Instead of scrolling through hundreds of social media messages.</li>
           <li><i class="fas fa-eye-slash"></i> <strong>Free to browse</strong> Verify only when you're ready to buy or sell.</li>
-          <li><i class="fas fa-star"></i> <strong>Hall verification badge</strong> Hall verification helps buyers know where you live on campus, 
-            making transactions feel safer and building confidence before meeting.</li>
+          <li><i class="fas fa-star"></i> <strong>Hall verification badge</strong> Hall verification helps buyers know where you live on campus.</li>
         </ul>
         <div class="mt-4">
-          <a href="auth/auth.html" class="btn btn-primary-custom">Join the growing community of verified students <i class="fas fa-arrow-right ms-2"></i></a>
+          <a href="auth/auth.html" class="btn btn-primary-custom">Join the community <i class="fas fa-arrow-right ms-2"></i></a>
         </div>
       </div>
       <div class="col-lg-6" data-aos="fade-left">
@@ -1064,7 +887,7 @@
             <i class="fas fa-shield-alt fa-2x" style="color: var(--accent);"></i>
             <div>
               <h5 class="fw-semibold">No strangers, only Badgers</h5>
-              <p class="text-muted mb-0">Every user is tied to a Demo University email. If something goes wrong, you can report instantly through our moderation system.</p>
+              <p class="text-muted mb-0">Every user is tied to a Demo University email. If something goes wrong, you can report instantly.</p>
             </div>
           </div>
           <hr>
@@ -1081,41 +904,258 @@
   </div>
 </section>
 
+<!-- ==================== COMPARISON TABLE ==================== -->
+<section class="py-4 bg-soft-green" id="compare">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <span class="badge-verify mb-2">The Smarter Choice</span>
+      <h2 class="fw-semibold">Why Students Are Leaving WhatsApp Groups</h2>
+    </div>
+    <div class="compare-table" data-aos="fade-up">
+      <div class="row">
+        <div class="col-5 fw-bold text-muted">Feature</div>
+        <div class="col-3 fw-bold text-danger"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+        <div class="col-4 fw-bold text-success"><i class="fas fa-graduation-cap"></i> CampusConnect</div>
+      </div>
+      <div class="row">
+        <div class="col-5">Search instantly for items</div>
+        <div class="col-3"><i class="fas fa-times-circle text-danger"></i> Endless scrolling</div>
+        <div class="col-4"><i class="fas fa-check-circle text-success"></i> Search & filter</div>
+      </div>
+      <div class="row">
+        <div class="col-5">Seller verification</div>
+        <div class="col-3"><i class="fas fa-times-circle text-danger"></i> Random strangers</div>
+        <div class="col-4"><i class="fas fa-check-circle text-success"></i> Verified students only</div>
+      </div>
+      <div class="row">
+        <div class="col-5">Organised listings</div>
+        <div class="col-3"><i class="fas fa-times-circle text-danger"></i> Lost messages</div>
+        <div class="col-4"><i class="fas fa-check-circle text-success"></i> Categories & photos</div>
+      </div>
+      <div class="row">
+        <div class="col-5">Trust & safety</div>
+        <div class="col-3"><i class="fas fa-times-circle text-danger"></i> No safety features</div>
+        <div class="col-4"><i class="fas fa-check-circle text-success"></i> Hall verification, reports</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section id="how-it-works" class="py-5">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="badge-verify mb-2">Simple & Secure</span>
+      <h2 class="display-6 fw-semibold">How CampusConnect works</h2>
+      <p class="text-muted col-lg-7 mx-auto">Built by students for students – buy, sell, and find services in three easy steps.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-search"></i></div>
+          <h5>1. Find it</h5>
+          <p class="text-muted">Search thousands of campus listings in seconds.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-comment-dots"></i></div>
+          <h5>2. Chat instantly</h5>
+          <p class="text-muted">Talk directly with verified students.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="step-card">
+          <div class="step-icon"><i class="fas fa-handshake"></i></div>
+          <h5>3. Meet safely</h5>
+          <p class="text-muted">Inspect before paying at a campus hotspot.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ACTIVE STATS ==================== -->
+<div class="container mt-2 mb-4">
+  <div class="row text-center g-4 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-number">150+</div>
+        <div class="text-muted small">Active Listings</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-number">500+</div>
+        <div class="text-muted small">Verified Students</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-number">40</div>
+        <div class="text-muted small">Items Sold This Week</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-number"><i class="fas fa-clock"></i></div>
+        <div class="text-muted small">Avg. sale within campus meetup</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CATEGORIES (MOVED UP) ==================== -->
+<section id="categories" class="py-4 bg-soft-green">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <span class="badge-verify mb-2">Browse by Category</span>
+      <h2 class="fw-semibold">What do you need?</h2>
+      <p class="text-muted">Find exactly what you're looking for, fast.</p>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center gap-3" data-aos="fade-up" data-aos-delay="100">
+      <a href="/dash/listings.html?category=textbooks" class="category-badge"><i class="fas fa-book me-1"></i> Textbooks</a>
+      <a href="/dash/listings.html?category=electronics" class="category-badge"><i class="fas fa-mobile-alt me-1"></i> Electronics</a>
+      <a href="/dash/listings.html?category=furniture" class="category-badge"><i class="fas fa-couch me-1"></i> Furniture</a>
+      <a href="/dash/listings.html?category=clothing" class="category-badge"><i class="fas fa-tshirt me-1"></i> Clothing</a>
+      <a href="/dash/listings.html?category=appliances" class="category-badge"><i class="fas fa-wrench me-1"></i> Appliances</a>
+      <a href="/dash/listings.html?category=sporting" class="category-badge"><i class="fas fa-bicycle me-1"></i> Sporting goods</a>
+      <a href="/dash/listings.html?category=services" class="category-badge"><i class="fas fa-hand-sparkles me-1"></i> Services</a>
+      <a href="/dash/listings.html" class="category-badge"><i class="fas fa-arrow-right me-1"></i> View all</a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SERVICES ==================== -->
+<section class="py-4 bg-soft-green" id="services">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <span class="badge-verify mb-2">More Than Just Items</span>
+      <h2 class="fw-semibold">Services Students Offer</h2>
+      <p class="text-muted">From assignments to haircuts – students help students.</p>
+    </div>
+    <div class="row g-3 justify-content-center">
+      <div class="col-4 col-md-2"><div class="service-item"><i class="fas fa-pencil-alt"></i><span>Assignments</span></div></div>
+      <div class="col-4 col-md-2"><div class="service-item"><i class="fas fa-cut"></i><span>Haircuts</span></div></div>
+      <div class="col-4 col-md-2"><div class="service-item"><i class="fas fa-camera"></i><span>Photography</span></div></div>
+      <div class="col-4 col-md-2"><div class="service-item"><i class="fas fa-laptop-code"></i><span>Coding</span></div></div>
+      <div class="col-4 col-md-2"><div class="service-item"><i class="fas fa-paint-brush"></i><span>Graphics</span></div></div>
+      <div class="col-4 col-md-2"><div class="service-item"><i class="fas fa-print"></i><span>Printing</span></div></div>
+      <div class="col-4 col-md-2"><div class="service-item"><i class="fas fa-tools"></i><span>Repairs</span></div></div>
+      <div class="col-4 col-md-2"><div class="service-item"><i class="fas fa-birthday-cake"></i><span>Cakes</span></div></div>
+    </div>
+    <div class="text-center mt-3">
+      <p class="text-muted small"><i class="fas fa-plus-circle"></i> …and many more. List your service today.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ==================== FEATURED LISTINGS ==================== -->
 <section id="IndexListing" class="py-5">
   <div class="container">
     <div class="text-center mb-4" data-aos="fade-up">
       <h3 class="fw-semibold">🔥 What's selling right now</h3>
-      <p class="text-muted">From past questions to new tech, find what you need; All from verified Demo University students.</p>
-    </div>
-    <div class="d-flex flex-wrap justify-content-center gap-3 mb-5" data-aos="fade-up" data-aos-delay="100">
-      <span class="category-badge"><i class="fas fa-book me-1"></i> Textbooks</span>
-      <span class="category-badge"><i class="fas fa-mobile-alt me-1"></i> Electronics</span>
-      <span class="category-badge"><i class="fas fa-couch me-1"></i> Furniture</span>
-      <span class="category-badge"><i class="fas fa-tshirt me-1"></i> Clothing</span>
-      <span class="category-badge"><i class="fas fa-wrench me-1"></i> Appliances</span>
-      <span class="category-badge"><i class="fas fa-bicycle me-1"></i> Sporting goods</span>
+      <p class="text-muted">From past questions to new tech, find what you need – all from verified Demo University students.</p>
     </div>
 
     <div id="featuredListingsGrid" class="row row-cols-2 row-cols-md-3 g-4 featured-grid" data-aos="fade-up"></div>
     <div class="text-center mt-5">
-      <a href="auth/auth.html" class="btn btn-outline-custom">Browse all listings <i class="fas fa-arrow-right ms-1"></i></a>
+      <a href="/dash/listings.html" class="btn btn-primary-custom">Browse all listings <i class="fas fa-arrow-right ms-1"></i></a>
     </div>
   </div>
 </section>
 
-<!-- ==================== TESTIMONIALS ==================== -->
-<!-- <section id="testimonials" class="py-5" style="background-color: #fafaf6;">
+<!-- ==================== RECENTLY ADDED ==================== -->
+<section class="py-4 bg-soft-green" id="recently-added">
   <div class="container">
-    <div class="text-center mb-5" data-aos="fade-up">
-      <h3 class="fw-semibold">Trusted by Demo University students, from 100L to final year</h3>
-      <p class="text-muted">Real stories inside the campus bubble</p>
+    <div class="d-flex justify-content-between align-items-center mb-3" data-aos="fade-up">
+      <h4 class="fw-semibold mb-0"><i class="fas fa-clock me-2" style="color: var(--accent);"></i>Recently Added</h4>
+      <a href="/dash/listings.html?sort=newest" class="text-decoration-none small" style="color: var(--accent);">View all →</a>
+    </div>
+    <div class="row g-3" data-aos="fade-up">
+      <div class="col-md-4 col-6">
+        <div class="recent-item">
+          <div class="recent-icon"><i class="fas fa-laptop"></i></div>
+          <div class="recent-info">
+            <strong>Dell XPS 13</strong>
+            <small>₦450,000</small>
+          </div>
+          <span class="recent-time">10 min ago</span>
+        </div>
+      </div>
+      <div class="col-md-4 col-6">
+        <div class="recent-item">
+          <div class="recent-icon"><i class="fas fa-book"></i></div>
+          <div class="recent-info">
+            <strong>BIO201 Textbook</strong>
+            <small>₦8,500</small>
+          </div>
+          <span class="recent-time">Today</span>
+        </div>
+      </div>
+      <div class="col-md-4 col-6">
+        <div class="recent-item">
+          <div class="recent-icon"><i class="fas fa-tshirt"></i></div>
+          <div class="recent-info">
+            <strong>Nike Hoodie (L)</strong>
+            <small>₦15,000</small>
+          </div>
+          <span class="recent-time">Yesterday</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== "I'M LOOKING FOR..." ==================== -->
+<section class="py-4" id="looking-for">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <span class="badge-verify mb-2">Don't see what you need?</span>
+      <h2 class="fw-semibold">“I'm Looking For...”</h2>
+      <p class="text-muted">Post what you need – let sellers come to you.</p>
+    </div>
+    <div class="row g-4 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-md-4">
+        <div class="looking-for-card">
+          <i class="fas fa-laptop"></i>
+          <h6>“I'm looking for a used HP laptop.”</h6>
+          <p class="text-muted small">Budget: ₦250,000</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="looking-for-card">
+          <i class="fas fa-book"></i>
+          <h6>“Need BIO201 textbook.”</h6>
+          <p class="text-muted small">Preferably 3rd edition</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="looking-for-card">
+          <i class="fas fa-bed"></i>
+          <h6>“Looking for a roommate.”</h6>
+          <p class="text-muted small">Mellanby Hall, ₦80k/semester</p>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4" data-aos="fade-up">
+      <a href="auth/auth.html" class="btn btn-outline-custom"><i class="fas fa-plus-circle me-2"></i>Post what you need</a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SOCIAL PROOF ==================== -->
+<section class="py-5 bg-soft-green" id="social-proof">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <span class="badge-verify mb-2">Real Students, Real Stories</span>
+      <h2 class="fw-semibold">What Students Say</h2>
     </div>
     <div class="row g-4">
       <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
         <div class="testimonial-card">
           <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-          <p>“I sold my law textbooks in 2 days. No Jiji stress, and the buyer stays in my hostel. Perfect for last-minute cash before holidays.”</p>
+          <p>“I sold my law textbooks in 2 days. No Jiji stress, and the buyer stays in my hostel. Perfect for last‑minute cash before holidays.”</p>
           <div class="user">
             <i class="fas fa-user-circle"></i>
             <div><strong>Tolani A.</strong><br><small>Faculty of Law, Independence Hall</small></div>
@@ -1125,7 +1165,7 @@
       <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
         <div class="testimonial-card">
           <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
-          <p>“I needed a mini-fridge and was scared of scammers. The hall verification on CampusConnect saved me. The seller had a verified badge.”</p>
+          <p>“I needed a mini‑fridge and was scared of scammers. The hall verification on CampusConnect saved me. The seller had a verified badge.”</p>
           <div class="user">
             <i class="fas fa-user-circle"></i>
             <div><strong>David O.</strong><br><small>Engineering, Mellanby Hall</small></div>
@@ -1144,42 +1184,9 @@
       </div>
     </div>
   </div>
-</section> -->
+</section>
 
-<!-- ==================== PRICE & SAVINGS ==================== -->
-<!-- <section class="py-4">
-  <div class="container">
-    <div class="row g-4 align-items-stretch" data-aos="fade-up">
-      <div class="col-md-6">
-        <div class="bg-white p-4 rounded-4 shadow-sm h-100 savings-highlight">
-          <div class="d-flex align-items-center gap-3 mb-2">
-            <i class="fas fa-chart-line fa-2x" style="color: var(--accent);"></i>
-            <h4 class="fw-semibold mb-0">Afordable Price</h4>
-          </div>
-          <p class="text-muted">Compared to brand new prices or external marketplaces. Textbooks are cheaper, electronics cheaper, furniture up to less.</p>
-          <div>
-            <span class="badge bg-light text-dark me-2"><i class="fas fa-clock me-1"></i> Updated weekly</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="bg-white p-4 rounded-4 shadow-sm h-100">
-          <h5 class="fw-semibold"><i class="fas fa-fire" style="color: #e67e22;"></i> Top 5 most wanted items this week</h5>
-          <ul class="list-unstyled mt-3">
-            <li class="mb-2"><i class="fas fa-book text-success me-2"></i> CSC 301 past questions — <strong>24 requests</strong></li>
-            <li class="mb-2"><i class="fas fa-laptop-code me-2"></i> HP/Dell laptops — <strong>18+ active buyers</strong></li>
-            <li class="mb-2"><i class="fas fa-tshirt me-2"></i> Branded hoodies — <strong>11 wanted</strong></li>
-            <li class="mb-2"><i class="fas fa-microphone me-2"></i> Bluetooth speakers — <strong>9 buyers</strong></li>
-            <li class="mb-2"><i class="fas fa-shoe-prints me-2"></i> Casual shoes — <strong>trending 🔥</strong></li>
-          </ul>
-          <div class="alert alert-light border rounded-3 mt-2 p-2 text-center small">“Post what you need — get matched in 48h”</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section> -->
-
-<!-- ==================== SAFETY TIPS ==================== -->
+<!-- ==================== SAFETY ==================== -->
 <section class="py-4" id="safety">
   <div class="container">
     <div class="text-center mb-4">
@@ -1231,10 +1238,10 @@
           <p class="lead text-muted">Help fellow students recover lost belongings.</p>
           <div class="bg-white p-4 rounded-4 shadow-sm mt-3">
             <i class="fas fa-hand-peace fa-3x mb-3" style="color: var(--accent);"></i>
-            <h5 class="fw-semibold">“I found a student ID near the library: here’s how I returned it”</h5>
+            <h5 class="fw-semibold">“I found a student ID near the library – here’s how I returned it”</h5>
             <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
               <button id="reportLostBtn" class="btn btn-primary-custom" data-bs-toggle="tooltip" title="Report item"><i class="fas fa-clipboard-list me-2"></i>Report lost item</button>
-              <a href="lost-and-found-board.html" class="btn btn-outline-custom" data-bs-toggle="tooltip" title="View board"><i class="fas fa-eye me-2"></i>View lost & found board</a>
+              <a href="/student/lost-item.html" class="btn btn-outline-custom" data-bs-toggle="tooltip" title="View board"><i class="fas fa-eye me-2"></i>View lost & found board</a>
             </div>
             <p class="small text-muted mt-3">🔹 You remain anonymous. We verify ownership before sharing contact details.</p>
           </div>
@@ -1243,6 +1250,58 @@
     </div>
   </div>
 </section>
+
+<!-- ==================== FAQ ==================== -->
+<section class="py-5 bg-soft-green" id="faq">
+  <div class="container">
+    <div class="text-center mb-4" data-aos="fade-up">
+      <span class="badge-verify mb-2">Got questions?</span>
+      <h2 class="fw-semibold">Frequently Asked Questions</h2>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="faq-item" data-aos="fade-up">
+          <div class="faq-question" onclick="toggleFaq(this)">Why should I trust CampusConnect? <i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">Every user must verify with their university email and student ID. We also have hall verification and a reporting system to keep the community safe.</div>
+        </div>
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="50">
+          <div class="faq-question" onclick="toggleFaq(this)">Is it free? <i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">Yes! Browsing and posting listings is completely free. You only pay when you buy an item.</div>
+        </div>
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+          <div class="faq-question" onclick="toggleFaq(this)">Can outsiders join? <i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">No. Only current Demo University students with a valid @demo.edu.ng or @stu.demo.edu.ng email can join.</div>
+        </div>
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="150">
+          <div class="faq-question" onclick="toggleFaq(this)">How do you verify students? <i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">We send a verification link to your university email. You also have the option to upload a photo of your student ID.</div>
+        </div>
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+          <div class="faq-question" onclick="toggleFaq(this)">Who handles payments? <i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">CampusConnect does NOT handle payments. Buyers and sellers meet in person to inspect and pay directly.</div>
+        </div>
+        <div class="faq-item" data-aos="fade-up" data-aos-delay="250">
+          <div class="faq-question" onclick="toggleFaq(this)">What happens if someone scams me? <i class="fas fa-chevron-down"></i></div>
+          <div class="faq-answer">Report the user immediately using the “Report” button. Our moderation team will investigate and take action.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    const icon = el.querySelector('i');
+    if (answer.classList.contains('open')) {
+      answer.classList.remove('open');
+      icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+    } else {
+      answer.classList.add('open');
+      icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+    }
+  }
+</script>
 
 <!-- ==================== CONTACT ==================== -->
 <section class="py-5" id="contact">
@@ -1264,7 +1323,7 @@
         <div class="bg-white p-4 rounded-4 shadow-sm border text-center h-100">
           <i class="fas fa-envelope fa-2x mb-3" style="color: var(--accent);"></i>
           <h5 class="fw-semibold">Email us</h5>
-          <p class="mb-0"><a href="mailto:support@campusconnect.Demo University" class="text-decoration-none" style="color: var(--accent-dark);">support@campusconnect.Demo University</a></p>
+          <p class="mb-0"><a href="mailto:support@campusconnect.edu" class="text-decoration-none" style="color: var(--accent-dark);">support@campusconnect.edu</a></p>
           <small class="text-muted">We reply within 24h</small>
         </div>
       </div>
@@ -1277,10 +1336,11 @@
   <div class="container">
     <div class="cta-card">
       <i class="fas fa-users fa-3x mb-3" style="color: var(--accent);"></i>
-      <h2 class="fw-bold">Join the growing community of verified students already saving money</h2>
-      <p class="text-muted col-md-8 mx-auto mb-4">Start buying and selling within your community.</p>
-      <a href="auth/auth.html" class="btn btn-primary-custom btn-lg"><i class="fas fa-user-graduate me-2"></i>Sign Up Now - It's free</a>
-      <p class="small text-muted mt-3">Required: @Demo University.edu.ng or @stu.Demo University.edu.ng email</p>
+      <h2 class="fw-bold">Ready to Stop Searching Everywhere?</h2>
+      <p class="text-muted col-md-8 mx-auto mb-4">Buy smarter. Sell faster. Trade safer. Only with verified students.</p>
+      <a href="auth/auth.html" class="btn btn-primary-custom btn-lg"><i class="fas fa-user-graduate me-2"></i>Create Free Account</a>
+      <a href="/dash/listings.html" class="btn btn-outline-custom ms-2"><i class="fas fa-eye me-2"></i>Browse Marketplace</a>
+      <p class="small text-muted mt-3">Required: @demo.edu.ng or @stu.demo.edu.ng email</p>
     </div>
   </div>
 </section>
@@ -1311,6 +1371,12 @@
   </div>
 </footer>
 
+<!-- ==================== STICKY SELL BUTTON ==================== -->
+<a href="auth/auth.html" class="sticky-sell-btn" data-bs-toggle="tooltip" title="Sell an item">
+  <i class="fas fa-plus-circle"></i>
+  <span>Sell Item</span>
+</a>
+
 <!-- ==================== MODALS ==================== -->
 <div id="formModal" class="modal-overlay" style="display: none;"><div class="modal-container"><div class="modal-header"><h3 id="formModalTitle">Form Title</h3><button class="modal-close" id="closeFormModalBtn" data-bs-toggle="tooltip" title="Close form">&times;</button></div><div class="modal-body" id="formModalBody"></div><div class="modal-footer" id="formModalFooter"></div></div></div>
 <div id="confirmModal" class="modal-overlay" style="display: none;"><div class="modal-container confirm-modal-container"><div class="modal-header"><h3 id="confirmModalTitle">Confirm Action</h3><button class="modal-close" id="closeConfirmModalBtn" data-bs-toggle="tooltip" title="Close dialog">&times;</button></div><div class="modal-body" id="confirmModalBody"><p id="confirmMessage"></p></div><div class="modal-footer" id="confirmModalFooter"></div></div></div>
@@ -1325,11 +1391,7 @@
 
 <script>
   // ─── AOS ──────────────────────────────────────────────────────
-  AOS.init({
-    duration: 800,
-    once: true,
-    offset: 80,
-  });
+  AOS.init({ duration: 800, once: true, offset: 80 });
 
   // ─── Particles ────────────────────────────────────────────────
   if (document.getElementById('particles-js')) {
@@ -1354,16 +1416,9 @@
     });
   }
 
-  // ─── Helpers for listings ────────────────────────────────────
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
-  }
-
-  function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
-  }
-
+  // ─── Helpers ──────────────────────────────────────────────────
+  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); }
+  function formatCurrency(amount) { return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount); }
   function getConditionDisplay(badge) {
     const map = {
       'new': { icon: '🆕', text: 'New' },
@@ -1418,6 +1473,11 @@
                 </div>
                 <h5 class="card-title">${escapeHtml(item.title)}</h5>
                 <div class="listing-price mt-1">${formatCurrency(item.price)}</div>
+                <div class="listing-meta d-flex gap-2 mt-1">
+                  <span><i class="fas fa-check-circle text-success"></i> Verified</span>
+                  <span><i class="fas fa-clock"></i> 2h ago</span>
+                  <span><i class="fas fa-eye"></i> 12 views</span>
+                </div>
                 <div class="listing-desc mt-2 d-none d-md-block">${escapeHtml(item.description)}</div>
                 <div class="listing-location mt-1 d-none d-md-block"><i class="fas fa-map-marker-alt me-1"></i> ${escapeHtml(item.location)}</div>
               </div>
@@ -1426,7 +1486,6 @@
         `;
       }
       container.innerHTML = cardsHtml;
-
       section.style.display = 'block';
 
       // Click handler for modal

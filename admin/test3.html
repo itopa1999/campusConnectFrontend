@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CampusConnect · Forgot Password</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome 6 (solid) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+           ROOT — warm, green‑free palette
+           ============================================================ */
+        :root {
+            --ink: #1e1a33;
+            --muted: #8d89a0;
+            --cream: #fffaf6;
+            --coral: #e8826a;
+            --coral-light: #fce8e2;
+            --coral-dark: #d16a52;
+            --rose: #f5b8b8;
+            --rose-light: #fdeef0;
+            --lavender: #e2ddf9;
+            --lavender-deep: #c9bdf5;
+            --peach: #fdedd0;
+            --peach-deep: #f6cf8e;
+            --yellow: #f8c94a;
+            --yellow-dark: #f0b421;
+            --purple-deep: #9a84c9;
+            --pink: #fbdfe4;
+            --pink-deep: #f6b8c4;
+            --radius-lg: 28px;
+            --radius-md: 20px;
+            --shadow-soft: 0 20px 45px rgba(30, 26, 51, 0.08);
+            --shadow-hover: 0 24px 56px rgba(30, 26, 51, 0.13);
+            --success: #2e9c6f;
+            --success-light: #e1f5ed;
+        }
+
+        /* ============================================================
+           BASE
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+            background: var(--cream);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+        p {
+            margin: 0;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 32px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ============================================================
+           BUTTONS
+           ============================================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: .95rem;
+            border: none;
+            cursor: pointer;
+            transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+            justify-content: center;
+        }
+        .btn-coral {
+            background: var(--coral);
+            color: #fff;
+            box-shadow: 0 12px 24px rgba(232, 130, 106, .40);
+        }
+        .btn-coral:hover {
+            transform: translateY(-3px);
+            background: var(--coral-dark);
+        }
+        .btn-coral:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-outline {
+            background: #fff;
+            color: var(--ink);
+            border: 1.5px solid rgba(30, 26, 51, .12);
+        }
+        .btn-outline:hover {
+            border-color: var(--ink);
+            transform: translateY(-3px);
+        }
+        .btn-block {
+            width: 100%;
+        }
+        .btn-sm {
+            padding: 10px 20px;
+            font-size: .85rem;
+        }
+
+        /* ============================================================
+           WAVE DIVIDERS
+           ============================================================ */
+        .wave-divider {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            margin: -2px 0;
+        }
+        .wave-divider svg {
+            display: block;
+            width: 100%;
+            height: 28px;
+        }
+
+        /* ============================================================
+           WAVE BACKGROUND SYSTEM
+           ============================================================ */
+        .bg-wave {
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+        }
+        .bg-wave .wave-blob {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-wave .wave-blob svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .bg-wave .wrap {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ============================================================
+           NAV
+           ============================================================ */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 250, 246, .88);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(30, 26, 51, .05);
+        }
+        .navbar .wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+        .brand svg {
+            width: 30px;
+            height: 30px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 34px;
+        }
+        .nav-links a {
+            font-size: .92rem;
+            font-weight: 500;
+            color: var(--ink);
+            position: relative;
+            transition: color .25s;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--coral);
+            transition: width .3s;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .nav-links a:hover {
+            color: var(--coral);
+        }
+        .nav-cta {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--ink);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 72px;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 250, 246, .98);
+                padding: 24px 32px;
+                gap: 16px;
+                border-bottom: 1px solid rgba(30, 26, 51, .05);
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        /* ============================================================
+           FORGOT PASSWORD CARD
+           ============================================================ */
+        .auth-section {
+            padding: 60px 0 40px;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+        }
+        .auth-card {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 40px 36px 36px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(30, 26, 51, .04);
+            transition: transform .3s, box-shadow .3s;
+            width: 100%;
+        }
+        .auth-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .auth-header .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+        .auth-header .logo-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+        .auth-header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--ink);
+        }
+        .auth-header p {
+            color: var(--muted);
+            font-size: .95rem;
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--muted);
+            font-size: .85rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: color .2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        .back-link:hover {
+            color: var(--coral);
+        }
+        .back-link i {
+            font-size: .75rem;
+        }
+
+        /* ============================================================
+           STEPS
+           ============================================================ */
+        .step-indicators {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(30, 26, 51, .08);
+            transition: background .3s, transform .3s;
+        }
+        .step-dot.active {
+            background: var(--coral);
+            transform: scale(1.2);
+        }
+        .step-dot.done {
+            background: var(--success);
+        }
+        .step-line {
+            width: 32px;
+            height: 2px;
+            background: rgba(30, 26, 51, .08);
+            border-radius: 2px;
+            transition: background .3s;
+        }
+        .step-line.done {
+            background: var(--success);
+        }
+
+        /* ============================================================
+           STEP 1 — Request Reset
+           ============================================================ */
+        .auth-form {
+            display: block;
+        }
+        .auth-form.hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: .85rem;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+        .form-group .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--cream);
+            border-radius: 40px;
+            border: 1px solid rgba(30, 26, 51, .06);
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .form-group .input-wrap:focus-within {
+            border-color: var(--coral);
+            box-shadow: 0 0 0 4px rgba(232, 130, 106, .08);
+        }
+        .form-group .input-wrap i {
+            position: absolute;
+            left: 18px;
+            color: var(--muted);
+            font-size: 1rem;
+            opacity: .6;
+        }
+        .form-group .input-wrap input {
+            width: 100%;
+            padding: 14px 18px 14px 48px;
+            border: none;
+            background: transparent;
+            font-size: .95rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+            outline: none;
+            border-radius: 40px;
+        }
+        .form-group .input-wrap input::placeholder {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           STEP 2 — Success / Email Sent
+           ============================================================ */
+        .success-state {
+            text-align: center;
+            padding: 12px 0 8px;
+        }
+        .success-state .icon-wrap {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--success-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.6rem;
+            color: var(--success);
+        }
+        .success-state h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+        .success-state p {
+            color: var(--muted);
+            font-size: .95rem;
+            line-height: 1.6;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+        .success-state .email-highlight {
+            display: inline-block;
+            font-weight: 600;
+            color: var(--ink);
+            background: var(--cream);
+            padding: 2px 12px;
+            border-radius: 20px;
+            margin-top: 4px;
+            font-size: .9rem;
+        }
+
+        /* ============================================================
+           STEP 3 — Reset Password
+           ============================================================ */
+        .password-requirements {
+            font-size: .78rem;
+            color: var(--muted);
+            margin-top: 6px;
+            padding-left: 4px;
+        }
+        .password-requirements .req {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 0;
+        }
+        .password-requirements .req i {
+            font-size: .7rem;
+            color: var(--muted);
+            transition: color .3s;
+        }
+        .password-requirements .req.valid i {
+            color: var(--success);
+        }
+        .password-requirements .req.valid span {
+            color: var(--success);
+        }
+
+        /* ============================================================
+           TOAST / NOTIFICATION
+           ============================================================ */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 380px;
+            width: calc(100% - 48px);
+            pointer-events: none;
+        }
+        .toast {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            box-shadow: var(--shadow-hover);
+            border-left: 4px solid var(--coral);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            animation: slideIn 0.4s ease forwards;
+        }
+        .toast.success {
+            border-left-color: var(--success);
+        }
+        .toast .toast-icon {
+            font-size: 1.2rem;
+            color: var(--coral);
+            flex-shrink: 0;
+        }
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+        .toast .toast-content {
+            flex: 1;
+        }
+        .toast .toast-content strong {
+            display: block;
+            font-size: .85rem;
+            color: var(--ink);
+        }
+        .toast .toast-content span {
+            font-size: .78rem;
+            color: var(--muted);
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: .9rem;
+            padding: 0;
+            opacity: .5;
+            transition: opacity .2s;
+        }
+        .toast .toast-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+        }
+        .toast.hiding {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .footer-section {
+            background: linear-gradient(120deg, var(--pink) 0%, var(--peach) 55%, var(--lavender) 100%);
+            border-radius: 44px 44px 0 0;
+            padding: 40px 40px 28px;
+            margin: 0 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .footer-section::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(232, 130, 106, .06);
+            pointer-events: none;
+        }
+        .footer-inner {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+            font-size: .85rem;
+            font-weight: 500;
+        }
+        .footer-links a {
+            transition: color .25s;
+        }
+        .footer-links a:hover {
+            color: var(--coral);
+        }
+        .footer-bottom {
+            text-align: center;
+            margin-top: 18px;
+            font-size: .75rem;
+            color: #8a84a0;
+        }
+        @media (max-width: 768px) {
+            .footer-section {
+                margin: 0;
+                border-radius: 36px 36px 0 0;
+                padding: 32px 20px 24px;
+            }
+        }
+
+        /* ============================================================
+           SCROLL TOP
+           ============================================================ */
+        .scroll-top {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 100;
+            background: var(--coral);
+            color: #fff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(232, 130, 106, .35);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .3s, transform .3s, background .3s;
+        }
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:hover {
+            transform: translateY(-4px) scale(1.05);
+            background: var(--coral-dark);
+        }
+        @media (max-width: 576px) {
+            .scroll-top {
+                width: 38px;
+                height: 38px;
+                font-size: .9rem;
+                right: 16px;
+                bottom: 16px;
+            }
+        }
+
+        /* ============================================================
+           AOS OVERRIDE
+           ============================================================ */
+        [data-aos] {
+            pointer-events: none;
+        }
+        [data-aos].aos-animate {
+            pointer-events: auto;
+        }
+        @media (max-width: 768px) {
+            [data-aos] {
+                transform: none !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* ============================================================
+           UTILITY
+           ============================================================ */
+        .text-center {
+            text-align: center;
+        }
+        .mt-2 {
+            margin-top: 16px;
+        }
+        .mb-2 {
+            margin-bottom: 16px;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .gap-2 {
+            gap: 12px;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 576px) {
+            .auth-card {
+                padding: 28px 20px 24px;
+            }
+            .auth-header h1 {
+                font-size: 1.4rem;
+            }
+            .success-state .icon-wrap {
+                width: 64px;
+                height: 64px;
+                font-size: 2rem;
+            }
+            .step-line {
+                width: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    TOP WAVE DIVIDER
+    ============================================================ -->
+    <div class="wave-divider" style="margin-top:72px;">
+        <svg viewBox="0 0 1440 28" preserveAspectRatio="none">
+            <path d="M0,10 C360,28 720,0 1080,18 C1260,27 1380,6 1440,14 L1440,28 L0,28 Z" fill="#fffaf6" opacity="0.5" />
+            <path d="M0,18 C240,4 480,22 720,10 C960,0 1200,20 1440,6 L1440,28 L0,28 Z" fill="#fffaf6" opacity="0.3" />
+        </svg>
+    </div>
+
+    <!-- ============================================================
+    NAV
+    ============================================================ -->
+    <header class="navbar">
+        <div class="wrap">
+            <a class="brand" href="index.html">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 21 7v10l-9 5-9-5V7l9-5Z" stroke="#1e1a33" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                CampusConnect
+            </a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="index.html#marketplace">Marketplace</a>
+                <a href="index.html#categories">Categories</a>
+                <a href="index.html#safety">Safety</a>
+                <a href="index.html#faq">FAQ</a>
+            </nav>
+            <div class="nav-cta">
+                <a href="auth.html" class="btn btn-coral btn-sm">Sign In</a>
+                <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================
+    FORGOT PASSWORD SECTION (bg-wave)
+    ============================================================ -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1440 28" preserveAspectRatio="none">
+            <path d="M0,14 C360,28 720,2 1080,20 C1260,26 1380,8 1440,14 L1440,28 L0,28 Z" fill="rgba(255,250,246,0.3)" />
+        </svg>
+    </div>
+
+    <section class="bg-wave auth-section" id="forgot-password">
+        <div class="wave-blob">
+            <svg viewBox="0 0 1440 600" preserveAspectRatio="none">
+                <path d="M0,300 C360,450 720,100 1080,350 C1260,475 1380,250 1440,300 L1440,600 L0,600 Z" fill="#fce8e2" opacity="0.5" />
+                <path d="M0,400 C240,550 480,200 720,450 C960,700 1200,300 1440,400 L1440,600 L0,600 Z" fill="#e2ddf9" opacity="0.3" />
+            </svg>
+        </div>
+        <div class="wrap">
+            <div class="auth-card" data-aos="fade-up" data-aos-duration="800">
+
+                <!-- Back link -->
+                <button class="back-link" id="backToLogin">
+                    <i class="fas fa-arrow-left"></i> Back to Sign In
+                </button>
+
+                <!-- Header -->
+                <div class="auth-header">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 21 7v10l-9 5-9-5V7l9-5Z" stroke="#e8826a" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                        CampusConnect
+                    </div>
+                    <h1 id="stepTitle">Reset Password</h1>
+                    <p id="stepDescription">Enter your email and we'll send you a link to reset your password.</p>
+                </div>
+
+                <!-- Step Indicators -->
+                <div class="step-indicators">
+                    <span class="step-dot active" id="dot1"></span>
+                    <span class="step-line" id="line1"></span>
+                    <span class="step-dot" id="dot2"></span>
+                    <span class="step-line" id="line2"></span>
+                    <span class="step-dot" id="dot3"></span>
+                </div>
+
+                <!-- ================================================
+                STEP 1 — Request Reset
+                ================================================ -->
+                <form class="auth-form" id="step1Form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="resetEmail">Email Address</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="resetEmail" placeholder="you@demo.edu.ng" required />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-coral btn-block" id="sendResetBtn">
+                        <i class="fas fa-paper-plane"></i> Send Reset Link
+                    </button>
+                    <p class="auth-footer-text" style="margin-top:16px; text-align:center; font-size:.82rem; color:var(--muted);">
+                        We'll send a password reset link to your email.
+                    </p>
+                </form>
+
+                <!-- ================================================
+                STEP 2 — Email Sent (Success)
+                ================================================ -->
+                <div class="auth-form hidden" id="step2Form">
+                    <div class="success-state">
+                        <div class="icon-wrap">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h2>Check Your Email</h2>
+                        <p>
+                            We've sent a password reset link to
+                            <span class="email-highlight" id="sentEmail">you@demo.edu.ng</span>
+                        </p>
+                        <p style="margin-top:12px; font-size:.85rem; color:var(--muted);">
+                            Click the link in the email to reset your password. It expires in 15 minutes.
+                        </p>
+                        <div style="margin-top:24px; display:flex; flex-direction:column; gap:12px;">
+                            <button class="btn btn-coral btn-block" id="openEmailBtn">
+                                <i class="fas fa-envelope-open-text"></i> Open Email App
+                            </button>
+                            <button class="btn btn-outline btn-block" id="resendEmailBtn">
+                                <i class="fas fa-redo"></i> Resend Email
+                            </button>
+                        </div>
+                        <p style="margin-top:16px; font-size:.78rem; color:var(--muted);">
+                            Didn't receive the email? Check your spam folder or <a href="#" id="tryDifferentEmail" style="color:var(--coral); font-weight:600;">try a different email</a>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ================================================
+                STEP 3 — Reset Password
+                ================================================ -->
+                <form class="auth-form hidden" id="step3Form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="newPassword" placeholder="Create a strong password" required />
+                            <button type="button" class="toggle-pw" aria-label="Toggle password visibility" style="position:absolute;right:18px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0;opacity:.6;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-requirements" id="pwRequirements">
+                            <div class="req" id="reqLength"><i class="fas fa-circle"></i> <span>At least 8 characters</span></div>
+                            <div class="req" id="reqUpper"><i class="fas fa-circle"></i> <span>One uppercase letter</span></div>
+                            <div class="req" id="reqNumber"><i class="fas fa-circle"></i> <span>One number</span></div>
+                            <div class="req" id="reqSpecial"><i class="fas fa-circle"></i> <span>One special character (!@#$%^&*)</span></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-check-circle"></i>
+                            <input type="password" id="confirmPassword" placeholder="Confirm your new password" required />
+                            <button type="button" class="toggle-pw" aria-label="Toggle password visibility" style="position:absolute;right:18px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0;opacity:.6;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-coral btn-block" id="resetPasswordBtn">
+                        <i class="fas fa-check-circle"></i> Reset Password
+                    </button>
+                    <div id="resetSuccess" style="display:none; margin-top:16px; text-align:center; padding:16px; background:var(--success-light); border-radius:var(--radius-md);">
+                        <i class="fas fa-check-circle" style="color:var(--success); font-size:1.6rem; display:block; margin-bottom:8px;"></i>
+                        <p style="font-weight:600; color:var(--success);">Password reset successful!</p>
+                        <p style="font-size:.85rem; color:var(--muted);">You can now sign in with your new password.</p>
+                        <a href="auth.html" class="btn btn-coral" style="margin-top:12px; display:inline-flex;">Sign In Now</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1440 28" preserveAspectRatio="none">
+            <path d="M0,14 C360,28 720,2 1080,20 C1260,26 1380,8 1440,14 L1440,28 L0,28 Z" fill="rgba(255,250,246,0.3)" />
+        </svg>
+    </div>
+
+    <footer class="footer-section" id="contact">
+        <div class="footer-inner">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#categories">Categories</a>
+                <a href="index.html#marketplace">Marketplace</a>
+                <a href="index.html#contact">Contact</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </div>
+            <div class="footer-bottom">&copy; <span id="yr"></span> CampusConnect Demo University. Built by students, for students.</div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    TOAST CONTAINER
+    ============================================================ -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ============================================================
+    SCROLL TOP
+    ============================================================ -->
+    <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
+    </script>
+    <script>
+        // ─── AOS ──────────────────────────────────────────────────────
+        AOS.init({ duration: 800, once: true, offset: 40, easing: 'ease-out-cubic' });
+
+        // ─── DOM refs ──────────────────────────────────────────────
+        const step1Form = document.getElementById('step1Form');
+        const step2Form = document.getElementById('step2Form');
+        const step3Form = document.getElementById('step3Form');
+        const stepTitle = document.getElementById('stepTitle');
+        const stepDescription = document.getElementById('stepDescription');
+        const dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
+        const lines = [document.getElementById('line1'), document.getElementById('line2')];
+        const resetEmail = document.getElementById('resetEmail');
+        const sentEmail = document.getElementById('sentEmail');
+
+        // ─── Step Management ──────────────────────────────────────
+        let currentStep = 1;
+
+        function goToStep(step) {
+            currentStep = step;
+            // Hide all forms
+            step1Form.classList.add('hidden');
+            step2Form.classList.add('hidden');
+            step3Form.classList.add('hidden');
+
+            // Show correct form
+            if (step === 1) {
+                step1Form.classList.remove('hidden');
+                stepTitle.textContent = 'Reset Password';
+                stepDescription.textContent = "Enter your email and we'll send you a link to reset your password.";
+            } else if (step === 2) {
+                step2Form.classList.remove('hidden');
+                stepTitle.textContent = 'Check Your Email';
+                stepDescription.textContent = 'We sent a password reset link to your email address.';
+            } else if (step === 3) {
+                step3Form.classList.remove('hidden');
+                stepTitle.textContent = 'Create New Password';
+                stepDescription.textContent = 'Enter a new password for your account.';
+                // Reset success message if visible
+                document.getElementById('resetSuccess').style.display = 'none';
+                document.getElementById('resetPasswordBtn').style.display = 'inline-flex';
+            }
+
+            // Update indicators
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].className = 'step-dot';
+                if (i + 1 === step) dots[i].classList.add('active');
+                else if (i + 1 < step) dots[i].classList.add('done');
+            }
+            for (let i = 0; i < lines.length; i++) {
+                lines[i].className = 'step-line';
+                if (i + 1 < step) lines[i].classList.add('done');
+            }
+        }
+
+        // ─── Step 1: Send Reset Link ─────────────────────────────
+        step1Form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = resetEmail.value.trim();
+            if (!email || !email.includes('@')) {
+                showToast('Please enter a valid email address.', 'error');
+                return;
+            }
+            sentEmail.textContent = email;
+            showToast('Reset link sent to ' + email + '!', 'success');
+            goToStep(2);
+        });
+
+        // ─── Step 2: Resend Email ────────────────────────────────
+        document.getElementById('resendEmailBtn').addEventListener('click', function() {
+            const email = sentEmail.textContent;
+            showToast('Reset link resent to ' + email + '!', 'success');
+        });
+
+        document.getElementById('openEmailBtn').addEventListener('click', function() {
+            // In a real app, this might open the default mail app
+            showToast('Opening your email app...', 'success');
+        });
+
+        document.getElementById('tryDifferentEmail').addEventListener('click', function(e) {
+            e.preventDefault();
+            goToStep(1);
+            resetEmail.value = '';
+            resetEmail.focus();
+        });
+
+        // ─── Step 3: Password Reset ──────────────────────────────
+        const newPw = document.getElementById('newPassword');
+        const confirmPw = document.getElementById('confirmPassword');
+
+        // Password requirements
+        const reqLength = document.getElementById('reqLength');
+        const reqUpper = document.getElementById('reqUpper');
+        const reqNumber = document.getElementById('reqNumber');
+        const reqSpecial = document.getElementById('reqSpecial');
+
+        function checkPasswordStrength(pw) {
+            const checks = {
+                length: pw.length >= 8,
+                upper: /[A-Z]/.test(pw),
+                number: /\d/.test(pw),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(pw)
+            };
+            reqLength.classList.toggle('valid', checks.length);
+            reqUpper.classList.toggle('valid', checks.upper);
+            reqNumber.classList.toggle('valid', checks.number);
+            reqSpecial.classList.toggle('valid', checks.special);
+            return Object.values(checks).every(Boolean);
+        }
+
+        newPw.addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+
+        // Password toggle for step 3
+        document.querySelectorAll('#step3Form .toggle-pw').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const input = this.closest('.input-wrap').querySelector('input');
+                const icon = this.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            });
+        });
+
+        step3Form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const pw = newPw.value;
+            const confirm = confirmPw.value;
+
+            if (!checkPasswordStrength(pw)) {
+                showToast('Please meet all password requirements.', 'error');
+                return;
+            }
+            if (pw !== confirm) {
+                showToast('Passwords do not match.', 'error');
+                return;
+            }
+
+            // Success!
+            document.getElementById('resetSuccess').style.display = 'block';
+            document.getElementById('resetPasswordBtn').style.display = 'none';
+            showToast('Password reset successful! 🎉', 'success');
+        });
+
+        // ─── Back to Login ──────────────────────────────────────
+        document.getElementById('backToLogin').addEventListener('click', function() {
+            window.location.href = 'auth.html';
+        });
+
+        // ─── Toast System ──────────────────────────────────────
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (type === 'success' ? ' success' : '');
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            toast.innerHTML = `
+                <span class="toast-icon"><i class="fas ${icon}"></i></span>
+                <div class="toast-content">
+                    <strong>${type === 'success' ? 'Success' : 'Oops'}</strong>
+                    <span>${message}</span>
+                </div>
+                <button class="toast-close"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(toast);
+
+            // Auto-remove after 4 seconds
+            setTimeout(() => {
+                toast.classList.add('hiding');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+
+            // Close button
+            toast.querySelector('.toast-close').addEventListener('click', function() {
+                toast.classList.add('hiding');
+                setTimeout(() => toast.remove(), 300);
+            });
+        }
+
+        // ─── Scroll top ──────────────────────────────────────────
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            scrollBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ─── Mobile menu ─────────────────────────────────────────
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            const icon = menuToggle.querySelector('i');
+            if (navLinks.classList.contains('open')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
+        });
+
+        // ─── Year ───────────────────────────────────────────────
+        document.getElementById('yr').textContent = new Date().getFullYear();
+
+        // ─── Smooth anchor scroll ──────────────────────────────
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    const header = document.querySelector('.navbar');
+                    const offset = header ? header.offsetHeight : 0;
+                    window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authentication Required</title>
+</head>
+<body>
+    <div style="text-align:center; padding:50px;">
+        <h1>🔐 Authentication Required</h1>
+        <p id="message">Please log in to access this feature.</p>
+        <a href="/auth/auth.html">Log In</a>
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const page = params.get('page') || 'feature';
+        const message = params.get('message') || 'This feature';
+        document.getElementById('message').textContent = `${message} requires authentication. Please log in to continue.`;
+    </script>
+</body>
+</html>

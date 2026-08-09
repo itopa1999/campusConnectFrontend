@@ -13,6 +13,9 @@
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
     <style>
+        /* ============================================================
+           All existing styles remain the same...
+           ============================================================ */
         .create-wrapper {
             max-width: 720px;
             margin: 0 auto;
@@ -260,18 +263,32 @@
             cursor: not-allowed;
         }
 
-        /* ─── Price Input (no icon) ─── */
-        .price-input {
-            /* No special wrapper needed – just a normal input */
-        }
-
         /* Location Chips */
         .location-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             margin-top: 4px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 6px;
+            scrollbar-width: thin;
         }
+        .location-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .location-grid::-webkit-scrollbar-track {
+            background: var(--bg-input);
+            border-radius: 10px;
+        }
+        .location-grid::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        .location-grid::-webkit-scrollbar-thumb:hover {
+            background: var(--green);
+        }
+
         .location-chip {
             display: flex;
             align-items: center;
@@ -332,27 +349,6 @@
             .location-grid {
                 grid-template-columns: 1fr;
             }
-        }
-
-        .location-grid {
-            max-height: 420px;    
-            overflow-y: auto;
-            padding-right: 6px;         /* prevent content from hiding under scrollbar */
-            scrollbar-width: thin;      /* Firefox */
-        }
-        .location-grid::-webkit-scrollbar {
-            width: 6px;
-        }
-        .location-grid::-webkit-scrollbar-track {
-            background: var(--bg-input);
-            border-radius: 10px;
-        }
-        .location-grid::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 10px;
-        }
-        .location-grid::-webkit-scrollbar-thumb:hover {
-            background: var(--green);
         }
 
         /* Badge & Type Chips */
@@ -523,7 +519,9 @@
             color: var(--red);
         }
 
-        /* File Upload */
+        /* ============================================================
+           FILE UPLOAD — updated for image required + dimension validation
+           ============================================================ */
         .file-drop-zone {
             border: 2px dashed var(--border-color);
             border-radius: 12px;
@@ -555,6 +553,15 @@
             border-color: var(--green);
             background: var(--green-bg);
             border-style: solid;
+        }
+        .file-drop-zone.has-image {
+            border-color: var(--green);
+            background: var(--green-bg);
+            border-style: solid;
+        }
+        .file-drop-zone.error {
+            border-color: var(--red);
+            background: rgba(231, 76, 60, 0.06);
         }
         .file-drop-zone .drop-icon {
             font-size: 36px;
@@ -659,6 +666,9 @@
             background: var(--green-bg);
         }
         .dark-mode .file-drop-zone.has-file {
+            background: var(--green-bg);
+        }
+        .dark-mode .file-drop-zone.has-image {
             background: var(--green-bg);
         }
         .dark-mode .file-drop-zone .file-preview {
@@ -945,7 +955,7 @@
                                 <div class="help-text" id="descHelp">Help buyers understand what you're offering.</div>
                             </div>
 
-                            <!-- Price (no icon, label shows currency) -->
+                            <!-- Price -->
                             <div class="form-group">
                                 <label for="listingPrice">Price (₦) <span class="required-star">*</span></label>
                                 <input type="text" id="listingPrice" class="form-input" placeholder="0" required />
@@ -1009,26 +1019,26 @@
                             <div class="help-text" id="adsHelp">Boost your listing's visibility with these options.</div>
                         </div>
 
-                        <!-- Total Points Deduction (base 1 + ads) -->
+                        <!-- Total Points Deduction -->
                         <div class="total-points-display" id="totalPointsDisplay">
                             <span class="label"><i class="fa-regular fa-coins"></i> Total points to deduct:</span>
                             <span class="points-value" id="totalPointsValue">1</span>
                         </div>
 
-                        <!-- Image Upload -->
+                        <!-- ===== IMAGE UPLOAD (REQUIRED) ===== -->
                         <div class="form-group">
-                            <label>Listing Image <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
+                            <label>Listing Image <span class="required-star">*</span></label>
                             <div class="file-drop-zone" id="fileDropZone">
                                 <div class="drop-icon"><i class="fa-regular fas fa-cloud-arrow-up"></i></div>
                                 <div class="drop-text">
                                     Drop your image here or <strong>browse</strong>
                                 </div>
-                                <div class="drop-hint">JPG, PNG • Max 5MB</div>
+                                <div class="drop-hint">JPG, PNG • Max 5MB • Minimum 400x400px</div>
                                 <div class="file-preview-container"></div>
                                 <div class="drop-error"></div>
-                                <input type="file" id="listingImage" accept=".jpg,.jpeg,.png,image/*" />
+                                <input type="file" id="listingImage" accept=".jpg,.jpeg,.png,image/*" required />
                             </div>
-                            <div class="help-text" id="imageHelp">Upload a clear photo of your item (optional).</div>
+                            <div class="help-text" id="imageHelp">Upload a clear photo of your item (required).</div>
                         </div>
 
                         <div class="step-actions">
@@ -1139,7 +1149,7 @@
             };
 
             let advertTypes = [];
-            let totalPoints = 1; // base cost
+            let totalPoints = 1;
             let userPoints = 0;
 
             // ============================================================
@@ -1169,7 +1179,7 @@
             });
 
             // ============================================================
-            // PRICE FORMATTING (comma-separated, no icon)
+            // PRICE FORMATTING
             // ============================================================
 
             function formatPrice(value) {
@@ -1251,7 +1261,6 @@
                         document.querySelectorAll('.type-chip').forEach(el => el.classList.remove('selected'));
                         this.classList.add('selected');
                         formData.type = this.dataset.value;
-                        // If freebie, set price to 0 and disable
                         if (formData.type === 'freebie') {
                             priceInput.value = '0';
                             priceInput.disabled = true;
@@ -1339,11 +1348,11 @@
             }
 
             // ============================================================
-            // TOTAL POINTS CALCULATION (base 1 + ads)
+            // TOTAL POINTS CALCULATION
             // ============================================================
 
             function updateTotalPointsDisplay() {
-                let total = 1; // base cost
+                let total = 1;
                 advertTypes.forEach(ad => {
                     if (formData.ads[ad.value]) {
                         total += ad.points || 0;
@@ -1356,7 +1365,7 @@
             }
 
             // ============================================================
-            // FILE UPLOAD
+            // FILE UPLOAD — with dimension validation (400x400 min)
             // ============================================================
 
             function initFileUpload() {
@@ -1402,11 +1411,12 @@
                         e.stopPropagation();
                         input.value = '';
                         clearFilePreview();
-                        zone.classList.remove('has-file');
+                        zone.classList.remove('has-file', 'has-image', 'error');
                         formData.image = null;
                         formData.imageName = '';
                         const errorEl = zone.querySelector('.drop-error');
                         if (errorEl) errorEl.textContent = '';
+                        setHelp('imageHelp', 'Upload a clear photo of your item (required).', false);
                     }
                 });
             }
@@ -1418,44 +1428,68 @@
                 const errorEl = zone.querySelector('.drop-error');
                 const container = zone.querySelector('.file-preview-container');
 
+                // Clear previous state
+                clearFilePreview();
+                zone.classList.remove('has-file', 'has-image', 'error');
+                if (errorEl) errorEl.textContent = '';
+                formData.image = null;
+                formData.imageName = '';
+
                 if (!file) {
-                    clearFilePreview();
-                    zone.classList.remove('has-file');
-                    if (errorEl) errorEl.textContent = '';
+                    setHelp('imageHelp', 'Please upload a clear photo of your item (required).', false);
                     return;
                 }
 
+                // ─── Validate size ───
                 const maxSize = 5 * 1024 * 1024;
                 if (file.size > maxSize) {
                     if (errorEl) errorEl.textContent = 'File too large. Max 5MB.';
+                    zone.classList.add('error');
                     input.value = '';
-                    clearFilePreview();
-                    zone.classList.remove('has-file');
+                    setHelp('imageHelp', 'File too large. Max 5MB.', true);
                     return;
                 }
 
-                const validTypes = ['image/jpeg', 'image/png'];
+                // ─── Validate type ───
+                const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
                 if (!validTypes.includes(file.type)) {
-                    if (errorEl) errorEl.textContent = 'Invalid file type. Please upload JPG or PNG.';
+                    if (errorEl) errorEl.textContent = 'Invalid file type. Please upload JPG, PNG, or WEBP.';
+                    zone.classList.add('error');
                     input.value = '';
-                    clearFilePreview();
-                    zone.classList.remove('has-file');
+                    setHelp('imageHelp', 'Invalid file type. Please upload JPG, PNG, or WEBP.', true);
                     return;
                 }
 
-                if (errorEl) errorEl.textContent = '';
-                zone.classList.add('has-file');
-                formData.image = file;
-                formData.imageName = file.name;
+                // ─── Validate dimensions (400x400 min) ───
+                const img = new Image();
+                img.onload = function() {
+                    if (img.width < 400 || img.height < 400) {
+                        if (errorEl) errorEl.textContent = 'Image too small. Minimum size: 400x400px.';
+                        zone.classList.add('error');
+                        input.value = '';
+                        clearFilePreview();
+                        zone.classList.remove('has-file', 'has-image');
+                        formData.image = null;
+                        formData.imageName = '';
+                        setHelp('imageHelp', 'Image too small. Minimum size: 400x400px.', true);
+                        return;
+                    }
 
-                const reader = new FileReader();
-                reader.onload = function(e) {
+                    // ─── SUCCESS: Image meets all requirements ───
+                    if (errorEl) errorEl.textContent = '';
+                    zone.classList.remove('error');
+                    zone.classList.add('has-file', 'has-image');
+                    formData.image = file;
+                    formData.imageName = file.name;
+                    setHelp('imageHelp', '✅ Image uploaded successfully!', false);
+
+                    // Show preview
                     container.innerHTML = `
                         <div class="file-preview file-preview-image">
-                            <img src="${e.target.result}" alt="${file.name}" />
+                            <img src="${img.src}" alt="${file.name}" />
                             <div class="file-info" style="text-align:center; margin-top:4px;">
                                 <div class="file-name">${file.name}</div>
-                                <div class="file-size">${(file.size / 1024).toFixed(1)} KB</div>
+                                <div class="file-size">${(file.size / 1024).toFixed(1)} KB • ${img.width}x${img.height}</div>
                             </div>
                             <button type="button" class="file-remove" aria-label="Remove file">&times;</button>
                         </div>
@@ -1464,13 +1498,23 @@
                         e.stopPropagation();
                         input.value = '';
                         clearFilePreview();
-                        zone.classList.remove('has-file');
+                        zone.classList.remove('has-file', 'has-image', 'error');
                         formData.image = null;
                         formData.imageName = '';
                         if (errorEl) errorEl.textContent = '';
+                        setHelp('imageHelp', 'Upload a clear photo of your item (required).', false);
                     });
+
+                    // Clean up object URL
+                    URL.revokeObjectURL(img.src);
                 };
-                reader.readAsDataURL(file);
+                img.onerror = function() {
+                    if (errorEl) errorEl.textContent = 'Failed to load image. Please try another file.';
+                    zone.classList.add('error');
+                    input.value = '';
+                    setHelp('imageHelp', 'Failed to load image. Please try another file.', true);
+                };
+                img.src = URL.createObjectURL(file);
             }
 
             function clearFilePreview() {
@@ -1515,7 +1559,6 @@
                 if (step === 1) {
                     let valid = true;
 
-                    // Title
                     const title = titleInput.value.trim();
                     if (!title) {
                         setHelp('titleHelp', 'Please enter a listing title.', true);
@@ -1527,7 +1570,6 @@
                         formData.title = title;
                     }
 
-                    // Description
                     const description = descInput.value.trim();
                     if (!description) {
                         setHelp('descHelp', 'Please enter a description.', true);
@@ -1539,7 +1581,6 @@
                         formData.description = description;
                     }
 
-                    // Category
                     if (!categorySelect.value) {
                         setHelp('categoryHelp', 'Please select a category.', true);
                         categorySelect.classList.add('error');
@@ -1550,7 +1591,6 @@
                         formData.category = categorySelect.value;
                     }
 
-                    // Price
                     const price = parsePrice(priceInput.value);
                     if (isNaN(price) || price < 0) {
                         setHelp('priceHelp', 'Please enter a valid price.', true);
@@ -1562,7 +1602,6 @@
                         formData.price = price;
                     }
 
-                    // Listing Type
                     if (!formData.type) {
                         setHelp('typeHelp', 'Please select a listing type.', true);
                         valid = false;
@@ -1585,6 +1624,15 @@
                 }
 
                 if (step === 3) {
+                    // ─── Validate image exists ───
+                    if (!formData.image) {
+                        setHelp('imageHelp', 'Please upload an image of your item. This is required.', true);
+                        fileDropZone.classList.add('error');
+                        return false;
+                    }
+                    setHelp('imageHelp', '✅ Image uploaded successfully!', false);
+                    fileDropZone.classList.remove('error');
+
                     if (totalPoints > userPoints) {
                         if (typeof showAlert !== 'undefined') {
                             showAlert.warning(`You don't have enough points. You need ${totalPoints} points but have ${userPoints}.`, { duration: 3000 });
@@ -1651,6 +1699,18 @@
                     `;
                 }
 
+                // Image preview in review
+                let imageHtml = 'No image uploaded';
+                if (formData.image) {
+                    const imgUrl = URL.createObjectURL(formData.image);
+                    imageHtml = `
+                        <div class="file-preview-small">
+                            <img src="${imgUrl}" alt="${formData.imageName}" />
+                            <span>${formData.imageName}</span>
+                        </div>
+                    `;
+                }
+
                 reviewContainer.innerHTML = `
                     <div class="review-item">
                         <span class="review-label">Title</span>
@@ -1697,37 +1757,28 @@
                     <div class="review-divider"></div>
                     <div class="review-item">
                         <span class="review-label">Image</span>
-                        <span class="review-value">
-                            ${formData.image ? `
-                                <div class="file-preview-small">
-                                    <img src="${URL.createObjectURL(formData.image)}" alt="${formData.imageName}" />
-                                    <span>${formData.imageName}</span>
-                                </div>
-                            ` : 'No image uploaded'}
-                        </span>
+                        <span class="review-value">${imageHtml}</span>
                     </div>
                 `;
             }
 
             // ============================================================
-            // SUBMIT (UPDATED PAYLOAD + CORRECT ASYNC)
+            // SUBMIT
             // ============================================================
 
             async function submitListing() {
-                // Final validation
+                // Final validation — including image check
                 if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
                     goToStep(1);
                     return;
                 }
 
-                // Disable button and show spinner
                 submitBtn.disabled = true;
                 submitBtn.classList.add('loading');
                 const originalText = submitBtn.querySelector('.btn-text').innerHTML;
                 submitBtn.querySelector('.btn-text').innerHTML = 'Creating...';
 
                 try {
-                    // Build payload
                     const payload = {
                         title: formData.title,
                         category: parseInt(formData.category, 10),
@@ -1767,16 +1818,13 @@
                         if (typeof showAlert !== 'undefined') {
                             showAlert.success(result.message || 'Your listing has been created successfully. It will appear in the marketplace once approved.');
                         }
-                        // Refresh points balance after deduction
                         if (typeof window.refreshPointBalance === 'function') {
                             window.refreshPointBalance();
                         } else {
                             updatePointsBalance();
                         }
-                        // Reset form (optional – redirect to dashboard or clear)
                         resetForm();
                     } else {
-                        // Error handling
                         const errors = result.data?.errors || {};
                         let msg = result.message || 'Failed to create listing.';
                         if (Object.keys(errors).length) {
@@ -1801,7 +1849,6 @@
                         alert('An unexpected error occurred. Please try again.');
                     }
                 } finally {
-                    // Re-enable button
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('loading');
                     submitBtn.querySelector('.btn-text').innerHTML = originalText;
@@ -1809,16 +1856,14 @@
             }
 
             // ============================================================
-            // RESET FORM (optional)
+            // RESET FORM
             // ============================================================
 
             function resetForm() {
-                // Reset all fields to initial state
                 titleInput.value = '';
                 descInput.value = '';
                 priceInput.value = '0';
                 categorySelect.value = '';
-                // Clear chips
                 document.querySelectorAll('.type-chip, .badge-chip, .location-chip, .ads-check').forEach(el => {
                     el.classList.remove('selected', 'checked');
                 });
@@ -1828,10 +1873,9 @@
                 formData.image = null;
                 formData.imageName = '';
                 clearFilePreview();
-                fileDropZone.classList.remove('has-file');
-                // Reset total points
+                fileDropZone.classList.remove('has-file', 'has-image', 'error');
+                setHelp('imageHelp', 'Upload a clear photo of your item (required).', false);
                 updateTotalPointsDisplay();
-                // Go back to step 1
                 goToStep(1);
                 if (typeof showAlert !== 'undefined') {
                     showAlert.info('Form has been reset.');
@@ -1881,6 +1925,9 @@
                             <p style="color:var(--text-muted); font-size:13px;">
                                 ${totalPoints > 0 ? `This will deduct <strong>${totalPoints}</strong> points (1 base + ${totalPoints - 1} ad points) from your balance.` : 'No points will be deducted.'}
                             </p>
+                            <p style="color:var(--text-muted); font-size:13px;">
+                                Image: ${formData.image ? '✅ Uploaded' : '❌ Missing'}
+                            </p>
                         `,
                         type: 'info',
                         confirmText: 'Create Listing',
@@ -1895,6 +1942,7 @@
                 }
             });
 
+            // Enter key support
             document.querySelectorAll('#step1 input, #step1 select, #step1 textarea').forEach(el => {
                 el.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
@@ -1917,7 +1965,6 @@
                 if (lookup.hotspots) populateLocations(lookup.hotspots);
                 if (lookup.badge_choices) populateBadges(lookup.badge_choices);
                 if (lookup.advert_type) populateAds(lookup.advert_type);
-                
 
                 initFileUpload();
                 updateTotalPointsDisplay();

@@ -36,6 +36,9 @@
     --radius-btn: 30px;
 
     --transition: 0.3s ease;
+
+    --orange: #f39c12;
+    --blue: #63e078cb;
 }
 
 /* ===== DARK THEME ===== */
@@ -69,6 +72,9 @@
     --green: #2ecc71;
     --green-bg: #1a3a2a;
     --star: #f1c40f;
+
+    --orange: #e67e22;
+    --blue: #61bb55c7;
 }
 
 /* ===== RESET & BASE ===== */
@@ -1161,7 +1167,7 @@ body {
 .bottom-nav .nav-item:hover {
     background: rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
-    color: color: var(--green)
+    color: var(--green)
 }
 
 .bottom-nav .sell-btn:hover {
@@ -1916,4 +1922,37 @@ body {
 /* ─── Required asterisk in dark mode ─── */
 .dark-mode .form-group label .required-star {
     color: #ff6b6b;
+}
+
+
+/* ===== MODAL BUTTONS ===== */
+.modal-confirm-btn {
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.modal-confirm-btn:hover {
+    opacity: 0.9;
+    transform: scale(0.97);
+}
+.modal-btn-primary {
+    background: var(--green);
+}
+.modal-btn-success {
+    background: var(--green);
+}
+.modal-btn-danger {
+    background: var(--red);
+}
+.modal-btn-warning {
+    background: var(--orange);
+}
+.modal-btn-info {
+    background: var(--blue);
 }

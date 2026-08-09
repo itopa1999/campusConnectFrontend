@@ -21,8 +21,8 @@ class Modal {
      * @param {boolean} [options.showConfirm=true] - Show confirm button
      * @param {boolean} [options.showCancel=true] - Show cancel button
      * @param {boolean} [options.showClose=true] - Show close (X) button in header
-     * @param {Function} [options.onConfirm] - Callback when confirm is clicked
-     * @param {Function} [options.onCancel] - Callback when cancel is clicked
+     * @param {Function} [options.onConfirm] - Callback when confirm is clicked. Return `false` to prevent closing.
+     * @param {Function} [options.onCancel] - Callback when cancel is clicked. Return `false` to prevent closing.
      * @param {string} [options.size='md'] - 'sm' | 'md' | 'lg'
      * @param {boolean} [options.closeOnOverlay=true] - Close when clicking overlay
      * @param {boolean} [options.closeOnEsc=true] - Close when pressing ESC
@@ -56,13 +56,13 @@ class Modal {
         this._overlay = null;
         this._escHandler = null;
 
-        // Theme configuration
+        // ─── Theme configuration ──────────────────────────────
         this.themes = {
-            danger: { accent: 'var(--red)', icon: 'fa-triangle-exclamation', btnClass: 'modal-btn-danger' },
-            warning: { accent: 'var(--orange)', icon: 'fa-triangle-exclamation', btnClass: 'modal-btn-warning' },
-            success: { accent: 'var(--green)', icon: 'fa-circle-check', btnClass: 'modal-btn-success' },
-            info: { accent: 'var(--blue)', icon: 'fa-circle-info', btnClass: 'modal-btn-info' },
-            default: { accent: 'var(--green)', icon: 'fa-circle-check', btnClass: 'modal-btn-primary' },
+            danger: { btnClass: 'modal-btn-danger', icon: 'fa-triangle-exclamation' },
+            warning: { btnClass: 'modal-btn-warning', icon: 'fa-triangle-exclamation' },
+            success: { btnClass: 'modal-btn-success', icon: 'fa-circle-check' },
+            info: { btnClass: 'modal-btn-info', icon: 'fa-circle-info' },
+            default: { btnClass: 'modal-btn-primary', icon: 'fa-circle-check' },
         };
 
         this._build();
@@ -160,7 +160,7 @@ class Modal {
                     align-items: center;
                     gap: 10px;
                 ">
-                    ${this.options.type !== 'default' ? `<i class="fa-solid ${theme.icon}" style="color:${theme.accent};"></i>` : ''}
+                    ${this.options.type !== 'default' ? `<i class="fa-solid ${theme.icon}"></i>` : ''}
                     ${this.options.title}
                 </h3>
                 ${this.options.showClose ? `
@@ -234,26 +234,15 @@ class Modal {
                         font-weight: 600;
                         border: none;
                         cursor: pointer;
+                        transition: all 0.2s;
                         background: var(--bg-input, #f3f4f6);
                         color: var(--text-secondary, #4a4a4a);
-                        transition: all 0.2s;
                     ">${this.options.cancelText}</button>
                 `;
             }
             if (this.options.showConfirm) {
-                const btnStyle = `
-                    padding: 10px 24px;
-                    border-radius: 30px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    border: none;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    background: ${theme.accent};
-                    color: #ffffff;
-                `;
                 html += `
-                    <button class="modal-confirm-btn ${theme.btnClass}" style="${btnStyle}">${this.options.confirmText}</button>
+                    <button class="modal-confirm-btn ${theme.btnClass}">${this.options.confirmText}</button>
                 `;
             }
             footer.innerHTML = html;
@@ -293,9 +282,12 @@ class Modal {
         if (confirmBtn) {
             confirmBtn.addEventListener('click', (e) => {
                 if (typeof this.options.onConfirm === 'function') {
-                    this.options.onConfirm(this, e);
+                    // Call callback; if it returns false, do NOT close.
+                    const result = this.options.onConfirm(this, e);
+                    if (result !== false) {
+                        this.close();
+                    }
                 } else {
-                    // Auto-close if no custom onConfirm
                     this.close();
                 }
             });
@@ -304,7 +296,10 @@ class Modal {
         if (cancelBtn) {
             cancelBtn.addEventListener('click', (e) => {
                 if (typeof this.options.onCancel === 'function') {
-                    this.options.onCancel(this, e);
+                    const result = this.options.onCancel(this, e);
+                    if (result !== false) {
+                        this.close();
+                    }
                 } else {
                     this.close();
                 }
@@ -386,10 +381,10 @@ class Modal {
         const footerEl = this._element?.querySelector('.modal-footer');
 
         if (options.title && headerEl) {
-            const icon = this.themes[this.options.type]?.icon || '';
-            const accent = this.themes[this.options.type]?.accent || '';
+            const theme = this.themes[this.options.type] || this.themes.default;
+            const icon = theme.icon || '';
             headerEl.innerHTML = `
-                ${this.options.type !== 'default' ? `<i class="fa-solid ${icon}" style="color:${accent};"></i>` : ''}
+                ${this.options.type !== 'default' ? `<i class="fa-solid ${icon}"></i>` : ''}
                 ${options.title}
             `;
             this.options.title = options.title;

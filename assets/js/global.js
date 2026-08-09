@@ -2,6 +2,7 @@
 // global.js – Shared functionality for all pages
 // Includes: header, dark mode, filter sidebar, bottom nav,
 // scroll to top, desktop overlay, profile sidebar, auth, form guard
+// UPDATED: Unauthenticated user handling
 // ============================================================
 
 (function() {
@@ -37,105 +38,105 @@
      * @returns {Promise<void>}
      */
     function waitForRateLimit(retryAfter) {
-    // If we are already waiting, return the same promise
-    if (_rateLimitResolve) {
-        return new Promise((resolve, reject) => {
-        // We attach to the existing promise by storing callbacks
-        // But we need to chain properly. We'll use a simple approach:
-        // Wrap the existing promise.
-        return new Promise((res, rej) => {
-            // We'll store a chain
-            // Simpler: just return a new promise that waits for the same resolve/reject
-            // We'll push our callbacks into an array.
-            // To keep it simple, we'll just use the same promise instance.
-            // But we cannot attach multiple resolve/reject to the same promise.
-            // We'll use a shared promise that we can await.
-            // We'll store a pending promise.
-        });
-        });
-    }
-
-    return new Promise((resolve, reject) => {
-        _rateLimitResolve = resolve;
-        _rateLimitReject = reject;
-
-        let timeLeft = Math.max(1, Math.floor(retryAfter));
-        const modal = new Modal({
-        title: 'Rate Limit Exceeded',
-        type: 'warning',
-        body: `
-            <div style="text-align:center; padding:8px 0;">
-            <div style="font-size:48px; margin-bottom:12px;">⏳</div>
-            <p style="font-size:16px; color: var(--text-secondary); line-height:1.6; margin-bottom:12px;">
-                Too many requests. Please wait <strong id="retryCountdown">${timeLeft}</strong> seconds.
-            </p>
-            <div style="display:flex; justify-content:center; gap:12px;">
-                <button class="btn btn-primary" id="retryCancelBtn" style="padding:10px 24px; border-radius:30px; border:none; background:var(--red); color:#fff; font-weight:600; cursor:pointer;">Cancel</button>
-            </div>
-            </div>
-        `,
-        showConfirm: false,
-        showCancel: false,
-        showClose: false,
-        closeOnOverlay: false,
-        closeOnEsc: false,
-        onOpen: function() {
-            _rateLimitModal = modal;
-            _rateLimitInterval = setInterval(() => {
-            timeLeft--;
-            const el = document.getElementById('retryCountdown');
-            if (el) el.textContent = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(_rateLimitInterval);
-                _rateLimitInterval = null;
-                modal.close();
-                setTimeout(() => {
-                modal.destroy();
-                _rateLimitModal = null;
-                if (_rateLimitResolve) {
-                    _rateLimitResolve();
-                    _rateLimitResolve = null;
-                    _rateLimitReject = null;
-                }
-                }, 300);
-            }
-            }, 1000);
-
-            // Cancel button
-            const cancelBtn = document.getElementById('retryCancelBtn');
-            if (cancelBtn) {
-            cancelBtn.addEventListener('click', function() {
-                clearInterval(_rateLimitInterval);
-                _rateLimitInterval = null;
-                modal.close();
-                setTimeout(() => {
-                modal.destroy();
-                _rateLimitModal = null;
-                if (_rateLimitReject) {
-                    _rateLimitReject(new Error('Request cancelled by user'));
-                    _rateLimitResolve = null;
-                    _rateLimitReject = null;
-                }
-                }, 300);
+        // If we are already waiting, return the same promise
+        if (_rateLimitResolve) {
+            return new Promise((resolve, reject) => {
+                // We attach to the existing promise by storing callbacks
+                // But we need to chain properly. We'll use a simple approach:
+                // Wrap the existing promise.
+                return new Promise((res, rej) => {
+                    // We'll store a chain
+                    // Simpler: just return a new promise that waits for the same resolve/reject
+                    // We'll push our callbacks into an array.
+                    // To keep it simple, we'll just use the same promise instance.
+                    // But we cannot attach multiple resolve/reject to the same promise.
+                    // We'll use a shared promise that we can await.
+                    // We'll store a pending promise.
+                });
             });
-            }
-        },
-        onClose: function() {
-            // Cleanup if modal closes unexpectedly
-            if (_rateLimitInterval) {
-            clearInterval(_rateLimitInterval);
-            _rateLimitInterval = null;
-            }
-            _rateLimitModal = null;
-            if (_rateLimitReject) {
-            _rateLimitReject(new Error('Rate limit modal closed'));
-            _rateLimitResolve = null;
-            _rateLimitReject = null;
-            }
         }
+
+        return new Promise((resolve, reject) => {
+            _rateLimitResolve = resolve;
+            _rateLimitReject = reject;
+
+            let timeLeft = Math.max(1, Math.floor(retryAfter));
+            const modal = new Modal({
+                title: 'Rate Limit Exceeded',
+                type: 'warning',
+                body: `
+                    <div style="text-align:center; padding:8px 0;">
+                    <div style="font-size:48px; margin-bottom:12px;">⏳</div>
+                    <p style="font-size:16px; color: var(--text-secondary); line-height:1.6; margin-bottom:12px;">
+                        Too many requests. Please wait <strong id="retryCountdown">${timeLeft}</strong> seconds.
+                    </p>
+                    <div style="display:flex; justify-content:center; gap:12px;">
+                        <button class="btn btn-primary" id="retryCancelBtn" style="padding:10px 24px; border-radius:30px; border:none; background:var(--red); color:#fff; font-weight:600; cursor:pointer;">Cancel</button>
+                    </div>
+                    </div>
+                `,
+                showConfirm: false,
+                showCancel: false,
+                showClose: false,
+                closeOnOverlay: false,
+                closeOnEsc: false,
+                onOpen: function() {
+                    _rateLimitModal = modal;
+                    _rateLimitInterval = setInterval(() => {
+                        timeLeft--;
+                        const el = document.getElementById('retryCountdown');
+                        if (el) el.textContent = timeLeft;
+                        if (timeLeft <= 0) {
+                            clearInterval(_rateLimitInterval);
+                            _rateLimitInterval = null;
+                            modal.close();
+                            setTimeout(() => {
+                                modal.destroy();
+                                _rateLimitModal = null;
+                                if (_rateLimitResolve) {
+                                    _rateLimitResolve();
+                                    _rateLimitResolve = null;
+                                    _rateLimitReject = null;
+                                }
+                            }, 300);
+                        }
+                    }, 1000);
+
+                    // Cancel button
+                    const cancelBtn = document.getElementById('retryCancelBtn');
+                    if (cancelBtn) {
+                        cancelBtn.addEventListener('click', function() {
+                            clearInterval(_rateLimitInterval);
+                            _rateLimitInterval = null;
+                            modal.close();
+                            setTimeout(() => {
+                                modal.destroy();
+                                _rateLimitModal = null;
+                                if (_rateLimitReject) {
+                                    _rateLimitReject(new Error('Request cancelled by user'));
+                                    _rateLimitResolve = null;
+                                    _rateLimitReject = null;
+                                }
+                            }, 300);
+                        });
+                    }
+                },
+                onClose: function() {
+                    // Cleanup if modal closes unexpectedly
+                    if (_rateLimitInterval) {
+                        clearInterval(_rateLimitInterval);
+                        _rateLimitInterval = null;
+                    }
+                    _rateLimitModal = null;
+                    if (_rateLimitReject) {
+                        _rateLimitReject(new Error('Rate limit modal closed'));
+                        _rateLimitResolve = null;
+                        _rateLimitReject = null;
+                    }
+                }
+            });
+            modal.open();
         });
-        modal.open();
-    });
     }
 
     const listingStatusMap = {
@@ -161,10 +162,10 @@
     function getUserData() {
         const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
         const storage = rememberMe ? localStorage : sessionStorage;
-        
+
         const userData = storage.getItem('user');
         if (!userData) return null;
-        
+
         try {
             return JSON.parse(userData);
         } catch (e) {
@@ -193,11 +194,11 @@
 
     function updateHeaderUser() {
         const user = getUserData();
-        
+
         const avatarEl = document.querySelector('#profileSidebarAvatar');
         const nameEl = document.querySelector('#profileSidebarName');
         const emailEl = document.querySelector('#profileSidebarEmail');
-        
+
         if (user) {
             if (avatarEl) {
                 const email = user.email || '';
@@ -224,9 +225,10 @@
                 window.setNotificationDot(false);
             }
         } else {
-            if (avatarEl) avatarEl.textContent = 'S';
-            if (nameEl) nameEl.textContent = 'Student';
-            if (emailEl) emailEl.textContent = '@student.uniben';
+            // Guest user
+            if (avatarEl) avatarEl.textContent = 'G';
+            if (nameEl) nameEl.textContent = 'Guest';
+            if (emailEl) emailEl.textContent = '@guest';
         }
     }
 
@@ -305,7 +307,7 @@
                 'Content-Type': 'application/json',
                 'X-Key-Id': X_KEY_ID,
             },
-            body: JSON.stringify({ platform: PLATFORM})
+            body: JSON.stringify({ platform: PLATFORM })
         });
         if (!response.ok) {
             throw new Error('Refresh failed');
@@ -326,7 +328,7 @@
     // ============================================================
 
     async function fetchWithAuth(url, options = {}) {
-        if (!isAuthenticated()) {                
+        if (!isAuthenticated()) {
             if (typeof showAlert !== 'undefined') {
                 showAlert.warning('Session timed out. Please login again.', { duration: 2000 });
             }
@@ -374,12 +376,12 @@
                     if (retryCount < 2) {
                         const retryAfter = body?.retry_after || 30;
                         try {
-                        await waitForRateLimit(retryAfter);
-                        // Retry the request with incremented retry count
-                        return fetchWithAuth(url, options, retryCount + 1);
+                            await waitForRateLimit(retryAfter);
+                            // Retry the request with incremented retry count
+                            return fetchWithAuth(url, options, retryCount + 1);
                         } catch (cancelError) {
-                        // User cancelled – re-throw so the caller sees the error
-                        throw cancelError;
+                            // User cancelled – re-throw so the caller sees the error
+                            throw cancelError;
                         }
                     } else {
                         throw new Error('Too many retries due to rate limiting');
@@ -442,11 +444,11 @@
                     'Content-Type': 'application/json',
                 },
                 showSpinner: true,
-                skipRefresh: true, 
+                skipRefresh: true,
                 body: JSON.stringify({
                     platform: 'web'
                 }),
-                credentials: 'include', 
+                credentials: 'include',
             });
 
             if (!response.ok) {
@@ -497,7 +499,7 @@
                     user.point_bal = newBalance;
                     const storage = sessionStorage.getItem('rememberMe') === 'true' ? localStorage : sessionStorage;
                     storage.setItem('user', JSON.stringify(user));
-                } catch (e) { }
+                } catch (e) {}
             }
 
             showAlert.success('Point balance updated', { duration: 1500 });
@@ -561,12 +563,19 @@
             align-items: center;
             flex-shrink: 0;
         `;
+        // Determine if authenticated to show correct avatar/name
+        const isAuth = isAuthenticated();
+        const user = isAuth ? getUserData() : null;
+        const avatarLetter = isAuth ? (user?.email?.charAt(0)?.toUpperCase() || 'S') : 'G';
+        const displayName = isAuth ? (user?.email?.split('@')[0]?.charAt(0)?.toUpperCase() + user?.email?.split('@')[0]?.slice(1) || 'Student') : 'Guest';
+        const emailDisplay = isAuth ? (user?.email ? '@' + user?.email?.split('@')[1] : '@student.uniben') : '@guest';
+
         header.innerHTML = `
             <div style="display:flex;align-items:center;gap:12px;">
-                <div style="width:44px;height:44px;border-radius:50%;background:var(--green-bg,#eaf9ef);color:var(--green,#0d8a3e);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;border:2px solid var(--green,#0d8a3e);flex-shrink:0;" id="profileSidebarAvatar">S</div>
+                <div style="width:44px;height:44px;border-radius:50%;background:var(--green-bg,#eaf9ef);color:var(--green,#0d8a3e);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;border:2px solid var(--green,#0d8a3e);flex-shrink:0;" id="profileSidebarAvatar">${avatarLetter}</div>
                 <div>
-                    <div style="font-size:15px;font-weight:700;color:var(--text-primary,#1a1a1a);" id="profileSidebarName">Student</div>
-                    <div style="font-size:12px;color:var(--text-muted,#888);" id="profileSidebarEmail">@student.uniben</div>
+                    <div style="font-size:15px;font-weight:700;color:var(--text-primary,#1a1a1a);" id="profileSidebarName">${displayName}</div>
+                    <div style="font-size:12px;color:var(--text-muted,#888);" id="profileSidebarEmail">${emailDisplay}</div>
                 </div>
             </div>
             <button class="profile-sidebar-close" style="background:none;border:none;font-size:24px;color:var(--text-muted2,#8e8e93);cursor:pointer;padding:4px 8px;border-radius:8px;transition:background 0.2s,color 0.2s;line-height:1;">&times;</button>
@@ -579,20 +588,31 @@
             padding: 8px 0;
         `;
 
-        const menuItems = [
-            { icon: 'fas fa-user', label: 'View Profile', id: 'view-profile' },
-            { icon: 'fas fa-coins', label: 'Buy Points', id: 'buy-point' },
-            { icon: 'fas fa-id-card', label: 'Upload Student ID', id: 'upload-id' },
-            { icon: 'fas fa-building', label: 'Hall Verification', id: 'hall-verified' },       
-            { icon: 'fas fa-eye', label: 'Change Visibility', id: 'change-visibility' },
-            // { icon: 'fas fa-laptop', label: 'Device', id: 'device' },
-            { icon: 'fas fa-shield-halved', label: 'Add 2FA', id: 'add-2fa' },                  
-            { icon: 'fas fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },        
-            { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
-            { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
-            { icon: 'fas fa-key', label: 'Change Password', id: 'change-password' },
-            { icon: 'fas fa-right-from-bracket', label: 'Logout', id: 'logout' },                
-        ];
+        // ============================================================
+        // MENU ITEMS – Filter based on authentication
+        // ============================================================
+        let menuItems = [];
+        if (isAuth) {
+            menuItems = [
+                { icon: 'fas fa-user', label: 'View Profile', id: 'view-profile' },
+                { icon: 'fas fa-coins', label: 'Buy Points', id: 'buy-point' },
+                { icon: 'fas fa-id-card', label: 'Upload Student ID', id: 'upload-id' },
+                { icon: 'fas fa-building', label: 'Hall Verification', id: 'hall-verified' },
+                { icon: 'fas fa-eye', label: 'Change Visibility', id: 'change-visibility' },
+                { icon: 'fas fa-shield-halved', label: 'Add 2FA', id: 'add-2fa' },
+                { icon: 'fas fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },
+                { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
+                { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
+                { icon: 'fas fa-key', label: 'Change Password', id: 'change-password' },
+                { icon: 'fas fa-right-from-bracket', label: 'Logout', id: 'logout' },
+            ];
+        } else {
+            // Unauthenticated: only About Us and Help us Improve
+            menuItems = [
+                { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
+                { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
+            ];
+        }
 
         let itemsHTML = '';
         menuItems.forEach((item, index) => {
@@ -773,7 +793,6 @@
             'upload-id': 'upload-id.html',
             'change-visibility': 'visibility.html',
             'hall-verified': 'hall-verification.html',
-            // 'device': 'device.html',
             'add-2fa': '2fa.html',
             'report-issue': 'report.html',
             'help-improve': 'help-improve.html',
@@ -800,14 +819,14 @@
     window.openProfileSidebar = openProfileSidebar;
     window.closeProfileSidebar = closeProfileSidebar;
 
-    window.updateFavouriteCount = function (count) {
+    window.updateFavouriteCount = function(count) {
         const el = document.getElementById('favouriteCount');
         if (el) {
             el.textContent = count;
         }
     };
 
-    window.incrementFavouriteCount = function () {
+    window.incrementFavouriteCount = function() {
         const el = document.getElementById('favouriteCount');
 
         if (!el) return;
@@ -816,7 +835,7 @@
         el.textContent = current + 1;
     };
 
-    window.decrementFavouriteCount = function () {
+    window.decrementFavouriteCount = function() {
         const el = document.getElementById('favouriteCount');
 
         if (!el) return;
@@ -843,11 +862,13 @@
     };
 
     // ============================================================
-    // HEADER
+    // HEADER – Hide notification bell for unauthenticated users
     // ============================================================
 
     function renderHeader() {
         if (document.querySelector('.app-header')) return;
+
+        const isAuth = isAuthenticated();
 
         const header = document.createElement('header');
         header.className = 'app-header';
@@ -861,7 +882,7 @@
                     <i class="fa-regular fa-sun"></i>
                     <i class="fa-regular fa-moon"></i>
                 </button>
-                <i class="fa-regular fa-bell badge-dot" id="notificationBell"></i>
+                ${isAuth ? `<i class="fa-regular fa-bell badge-dot" id="notificationBell"></i>` : ''}
                 <i class="fa-regular fa-user-circle" id="profileIcon"></i>
             </div>
         `;
@@ -1353,7 +1374,7 @@
     }
 
     // ============================================================
-    // BOTTOM NAV
+    // BOTTOM NAV – Unauthenticated handling
     // ============================================================
 
     function renderBottomNav(activePage) {
@@ -1367,6 +1388,8 @@
             else if (path.includes('lost-item')) activePage = 'lost-item';
             else activePage = 'dashboard';
         }
+
+        const isAuth = isAuthenticated();
 
         const nav = document.createElement('nav');
         nav.className = 'bottom-nav';
@@ -1401,36 +1424,80 @@
             document.body.appendChild(nav);
         }
 
+        // ─── Nav item click handler ──────────────────────────────
         nav.querySelectorAll('.nav-item:not(.sell-btn)').forEach(function(item) {
             item.addEventListener('click', function() {
                 const page = this.dataset.page;
-                if (page) {
-                    navigateWithGuard('' + page + '.html');
+                if (!page) return;
+
+                if (!isAuth) {
+                    // Unauthenticated: handle navigation
+                    handleUnauthenticatedNav(page);
+                    return;
                 }
+
+                // Authenticated: normal navigation
+                navigateWithGuard(page + '.html');
             });
         });
 
+        // ─── Sell button ──────────────────────────────────────────
         const sellBtn = nav.querySelector('.sell-btn');
         if (sellBtn) {
             sellBtn.addEventListener('click', function() {
+                if (!isAuth) {
+                    handleUnauthenticatedNav('sell');
+                    return;
+                }
                 navigateWithGuard('create-listing.html');
             });
+        }
+
+        // ─── Helper to handle unauthenticated nav ────────────────────
+        function handleUnauthenticatedNav(page) {
+            // If page is 'explore', go to explore1.html (public)
+            if (page === 'explore') {
+                window.location.href = 'explore1.html';
+                return;
+            }
+
+            // Otherwise, go to default.html with a message based on the page
+            let message = '';
+            switch (page) {
+                case 'dashboard':
+                    message = 'Home';
+                    break;
+                case 'favourites':
+                    message = 'Favourites';
+                    break;
+                case 'lost-item':
+                    message = 'Lost & Found';
+                    break;
+                case 'sell':
+                    message = 'Sell an Item';
+                    break;
+                default:
+                    message = 'This feature';
+            }
+            window.location.href = `default.html?page=${page}&message=${encodeURIComponent(message)}`;
         }
     }
 
     // ============================================================
-    // PROTECTED PAGE CHECK
+    // PROTECTED PAGE CHECK – Remove about-us and help-improve
     // ============================================================
 
     function checkProtectedPage() {
-        const protectedPages = ['dashboard.html', 'profile.html', 'favourites.html', 
-                               'lost-item.html', 'notification.html', 'create-listing.html',
-                               'buy-point.html', 'upload-id.html', 'visibility.html',
-                               'hall-verification.html', 'device.html', '2fa.html',
-                               'report.html', 'help-improve.html', 'about-us.html',
-                               'change-password.html', 'explore.html'];
+        const protectedPages = ['dashboard.html', 'profile.html', 'favourites.html',
+            'lost-item.html', 'notification.html', 'create-listing.html',
+            'buy-point.html', 'upload-id.html', 'visibility.html',
+            'hall-verification.html', 'device.html', '2fa.html',
+            'report.html', 'change-password.html'
+        ];
+        // Removed: 'about-us.html', 'help-improve.html'
+
         const currentPage = window.location.pathname.split('/').pop();
-        
+
         if (protectedPages.includes(currentPage) && !isAuthenticated()) {
             if (typeof showAlert !== 'undefined') {
                 showAlert.warning('Please login to access this page.', { duration: 2000 });
