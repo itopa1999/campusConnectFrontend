@@ -998,7 +998,7 @@
                     <span class="icon"><i class="fa-regular fa-circle-exclamation"></i></span>
                     <h3>Missing Listing ID</h3>
                     <p>No listing ID was provided in the URL. Please check the link and try again.</p>
-                    <a href="/explore.html" class="btn-back"><i class="fa-regular fa-arrow-left"></i> Back to Explore</a>
+                    <a href="explore.html" class="btn-back"><i class="fa-regular fa-arrow-left"></i> Back to Explore</a>
                 </div>
             `;
             return;
@@ -1029,7 +1029,7 @@
                         <span class="icon"><i class="fa-regular fa-triangle-exclamation"></i></span>
                         <h3>${err.message === 'Listing not found' ? 'Listing Not Found' : 'Something went wrong'}</h3>
                         <p>${err.message === 'Listing not found' ? 'The listing you\'re looking for doesn\'t exist or has been removed.' : err.message || 'Could not load the listing. Please try again later.'}</p>
-                        <a href="/explore.html" class="btn-back"><i class="fa-regular fa-arrow-left"></i> Back to Explore</a>
+                        <a href="explore.html" class="btn-back"><i class="fa-regular fa-arrow-left"></i> Back to Explore</a>
                     </div>
                 `;
                 if (typeof showAlert !== 'undefined') {
@@ -1073,7 +1073,7 @@
             let ownerButton = '';
             if (isOwner) {
                 ownerButton = `
-                    <a href="/my-listing-details.html?id=${id}&title=${encodeURIComponent(title)}" class="btn-secondary btn-owner">
+                    <a href="my-listing-details.html?id=${id}&title=${encodeURIComponent(title)}" class="btn-secondary btn-owner">
                         <i class="fa-regular fa-pen-to-square"></i> ${manageLabel}
                     </a>
                 `;
@@ -1251,7 +1251,7 @@
             `;
             if (isOwner) {
                 mobileButtons += `
-                    <a href="/my-listing-details.html?id=${id}&title=${encodeURIComponent(title)}" class="btn-secondary btn-owner">
+                    <a href="my-listing-details.html?id=${id}&title=${encodeURIComponent(title)}" class="btn-secondary btn-owner">
                         <i class="fa-regular fa-pen-to-square"></i> ${manageLabel}
                     </a>
                 `;

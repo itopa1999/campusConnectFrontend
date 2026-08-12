@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Profile</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+
+    <!-- Google Font (Inter/Playfair) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+           TOKENS
+           ============================================================ */
+        :root {
+            --amber: #f5b342;
+            --amber-bg: rgba(245, 179, 66, 0.14);
+            --danger-bg: rgba(231, 76, 60, 0.12);
+            --blue: #3498db;
+            --blue-bg: rgba(52, 152, 219, 0.12);
+            --purple: #8e44ad;
+            --purple-bg: rgba(142, 68, 173, 0.12);
+            --gold: #d4a017;
+            --gold-bg: rgba(212, 160, 23, 0.14);
+            --teal: #16a085;
+            --teal-bg: rgba(22, 160, 133, 0.12);
+            --pink: #e84393;
+            --pink-bg: rgba(232, 67, 147, 0.12);
+            --radius-card: 20px;
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ============================================================
+           ANIMATIONS
+           ============================================================ */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============================================================
+           PROFILE WRAPPER
+           ============================================================ */
+        .profile-wrapper {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 12px;
+        }
+
+        /* ============================================================
+           LOADING
+           ============================================================ */
+        .profile-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 360px;
+            gap: 16px;
+            width: 100%;
+        }
+        .profile-loading .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+        .profile-loading p {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ============================================================
+           MAIN CARD
+           ============================================================ */
+        .profile-main-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            padding: 32px 36px;
+            margin-bottom: 24px;
+            transition: background var(--transition), border-color var(--transition), box-shadow 0.3s ease;
+            animation: fadeUp 0.5s ease both;
+        }
+        .profile-main-card:hover {
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .profile-header .header-left {
+            flex: 1;
+        }
+        .profile-header .profile-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            margin: 0 0 4px 0;
+            transition: color var(--transition);
+        }
+        .profile-header .profile-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin: 0 0 2px 0;
+            transition: color var(--transition);
+        }
+        .profile-header .profile-location {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0;
+            transition: color var(--transition);
+        }
+        .profile-header .profile-location i {
+            color: var(--green);
+            margin-right: 6px;
+        }
+
+        .profile-header .header-right {
+            flex-shrink: 0;
+            position: relative;
+        }
+        .profile-header .profile-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--bg-card);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            background: var(--bg-input);
+            transition: border-color var(--transition);
+        }
+        .profile-header .online-dot {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--green);
+            border: 3px solid var(--bg-card);
+            box-shadow: 0 2px 8px rgba(13, 138, 62, 0.3);
+        }
+        .profile-header .verified-badge {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--green);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: 3px solid var(--bg-card);
+            box-shadow: 0 2px 12px rgba(13, 138, 62, 0.4);
+            animation: popIn 0.4s ease 0.3s both;
+        }
+
+        /* ============================================================
+           STATS
+           ============================================================ */
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            transition: border-color var(--transition);
+        }
+        .profile-stats .stat-item {
+            text-align: center;
+        }
+        .profile-stats .stat-number {
+            display: block;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            letter-spacing: -0.4px;
+            transition: color var(--transition);
+        }
+        .profile-stats .stat-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+        @media (max-width: 480px) {
+            .profile-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .profile-stats .stat-number {
+                font-size: 22px;
+            }
+        }
+
+        /* ============================================================
+           ABOUT
+           ============================================================ */
+        .profile-about {
+            margin-bottom: 24px;
+        }
+        .profile-about h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 8px 0;
+            transition: color var(--transition);
+        }
+        .profile-about p {
+            font-size: 14.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin: 0;
+            transition: color var(--transition);
+        }
+
+        /* ============================================================
+           ACTIONS
+           ============================================================ */
+        .profile-actions-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 28px;
+            align-items: center;
+        }
+        .profile-actions-row .btn {
+            padding: 10px 24px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2ecc71, #0d8a3e);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(13, 138, 62, 0.30);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(13, 138, 62, 0.40);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71, #0d8a3e);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(13, 138, 62, 0.30);
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: #fff;
+        }
+        .edit-restriction-badge {
+            font-size: 12px;
+            background: var(--amber-bg);
+            color: var(--amber);
+            padding: 6px 16px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--amber);
+            font-weight: 600;
+        }
+        .edit-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* ============================================================
+           PERSONAL DETAILS
+           ============================================================ */
+        .profile-details h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 16px 0;
+            transition: color var(--transition);
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 32px;
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .detail-item .detail-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .detail-item .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+        .detail-item .detail-value.edit-input {
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: border-color 0.2s, box-shadow 0.2s, background var(--transition);
+            width: 100%;
+        }
+        .detail-item .detail-value.edit-input:focus {
+            border-color: var(--green);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.10);
+        }
+        .detail-item .detail-value select.edit-input {
+            appearance: auto;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            width: 100%;
+            transition: border-color var(--transition), background var(--transition);
+        }
+        .detail-item .detail-value .empty-placeholder {
+            color: var(--text-muted2);
+            font-weight: 400;
+        }
+        @media (max-width: 480px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        /* ============================================================
+           MISSING BANNER
+           ============================================================ */
+        .missing-banner {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 16px 22px 18px;
+            border: 1px solid #f39c12;
+            border-left: 4px solid #f39c12;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+            margin-bottom: 22px;
+            animation: fadeUp 0.4s ease;
+        }
+        .dark-mode .missing-banner {
+            border-color: #f1c40f;
+        }
+        .missing-banner .banner-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            margin-bottom: 8px;
+        }
+        .missing-banner .banner-header .banner-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+        .missing-banner .banner-header .banner-title i {
+            color: #f39c12;
+            font-size: 20px;
+        }
+        .missing-banner .banner-header .banner-progress {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--bg-input);
+            padding: 3px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .missing-banner .banner-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            list-style: none;
+            padding: 0;
+            margin: 0 0 8px 0;
+        }
+        .missing-banner .banner-list li {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-input);
+            padding: 3px 12px 3px 8px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            transition: all 0.25s ease;
+        }
+        .missing-banner .banner-list li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-color: #f39c12;
+        }
+        .missing-banner .banner-list li i {
+            color: #e67e22;
+            font-size: 11px;
+        }
+        .missing-banner .banner-list li a {
+            color: var(--text-primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .missing-banner .banner-list li a:hover {
+            color: var(--green);
+        }
+        .missing-banner .banner-cta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            transition: color var(--transition);
+        }
+        .missing-banner .banner-cta a {
+            color: var(--green);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .missing-banner .banner-cta a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 480px) {
+            .missing-banner {
+                padding: 14px 14px 16px;
+            }
+            .missing-banner .banner-header .banner-title {
+                font-size: 13px;
+            }
+            .missing-banner .banner-header .banner-progress {
+                font-size: 10px;
+                padding: 2px 10px;
+            }
+            .missing-banner .banner-list li {
+                font-size: 11px;
+                padding: 2px 10px 2px 6px;
+            }
+        }
+
+        /* ============================================================
+           SECONDARY GRID (Badges, Verifications, etc.)
+           ============================================================ */
+        .profile-secondary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            animation: fadeUp 0.5s ease 0.1s both;
+        }
+        @media (max-width: 820px) {
+            .profile-secondary-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+        }
+
+        .profile-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 20px 22px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow 0.3s ease;
+            height: fit-content;
+        }
+        .profile-card:hover {
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .card-header .icon-chip {
+            width: 36px;
+            height: 36px;
+            border-radius: 11px;
+            background: var(--green-bg);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: background var(--transition), color var(--transition);
+        }
+        .card-header h3 {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            transition: color var(--transition);
+        }
+        .card-header .badge-count {
+            margin-left: auto;
+            font-size: 11px;
+            padding: 2px 14px;
+            border-radius: 40px;
+            background: var(--bg-input);
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        /* Badges */
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .badge-item {
+            padding: 6px 16px 6px 6px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            animation: popIn 0.35s ease both;
+        }
+        .badge-item:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+        }
+        .badge-item .badge-icon-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.20);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* Verifications */
+        .verification-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 480px) {
+            .verification-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .verify-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            transition: transform 0.25s ease, background var(--transition), border-color var(--transition);
+        }
+        .verify-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-color-hover);
+        }
+        .verify-card .vicon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .verify-card .vicon.verified {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .verify-card .vicon.pending {
+            background: var(--amber-bg);
+            color: var(--amber);
+        }
+        .verify-card .vicon.rejected {
+            background: var(--danger-bg);
+            color: var(--red);
+        }
+        .verify-card .vicon.neutral {
+            background: var(--blue-bg);
+            color: var(--blue);
+        }
+        .verify-card .vtext {
+            min-width: 0;
+            flex: 1;
+        }
+        .verify-card .vlabel {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            transition: color var(--transition);
+        }
+        .verify-card .vstatus {
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 1px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .vstatus.verified {
+            color: var(--green);
+        }
+        .vstatus.pending {
+            color: var(--amber);
+        }
+        .vstatus.rejected {
+            color: var(--red);
+        }
+        .vstatus.neutral {
+            color: var(--text-primary);
+        }
+
+        /* Flags & Moderation */
+        .flag-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            gap: 12px;
+            transition: border-color var(--transition);
+        }
+        .flag-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .flag-item .flag-reason {
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+        .flag-status {
+            font-size: 10px;
+            padding: 2px 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .flag-status.resolved {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .flag-status.unresolved {
+            background: var(--danger-bg);
+            color: var(--red);
+        }
+        .flag-item .flag-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: right;
+            transition: color var(--transition);
+        }
+        .moderation-notes {
+            background: var(--bg-input);
+            padding: 8px 14px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 6px;
+            border-left: 3px solid var(--amber);
+            transition: background var(--transition);
+        }
+        .moderation-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+        }
+        .moderation-row .mod-item {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .moderation-row .mod-item .mod-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 13px;
+            transition: color var(--transition);
+        }
+        .moderation-row .mod-item .mod-value {
+            color: var(--text-secondary);
+            font-size: 13px;
+            transition: color var(--transition);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 20px 10px;
+            color: var(--text-muted);
+            font-size: 13px;
+            transition: color var(--transition);
+        }
+        .empty-state i {
+            font-size: 24px;
+            opacity: 0.25;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* ============================================================
+           RESPONSIVE FINE-TUNE
+           ============================================================ */
+        @media (max-width: 700px) {
+            .profile-main-card {
+                padding: 24px 20px;
+            }
+            .profile-header {
+                flex-direction: column-reverse;
+                align-items: center;
+                text-align: center;
+            }
+            .profile-header .header-left {
+                text-align: center;
+            }
+            .profile-header .profile-name {
+                font-size: 24px;
+            }
+            .profile-actions-row {
+                justify-content: center;
+            }
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .profile-main-card {
+                padding: 20px 16px;
+            }
+            .profile-header .profile-name {
+                font-size: 20px;
+            }
+            .profile-header .profile-avatar {
+                width: 64px;
+                height: 64px;
+            }
+            .profile-actions-row .btn {
+                font-size: 13px;
+                padding: 8px 16px;
+            }
+            .profile-stats .stat-number {
+                font-size: 20px;
+            }
+            .profile-secondary-grid {
+                gap: 14px;
+            }
+            .profile-card {
+                padding: 16px 16px;
+            }
+        }
+
+        /* ============================================================
+           DEMO NOTE
+           ============================================================ */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- ===== HEADER (injected by global.js) ===== -->
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <!-- Loading -->
+            <div id="profileLoadingState" class="profile-loading">
+                <div class="spinner"></div>
+                <p>Loading profile…</p>
+            </div>
+
+            <!-- Profile Content -->
+            <div id="profileContent" style="display:none;">
+
+                <div class="profile-wrapper">
+
+                    <!-- ─── MISSING FIELDS BANNER ─── -->
+                    <div id="missingFieldsBanner" style="display:none;"></div>
+
+                    <!-- ─── MAIN CARD ─── -->
+                    <div class="profile-main-card">
+
+                        <!-- Header -->
+                        <div class="profile-header">
+                            <div class="header-left">
+                                <h1 class="profile-name" id="profileFullName">—</h1>
+                                <p class="profile-title" id="profileTitle">Student at University of Benin</p>
+                                <p class="profile-location"><i class="fa-solid fa-location-dot"></i> <span id="profileLocation">Ugbowo, Nigeria</span></p>
+                            </div>
+                            <div class="header-right">
+                                <img id="profileAvatar" class="profile-avatar" src="" alt="Profile" />
+                                <div class="online-dot"></div>
+                                <div class="verified-badge" id="verifiedCheck" style="display:none;"><i class="fa-solid fa-check"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="statTrust">0</span>
+                                <span class="stat-label">Trust</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="statRating">0</span>
+                                <span class="stat-label">Rating</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="statReviews">0</span>
+                                <span class="stat-label">Reviews</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="statPoints">0</span>
+                                <span class="stat-label">Points</span>
+                            </div>
+                        </div>
+
+                        <!-- About -->
+                        <div class="profile-about">
+                            <h3>About</h3>
+                            <p id="profileBio">Passionate student and campus trader. Focused on building trust, delivering quality, and creating a vibrant community at the University of Benin.</p>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="profile-actions-row">
+                            <div id="editRestrictionBadge" class="edit-restriction-badge" style="display:none;">
+                                <i class="fa-regular fa-clock"></i> <span id="restrictionDays">0</span> days
+                            </div>
+                            <div id="editActions" style="display:none;" class="edit-actions">
+                                <button id="saveEditBtn" class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                <button id="cancelEditBtn" class="btn btn-secondary"><i class="fa-regular fa-xmark"></i> Cancel</button>
+                            </div>
+                            <button id="editToggleBtn" class="btn btn-primary">
+                                <i class="fa-regular fa-pen-to-square"></i> Edit Profile
+                            </button>
+                            <button class="btn btn-secondary" onclick="alert('Password change feature coming soon.')">
+                                <i class="fa-regular fa-key"></i> Password
+                            </button>
+                        </div>
+
+                        <!-- Personal Details -->
+                        <div class="profile-details">
+                            <h3>Personal Details</h3>
+                            <div class="details-grid" id="detailsGrid">
+                                <!-- Rendered by JS -->
+                            </div>
+                        </div>
+
+                    </div><!-- /profile-main-card -->
+
+                    <!-- ─── SECONDARY GRID ─── -->
+                    <div class="profile-secondary-grid">
+
+                        <!-- Badges -->
+                        <div class="profile-card" style="animation-delay:0.1s;">
+                            <div class="card-header">
+                                <div class="icon-chip"><i class="fa-solid fa-award"></i></div>
+                                <h3>Badges</h3>
+                                <span class="badge-count" id="badgeCount">0</span>
+                            </div>
+                            <div class="badge-list" id="badgeList"></div>
+                        </div>
+
+                        <!-- Verifications -->
+                        <div class="profile-card" style="animation-delay:0.15s;">
+                            <div class="card-header">
+                                <div class="icon-chip" style="background:var(--blue-bg); color:var(--blue);"><i class="fa-solid fa-shield-check"></i></div>
+                                <h3>Verifications</h3>
+                            </div>
+                            <div class="verification-grid" id="verificationGrid"></div>
+                        </div>
+
+                        <!-- Flags -->
+                        <div class="profile-card" style="animation-delay:0.2s;">
+                            <div class="card-header">
+                                <div class="icon-chip" style="background:var(--danger-bg); color:var(--red);"><i class="fa-solid fa-flag"></i></div>
+                                <h3>Flags</h3>
+                                <span class="badge-count" id="flagCount">0</span>
+                            </div>
+                            <div id="flagsContainer"></div>
+                        </div>
+
+                        <!-- Moderation -->
+                        <div class="profile-card" style="animation-delay:0.25s;">
+                            <div class="card-header">
+                                <div class="icon-chip" style="background:var(--teal-bg); color:var(--teal);"><i class="fa-solid fa-gavel"></i></div>
+                                <h3>Moderation</h3>
+                            </div>
+                            <div id="moderationContainer"></div>
+                        </div>
+
+                    </div><!-- /profile-secondary-grid -->
+
+                </div><!-- /profile-wrapper -->
+            </div><!-- /profileContent -->
+
+        </main>
+
+        <div class="demo-note"><span>CampusHub</span> • Profile • real API</div>
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/global.js"></script>
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const loading = document.getElementById('profileLoadingState');
+            const content = document.getElementById('profileContent');
+
+            const avatar = document.getElementById('profileAvatar');
+            const fullNameEl = document.getElementById('profileFullName');
+            const profileTitle = document.getElementById('profileTitle');
+            const profileLocation = document.getElementById('profileLocation');
+            const profileBio = document.getElementById('profileBio');
+            const verifiedCheck = document.getElementById('verifiedCheck');
+            const detailsGrid = document.getElementById('detailsGrid');
+
+            const statTrust = document.getElementById('statTrust');
+            const statRating = document.getElementById('statRating');
+            const statReviews = document.getElementById('statReviews');
+            const statPoints = document.getElementById('statPoints');
+
+            const badgeList = document.getElementById('badgeList');
+            const badgeCount = document.getElementById('badgeCount');
+            const verificationGrid = document.getElementById('verificationGrid');
+            const flagsContainer = document.getElementById('flagsContainer');
+            const flagCount = document.getElementById('flagCount');
+            const moderationContainer = document.getElementById('moderationContainer');
+
+            const editToggleBtn = document.getElementById('editToggleBtn');
+            const editRestrictionBadge = document.getElementById('editRestrictionBadge');
+            const restrictionDaysSpan = document.getElementById('restrictionDays');
+            const editActions = document.getElementById('editActions');
+            const saveEditBtn = document.getElementById('saveEditBtn');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+            // ─── API ──────────────────────────────────────────────────
+            const PROFILE_API = `${AUTH_URL}profile`;
+            const UPDATE_PROFILE_API = `${AUTH_URL}profile/update`;
+
+            // ─── State ──────────────────────────────────────────────────
+            let profileData = null;
+            let isEditMode = false;
+            let isSaving = false;
+            const EDITABLE_FIELDS = ['phone', 'department', 'faculty', 'level'];
+
+            // ─── Helpers ────────────────────────────────────────────────
+            function formatDate(dateStr) {
+                if (!dateStr) return '—';
+                const d = new Date(dateStr);
+                return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            }
+
+            function getDaysSince(dateStr) {
+                if (!dateStr) return 0;
+                const then = new Date(dateStr);
+                const now = new Date();
+                return Math.floor((now - then) / (1000 * 60 * 60 * 24));
+            }
+
+            function getEditRestriction(editDay, modifiedAt) {
+                if (editDay === 0) return { canEdit: true, daysRemaining: 0 };
+                const daysSince = getDaysSince(modifiedAt);
+                if (daysSince >= editDay) return { canEdit: true, daysRemaining: 0 };
+                return { canEdit: false, daysRemaining: editDay - daysSince };
+            }
+
+            function animateCount(el, target) {
+                const num = parseFloat(target) || 0;
+                const isDecimal = num % 1 !== 0;
+                const duration = 650;
+                const start = performance.now();
+
+                function frame(now) {
+                    const progress = Math.min((now - start) / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    const current = num * eased;
+                    el.textContent = isDecimal ? current.toFixed(1) : Math.round(current);
+                    if (progress < 1) requestAnimationFrame(frame);
+                    else el.textContent = isDecimal ? num.toFixed(1) : num;
+                }
+                requestAnimationFrame(frame);
+            }
+
+            // Badge styles
+            const BADGE_STYLES = [
+                { test: /top|best|elite|gold/i, bg: 'linear-gradient(135deg, #d4a017, #b8860b)', icon: 'fa-solid fa-crown' },
+                { test: /fast|speed|quick|prompt/i, bg: 'linear-gradient(135deg, #8e44ad, #6c3483)', icon: 'fa-solid fa-bolt' },
+                { test: /trust|verified|safe|secure/i, bg: 'linear-gradient(135deg, #3498db, #2471a3)', icon: 'fa-solid fa-shield-halved' },
+                { test: /new|rookie|starter|fresh/i, bg: 'linear-gradient(135deg, #16a085, #0e6655)', icon: 'fa-solid fa-seedling' },
+                { test: /helpful|kind|friendly|community/i, bg: 'linear-gradient(135deg, #e84393, #c2185b)', icon: 'fa-solid fa-heart' },
+                { test: /review|rating|star/i, bg: 'linear-gradient(135deg, #f5b342, #d4941f)', icon: 'fa-solid fa-star' },
+            ];
+            const DEFAULT_BADGE_STYLE = { bg: 'linear-gradient(135deg, #2ecc71, #0d8a3e)', icon: 'fa-solid fa-medal' };
+
+            function getBadgeStyle(name) {
+                for (const s of BADGE_STYLES) {
+                    if (s.test.test(name || '')) return s;
+                }
+                return DEFAULT_BADGE_STYLE;
+            }
+
+            // ─── Render Functions ──────────────────────────────────────
+
+            function renderHeader(data) {
+                avatar.src = data.profile_picture || '../assets/img/default-avatar.jpg';
+                fullNameEl.textContent = data.full_name || '—';
+                profileTitle.textContent = data.title || 'Student at University of Benin';
+                profileLocation.textContent = data.location || 'Ugbowo, Nigeria';
+                profileBio.textContent = data.bio || 'Passionate student and campus trader. Focused on building trust, delivering quality, and creating a vibrant community at the University of Benin.';
+
+                const isVerified = data.email_verified || data.student_id_verified || data.hall_verified;
+                verifiedCheck.style.display = isVerified ? 'flex' : 'none';
+            }
+
+            function renderStats(data) {
+                animateCount(statTrust, data.trust_score ?? 0);
+                animateCount(statRating, data.avg_rating ?? 0);
+                animateCount(statReviews, data.review_count ?? 0);
+                animateCount(statPoints, data.points ?? 0);
+            }
+
+            function renderDetailsGrid(data) {
+                const fields = [
+                    { key: 'full_name', label: 'Full Name', value: data.full_name || '' },
+                    { key: 'email', label: 'Email', value: data.email || '' },
+                    { key: 'phone', label: 'Phone', value: data.phone || '' },
+                    { key: 'department', label: 'Department', value: data.department || '' },
+                    { key: 'faculty', label: 'Faculty', value: data.faculty || '' },
+                    { key: 'level', label: 'Level', value: data.level || '' },
+                ];
+
+                let html = '';
+                fields.forEach(f => {
+                    const isEditable = EDITABLE_FIELDS.includes(f.key);
+                    let valueHtml = '';
+                    const displayValue = f.value || '—';
+                    if (isEditMode && isEditable) {
+                        if (f.key === 'level') {
+                            valueHtml = `
+                                <select class="detail-value edit-input" data-field="${f.key}">
+                                    ${[1,2,3,4,5,6,7].map(n => `<option value="${n}" ${n == f.value ? 'selected' : ''}>${n}</option>`).join('')}
+                                </select>
+                            `;
+                        } else {
+                            valueHtml =
+                                `<input class="detail-value edit-input" type="text" data-field="${f.key}" value="${f.value || ''}" placeholder="Enter ${f.label}" />`;
+                        }
+                    } else {
+                        const emptyClass = !f.value ? 'empty-placeholder' : '';
+                        valueHtml = `<span class="detail-value ${emptyClass}">${displayValue}</span>`;
+                    }
+                    html += `
+                        <div class="detail-item">
+                            <span class="detail-label">${f.label}</span>
+                            ${valueHtml}
+                        </div>
+                    `;
+                });
+                detailsGrid.innerHTML = html;
+            }
+
+            function renderBadges(badges) {
+                badgeCount.textContent = badges.length;
+                if (!badges.length) {
+                    badgeList.innerHTML = `
+                        <div class="empty-state" style="width:100%;">
+                            <i class="fa-regular fa-face-smile-beam"></i>
+                            No badges yet
+                        </div>
+                    `;
+                    return;
+                }
+                let html = '';
+                badges.forEach((b, i) => {
+                    const style = getBadgeStyle(b.name);
+                    const icon = b.icon || style.icon;
+                    html += `
+                        <span class="badge-item" style="background:${style.bg}; animation-delay:${0.05 * i}s;">
+                            <span class="badge-icon-circle"><i class="${icon}"></i></span> ${b.name}
+                        </span>
+                    `;
+                });
+                badgeList.innerHTML = html;
+            }
+
+            function renderVerifications(data) {
+                const items = [
+                    { label: 'Email', value: data.email_verified ? 'Verified' : 'Not Verified', status: data
+                            .email_verified ? 'verified' : 'rejected', icon: 'fa-solid fa-envelope' },
+                    { label: 'Student ID', value: data.student_id_verified ? 'Verified' : (data
+                            .student_id_verified_status || 'Not Verified'), status: data.student_id_verified ?
+                            'verified' : (data.student_id_verified_status ? 'pending' : 'rejected'),
+                        icon: 'fa-solid fa-id-card' },
+                    { label: 'Hall', value: data.hall_verified ? 'Verified' : (data.hall_verified_status ||
+                            'Not Verified'), status: data.hall_verified ? 'verified' : (data
+                            .hall_verified_status ? 'pending' : 'rejected'), icon: 'fa-solid fa-building-shield' },
+                    { label: 'Residence', value: data.hall_residence || '—', status: 'neutral',
+                        icon: 'fa-solid fa-house' },
+                    { label: 'Room', value: data.hall_number || '—', status: 'neutral',
+                        icon: 'fa-solid fa-door-closed' },
+                ];
+                let html = '';
+                items.forEach(item => {
+                    const iconClass = item.status === 'verified' ? 'fa-solid fa-check' :
+                        item.status === 'pending' ? 'fa-solid fa-hourglass-half' :
+                        item.status === 'neutral' ? item.icon : 'fa-solid fa-xmark';
+                    html += `
+                        <div class="verify-card">
+                            <div class="vicon ${item.status}"><i class="${iconClass}"></i></div>
+                            <div class="vtext">
+                                <div class="vlabel">${item.label}</div>
+                                <div class="vstatus ${item.status}">${item.value}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                verificationGrid.innerHTML = html;
+            }
+
+            function renderFlags(flags) {
+                flagCount.textContent = flags.length;
+                if (!flags.length) {
+                    flagsContainer.innerHTML =
+                        `<div class="empty-state"><i class="fa-regular fa-flag"></i>No flags</div>`;
+                    return;
+                }
+                let html = '';
+                flags.forEach(f => {
+                    const statusClass = f.is_resolved ? 'resolved' : 'unresolved';
+                    const statusText = f.is_resolved ? 'Resolved' : 'Unresolved';
+                    html += `
+                        <div class="flag-item">
+                            <span class="flag-reason">${f.reason}</span>
+                            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                                <span class="flag-status ${statusClass}">${statusText}</span>
+                                <span class="flag-meta">${f.resolved_at ? formatDate(f.resolved_at) : 'Pending'}</span>
+                            </div>
+                        </div>
+                        ${f.resolution_note ? `<div class="moderation-notes">${f.resolution_note}</div>` : ''}
+                    `;
+                });
+                flagsContainer.innerHTML = html;
+            }
+
+            function renderModeration(mod) {
+                const warningCount = mod.warning_count ?? 0;
+                const notes = mod.notes || 'No notes.';
+                moderationContainer.innerHTML = `
+                    <div class="moderation-row">
+                        <div class="mod-item">
+                            <span class="mod-label"><i class="fa-solid fa-triangle-exclamation" style="color:var(--amber);margin-right:4px;"></i> Warnings:</span>
+                            <span class="mod-value">${warningCount}</span>
+                        </div>
+                        <div class="mod-item">
+                            <span class="mod-label"><i class="fa-regular fa-note-sticky" style="color:var(--teal);margin-right:4px;"></i> Notes:</span>
+                            <span class="mod-value">${notes}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ─── Missing Fields Banner ─────────────────────────────────
+            function renderMissingFieldsBanner(missingFields) {
+                const container = document.getElementById('missingFieldsBanner');
+                if (!container) return;
+
+                if (!missingFields || missingFields.length === 0) {
+                    container.style.display = 'none';
+                    return;
+                }
+
+                const fieldMap = {
+                    'phone': { label: 'Phone Number', url: '#' },
+                    'profile_picture': { label: 'Profile Picture', url: '#' },
+                    'matric_number': { label: 'Matric Number', url: '#' },
+                    'department': { label: 'Department', url: '#' },
+                    'faculty': { label: 'Faculty', url: '#' },
+                    'level': { label: 'Level', url: '#' },
+                    'student_id_verified': { label: 'Student ID Verification', url: 'upload-id.html' },
+                    'hall_verified': { label: 'Hall Verification', url: 'hall-verification.html' },
+                    'email_verified': { label: 'Email Verification', url: '#' }
+                };
+
+                const totalFields = Object.keys(fieldMap).length;
+                const completed = totalFields - missingFields.length;
+                const progressText = `${completed} of ${totalFields} done`;
+
+                const listItems = missingFields.map(field => {
+                    const info = fieldMap[field] || { label: field.replace(/_/g, ' '), url: '#' };
+                    const label = info.label;
+                    const url = info.url;
+                    const target = (url === '#') ? 'javascript:void(0)' : url;
+                    const onclick = (url === '#') ?
+                        `document.getElementById('editToggleBtn')?.click?.()` : '';
+                    return `<li>
+                                <i class="fa-regular fa-circle-xmark"></i>
+                                <a href="${target}" ${onclick ? `onclick="${onclick}"` : ''}>${label}</a>
+                            </li>`;
+                }).join('');
+
+                container.style.display = 'block';
+                container.className = 'missing-banner';
+                container.innerHTML = `
+                    <div class="banner-header">
+                        <span class="banner-title">
+                            <i class="fa-regular fa-list-check"></i>
+                            <span>Complete Your Profile</span>
+                        </span>
+                        <span class="banner-progress">${progressText}</span>
+                    </div>
+                    <ul class="banner-list">${listItems}</ul>
+                    <div class="banner-cta">
+                        <i class="fa-regular fa-arrow-right"></i>
+                        <span>Click any missing item or use <strong>“Edit Profile”</strong> to update your info.</span>
+                    </div>
+                `;
+            }
+
+            // ─── Full Render ────────────────────────────────────────────
+            function renderProfile(data) {
+                profileData = data;
+                renderHeader(data);
+                renderStats(data);
+                renderDetailsGrid(data);
+                renderBadges(data.badges || []);
+                renderVerifications(data);
+                renderFlags(data.flags || []);
+                renderModeration(data.moderation || {});
+
+                // Edit restriction
+                const editDay = data.edit_day ?? 0;
+                const modifiedAt = data.modified_at;
+                const restriction = getEditRestriction(editDay, modifiedAt);
+                if (!restriction.canEdit) {
+                    editRestrictionBadge.style.display = 'inline-flex';
+                    restrictionDaysSpan.textContent = restriction.daysRemaining;
+                    editToggleBtn.disabled = true;
+                    editToggleBtn.title = `Edit available in ${restriction.daysRemaining} days`;
+                } else {
+                    editRestrictionBadge.style.display = 'none';
+                    editToggleBtn.disabled = false;
+                    editToggleBtn.title = '';
+                }
+
+                renderMissingFieldsBanner(data.missing_fields);
+            }
+
+            // ─── Edit Mode ──────────────────────────────────────────────
+            function enterEditMode() {
+                isEditMode = true;
+                editToggleBtn.style.display = 'none';
+                editActions.style.display = 'flex';
+                renderDetailsGrid(profileData);
+            }
+
+            function exitEditMode() {
+                isEditMode = false;
+                editToggleBtn.style.display = 'block';
+                editActions.style.display = 'none';
+                renderDetailsGrid(profileData);
+            }
+
+            function cancelEdit() {
+                if (isSaving) return;
+                exitEditMode();
+            }
+
+            async function performSave() {
+                if (isSaving) return;
+                const inputs = detailsGrid.querySelectorAll('.edit-input');
+                const changedData = {};
+                inputs.forEach(input => {
+                    const field = input.dataset.field;
+                    let value = input.value;
+                    if (field === 'level') value = parseInt(value, 10);
+                    const current = profileData[field];
+                    if (value !== current) {
+                        changedData[field] = value;
+                    }
+                });
+
+                if (Object.keys(changedData).length === 0) {
+                    if (typeof showAlert !== 'undefined') showAlert.info('No changes to save.');
+                    cancelEdit();
+                    return;
+                }
+
+                isSaving = true;
+                saveEditBtn.disabled = true;
+                saveEditBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+
+                try {
+                    const response = await fetchWithAuth(UPDATE_PROFILE_API, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(changedData),
+                    });
+                    if (!response.ok) {
+                        const err = await response.json().catch(() => ({}));
+                        throw new Error(err.message || `HTTP ${response.status}`);
+                    }
+                    const result = await response.json();
+                    if (!result.is_success) throw new Error(result.message || 'Update failed');
+
+                    const newData = await fetchProfile();
+                    renderProfile(newData);
+                    if (typeof showAlert !== 'undefined') showAlert.success('Profile updated!');
+                    cancelEdit();
+                } catch (err) {
+                    console.error(err);
+                    if (typeof showAlert !== 'undefined') showAlert.error(err.message || 'Update failed.');
+                    saveEditBtn.disabled = false;
+                    saveEditBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save';
+                } finally {
+                    isSaving = false;
+                }
+            }
+
+            // ─── Fetch Profile ──────────────────────────────────────────
+            async function fetchProfile() {
+                const response = await fetchWithAuth(PROFILE_API, {
+                    method: 'GET',
+                    showSpinner: true,
+                    spinnerText: 'Loading profile…'
+                });
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err.message || `HTTP ${response.status}`);
+                }
+                const result = await response.json();
+                if (!result.is_success) throw new Error(result.message || 'Failed to load profile');
+                return result.data;
+            }
+
+            // ─── Init ──────────────────────────────────────────────────
+            async function init() {
+                try {
+                    const data = await fetchProfile();
+                    loading.style.display = 'none';
+                    content.style.display = 'block';
+                    renderProfile(data);
+
+                    editToggleBtn.addEventListener('click', function() {
+                        const restriction = getEditRestriction(profileData.edit_day, profileData
+                        .modified_at);
+                        if (!restriction.canEdit) {
+                            if (typeof showAlert !== 'undefined')
+                                showAlert.warning(
+                                    `Edit available in ${restriction.daysRemaining} days.`);
+                            return;
+                        }
+                        enterEditMode();
+                    });
+
+                    saveEditBtn.addEventListener('click', performSave);
+                    cancelEditBtn.addEventListener('click', cancelEdit);
+
+                } catch (err) {
+                    loading.innerHTML =
+                        `<p style="color:var(--red);">❌ ${err.message || 'Failed to load profile.'}</p>`;
+                    if (typeof showAlert !== 'undefined') showAlert.error(err.message || 'Failed to load profile.');
+                    console.error(err);
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                setTimeout(init, 200);
+            }
+
+        })();
+    </script>
+
+</body>
+</html>

@@ -1487,7 +1487,123 @@
         width: 40%;
     }
 }
-    </style>
+
+/* ─── Verification Banner (now also shows missing fields) ─── */
+.verification-banner {
+    background: var(--bg-card);
+    border-radius: var(--radius-card);
+    padding: 16px 20px;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid #f39c12;
+    box-shadow: var(--shadow-card);
+    transition: all var(--transition);
+    margin-bottom: 20px;
+}
+.dark-mode .verification-banner {
+    border-left-color: #f1c40f;
+}
+.verification-banner .banner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 10px;
+}
+.verification-banner .banner-header .banner-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.verification-banner .banner-header .banner-title i {
+    color: #f39c12;
+    font-size: 20px;
+}
+.verification-banner .banner-header .banner-progress {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-input);
+    padding: 4px 16px;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+}
+.verification-banner .banner-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+}
+.verification-banner .banner-fields li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-input);
+    padding: 4px 14px 4px 10px;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s;
+}
+.verification-banner .banner-fields li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    border-color: #f39c12;
+}
+.verification-banner .banner-fields li i {
+    color: #e67e22;
+    font-size: 12px;
+}
+.verification-banner .banner-fields li a {
+    color: var(--text-primary);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.verification-banner .banner-fields li a:hover {
+    color: var(--green);
+}
+.verification-banner .banner-cta {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.verification-banner .banner-cta a {
+    color: var(--green);
+    font-weight: 600;
+    text-decoration: none;
+}
+.verification-banner .banner-cta a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 480px) {
+    .verification-banner {
+        padding: 14px 16px;
+    }
+    .verification-banner .banner-header .banner-title {
+        font-size: 14px;
+    }
+    .verification-banner .banner-header .banner-progress {
+        font-size: 11px;
+        padding: 2px 12px;
+    }
+    .verification-banner .banner-fields li {
+        font-size: 12px;
+        padding: 3px 10px 3px 8px;
+    }
+}
+
+
+</style>
 </head>
 <body>
 
@@ -1841,41 +1957,54 @@
             // ============================================================
             // RENDER: VERIFICATION BANNER
             // ============================================================
-            function renderVerificationBanner() {
-                const user = getUserData();
-                if (!user) {
-                    verificationBanner.style.display = 'none';
+            function renderVerificationBanner(missingFields) {
+                const banner = document.getElementById('verificationBanner');
+                if (!banner) return;
+
+                // If no missing fields, hide the banner
+                if (!missingFields || missingFields.length === 0) {
+                    banner.style.display = 'none';
                     return;
                 }
 
-                const isStudentVerified = user.is_student_id_verified;
-                const isHallVerified = user.is_hall_verified;
+                // Map backend field names → human labels + destination URLs
+                const fieldMap = {
+                    'phone': { label: 'Phone Number', url: 'profile.html' },
+                    'profile_picture': { label: 'Profile Picture', url: 'profile.html' },
+                    'matric_number': { label: 'Matric Number', url: 'profile.html' },
+                    'department': { label: 'Department', url: 'profile.html' },
+                    'faculty': { label: 'Faculty', url: 'profile.html' },
+                    'level': { label: 'Level', url: 'profile.html' },
+                    'student_id_verified': { label: 'Student ID Verification', url: 'upload-id.html' },
+                    'hall_verified': { label: 'Hall Verification', url: 'hall-verification.html' },
+                    'email_verified': { label: 'Email Verification', url: 'profile.html' }
+                };
 
-                if (isStudentVerified && isHallVerified) {
-                    verificationBanner.style.display = 'none';
-                    return;
-                }
+                const totalFields = Object.keys(fieldMap).length;
+                const completed = totalFields - missingFields.length;
+                const progressText = `${completed} of ${totalFields} completed`;
 
-                let warnings = [];
-                if (!isStudentVerified) warnings.push('Student ID not verified');
-                if (!isHallVerified) warnings.push('Hall verification pending');
+                const listItems = missingFields.map(field => {
+                    const info = fieldMap[field] || { label: field.replace(/_/g, ' '), url: 'profile.html' };
+                    return `<li><i class="fa-regular fa-circle-xmark"></i> <a href="${info.url}">${info.label}</a></li>`;
+                }).join('');
 
-                verificationBanner.style.display = 'flex';
-                verificationBanner.className = 'verification-warning';
-                verificationBanner.innerHTML = `
-                    <span class="warning-icon"><i class="fa-regular fas fa-triangle-exclamation"></i></span>
-                    <span class="warning-text">
-                        <strong>Verification Required:</strong> ${warnings.join(' • ')}. 
-                        Complete verification to unlock full access and build trust with buyers.
-                    </span>
-                    <button class="warning-btn" id="verifyNowBtn">
-                        <i class="fa-regular fa-id-card"></i> Verify Now
-                    </button>
+                banner.style.display = 'block';
+                banner.className = 'verification-banner';
+                banner.innerHTML = `
+                    <div class="banner-header">
+                        <span class="banner-title">
+                            <i class="fa-regular fa-list-check"></i>
+                            <span>Complete Your Profile</span>
+                        </span>
+                        <span class="banner-progress">${progressText}</span>
+                    </div>
+                    <ul class="banner-fields">${listItems}</ul>
+                    <div class="banner-cta">
+                        <i class="fa-regular fa-arrow-right"></i> 
+                        <a href="profile.html">Go to Profile Settings</a> to update these details.
+                    </div>
                 `;
-
-                document.getElementById('verifyNowBtn')?.addEventListener('click', function() {
-                    window.location.href = 'upload-id.html';
-                });
             }
 
             // ============================================================
@@ -1938,9 +2067,11 @@
                     userAvatar.textContent = user.email.charAt(0).toUpperCase();
                 }
 
+                renderVerificationBanner(stats.missing_fields);
                 // Flag
                 flagCount.textContent = stats.flagged_listing_count || 0;
             }
+
 
             // ============================================================
             // RENDER: QUICK LINKS
@@ -2059,7 +2190,7 @@
                             </div>
                             <div class="price-tag">
                                 ${priceDisplay}
-                                <small>${item.lisiting_type || 'sell'}</small>
+                                <small>${item.listing_type || 'sell'}</small>
                             </div>
                         </div>
                     `;
@@ -2351,10 +2482,6 @@
 
                     // Load listings (always loaded on page load)
                     await renderListings();
-
-                    // Render verification banner
-                    renderVerificationBanner();
-
                     
                     // Render quick links
                     renderQuickLinks()
@@ -2384,14 +2511,14 @@ function renderBannerSlides() {
             title: "love is goos",
             price: 0,
             category: "Roommates & Shared Apartments",
-            image: "http://127.0.0.1:8000/media/Lisiting_images/Lisiting_image_love_is_goos_9c72291a04.webp"
+            image: "http://localhost/v1/media/listing_images/listing_image_love_is_goos_9c72291a04.webp"
         },
         {
             id: 7,
             title: "Laptop hp E2w",
             price: 300000,
             category: "Laptops & Computers",
-            image: "http://127.0.0.1:8000/media/Lisiting_images/Lisiting_image_Laptop_hp_E2w_4668f10c03.webp"
+            image: "http://localhost/v1/media/listing_images/listing_image_Laptop_hp_E2w_4668f10c03.webp"
         },
         {
             id: 14,
@@ -2422,7 +2549,7 @@ function renderBannerSlides() {
             <div class="slide-content">
                 <h2>${item.title}</h2>
                 <p>${item.category} • ${priceDisplay}</p>
-                <span class="slide-cta" data-id="${item.id}">Shop Now →</span>
+                <span class="slide-cta" data-id="${item.id}" data-title="${item.title}">Shop Now →</span>
             </div>
             <div class="slide-image">
                 <img src="${imgUrl}" alt="${item.title}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23ccc%22/%3E%3Ctext x=%22100%22 y=%22110%22 font-family=%22Arial%22 font-size=%2216%22 fill=%22%23999%22 text-anchor=%22middle%22%3ENo Image%3C/text%3E%3C/svg%3E'" />
@@ -2446,11 +2573,9 @@ function renderBannerSlides() {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
             const id = this.dataset.id;
-            if (typeof showAlert !== 'undefined') {
-                showAlert.info(`🔍 Viewing listing ${id} (demo)`, { duration: 2000 });
-            } else {
-                alert(`View listing ${id}`);
-            }
+            const title = this.dataset.title || '';
+            const encodedTitle = encodeURIComponent(title);
+            window.location.href = `listing-details.html?id=${id}&title=${encodedTitle}`;
         });
     });
 

@@ -752,19 +752,6 @@
         }
 
         // ============================================================
-        // SESSION & HEADER SYNC
-        // ============================================================
-        function updateFavouriteCountInSession(delta) {
-            const user = getUserData();
-            if (!user) return;
-            user.total_favourites = (user.total_favourites || 0) + delta;
-            const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
-            const storage = rememberMe ? localStorage : sessionStorage;
-            storage.setItem('user', JSON.stringify(user));
-            updateHeaderUser(); // refreshes badge and dot
-        }
-
-        // ============================================================
         // RENDER
         // ============================================================
         function renderFavourites() {
@@ -801,7 +788,7 @@
                         <span class="empty-icon"><i class="fa-regular fa-heart"></i></span>
                         <h3>No favourites yet</h3>
                         <p>Start exploring and heart the items you love. They'll appear here.</p>
-                        <a href="/explore.html" class="explore-cta">Explore now</a>
+                        <a href="explore.html" class="explore-cta">Explore now</a>
                     </div>
                 `;
                 return;
@@ -950,8 +937,6 @@
             try {
                 const action = await toggleFavourite(id);
                 if (action === 'removed') {
-                    // Success: update session count
-                    updateFavouriteCountInSession(-1);
                     // Show toast with undo
                     showToast(`"${removedItem.title}" removed from favourites`, function() {
                         // Undo: re-add
@@ -984,7 +969,6 @@
                 if (action === 'added') {
                     allItems.splice(index, 0, item);
                     renderFavourites();
-                    updateFavouriteCountInSession(+1);
                     if (typeof showAlert !== 'undefined') {
                         showAlert.success('Restored to favourites!', { duration: 1500 });
                     }

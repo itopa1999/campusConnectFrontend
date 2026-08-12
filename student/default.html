@@ -1,19 +1,424 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Authentication Required</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Authentication Required · CampusHub</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+
+    <!-- Page-Specific Styles -->
+    <style>
+        .default-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ─── Hero Section ─── */
+        .default-hero {
+            background: linear-gradient(135deg, var(--coral, #e8826a), var(--coral-dark, #d16a52));
+            border-radius: var(--radius-card);
+            padding: 40px 32px;
+            margin-bottom: 24px;
+            color: #fff;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .default-hero::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            pointer-events: none;
+        }
+        .default-hero .hero-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .default-hero h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        .default-hero p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .dark-mode .default-hero {
+            background: linear-gradient(135deg, #3a1a18, #1a0e0c);
+            border-color: #3a2a28;
+        }
+        @media (max-width: 480px) {
+            .default-hero {
+                padding: 28px 20px;
+            }
+            .default-hero h1 {
+                font-size: 22px;
+            }
+            .default-hero p {
+                font-size: 14px;
+            }
+            .default-hero .hero-icon {
+                font-size: 44px;
+            }
+        }
+
+        /* ─── Info Cards ─── */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        .info-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 24px 22px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+        }
+        .info-card:hover {
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-3px);
+        }
+        .info-card .info-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .info-card .info-icon.lock {
+            color: var(--coral);
+        }
+        .info-card .info-icon.verified {
+            color: var(--coral);
+        }
+        .info-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+        .info-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+        }
+        .info-card ul {
+            padding-left: 20px;
+            margin-top: 6px;
+        }
+        .info-card ul li {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+
+        @media (max-width: 640px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ─── Feature List ─── */
+        .feature-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .feature-list-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 18px 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            text-align: center;
+            transition: all var(--transition);
+        }
+        .feature-list-item:hover {
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-3px);
+        }
+        .feature-list-item .fl-icon {
+            font-size: 28px;
+            color: var(--coral);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .feature-list-item h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .feature-list-item p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            transition: color var(--transition);
+        }
+
+        /* ─── CTA ─── */
+        .default-cta {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 28px 24px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+        }
+        .default-cta h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+        .default-cta p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            transition: color var(--transition);
+        }
+        .default-cta .cta-btn {
+            display: inline-block;
+            padding: 12px 36px;
+            background: var(--coral);
+            color: #fff;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            min-width: 180px;
+        }
+        .default-cta .cta-btn:hover {
+            transform: scale(1.03);
+            opacity: 0.9;
+        }
+        .default-cta .cta-btn i {
+            margin-right: 8px;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .feature-list-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .feature-list-item {
+                padding: 14px 12px;
+            }
+            .feature-list-item .fl-icon {
+                font-size: 22px;
+            }
+            .feature-list-item h4 {
+                font-size: 13px;
+            }
+            .feature-list-item p {
+                font-size: 12px;
+            }
+            .default-cta h2 {
+                font-size: 18px;
+            }
+            .default-cta p {
+                font-size: 14px;
+            }
+            .default-cta .cta-btn {
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+        }
+
+        /* ─── Demo note ─── */
+        .demo-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 0 4px;
+            letter-spacing: 0.3px;
+            background: var(--bg-app);
+            border-top: 1px solid var(--border-color);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .demo-note span {
+            font-weight: 600;
+            color: var(--coral);
+            transition: color var(--transition);
+        }
+    </style>
 </head>
 <body>
-    <div style="text-align:center; padding:50px;">
-        <h1>🔐 Authentication Required</h1>
-        <p id="message">Please log in to access this feature.</p>
-        <a href="/auth/auth.html">Log In</a>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER (injected by global.js) ===== -->
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="default-wrapper">
+
+                <!-- ===== HERO ===== -->
+                <div class="default-hero">
+                    <span class="hero-icon"><i class="fa-regular fas fa-lock"></i></span>
+                    <h1 id="pageTitle">Authentication Required</h1>
+                    <p id="pageDescription">Please log in to access this feature. We need to verify you're a real student to keep the community safe.</p>
+                </div>
+
+                <!-- ===== INFO CARDS ===== -->
+                <div class="info-grid">
+                    <div class="info-card">
+                        <span class="info-icon lock"><i class="fa-regular fas fa-shield-halved"></i></span>
+                        <h3>Why do I need to log in?</h3>
+                        <p>CampusHub is a <strong>student‑only marketplace</strong>. We verify every user to prevent scams, fake listings, and non‑student access.</p>
+                        <ul>
+                            <li>✅ Only verified students can buy and sell</li>
+                            <li>✅ Trust scores protect you from bad actors</li>
+                            <li>✅ Secure messaging and dispute support</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon verified"><i class="fa-regular fa-circle-check"></i></span>
+                        <h3>What you get after logging in</h3>
+                        <ul>
+                            <li>🔓 Full access to all listings</li>
+                            <li>❤️ Save favourites and track items</li>
+                            <li>📦 Create and manage your own listings</li>
+                            <li>💬 Chat directly with verified buyers/sellers</li>
+                            <li>⭐ Build your trust score and reputation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ===== FEATURES ===== -->
+                <h2 style="font-size:20px; font-weight:700; color:var(--text-primary); margin-bottom:12px;">Why CampusHub requires authentication</h2>
+                <div class="feature-list-grid">
+                    <div class="feature-list-item">
+                        <span class="fl-icon"><i class="fa-regular fa-user-check"></i></span>
+                        <h4>Only Students</h4>
+                        <p>We verify every user with a student email and optional ID upload.</p>
+                    </div>
+                    <div class="feature-list-item">
+                        <span class="fl-icon"><i class="fa-regular fa-star"></i></span>
+                        <h4>Trust &amp; Safety</h4>
+                        <p>Trust scores and reviews help you trade with confidence.</p>
+                    </div>
+                    <div class="feature-list-item">
+                        <span class="fl-icon"><i class="fa-regular fa-handshake"></i></span>
+                        <h4>Secure Transactions</h4>
+                        <p>Inspect items before payment – we never hold your money.</p>
+                    </div>
+                    <div class="feature-list-item">
+                        <span class="fl-icon"><i class="fa-regular fa-location-dot"></i></span>
+                        <h4>Campus Meetups</h4>
+                        <p>Meet at recommended campus hotspots with CCTV.</p>
+                    </div>
+                </div>
+
+                <!-- ===== CTA ===== -->
+                <div class="default-cta">
+                    <h2 id="ctaTitle">Ready to continue?</h2>
+                    <p id="ctaDescription">Log in to access this feature and start trading safely with verified students.</p>
+                    <button class="cta-btn" id="loginRedirectBtn">
+                        <i class="fa-regular fa-arrow-right-to-bracket"></i> Log In Now
+                    </button>
+                </div>
+
+            </div><!-- /default-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Authentication Required • built for Nigerian students, by students
+        </div>
+
     </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/global.js"></script>
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const page = params.get('page') || 'feature';
-        const message = params.get('message') || 'This feature';
-        document.getElementById('message').textContent = `${message} requires authentication. Please log in to continue.`;
+        (function() {
+            'use strict';
+
+            // ─── Check if user is already authenticated ──────────
+            // If yes, redirect to dashboard (they shouldn't see this page)
+            if (typeof window.isAuthenticated === 'function' && window.isAuthenticated()) {
+                // Redirect to dashboard
+                window.location.href = 'dashboard.html';
+                return; // stop further execution
+            }
+
+            // ─── Get URL parameters ──────────────────────────────
+            const params = new URLSearchParams(window.location.search);
+            const page = params.get('page') || 'feature';
+            const message = params.get('message') || 'This feature';
+
+            // ─── Update page content based on the message ───────
+            document.getElementById('pageTitle').textContent = `${message} — Authentication Required`;
+            document.getElementById('pageDescription').textContent =
+                `Please log in to access "${message}". We need to verify your student identity to keep the community safe.`;
+            document.getElementById('ctaTitle').textContent = `Ready to access ${message}?`;
+            document.getElementById('ctaDescription').textContent =
+                `Log in to unlock "${message}" and start trading safely with verified students.`;
+
+            // ─── Set redirect cookie and go to login ────────────
+            const loginBtn = document.getElementById('loginRedirectBtn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function() {
+                    // Build the redirect URL
+                    const currentPath = window.location.pathname + window.location.search;
+                    // Store the full path (including query params) in the cookie
+                    const redirectPath = currentPath;
+                    // Set cookie (expires in 10 minutes)
+                    document.cookie = `redirect_after_login=${encodeURIComponent(redirectPath)}; path=/; max-age=600`;
+                    // Go to login page
+                    window.location.href = '/auth/auth.html';
+                });
+            }
+
+            console.log('🔐 Default page loaded – redirect cookie set on login click');
+        })();
     </script>
+
 </body>
 </html>

@@ -1913,13 +1913,20 @@
                         throw new Error(result.message || 'Payment initiation failed.');
                     }
 
-                    if (result.is_success && result.data?.checkout_url) {
-                        window.open(result.data.checkout_url, '_blank');
-                        showToast(`Payment page opened for ${selectedGateway}. Complete your payment.`, 'success');
-                        
+                    const url = result.data?.checkout_url ||
+                        result.data?.checkout_link ||
+                        result.data?.payment_url ||
+                        result.data?.redirect_url ||
+                        result.data?.url;
+
+                    if (result.is_success && url) {
+                        // Close modal and show toast
+                        closePaymentModal();
+                        showToast(`Redirecting to payment page...`, 'success');
+
+                        // Redirect after a short delay (so toast and modal closure are visible)
                         setTimeout(() => {
-                            closePaymentModal();
-                            setTimeout(() => fetchPurchases(purchasePage), 1500);
+                            window.location.href = url;
                         }, 800);
                     } else {
                         throw new Error(result.message || 'Something went wrong.');

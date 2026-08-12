@@ -11,11 +11,11 @@
     // ============================================================
     // API ENDPOINTS
     // ============================================================
-    const AUTH_URL = 'http://127.0.0.1:8000/user/api/auth/';
-    const CAMPUS_URL = 'http://127.0.0.1:8000/campus/api/campus/';
-    const NOTIFICATIONS_URL = 'http://127.0.0.1:8000/user/api/notifications/';
-    const LOGOUT_URL = 'http://127.0.0.1:8000/user/api/auth/logout-user';
-    const REFRESH_POINTS_URL = 'http://127.0.0.1:8000/user/api/';
+    const AUTH_URL = 'http://localhost/v1/user/api/auth/';
+    const CAMPUS_URL = 'http://localhost/v1/campus/api/campus/';
+    const NOTIFICATIONS_URL = 'http://localhost/v1/user/api/notifications/';
+    const LOGOUT_URL = 'http://localhost/v1/user/api/auth/logout-user';
+    const REFRESH_POINTS_URL = 'http://localhost/v1/user/api/';
     const X_KEY_ID = '1';
     const PLATFORM = 'web';
 
@@ -214,22 +214,19 @@
                 const displayEmail = user.email ? '@' + user.email.split('@')[1] : '@student.uniben';
                 emailEl.textContent = displayEmail;
             }
-            if (user && user.total_favourites !== undefined) {
-                window.updateFavouriteCount(user.total_favourites);
-            } else {
-                window.updateFavouriteCount(0);
-            }
-            if (user && user.has_unread_notifications !== undefined) {
-                window.setNotificationDot(user.has_unread_notifications);
-            } else {
-                window.setNotificationDot(false);
-            }
         } else {
             // Guest user
             if (avatarEl) avatarEl.textContent = 'G';
             if (nameEl) nameEl.textContent = 'Guest';
             if (emailEl) emailEl.textContent = '@guest';
         }
+
+        if (user && user.total_favourites !== undefined) {
+            window.updateFavouriteCount(user.total_favourites);
+        } else {
+            window.updateFavouriteCount(0);
+        }
+
     }
 
     // ============================================================
@@ -321,6 +318,60 @@
             updateHeaderUser();
         }
         return response;
+    }
+
+    // ============================================================
+    // HELPER: Process notification field from API responses
+    // ============================================================
+
+    function handleNotificationFromResponse(response) {
+        if (!response || !response.ok) return;
+        response.clone().json().then(data => {
+            let hasUnread = null;
+            let favouritesCount = null;
+
+            // Check notification flag (root or nested)
+            if (data.notification !== undefined) {
+                hasUnread = !!data.notification;
+            } else if (data.data && data.data.notification !== undefined) {
+                hasUnread = !!data.data.notification;
+            }
+
+            // Check favourites_count (root or nested)
+            if (data.favourites_count !== undefined) {
+                favouritesCount = data.favourites_count;
+            } else if (data.data && data.data.favourites_count !== undefined) {
+                favouritesCount = data.data.favourites_count;
+            }
+
+            // Update notification dot
+            if (hasUnread !== null) {
+                if (typeof window.setNotificationDot === 'function') {
+                    window.setNotificationDot(hasUnread);
+                }
+                const user = getUserData();
+                if (user) {
+                    user.has_unread_notifications = hasUnread;
+                    const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
+                    const storage = rememberMe ? localStorage : sessionStorage;
+                    storage.setItem('user', JSON.stringify(user));
+                }
+            }
+
+            // Update favourite badge
+            if (favouritesCount !== null) {
+                if (typeof window.updateFavouriteCount === 'function') {
+                    window.updateFavouriteCount(favouritesCount);
+                }
+                const user = getUserData();
+                if (user) {
+                    user.total_favourites = favouritesCount;
+                    const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
+                    const storage = rememberMe ? localStorage : sessionStorage;
+                    storage.setItem('user', JSON.stringify(user));
+                }
+            }
+        }).catch(() => {});
     }
 
     // ============================================================
@@ -421,6 +472,10 @@
 
         try {
             const response = await makeRequest();
+            // ✅ Intercept successful responses to update notification dot
+            if (response.ok) {
+                handleNotificationFromResponse(response);
+            }
             return response;
         } catch (error) {
             throw error;
@@ -826,39 +881,11 @@
         }
     };
 
-    window.incrementFavouriteCount = function() {
-        const el = document.getElementById('favouriteCount');
-
-        if (!el) return;
-
-        const current = parseInt(el.textContent || "0", 10);
-        el.textContent = current + 1;
-    };
-
-    window.decrementFavouriteCount = function() {
-        const el = document.getElementById('favouriteCount');
-
-        if (!el) return;
-
-        const current = parseInt(el.textContent || "0", 10);
-        el.textContent = Math.max(0, current - 1);
-    };
-
     window.setNotificationDot = function(show) {
         const el = document.getElementById('notificationBell');
         if (el) {
             el.classList.toggle('badge-dot', show);
         }
-    };
-
-    window.updateFavouriteCountInSession = function(delta) {
-        const user = getUserData();
-        if (!user) return;
-        user.total_favourites = (user.total_favourites || 0) + delta;
-        const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
-        const storage = rememberMe ? localStorage : sessionStorage;
-        storage.setItem('user', JSON.stringify(user));
-        updateHeaderUser();
     };
 
     // ============================================================
@@ -869,6 +896,8 @@
         if (document.querySelector('.app-header')) return;
 
         const isAuth = isAuthenticated();
+        const user = isAuth ? getUserData() : null;
+        const hasUnread = user ? user.has_unread_notifications : false;
 
         const header = document.createElement('header');
         header.className = 'app-header';
@@ -882,7 +911,7 @@
                     <i class="fa-regular fa-sun"></i>
                     <i class="fa-regular fa-moon"></i>
                 </button>
-                ${isAuth ? `<i class="fa-regular fa-bell badge-dot" id="notificationBell"></i>` : ''}
+                ${isAuth ? `<i class="fa-regular fa-bell ${hasUnread ? 'badge-dot' : ''}" id="notificationBell"></i>` : ''}
                 <i class="fa-regular fa-user-circle" id="profileIcon"></i>
             </div>
         `;
@@ -897,20 +926,31 @@
         const logo = document.getElementById('logoContainer');
         let clickCount = 0;
         let clickTimer = null;
+
         if (logo) {
             logo.addEventListener('click', function(e) {
                 clickCount++;
+
                 if (clickCount === 1) {
                     clickTimer = setTimeout(() => {
+                        if (typeof navigateWithGuard === 'function') {
+                            navigateWithGuard('dashboard.html');
+                        } else {
+                            window.location.href = 'dashboard.html';
+                        }
                         clickCount = 0;
-                    }, 400);
+                        clickTimer = null;
+                    }, 300); 
                 } else if (clickCount >= 2) {
                     clearTimeout(clickTimer);
+                    clickTimer = null;
                     clickCount = 0;
+
                     this.classList.add('shake-logo');
                     setTimeout(() => {
                         this.classList.remove('shake-logo');
                     }, 600);
+
                     if (typeof showAlert !== 'undefined') {
                         setTimeout(() => {
                             showAlert.info('👋 Hey there! CampusHub is built with ❤️ for students.', { duration: 3000 });
@@ -1455,9 +1495,8 @@
 
         // ─── Helper to handle unauthenticated nav ────────────────────
         function handleUnauthenticatedNav(page) {
-            // If page is 'explore', go to explore1.html (public)
             if (page === 'explore') {
-                window.location.href = 'explore1.html';
+                window.location.href = 'default-explore.html';
                 return;
             }
 

@@ -1347,7 +1347,7 @@
 
     // Listing type
     const typeMap = { sell:'Sell', wanted:'Wanted', freebie:'Freebie', service:'Service' };
-    document.getElementById('listingTypeView').innerText = typeMap[listingData.lisiting_type] || listingData.lisiting_type || '--';
+    document.getElementById('listingTypeView').innerText = typeMap[listingData.listing_type] || listingData.listing_type || '--';
 
     // Hotspots
     const selected = allHotspots.filter(h => (listingData.hotspots || []).includes(h.id));
