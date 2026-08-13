@@ -1552,6 +1552,70 @@
     }
 
     // ============================================================
+    // TOAST SYSTEM (Global)
+    // ============================================================
+
+    let toastElement = null;
+    let toastTimer = null;
+
+    function createToastElement() {
+        if (toastElement) return toastElement;
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.id = 'globalToast';
+        toast.innerHTML = `
+            <span class="toast-icon success"><i class="fa-regular fa-circle-check"></i></span>
+            <span class="toast-message">Action completed</span>
+        `;
+        document.body.appendChild(toast);
+        toastElement = toast;
+        return toastElement;
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = createToastElement();
+        const toastMessage = toast.querySelector('.toast-message');
+        const toastIcon = toast.querySelector('.toast-icon');
+
+        if (!toastMessage || !toastIcon) return;
+
+        // Set message
+        toastMessage.textContent = message;
+
+        // Set icon and type
+        toastIcon.className = 'toast-icon';
+        if (type === 'success') {
+            toastIcon.classList.add('success');
+            toastIcon.innerHTML = '<i class="fa-regular fa-circle-check"></i>';
+        } else if (type === 'warning') {
+            toastIcon.classList.add('warning');
+            toastIcon.innerHTML = '<i class="fa-regular fa-triangle-exclamation"></i>';
+        } else if (type === 'danger') {
+            toastIcon.classList.add('danger');
+            toastIcon.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
+        } else {
+            toastIcon.classList.add('success');
+            toastIcon.innerHTML = '<i class="fa-regular fa-circle-check"></i>';
+        }
+
+        // Show toast
+        toast.classList.add('visible');
+
+        // Clear existing timer
+        if (toastTimer) {
+            clearTimeout(toastTimer);
+            toastTimer = null;
+        }
+
+        // Auto-hide after 3 seconds
+        toastTimer = setTimeout(() => {
+            toast.classList.remove('visible');
+            toastTimer = null;
+        }, 3000);
+    }
+
+    // ============================================================
     // INIT
     // ============================================================
 
@@ -1609,6 +1673,8 @@
     window.getFormDirty = getFormDirty;
     window.navigateWithGuard = navigateWithGuard;
     window.showLeaveConfirmModal = showLeaveConfirmModal;
+
+    window.showToast = showToast;
 
     // ============================================================
     // DOM READY

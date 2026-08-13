@@ -757,59 +757,8 @@
             display: none;
         }
 
-        /* ─── Toast ─── */
-        .lost-toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            padding: 12px 24px;
-            border-radius: 14px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            border: 1px solid var(--border-color);
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 99999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            white-space: nowrap;
-        }
-        .lost-toast.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-        .lost-toast .toast-icon {
-            font-size: 20px;
-        }
-        .lost-toast .toast-icon.success {
-            color: var(--green);
-        }
-        .lost-toast .toast-icon.warning {
-            color: #e67e22;
-        }
-        .lost-toast .toast-icon.danger {
-            color: var(--red);
-        }
-        .dark-mode .lost-toast {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
         @media (max-width: 480px) {
-            .lost-toast {
-                font-size: 13px;
-                padding: 10px 18px;
-                white-space: normal;
-                max-width: 90%;
-                bottom: 90px;
-            }
+
             .verify-modal {
                 max-width: 100%;
                 margin: 10px;
@@ -1392,12 +1341,6 @@
             </div>
         </div>
 
-        <!-- ===== TOAST ===== -->
-        <div class="lost-toast" id="lostToast">
-            <span class="toast-icon" id="toastIcon"><i class="fas fa-circle-check"></i></span>
-            <span id="toastMessage">Action completed</span>
-        </div>
-
         <!-- ===== DEMO NOTE ===== -->
         <div class="demo-note">
             <span>CampusHub</span> • Lost &amp; Found • click any item to verify &amp; claim
@@ -1459,11 +1402,6 @@
             const addFileInput = document.getElementById('addFileInput');
             const addFileDropZone = document.getElementById('addFileDropZone');
 
-            // Toast
-            const toast = document.getElementById('lostToast');
-            const toastMessage = document.getElementById('toastMessage');
-            const toastIcon = document.getElementById('toastIcon');
-
             // ============================================================
             // STATE
             // ============================================================
@@ -1473,7 +1411,6 @@
             let searchQuery = '';
             let filteredItems = [];
             let currentClaimItem = null;
-            let toastTimer = null;
             let isFetching = false;
 
             // ============================================================
@@ -1502,27 +1439,6 @@
                 } catch {
                     return dateStr;
                 }
-            }
-
-            // ─── Toast ────────────────────────────────────────────────
-            function showToast(message, type = 'success') {
-                toastMessage.textContent = message;
-                toastIcon.className = 'toast-icon';
-                if (type === 'success') toastIcon.classList.add('success', 'fas', 'fa-circle-check');
-                else if (type === 'warning') toastIcon.classList.add('warning', 'fas', 'fa-triangle-exclamation');
-                else if (type === 'danger') toastIcon.classList.add('danger', 'fas', 'fa-circle-xmark');
-                else toastIcon.classList.add('success', 'fas', 'fa-circle-check');
-
-                toast.classList.add('visible');
-                clearTimeout(toastTimer);
-                toastTimer = setTimeout(() => {
-                    toast.classList.remove('visible');
-                }, 3000);
-            }
-
-            function hideToast() {
-                toast.classList.remove('visible');
-                clearTimeout(toastTimer);
             }
 
             // ============================================================

@@ -687,37 +687,6 @@
         .meta-key { color: var(--text-muted); font-size: 11px; }
         .meta-value { color: var(--text-primary); font-size: 11px; font-weight: 650; text-align: right; }
 
-        /* --- Toast --- */
-        .profile-toast {
-            position: fixed;
-            z-index: 11000;
-            left: 50%;
-            bottom: 90px;
-            transform: translateX(-50%) translateY(18px);
-            opacity: 0;
-            visibility: hidden;
-            padding: 11px 17px;
-            border-radius: 13px;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 35px rgba(0,0,0,.16);
-            font-size: 12px;
-            font-weight: 600;
-            display: flex;
-            gap: 9px;
-            align-items: center;
-            transition: .25s ease;
-        }
-        .profile-toast.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-        .profile-toast.success i { color: var(--green); }
-        .profile-toast.warning i { color: #e67e22; }
-        .profile-toast.danger i { color: var(--red); }
-
         /* --- Image preview modal --- */
         .image-modal {
             position: fixed;
@@ -1138,11 +1107,6 @@
             <span style="font-weight:700;color:var(--green);">CampusHub</span> • Profile
         </div>
 
-        <!-- ===== TOAST ===== -->
-        <div class="profile-toast" id="profileToast">
-            <i class="fa-solid fa-circle-check"></i>
-            <span id="toastMessage">Action completed</span>
-        </div>
 
         <!-- ===== IMAGE PREVIEW MODAL ===== -->
         <div class="image-modal" id="imageModal">
@@ -1318,24 +1282,6 @@
                 }
             }
 
-            // ============================================================
-            // TOAST
-            // ============================================================
-            function showToast(message, type = 'success') {
-                const toast = $('profileToast');
-                const icon = toast.querySelector('i');
-                toast.className = `profile-toast ${type} visible`;
-                icon.className = type === 'warning'
-                    ? 'fa-solid fa-triangle-exclamation'
-                    : type === 'danger'
-                    ? 'fa-solid fa-circle-xmark'
-                    : 'fa-solid fa-circle-check';
-                $('toastMessage').textContent = message;
-                clearTimeout(window.__profileToastTimer);
-                window.__profileToastTimer = setTimeout(() => {
-                    toast.classList.remove('visible');
-                }, 3200);
-            }
 
             // ============================================================
             // API: FETCH PROFILE

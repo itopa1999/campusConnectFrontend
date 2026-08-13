@@ -951,43 +951,6 @@
         }
 
         /* ============================================================
-           TOAST
-           ============================================================ */
-
-        .listing-toast {
-            position: fixed;
-            left: 50%;
-            bottom: 80px;
-            z-index: 11000;
-            transform: translate(-50%, 16px);
-            opacity: 0;
-            visibility: hidden;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 13px;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 15px 45px rgba(0,0,0,.18);
-            font-size: 10px;
-            font-weight: 700;
-            transition: .25s ease;
-            max-width: calc(100% - 30px);
-        }
-
-        .listing-toast.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, 0);
-        }
-
-        .listing-toast.success i { color: var(--listing-green); }
-        .listing-toast.warning i { color: var(--listing-amber); }
-        .listing-toast.danger i { color: var(--listing-red); }
-
-        /* ============================================================
            SIMILAR LISTINGS
            ============================================================ */
 
@@ -1783,16 +1746,9 @@
     <img id="lightboxImage" src="" alt="Listing preview">
 </div>
 
-<!-- Toast -->
-<div class="listing-toast" id="listingToast">
-    <i class="fa-solid fa-circle-check"></i>
-    <span id="listingToastMessage">Done</span>
-</div>
-
 <!-- Existing global scripts -->
 <script src="/assets/js/global.js"></script>
 <script src="/assets/js/modal.js"></script>
-<script src="/assets/js/showAlert.js"></script>
 
 <script>
 (function () {
@@ -1988,29 +1944,6 @@
         }
 
         return html;
-    }
-
-    function showToast(message, type = "success") {
-        const toast = $("listingToast");
-        const icon = toast.querySelector("i");
-
-        $("listingToastMessage").textContent = message;
-
-        toast.className = `listing-toast ${type} visible`;
-
-        if (type === "warning") {
-            icon.className = "fa-solid fa-triangle-exclamation";
-        } else if (type === "danger") {
-            icon.className = "fa-solid fa-circle-exclamation";
-        } else {
-            icon.className = "fa-solid fa-circle-check";
-        }
-
-        clearTimeout(window.__listingToastTimer);
-
-        window.__listingToastTimer = setTimeout(() => {
-            toast.classList.remove("visible");
-        }, 2800);
     }
 
     function openModal(id) {

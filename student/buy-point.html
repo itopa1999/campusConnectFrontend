@@ -890,61 +890,6 @@
             color: var(--text-muted);
         }
 
-        /* ─── Toast ─── */
-        .points-toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            padding: 12px 24px;
-            border-radius: 14px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            border: 1px solid var(--border-color);
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            white-space: nowrap;
-        }
-        .points-toast.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-        .points-toast .toast-icon {
-            font-size: 20px;
-        }
-        .points-toast .toast-icon.success {
-            color: var(--green);
-        }
-        .points-toast .toast-icon.warning {
-            color: #e67e22;
-        }
-        .points-toast .toast-icon.danger {
-            color: var(--red);
-        }
-        .dark-mode .points-toast {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-        @media (max-width: 480px) {
-            .points-toast {
-                font-size: 13px;
-                padding: 10px 18px;
-                white-space: normal;
-                max-width: 90%;
-                bottom: 90px;
-            }
-        }
-
         /* ─── Payment Modal ─── */
         .payment-overlay {
             position: fixed;
@@ -1360,12 +1305,6 @@
             </div>
         </div>
 
-        <!-- ===== TOAST ===== -->
-        <div class="points-toast" id="pointsToast">
-            <span class="toast-icon" id="toastIcon"><i class="fa-regular fa-circle-check"></i></span>
-            <span id="toastMessage">Action completed</span>
-        </div>
-
         <!-- ===== DEMO NOTE ===== -->
         <div class="demo-note">
             <span>CampusHub</span> • Points & Transactions
@@ -1412,10 +1351,6 @@
             const transactionDateFrom = document.getElementById('transactionDateFrom');
             const transactionDateTo = document.getElementById('transactionDateTo');
 
-            const toast = document.getElementById('pointsToast');
-            const toastMessage = document.getElementById('toastMessage');
-            const toastIcon = document.getElementById('toastIcon');
-
             const paymentOverlay = document.getElementById('paymentOverlay');
             const paymentModalClose = document.getElementById('paymentModalClose');
             const paymentCancelBtn = document.getElementById('paymentCancelBtn');
@@ -1442,25 +1377,6 @@
             let isLoadingTransactions = false;
 
             let userPoints = 0;
-            let toastTimer = null;
-
-            // ============================================================
-            // TOAST
-            // ============================================================
-            function showToast(message, type = 'success') {
-                toastMessage.textContent = message;
-                toastIcon.className = 'toast-icon';
-                if (type === 'success') toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
-                else if (type === 'warning') toastIcon.classList.add('warning', 'fa-regular', 'fa-triangle-exclamation');
-                else if (type === 'danger') toastIcon.classList.add('danger', 'fa-regular', 'fa-circle-xmark');
-                else toastIcon.classList.add('success', 'fa-regular', 'fa-circle-check');
-
-                toast.classList.add('visible');
-                clearTimeout(toastTimer);
-                toastTimer = setTimeout(() => {
-                    toast.classList.remove('visible');
-                }, 3000);
-            }
 
             // ============================================================
             // API: Fetch Packages

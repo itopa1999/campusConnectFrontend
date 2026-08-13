@@ -536,67 +536,6 @@
             font-weight: 500;
         }
 
-        /* ─── Toast notification ─── */
-        .fav-toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            padding: 12px 24px;
-            border-radius: 14px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            border: 1px solid var(--border-color);
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            white-space: nowrap;
-        }
-        .fav-toast.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-        .fav-toast .toast-icon {
-            color: var(--red);
-            font-size: 20px;
-        }
-        .fav-toast .toast-undo {
-            background: none;
-            border: none;
-            color: var(--green);
-            font-weight: 600;
-            cursor: pointer;
-            padding: 4px 12px;
-            border-radius: 8px;
-            transition: background 0.2s;
-            font-size: 13px;
-        }
-        .fav-toast .toast-undo:hover {
-            background: var(--green-bg);
-        }
-        .dark-mode .fav-toast {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        }
-        @media (max-width: 480px) {
-            .fav-toast {
-                font-size: 13px;
-                padding: 10px 18px;
-                white-space: normal;
-                max-width: 90%;
-                bottom: 90px;
-            }
-        }
-
         .demo-note {
             text-align: center;
             font-size: 10px;
@@ -667,13 +606,6 @@
 
     </main>
 
-    <!-- ===== TOAST ===== -->
-    <div class="fav-toast" id="favToast">
-        <span class="toast-icon"><i class="fa-solid fa-heart-broken"></i></span>
-        <span id="toastMessage">Removed from favourites</span>
-        <button class="toast-undo" id="toastUndo">Undo</button>
-    </div>
-
     <!-- ===== DEMO NOTE ===== -->
     <div class="demo-note">
         <span>CampusHub</span> • Favourites • heart to remove • real‑time
@@ -701,10 +633,6 @@
         const prevBtn = document.getElementById('favPrev');
         const nextBtn = document.getElementById('favNext');
         const pageInfo = document.getElementById('favPageInfo');
-
-        const toast = document.getElementById('favToast');
-        const toastMessage = document.getElementById('toastMessage');
-        const toastUndo = document.getElementById('toastUndo');
 
         // ============================================================
         // STATE
@@ -887,36 +815,7 @@
             return map[badge] || badge || '';
         }
 
-        // ============================================================
-        // TOAST
-        // ============================================================
-        let toastTimer = null;
-
-        function showToast(message, undoCallback) {
-            toastMessage.textContent = message || 'Removed from favourites';
-            toast.classList.add('visible');
-
-            toastUndo._callback = undoCallback || null;
-            toastUndo.style.display = undoCallback ? 'inline-block' : 'none';
-
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => {
-                toast.classList.remove('visible');
-            }, 4000);
-        }
-
-        function hideToast() {
-            toast.classList.remove('visible');
-            clearTimeout(toastTimer);
-        }
-
-        toastUndo.addEventListener('click', function() {
-            if (this._callback) {
-                this._callback();
-                hideToast();
-            }
-        });
-
+        // TODO: add somethig to make it undo call. 
         // ============================================================
         // REMOVE FROM FAVOURITES (with undo)
         // ============================================================
@@ -938,10 +837,7 @@
                 const action = await toggleFavourite(id);
                 if (action === 'removed') {
                     // Show toast with undo
-                    showToast(`"${removedItem.title}" removed from favourites`, function() {
-                        // Undo: re-add
-                        undoRemove(removedItem, itemIndex);
-                    });
+                    showToast(`"${removedItem.title}" removed from favourites`, 'warning');
                     if (typeof showAlert !== 'undefined') {
                         showAlert.info(`"${removedItem.title}" removed`, { duration: 1500 });
                     }
@@ -950,13 +846,13 @@
                     // Revert: put item back
                     allItems.splice(itemIndex, 0, removedItem);
                     renderFavourites();
-                    showToast('Item was not removed. Please try again.', null);
+                    showToast('Item was not removed. Please try again.', 'danger');
                 }
             } catch (error) {
                 // Revert on error
                 allItems.splice(itemIndex, 0, removedItem);
                 renderFavourites();
-                showToast('Could not remove. Please try again.', null);
+                showToast('Could not remove. Please try again.', 'danger');
                 console.error('Remove error:', error);
             } finally {
                 hearts.forEach(btn => btn.style.pointerEvents = '');
@@ -973,10 +869,10 @@
                         showAlert.success('Restored to favourites!', { duration: 1500 });
                     }
                 } else {
-                    showToast('Could not restore. Please try again.', null);
+                    showToast('Could not restore. Please try again.', 'danger');
                 }
             } catch (error) {
-                showToast('Error restoring favourite.', null);
+                showToast('Error restoring favourite.', 'danger');
                 console.error('Undo error:', error);
             }
         }
