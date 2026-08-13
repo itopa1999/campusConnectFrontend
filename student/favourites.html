@@ -1041,7 +1041,7 @@
                 const items = await fetchAllFavourites();
                 allItems = items;
                 renderFavourites();
-                console.log(`❤️ Loaded ${items.length} favourites.`);
+                console.log('📟 Favourites page initialized.');
             } catch (error) {
                 console.error('Init error:', error);
                 grid.innerHTML = `

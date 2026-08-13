@@ -2486,7 +2486,6 @@
                     // Render quick links
                     renderQuickLinks()
 
-                    console.log('Dashboard loaded successfully');
                 } catch (error) {
                     console.error('Error loading dashboard:', error);
                     if (typeof showAlert !== 'undefined') {
@@ -2625,6 +2624,8 @@ function renderBannerSlides() {
 
                 // Set default tab
                 switchTab('listings');
+
+                console.log('📟 Dashboard page initialized');
             }
 
             // Wait for global.js to inject header/nav

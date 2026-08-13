@@ -658,6 +658,7 @@
                 { icon: 'fas fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },
                 { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
                 { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
+                { icon: 'fas fa-file-contract', label: 'Term & Condition', id: 'term-condition' },
                 { icon: 'fas fa-key', label: 'Change Password', id: 'change-password' },
                 { icon: 'fas fa-right-from-bracket', label: 'Logout', id: 'logout' },
             ];
@@ -852,6 +853,7 @@
             'report-issue': 'report.html',
             'help-improve': 'help-improve.html',
             'about-us': 'about-us.html',
+            'term-condition': 'terms-privacy.html',
             'change-password': 'change-password.html',
         };
 
