@@ -1,894 +1,1284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CampusHub – Listing Details</title>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-    <!-- Global Styles -->
-    <link rel="stylesheet" href="/assets/css/style.css" />
-    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
-
-    <!-- Google Fonts (Playfair for title) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
+    <!-- Existing CampusHub dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
     <style>
-        /* ──────── PAGE WRAPPER ──────── */
-        .listing-detail-wrapper {
-            max-width: 1200px;
+        /* ============================================================
+           CAMPUSHUB LISTING DETAILS
+           Uses the same visual language as the existing profile page:
+           --bg-card, --bg-input, --border-color, --text-primary,
+           --text-secondary, --text-muted, --green, --radius-card.
+           ============================================================ */
+
+        :root {
+            --listing-green: #0d8a3e;
+            --listing-green-dark: #086b30;
+            --listing-green-soft: #eaf7ef;
+            --listing-amber: #f0a52b;
+            --listing-red: #dc4b57;
+            --listing-blue: #3d83d8;
+            --listing-purple: #8566d6;
+            --listing-radius: 18px;
+            --listing-shadow: 0 5px 24px rgba(0,0,0,.045);
+            --listing-shadow-hover: 0 14px 40px rgba(0,0,0,.09);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        button, a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .listing-page {
+            width: min(1120px, calc(100% - 28px));
             margin: 0 auto;
-            padding: 0 0 100px;
+            padding: 16px 0 34px;
         }
 
-        /* ─────── LOADING SPINNER ─────── */
-        .spinner-box {
-            text-align: center;
-            padding: 80px 20px;
+
+        /* ============================================================
+           MAIN GRID
+           ============================================================ */
+
+        .listing-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.42fr) minmax(330px, .82fr);
+            gap: 18px;
+            align-items: start;
         }
-        .spinner-box .spinner-ring {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: 4px solid var(--border-color);
-            border-top-color: var(--green);
-            animation: spin 0.8s cubic-bezier(0.6, 0, 0.4, 1) infinite;
-            margin: 0 auto 16px;
+
+        .listing-main,
+        .listing-side {
+            min-width: 0;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+
+        .listing-stack {
+            display: grid;
+            gap: 18px;
         }
-        .spinner-box p {
-            font-size: 15px;
+
+        .listing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--listing-radius);
+            box-shadow: var(--listing-shadow);
+            overflow: hidden;
+            transition: background .25s ease, border-color .25s ease,
+                        box-shadow .25s ease, transform .25s ease;
+        }
+
+        .listing-card:hover {
+            box-shadow: var(--listing-shadow-hover);
+        }
+
+        .listing-card-body {
+            padding: 18px;
+        }
+
+        /* ============================================================
+           IMAGE / GALLERY
+           ============================================================ */
+
+        .listing-gallery {
+            position: relative;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(13,138,62,.08), transparent 34%),
+                var(--bg-input);
+            min-height: 430px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .listing-gallery::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(
+                180deg,
+                rgba(0,0,0,.02),
+                transparent 24%,
+                transparent 72%,
+                rgba(0,0,0,.08)
+            );
+        }
+
+        .listing-gallery img {
+            width: 100%;
+            height: 430px;
+            object-fit: contain;
+            display: block;
+            cursor: zoom-in;
+            transition: transform .45s cubic-bezier(.2,.8,.2,1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .listing-gallery:hover img {
+            transform: scale(1.015);
+        }
+
+        .gallery-placeholder {
+            width: 100%;
+            height: 430px;
+            display: grid;
+            place-items: center;
             color: var(--text-muted);
-            font-weight: 500;
-            letter-spacing: 0.3px;
+            font-size: 42px;
         }
 
-        /* ─────── ERROR / EMPTY STATE ─────── */
-        .state-empty {
-            text-align: center;
-            padding: 80px 20px;
+        .gallery-badge-row {
+            position: absolute;
+            z-index: 4;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            pointer-events: none;
         }
-        .state-empty .icon {
-            font-size: 64px;
-            opacity: 0.25;
-            margin-bottom: 20px;
+
+        .gallery-badge,
+        .gallery-action {
+            border: 1px solid rgba(255,255,255,.34);
+            background: rgba(18,24,21,.72);
+            color: #fff;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 999px;
+            min-height: 31px;
+            padding: 6px 11px;
+            font-size: 10px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .gallery-action {
+            pointer-events: auto;
+            border: 0;
+            cursor: pointer;
+            transition: transform .2s ease, background .2s ease;
+        }
+
+        .gallery-action:hover {
+            transform: translateY(-1px);
+            background: rgba(18,24,21,.88);
+        }
+
+        .freebie-pill {
+            color: #c8f7d7;
+        }
+
+        .hot-pill {
+            color: #ffd07c;
+        }
+
+        /* ============================================================
+           LISTING SUMMARY
+           ============================================================ */
+
+        .listing-summary {
+            padding: 19px 19px 20px;
+        }
+
+        .summary-topline {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .summary-title-wrap {
+            min-width: 0;
+        }
+
+        .listing-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--listing-green-soft);
+            color: var(--listing-green-dark);
+            border: 1px solid rgba(13,138,62,.10);
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 9px;
+            font-weight: 800;
+            margin-bottom: 9px;
+        }
+
+        .listing-title {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: clamp(23px, 3vw, 31px);
+            line-height: 1.12;
+            letter-spacing: -.55px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .listing-id {
+            margin-top: 6px;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .listing-price {
+            color: var(--listing-green);
+            font-size: clamp(24px, 3vw, 31px);
+            line-height: 1;
+            font-weight: 900;
+            white-space: nowrap;
+            letter-spacing: -.5px;
+        }
+
+        .listing-price.free {
+            color: var(--listing-green);
+        }
+
+        .listing-description {
+            margin: 18px 0 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+        }
+
+        .summary-meta {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 9px;
+            margin-top: 18px;
+        }
+
+        .summary-meta-item {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 11px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            border-radius: 12px;
+        }
+
+        .summary-meta-item i {
+            width: 28px;
+            height: 28px;
+            flex: 0 0 28px;
+            border-radius: 9px;
+            display: grid;
+            place-items: center;
+            background: var(--bg-card);
+            color: var(--listing-green);
+            font-size: 11px;
+        }
+
+        .summary-meta-copy {
+            min-width: 0;
+        }
+
+        .summary-meta-label {
             display: block;
             color: var(--text-muted);
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: .45px;
+            font-weight: 800;
         }
-        .state-empty h3 {
-            font-size: 24px;
-            font-weight: 700;
+
+        .summary-meta-value {
+            display: block;
+            margin-top: 2px;
             color: var(--text-primary);
-            margin-bottom: 6px;
-        }
-        .state-empty p {
-            font-size: 15px;
-            color: var(--text-muted);
-            max-width: 420px;
-            margin: 0 auto 20px;
-            line-height: 1.6;
-        }
-        .state-empty .btn-back {
-            display: inline-block;
-            padding: 12px 32px;
-            background: var(--green);
-            color: #fff;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 20px rgba(13,138,62,0.25);
-        }
-        .state-empty .btn-back:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(13,138,62,0.35);
+            font-size: 11px;
+            font-weight: 750;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        /* ─────── HERO ─────── */
-        .listing-hero {
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 0;
-            background: var(--bg-card);
-            border-radius: 28px;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
-            margin-bottom: 32px;
-            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
-        }
-        .listing-hero:hover {
-            box-shadow: 0 12px 56px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.02);
-        }
+        /* ============================================================
+           HOTSPOTS
+           ============================================================ */
 
-        .listing-hero .hero-image {
-            position: relative;
-            min-height: 400px;
-            background: var(--bg-img-placeholder);
-            cursor: pointer;
-            overflow: hidden;
+        .section-heading {
             display: flex;
             align-items: center;
-            justify-content: center;
-        }
-        .listing-hero .hero-image::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.08) 100%);
-            pointer-events: none;
-        }
-        .listing-hero .hero-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        .listing-hero .hero-image:hover img {
-            transform: scale(1.05);
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
         }
 
-        /* ── Ribbon ── */
-        .listing-hero .hero-image .badge-ribbon {
-            position: absolute;
-            top: 24px;
-            left: -32px;
-            background: var(--green);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 6px 44px 6px 34px;
-            transform: rotate(-45deg);
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-            z-index: 3;
-            backdrop-filter: blur(2px);
+        .section-heading-main {
+            min-width: 0;
         }
-        .listing-hero .hero-image .badge-ribbon.hot { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-        .listing-hero .hero-image .badge-ribbon.free { background: linear-gradient(135deg, #27ae60, #1e8449); }
-        .listing-hero .hero-image .badge-ribbon.sell { background: linear-gradient(135deg, #3498db, #2471a3); }
-        .listing-hero .hero-image .badge-ribbon.bundle { background: linear-gradient(135deg, #8e44ad, #6c3483); }
-        .listing-hero .hero-image .badge-ribbon.wanted { background: linear-gradient(135deg, #e67e22, #ca6f1e); }
-        .listing-hero .hero-image .badge-ribbon.swap { background: linear-gradient(135deg, #2c3e50, #1a252f); }
 
-        /* Zoom hint */
-        .listing-hero .hero-image .image-zoom-hint {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.55);
-            backdrop-filter: blur(8px);
-            color: rgba(255,255,255,0.9);
-            font-size: 12px;
-            padding: 6px 18px;
-            border-radius: 30px;
+        .section-title {
             display: flex;
             align-items: center;
             gap: 8px;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: all 0.4s ease;
-            pointer-events: none;
-            z-index: 2;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .listing-hero .hero-image:hover .image-zoom-hint {
-            opacity: 1;
-            transform: translateY(0);
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 850;
         }
 
-        .listing-hero .hero-info {
-            padding: 36px 40px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .section-title i {
+            color: var(--listing-green);
+            font-size: 13px;
         }
-        .listing-hero .hero-info .listing-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-            line-height: 1.15;
+
+        .section-subtitle {
+            margin: 3px 0 0 21px;
+            color: var(--text-muted);
+            font-size: 10px;
+            line-height: 1.4;
         }
-        .listing-hero .hero-info .listing-sub {
+
+        .hotspot-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px 20px;
+            gap: 7px;
+        }
+
+        .hotspot {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .hotspot i {
+            color: var(--listing-green);
+            font-size: 9px;
+        }
+
+        /* ============================================================
+           SELLER CARD
+           ============================================================ */
+
+        .seller-card {
+            position: sticky;
+            top: 14px;
+        }
+
+        .seller-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .seller-avatar {
+            width: 54px;
+            height: 54px;
+            flex: 0 0 54px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #4c8b6a, #2d6b4f);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 850;
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 3px 12px rgba(0,0,0,.12);
+        }
+
+        .seller-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .seller-copy {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .seller-name {
+            color: var(--text-primary);
             font-size: 14px;
+            font-weight: 850;
+            overflow-wrap: anywhere;
+        }
+
+        .seller-role {
             color: var(--text-muted);
-            margin-bottom: 14px;
-            padding-bottom: 14px;
+            font-size: 9px;
+            margin-top: 2px;
+        }
+
+        .owner-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+            padding: 4px 7px;
+            border-radius: 999px;
+            background: var(--listing-green-soft);
+            color: var(--listing-green-dark);
+            font-size: 8px;
+            font-weight: 850;
+        }
+
+        .seller-rating {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 16px;
+            padding: 10px 11px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .stars {
+            display: inline-flex;
+            gap: 2px;
+            color: #e7a52c;
+            font-size: 10px;
+        }
+
+        .rating-number {
+            color: var(--text-primary);
+            font-size: 12px;
+            font-weight: 850;
+        }
+
+        .rating-meta {
+            color: var(--text-muted);
+            font-size: 9px;
+        }
+
+        .trust-score {
+            margin-left: auto;
+            color: var(--listing-green);
+            font-size: 10px;
+            font-weight: 850;
+        }
+
+        .seller-details {
+            margin-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .seller-detail {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 9px 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .listing-hero .hero-info .listing-sub i {
-            width: 16px;
-            color: var(--green);
-            margin-right: 4px;
-        }
-        .listing-hero .hero-info .listing-price {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--green);
-            margin: 4px 0 12px;
-            letter-spacing: -0.5px;
-        }
-        .listing-hero .hero-info .listing-price .free-tag {
-            font-size: 22px;
-            font-weight: 600;
-            background: var(--green-bg);
-            padding: 2px 24px;
-            border-radius: 40px;
-            display: inline-block;
-        }
-        .listing-hero .hero-info .listing-description {
-            font-size: 15px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            white-space: pre-wrap;
-            max-height: 110px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-        .listing-hero .hero-info .listing-description::-webkit-scrollbar {
-            width: 3px;
-        }
-        .listing-hero .hero-info .listing-description::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
+
+        .seller-detail:last-child {
+            border-bottom: 0;
         }
 
-        /* ─────── HOTSPOTS ─────── */
-        .hotspot-strip {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 18px;
-        }
-        .hotspot-strip .hotspot-tag {
-            background: var(--bg-input);
-            padding: 4px 16px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-        }
-        .hotspot-strip .hotspot-tag i {
-            color: var(--green);
-            font-size: 12px;
-        }
-        .hotspot-strip .hotspot-tag:hover {
-            background: var(--green-bg);
-            color: var(--green);
+        .seller-detail-label {
+            color: var(--text-muted);
+            font-size: 9px;
         }
 
-        /* ─────── ACTION BUTTONS ─────── */
-        .action-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 4px;
-        }
-        .action-group .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 36px;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: #fff;
-            border: none;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-decoration: none;
-            box-shadow: 0 4px 20px rgba(46,204,113,0.3);
-        }
-        .action-group .btn-primary:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 36px rgba(46,204,113,0.4);
-        }
-        .action-group .btn-primary:active {
-            transform: scale(0.96);
-        }
-        .action-group .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 30px;
-            background: var(--bg-input);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        .action-group .btn-secondary:hover {
-            background: var(--border-color);
+        .seller-detail-value {
             color: var(--text-primary);
-            transform: translateY(-2px);
-        }
-        .action-group .btn-owner {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #fff;
-            border-color: transparent;
-            box-shadow: 0 4px 20px rgba(243,156,18,0.25);
-        }
-        .action-group .btn-owner:hover {
-            box-shadow: 0 8px 36px rgba(243,156,18,0.35);
-            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: right;
+            overflow-wrap: anywhere;
         }
 
-        /* ─────── SELLER CARD ─────── */
-        .seller-card {
-            background: var(--bg-card);
-            border-radius: 28px;
-            border: 1px solid var(--border-color);
-            padding: 28px 32px;
-            margin-bottom: 32px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.03);
-            transition: all var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        .seller-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--green), #2ecc71, var(--green));
-            opacity: 0.3;
-        }
-        .seller-card:hover {
-            box-shadow: 0 8px 40px rgba(0,0,0,0.06);
-        }
-
-        .seller-card .seller-top {
+        .verification-line {
             display: flex;
-            align-items: center;
-            gap: 20px;
             flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 14px;
         }
-        .seller-card .seller-avatar {
-            width: 76px;
-            height: 76px;
-            border-radius: 50%;
+
+        .verification-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border-radius: 999px;
+            padding: 5px 7px;
             background: var(--bg-input);
-            overflow: hidden;
-            flex-shrink: 0;
-            cursor: pointer;
-            border: 3px solid var(--border-color);
-            display: flex;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 8px;
+            font-weight: 750;
+        }
+
+        .verification-chip.verified {
+            color: var(--listing-green);
+            background: var(--listing-green-soft);
+            border-color: rgba(13,138,62,.12);
+        }
+
+        /* ============================================================
+           ACTIONS
+           ============================================================ */
+
+        .listing-actions {
+            display: grid;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .listing-btn {
+            min-height: 42px;
+            border-radius: 11px;
+            border: 1px solid var(--border-color);
+            padding: 9px 13px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 34px;
-            color: var(--text-muted2);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .seller-card .seller-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .seller-card .seller-avatar::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--green), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: -1;
-        }
-        .seller-card .seller-avatar:hover {
-            transform: scale(1.04);
-            border-color: var(--green);
-        }
-        .seller-card .seller-avatar:hover::after {
-            opacity: 1;
-        }
-        .seller-card .seller-info {
-            flex: 1;
-            min-width: 160px;
-        }
-        .seller-card .seller-name {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .seller-card .seller-name .trust-badge {
-            font-size: 12px;
-            font-weight: 600;
-            background: var(--green-bg);
-            color: var(--green);
-            padding: 2px 16px;
-            border-radius: 30px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .seller-card .seller-meta {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-top: 2px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px 18px;
-        }
-        .seller-card .seller-meta i {
-            width: 16px;
-            color: var(--green);
-            margin-right: 3px;
-        }
-        .seller-card .seller-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin: 8px 0 2px;
-        }
-        .seller-card .seller-badges .badge-item {
-            background: var(--green-bg);
-            color: var(--green);
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 14px;
-            border-radius: 30px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            text-transform: capitalize;
-            transition: all 0.2s ease;
-        }
-        .seller-card .seller-badges .badge-item:hover {
-            background: var(--green);
-            color: #fff;
-        }
-        .seller-card .seller-details {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border-color);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 8px 24px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        .seller-card .seller-details .detail-item {
-            display: flex;
-            align-items: center;
             gap: 8px;
+            cursor: pointer;
+            font: inherit;
+            font-size: 11px;
+            font-weight: 800;
+            transition: transform .18s ease, box-shadow .18s ease,
+                        background .18s ease, border-color .18s ease;
+        }
+
+        .listing-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .listing-btn.primary {
+            background: var(--listing-green);
+            color: #fff;
+            border-color: var(--listing-green);
+            box-shadow: 0 7px 18px rgba(13,138,62,.18);
+        }
+
+        .listing-btn.primary:hover {
+            background: var(--listing-green-dark);
+            box-shadow: 0 10px 24px rgba(13,138,62,.24);
+        }
+
+        .listing-btn.secondary {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+
+        .listing-btn.secondary:hover {
+            border-color: rgba(13,138,62,.25);
+            color: var(--listing-green);
+        }
+
+        .listing-btn.danger {
+            background: transparent;
+            color: var(--listing-red);
+        }
+
+        .listing-btn.danger:hover {
+            background: rgba(220,75,87,.07);
+            border-color: rgba(220,75,87,.18);
+        }
+
+        /* ============================================================
+           REVIEWS
+           ============================================================ */
+
+        .reviews-summary {
+            display: grid;
+            grid-template-columns: 140px minmax(0,1fr);
+            gap: 18px;
+            padding: 13px;
+            border-radius: 13px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            margin-bottom: 14px;
+        }
+
+        .rating-big {
+            text-align: center;
             padding: 4px 0;
         }
-        .seller-card .seller-details .detail-item i {
-            width: 18px;
-            color: var(--green);
-            font-size: 14px;
-        }
-        .seller-card .seller-ratings {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px 28px;
-        }
-        .seller-card .seller-ratings .stars {
-            color: var(--star);
-            letter-spacing: 2px;
-            font-size: 17px;
-        }
-        .seller-card .seller-ratings .stars .empty {
-            color: var(--text-muted);
-            opacity: 0.25;
-        }
-        .seller-card .seller-ratings .rating-text {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-        .seller-card .seller-ratings .trust-score {
-            background: var(--green-bg);
-            padding: 2px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--green);
+
+        .rating-big-number {
+            color: var(--text-primary);
+            font-size: 31px;
+            line-height: 1;
+            font-weight: 900;
         }
 
-        /* ─────── REVIEWS ─────── */
-        .reviews-section {
-            background: var(--bg-card);
-            border-radius: 28px;
+        .rating-big-stars {
+            margin-top: 7px;
+            color: #e7a52c;
+            font-size: 11px;
+        }
+
+        .rating-big-caption {
+            color: var(--text-muted);
+            font-size: 9px;
+            margin-top: 4px;
+        }
+
+        .review-list {
+            display: grid;
+            gap: 9px;
+        }
+
+        .review-item {
+            padding: 13px;
             border: 1px solid var(--border-color);
-            padding: 28px 32px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.03);
-            transition: all var(--transition);
+            background: var(--bg-card);
+            border-radius: 13px;
         }
-        .reviews-section:hover {
-            box-shadow: 0 8px 40px rgba(0,0,0,0.06);
-        }
-        .reviews-section .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 6px 16px;
-            margin-bottom: 20px;
-        }
-        .reviews-section .review-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
+
+        .review-top {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 10px;
         }
-        .reviews-section .review-header h3 i {
-            color: var(--green);
-        }
-        .reviews-section .review-header .rating-summary {
-            font-size: 14px;
-            color: var(--text-muted);
+
+        .review-author {
             display: flex;
             align-items: center;
             gap: 8px;
+            min-width: 0;
         }
-        .reviews-section .review-item {
-            padding: 16px 0;
+
+        .review-avatar {
+            width: 29px;
+            height: 29px;
+            flex: 0 0 29px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--listing-green-soft);
+            color: var(--listing-green);
+            font-size: 9px;
+            font-weight: 850;
+        }
+
+        .review-author-name {
+            color: var(--text-primary);
+            font-size: 10px;
+            font-weight: 800;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .review-date {
+            color: var(--text-muted);
+            font-size: 8px;
+            margin-top: 2px;
+        }
+
+        .review-stars {
+            display: flex;
+            gap: 2px;
+            color: #e7a52c;
+            font-size: 9px;
+            flex: 0 0 auto;
+        }
+
+        .review-comment {
+            margin: 10px 0 0 37px;
+            color: var(--text-secondary);
+            font-size: 10.5px;
+            line-height: 1.55;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+        }
+
+        .empty-review {
+            text-align: center;
+            padding: 26px 15px;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        /* ============================================================
+           DETAILS / SAFETY
+           ============================================================ */
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 8px;
+        }
+
+        .detail-box {
+            padding: 11px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-input);
+        }
+
+        .detail-box-label {
+            color: var(--text-muted);
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            font-weight: 800;
+        }
+
+        .detail-box-value {
+            color: var(--text-primary);
+            font-size: 11px;
+            font-weight: 750;
+            margin-top: 4px;
+            overflow-wrap: anywhere;
+        }
+
+        .safety-note {
+            display: flex;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            background: var(--listing-green-soft);
+            border: 1px solid rgba(13,138,62,.10);
+            color: var(--text-secondary);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        .safety-note i {
+            color: var(--listing-green);
+            margin-top: 2px;
+        }
+
+        /* ============================================================
+           MODALS
+           ============================================================ */
+
+        .listing-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10050;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: rgba(0,0,0,.66);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+        }
+
+        .listing-modal.active {
+            display: flex;
+        }
+
+        .listing-modal-panel {
+            width: min(520px, 100%);
+            max-height: 90vh;
+            overflow: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            box-shadow: 0 25px 75px rgba(0,0,0,.28);
+            animation: listingModalIn .2s ease;
+        }
+
+        @keyframes listingModalIn {
+            from { opacity: 0; transform: translateY(12px) scale(.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 17px 18px;
             border-bottom: 1px solid var(--border-color);
-            transition: background 0.2s ease;
         }
-        .reviews-section .review-item:last-child {
-            border-bottom: none;
+
+        .modal-title {
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 850;
         }
-        .reviews-section .review-item .review-top {
+
+        .modal-subtitle {
+            margin-top: 3px;
+            color: var(--text-muted);
+            font-size: 9px;
+            line-height: 1.4;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 18px;
+        }
+
+        .modal-context {
+            padding: 12px;
+            border-radius: 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            margin-bottom: 13px;
+        }
+
+        .modal-context-label {
+            color: var(--text-muted);
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: .45px;
+            font-weight: 850;
+        }
+
+        .modal-context-value {
+            color: var(--text-primary);
+            font-size: 11px;
+            font-weight: 750;
+            margin-top: 4px;
+        }
+
+        .modal-field {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 13px;
+        }
+
+        .modal-field label {
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 750;
+        }
+
+        .modal-field input,
+        .modal-field textarea {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 11px;
+            padding: 10px 11px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            outline: none;
+            font: inherit;
+            font-size: 11px;
+        }
+
+        .modal-field textarea {
+            min-height: 105px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .modal-field input:focus,
+        .modal-field textarea:focus {
+            border-color: var(--listing-green);
+            box-shadow: 0 0 0 3px rgba(13,138,62,.08);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        /* ============================================================
+           IMAGE LIGHTBOX
+           ============================================================ */
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 10100;
+            display: none;
+            place-items: center;
+            padding: 18px;
+            background: rgba(0,0,0,.88);
+        }
+
+        .lightbox.active {
+            display: grid;
+        }
+
+        .lightbox img {
+            max-width: min(1100px, 96vw);
+            max-height: 86vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 30px 90px rgba(0,0,0,.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 38px;
+            height: 38px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.08);
+            color: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        /* ============================================================
+           TOAST
+           ============================================================ */
+
+        .listing-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 80px;
+            z-index: 11000;
+            transform: translate(-50%, 16px);
+            opacity: 0;
+            visibility: hidden;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 13px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 15px 45px rgba(0,0,0,.18);
+            font-size: 10px;
+            font-weight: 700;
+            transition: .25s ease;
+            max-width: calc(100% - 30px);
+        }
+
+        .listing-toast.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0);
+        }
+
+        .listing-toast.success i { color: var(--listing-green); }
+        .listing-toast.warning i { color: var(--listing-amber); }
+        .listing-toast.danger i { color: var(--listing-red); }
+
+        /* ============================================================
+           SIMILAR LISTINGS
+           ============================================================ */
+
+        .similar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .similar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform .2s, box-shadow .2s;
+            cursor: pointer;
+        }
+
+        .similar-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--listing-shadow-hover);
+        }
+
+        .similar-card .similar-img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: var(--bg-input);
+            object-fit: cover;
+            display: block;
+        }
+
+        .similar-card .similar-body {
+            padding: 10px 10px 11px;
+        }
+
+        .similar-card .similar-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+
+        .similar-card .similar-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 4px 12px;
-        }
-        .reviews-section .review-item .review-author {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 15px;
-        }
-        .reviews-section .review-item .review-date {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .reviews-section .review-item .review-stars {
-            color: var(--star);
-            letter-spacing: 1px;
-            font-size: 14px;
-            margin: 2px 0 4px;
-        }
-        .reviews-section .review-item .review-stars .empty {
-            color: var(--text-muted);
-            opacity: 0.2;
-        }
-        .reviews-section .review-item .review-comment {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.7;
             margin-top: 4px;
-            padding-left: 2px;
-        }
-
-        .reviews-section .no-reviews {
+            font-size: 9px;
             color: var(--text-muted);
-            font-size: 14px;
-            padding: 12px 0;
-            text-align: center;
-            font-style: italic;
         }
 
-        /* ─────── IMAGE MODAL ─────── */
-        .image-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
-            background: rgba(0,0,0,0.88);
-            backdrop-filter: blur(12px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .image-modal.active {
-            display: flex;
-            opacity: 1;
-        }
-        .image-modal .modal-content {
-            max-width: 92vw;
-            max-height: 92vh;
-            position: relative;
-            animation: modalFadeIn 0.4s ease;
-        }
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.92); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .image-modal .modal-content img {
-            width: 100%;
-            height: auto;
-            max-height: 85vh;
-            object-fit: contain;
-            border-radius: 16px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-        }
-        .image-modal .modal-close {
-            position: absolute;
-            top: -48px;
-            right: 0;
-            background: none;
-            border: none;
-            color: rgba(255,255,255,0.7);
-            font-size: 32px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 12px;
-            transition: all 0.2s ease;
-        }
-        .image-modal .modal-close:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            transform: rotate(90deg);
+        .similar-card .similar-price {
+            font-weight: 800;
+            color: var(--listing-green);
+            font-size: 12px;
         }
 
-        /* ─────── MOBILE ACTION BAR ─────── */
-        .mobile-action-bar {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-nav);
-            backdrop-filter: blur(16px);
-            border-top: 1px solid var(--border-color);
-            padding: 12px 20px 20px;
-            z-index: 999;
-            gap: 12px;
-            transition: all var(--transition);
-            box-shadow: 0 -4px 30px rgba(0,0,0,0.05);
-        }
-        .mobile-action-bar .btn-primary,
-        .mobile-action-bar .btn-secondary {
-            flex: 1;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 15px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.25s ease;
-        }
-        .mobile-action-bar .btn-primary {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(46,204,113,0.3);
-        }
-        .mobile-action-bar .btn-primary:active {
-            transform: scale(0.95);
-        }
-        .mobile-action-bar .btn-secondary {
+        .similar-card .similar-subcat {
             background: var(--bg-input);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-        }
-        .mobile-action-bar .btn-secondary:active {
-            transform: scale(0.95);
-        }
-        .mobile-action-bar .btn-owner {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #fff;
-            border-color: transparent;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--text-muted2);
         }
 
-        /* ─────── RESPONSIVE ─────── */
-        @media (max-width: 1024px) {
-            .listing-hero .hero-image { min-height: 320px; }
-            .listing-hero .hero-info { padding: 28px 30px 32px; }
-            .listing-hero .hero-info .listing-title { font-size: 28px; }
-            .listing-hero .hero-info .listing-price { font-size: 30px; }
+        .similar-card .similar-desc {
+            font-size: 9px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            white-space: pre-line;
         }
 
-        @media (max-width: 820px) {
-            .listing-hero {
-                grid-template-columns: 1fr;
-                border-radius: 24px;
+        /* Responsive */
+        @media (max-width: 900px) {
+            .similar-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
-            .listing-hero .hero-image {
-                min-height: 260px;
-            }
-            .listing-hero .hero-image .image-zoom-hint { display: none; }
-            .listing-hero .hero-info {
-                padding: 24px 24px 28px;
-            }
-            .listing-hero .hero-info .listing-title { font-size: 26px; }
-            .listing-hero .hero-info .listing-price { font-size: 28px; }
-            .listing-hero .hero-info .action-group { display: none; }
-            .mobile-action-bar {
-                display: flex;
-                flex-wrap: wrap;
-            }
-            .mobile-action-bar .btn-primary,
-            .mobile-action-bar .btn-secondary {
-                font-size: 14px;
-                padding: 12px 16px;
-                flex: 1;
-                min-width: 120px;
-            }
-            .seller-card { padding: 22px 24px; border-radius: 24px; }
-            .reviews-section { padding: 22px 24px; border-radius: 24px; }
         }
 
-        @media (max-width: 480px) {
-            .listing-detail-wrapper { padding: 0 0 90px; }
-            .listing-hero { border-radius: 20px; margin-bottom: 20px; }
-            .listing-hero .hero-image { min-height: 200px; }
-            .listing-hero .hero-image .badge-ribbon {
-                font-size: 10px;
-                padding: 4px 30px 4px 24px;
-                top: 16px;
-                left: -24px;
-            }
-            .listing-hero .hero-info { padding: 18px 16px 22px; }
-            .listing-hero .hero-info .listing-title {
-                font-size: 22px;
-                font-family: 'Inter', sans-serif;
-                font-weight: 800;
-            }
-            .listing-hero .hero-info .listing-sub {
-                font-size: 13px;
-                gap: 4px 12px;
-                padding-bottom: 10px;
-                margin-bottom: 10px;
-            }
-            .listing-hero .hero-info .listing-price {
-                font-size: 24px;
-                margin: 2px 0 8px;
-            }
-            .listing-hero .hero-info .listing-description {
-                font-size: 14px;
-                max-height: 80px;
-                margin-bottom: 12px;
-            }
-            .hotspot-strip .hotspot-tag {
-                font-size: 11px;
-                padding: 3px 12px;
-            }
-            .mobile-action-bar {
-                padding: 10px 16px 16px;
+        @media (max-width: 620px) {
+            .similar-grid {
+                grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
             }
-            .mobile-action-bar .btn-primary,
-            .mobile-action-bar .btn-secondary {
-                font-size: 13px;
-                padding: 10px 12px;
-                min-width: 80px;
+
+            .similar-card .similar-body {
+                padding: 7px 8px 9px;
             }
-            .seller-card {
-                padding: 16px;
-                border-radius: 20px;
-                margin-bottom: 20px;
+
+            .similar-card .similar-title {
+                font-size: 10px;
             }
-            .seller-card .seller-top {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 14px;
+
+            .similar-card .similar-price {
+                font-size: 11px;
             }
-            .seller-card .seller-avatar {
-                width: 56px;
-                height: 56px;
-                font-size: 24px;
+        }
+
+        @media (max-width: 430px) {
+            .similar-grid {
+                gap: 6px;
             }
-            .seller-card .seller-name { font-size: 17px; }
-            .seller-card .seller-meta {
-                font-size: 13px;
-                gap: 4px 12px;
+
+            .similar-card .similar-body {
+                padding: 5px 6px 7px;
             }
-            .seller-card .seller-details {
+
+            .similar-card .similar-title {
+                font-size: 9px;
+                -webkit-line-clamp: 1;
+            }
+
+            .similar-card .similar-desc {
+                display: none;
+            }
+
+            .similar-card .similar-meta {
+                font-size: 8px;
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Dark mode for similar */
+        .dark-mode .similar-card {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        .dark-mode .similar-card .similar-subcat {
+            background: var(--bg-input);
+        }
+
+        /* ============================================================
+           DARK MODE
+           ============================================================ */
+
+        .dark-mode .listing-category,
+        .dark-mode .owner-chip,
+        .dark-mode .verification-chip.verified,
+        .dark-mode .safety-note {
+            background: rgba(13,138,62,.13);
+            color: #71dc99;
+            border-color: rgba(90,210,130,.13);
+        }
+
+        .dark-mode .listing-gallery {
+            background:
+                radial-gradient(circle at 30% 20%, rgba(13,138,62,.12), transparent 34%),
+                var(--bg-input);
+        }
+
+        .dark-mode .summary-meta-item,
+        .dark-mode .seller-rating,
+        .dark-mode .detail-box,
+        .dark-mode .hotspot,
+        .dark-mode .verification-chip {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+
+        .dark-mode .summary-meta-item i {
+            background: var(--bg-card);
+        }
+
+        .dark-mode .listing-btn.secondary:hover {
+            background: rgba(13,138,62,.10);
+            border-color: rgba(80,210,130,.22);
+        }
+
+        .dark-mode .review-item {
+            background: var(--bg-card);
+        }
+
+        .dark-mode .safety-note {
+            color: #c9d3ce;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+
+        @media (max-width: 900px) {
+            .listing-layout {
                 grid-template-columns: 1fr;
-                font-size: 13px;
-                gap: 4px;
             }
-            .seller-card .seller-ratings {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-                margin-top: 12px;
-                padding-top: 12px;
+
+            .seller-card {
+                position: static;
             }
-            .seller-card .seller-ratings .stars { font-size: 15px; }
-            .reviews-section {
+
+            .listing-side {
+                display: grid;
+                grid-template-columns: minmax(0,1fr);
+                gap: 18px;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .listing-page {
+                width: min(100% - 18px, 1120px);
+                padding-top: 10px;
+            }
+
+            .listing-gallery,
+            .listing-gallery img,
+            .gallery-placeholder {
+                min-height: 300px;
+                height: 300px;
+            }
+
+            .listing-summary {
                 padding: 16px;
-                border-radius: 20px;
             }
-            .reviews-section .review-header h3 { font-size: 16px; }
-            .reviews-section .review-item { padding: 12px 0; }
-            .reviews-section .review-item .review-author { font-size: 14px; }
-            .reviews-section .review-item .review-comment { font-size: 13px; }
-            .image-modal .modal-close {
-                top: -32px;
-                font-size: 26px;
+
+            .summary-topline {
+                display: block;
             }
-            .image-modal .modal-content { max-width: 96vw; }
-            .state-empty { padding: 60px 16px; }
-            .state-empty .icon { font-size: 48px; }
-            .state-empty h3 { font-size: 20px; }
-        }
 
-        @media (max-width: 360px) {
-            .listing-hero .hero-image { min-height: 170px; }
-            .listing-hero .hero-info .listing-title { font-size: 19px; }
-            .listing-hero .hero-info .listing-price { font-size: 20px; }
-            .mobile-action-bar .btn-primary,
-            .mobile-action-bar .btn-secondary {
-                font-size: 12px;
-                padding: 8px 10px;
-                gap: 6px;
+            .listing-price {
+                margin-top: 12px;
             }
-            .seller-card .seller-name { font-size: 15px; }
+
+            .summary-meta {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .listing-card-body {
+                padding: 15px;
+            }
+
+            .reviews-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .rating-big {
+                text-align: left;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        @media (min-width: 821px) {
-            .mobile-action-bar { display: none !important; }
+        @media (max-width: 430px) {
+            .summary-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-badge-row {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+            }
+
+            .gallery-badge,
+            .gallery-action {
+                font-size: 9px;
+                min-height: 29px;
+                padding: 5px 9px;
+            }
+
+            .listing-title {
+                font-size: 22px;
+            }
         }
 
-        /* ─────── SCROLLBAR ─────── */
-        .listing-description::-webkit-scrollbar,
-        .reviews-section::-webkit-scrollbar {
-            width: 3px;
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
         }
-        .listing-description::-webkit-scrollbar-thumb,
-        .reviews-section::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-
-        .hidden { display: none !important; }
     </style>
 </head>
+
 <body>
 
 <div class="app-container">
 
-    <!-- ===== HEADER (injected by global.js) ===== -->
-
-    <!-- ===== LOCATION BAR ===== -->
     <div class="location-bar">
         <i class="fa-solid fa-location-dot"></i>
         <div class="loc-text">
@@ -896,403 +1286,1279 @@
         </div>
     </div>
 
-    <!-- ===== MAIN ===== -->
-    <main class="main-content" style="padding-top: 12px;">
-        <div class="listing-detail-wrapper" id="listingDetailWrapper">
-            <!-- Rendered by JavaScript -->
+    <main class="main-content">
+        <div class="listing-page">
+
+            <div class="listing-layout">
+
+                <!-- =====================================================
+                     LEFT / MAIN
+                     ===================================================== -->
+                <div class="listing-main">
+                    <div class="listing-stack">
+
+                        <!-- Image -->
+                        <section class="listing-card">
+                            <div class="listing-gallery" id="listingGallery">
+
+                                <div class="gallery-badge-row">
+                                    <span class="gallery-badge freebie-pill" id="listingTypePill">
+                                        <i class="fa-solid fa-gift"></i> Freebie
+                                    </span>
+
+                                    <button class="gallery-action"
+                                            type="button"
+                                            id="zoomImageBtn"
+                                            title="View image">
+                                        <i class="fa-solid fa-expand"></i>
+                                        View
+                                    </button>
+                                </div>
+
+                                <img
+                                    id="listingImage"
+                                    src="http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp"
+                                    alt="Listing image"
+                                    loading="eager"
+                                >
+                            </div>
+
+                            <!-- Listing summary -->
+                            <div class="listing-summary">
+
+                                <div class="summary-topline">
+                                    <div class="summary-title-wrap">
+                                        <span class="listing-category" id="listingCategory">
+                                            <i class="fa-solid fa-book"></i>
+                                            Academic Services
+                                        </span>
+
+                                        <h1 class="listing-title" id="listingTitle">k</h1>
+
+                                        <div class="listing-id">
+                                            Listing #<span id="listingId">7</span>
+                                            <span aria-hidden="true">•</span>
+                                            Posted <span id="createdAt">yesterday</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="listing-price free" id="listingPrice">
+                                        Free
+                                    </div>
+                                </div>
+
+                                <p class="listing-description" id="listingDescription">j</p>
+
+                                <div class="summary-meta">
+
+                                    <div class="summary-meta-item">
+                                        <i class="fa-solid fa-tag"></i>
+                                        <div class="summary-meta-copy">
+                                            <span class="summary-meta-label">Condition</span>
+                                            <span class="summary-meta-value" id="listingCondition">Almost New</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="summary-meta-item">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <div class="summary-meta-copy">
+                                            <span class="summary-meta-label">Location</span>
+                                            <span class="summary-meta-value" id="listingLocation">Main Gate</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="summary-meta-item">
+                                        <i class="fa-solid fa-layer-group"></i>
+                                        <div class="summary-meta-copy">
+                                            <span class="summary-meta-label">Listing type</span>
+                                            <span class="summary-meta-value" id="listingType">Freebie</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="summary-meta-item">
+                                        <i class="fa-solid fa-fire"></i>
+                                        <div class="summary-meta-copy">
+                                            <span class="summary-meta-label">Promotion</span>
+                                            <span class="summary-meta-value" id="hotSaleText">Regular listing</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Location / hotspots -->
+                        <section class="listing-card">
+                            <div class="listing-card-body">
+
+                                <div class="section-heading">
+                                    <div class="section-heading-main">
+                                        <h2 class="section-title">
+                                            <i class="fa-solid fa-map-location-dot"></i>
+                                            Pickup location
+                                        </h2>
+                                        <p class="section-subtitle">
+                                            Suggested campus meetup points for this listing.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="hotspot-list" id="hotspotList"></div>
+
+                            </div>
+                        </section>
+
+                        <!-- Listing information -->
+                        <section class="listing-card">
+                            <div class="listing-card-body">
+
+                                <div class="section-heading">
+                                    <div class="section-heading-main">
+                                        <h2 class="section-title">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                            Listing information
+                                        </h2>
+                                        <p class="section-subtitle">
+                                            Key information about this marketplace post.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="detail-grid">
+
+                                    <div class="detail-box">
+                                        <div class="detail-box-label">Category</div>
+                                        <div class="detail-box-value" id="detailCategory">Academic Services</div>
+                                    </div>
+
+                                    <div class="detail-box">
+                                        <div class="detail-box-label">Sub‑category</div>
+                                        <div class="detail-box-value" id="detailSubCategory">Printing</div>
+                                    </div>
+
+                                    <div class="detail-box">
+                                        <div class="detail-box-label">Condition</div>
+                                        <div class="detail-box-value" id="detailCondition">Almost New</div>
+                                    </div>
+
+                                    <div class="detail-box">
+                                        <div class="detail-box-label">Listing type</div>
+                                        <div class="detail-box-value" id="detailType">Freebie</div>
+                                    </div>
+
+                                    <div class="detail-box">
+                                        <div class="detail-box-label">Posted</div>
+                                        <div class="detail-box-value" id="detailCreated">Yesterday</div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </section>
+
+                        <!-- Reviews -->
+                        <section class="listing-card">
+                            <div class="listing-card-body">
+
+                                <div class="section-heading">
+                                    <div class="section-heading-main">
+                                        <h2 class="section-title">
+                                            <i class="fa-solid fa-star"></i>
+                                            Seller reviews
+                                        </h2>
+                                        <p class="section-subtitle">
+                                            Feedback from people who have interacted with this seller.
+                                        </p>
+                                    </div>
+                                    <span class="listing-category" style="margin:0;" id="reviewCountBadge">
+                                        2 reviews
+                                    </span>
+                                </div>
+
+                                <div class="reviews-summary">
+                                    <div class="rating-big">
+                                        <div class="rating-big-number" id="avgRating">3.5</div>
+                                        <div class="rating-big-stars" id="avgRatingStars"></div>
+                                        <div class="rating-big-caption">Average seller rating</div>
+                                    </div>
+
+                                    <div class="review-list" id="reviewList"></div>
+                                </div>
+
+                            </div>
+                        </section>
+
+                        <!-- Safety -->
+                        <section class="listing-card">
+                            <div class="listing-card-body">
+
+                                <div class="section-heading">
+                                    <div class="section-heading-main">
+                                        <h2 class="section-title">
+                                            <i class="fa-solid fa-shield-halved"></i>
+                                            Marketplace safety
+                                        </h2>
+                                    </div>
+                                </div>
+
+                                <div class="safety-note">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <div>
+                                        Meet in a public campus location, inspect the item or service before
+                                        agreeing, and keep communication inside the platform where possible.
+                                        CampusHub does not process the payment for this marketplace listing.
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+
+                        <!-- =====================================================
+                             STUDENTS ALSO ASKED (Similar listings)
+                             ===================================================== -->
+                        <section class="listing-card">
+                            <div class="listing-card-body">
+
+                                <div class="section-heading">
+                                    <div class="section-heading-main">
+                                        <h2 class="section-title">
+                                            <i class="fa-solid fa-users"></i>
+                                            Students also asked for
+                                        </h2>
+                                        <p class="section-subtitle">
+                                            Similar listings from the same category.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="similar-grid" id="similarGrid">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
+
+                <!-- =====================================================
+                     RIGHT / SELLER
+                     ===================================================== -->
+                <aside class="listing-side">
+
+                    <section class="listing-card seller-card">
+
+                        <div class="listing-card-body">
+
+                            <div class="section-heading">
+                                <div class="section-heading-main">
+                                    <h2 class="section-title">
+                                        <i class="fa-solid fa-user"></i>
+                                        Seller
+                                    </h2>
+                                    <p class="section-subtitle">
+                                        Seller profile and verification.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="seller-header">
+
+                                <div class="seller-avatar">
+                                    <img
+                                        id="sellerImage"
+                                        src="http://localhost/media/profile_pictures/profile_picture_2_a235c0f2c4.webp"
+                                        alt="Salawu Lucky"
+                                        onerror="this.style.display='none'; document.getElementById('sellerInitials').style.display='grid';"
+                                    >
+                                    <span id="sellerInitials" style="display:none;">SL</span>
+                                </div>
+
+                                <div class="seller-copy">
+                                    <div class="seller-name" id="sellerName">Salawu Lucky</div>
+                                    <div class="seller-role">
+                                        <span id="sellerDepartment">Computer Science</span>
+                                        · Level <span id="sellerLevel">5</span>
+                                    </div>
+
+                                    <div class="owner-chip" id="ownerChip">
+                                        <i class="fa-solid fa-user-check"></i>
+                                        You own this listing
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Rating -->
+                            <div class="seller-rating">
+                                <div class="stars" id="sellerStars"></div>
+                                <span class="rating-number" id="sellerRating">3.5</span>
+                                <span class="rating-meta">
+                                    (<span id="sellerReviews">2</span> reviews)
+                                </span>
+                                <span class="trust-score">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                    <span id="trustScore">70</span>
+                                </span>
+                            </div>
+
+                            <!-- Seller details -->
+                            <div class="seller-details">
+
+                                <div class="seller-detail">
+                                    <span class="seller-detail-label">Department</span>
+                                    <span class="seller-detail-value" id="sellerDepartmentDetail">Computer Science</span>
+                                </div>
+
+                                <div class="seller-detail">
+                                    <span class="seller-detail-label">Level</span>
+                                    <span class="seller-detail-value" id="sellerLevelDetail">5</span>
+                                </div>
+
+                                <div class="seller-detail">
+                                    <span class="seller-detail-label">Matric number</span>
+                                    <span class="seller-detail-value" id="sellerMatric">AJ P/1234561</span>
+                                </div>
+
+                                <div class="seller-detail">
+                                    <span class="seller-detail-label">Phone</span>
+                                    <span class="seller-detail-value" id="sellerPhone">08064160381</span>
+                                </div>
+
+                                <div class="seller-detail">
+                                    <span class="seller-detail-label">Member since</span>
+                                    <span class="seller-detail-value" id="sellerSince">2026</span>
+                                </div>
+
+                            </div>
+
+                            <!-- Verification -->
+                            <div class="verification-line" id="verificationLine"></div>
+
+                            <!-- Actions -->
+                            <div class="listing-actions">
+
+                                <button class="listing-btn primary" id="contactSellerBtn" type="button">
+                                    <i class="fa-solid fa-comments"></i>
+                                    Contact seller
+                                </button>
+
+                                <button class="listing-btn secondary" id="viewProfileBtn" type="button">
+                                    <i class="fa-solid fa-user"></i>
+                                    View seller profile
+                                </button>
+
+                                <button class="listing-btn danger" id="reportListingBtn" type="button">
+                                    <i class="fa-regular fa-flag"></i>
+                                    Report listing
+                                </button>
+
+                            </div>
+
+                        </div>
+                    </section>
+
+                </aside>
+
+            </div>
         </div>
     </main>
 
 </div>
 
-<!-- ===== MOBILE ACTION BAR ===== -->
-<div class="mobile-action-bar" id="mobileActionBar">
-    <!-- Populated by JavaScript -->
-</div>
+<!-- ================================================================
+     REPORT MODAL
+     ================================================================ -->
+<div class="listing-modal" id="reportModal" aria-hidden="true">
+    <div class="listing-modal-panel" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
 
-<!-- ===== IMAGE MODAL ===== -->
-<div class="image-modal" id="imageModal">
-    <div class="modal-content">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <img id="modalImage" src="" alt="Full size" />
+        <div class="modal-head">
+            <div>
+                <div class="modal-title" id="reportModalTitle">Report listing</div>
+                <div class="modal-subtitle">
+                    Tell the moderation team what is wrong with this listing.
+                </div>
+            </div>
+
+            <button class="modal-close" type="button" data-close-modal="reportModal" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form class="modal-body" id="reportForm">
+
+            <div class="modal-context">
+                <div class="modal-context-label">Listing</div>
+                <div class="modal-context-value" id="reportListingName">k</div>
+            </div>
+
+            <div class="modal-field">
+                <label for="reportReason">Reason</label>
+                <select id="reportReason"
+                        style="width:100%;border:1px solid var(--border-color);border-radius:11px;padding:10px 11px;background:var(--bg-input);color:var(--text-primary);font:inherit;font-size:11px;outline:none;">
+                    <option value="">Select a reason</option>
+                    <option>Spam or misleading content</option>
+                    <option>Prohibited item or service</option>
+                    <option>Scam or suspicious activity</option>
+                    <option>Offensive or inappropriate content</option>
+                    <option>Incorrect listing information</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="modal-field">
+                <label for="reportDescription">Additional details</label>
+                <textarea
+                    id="reportDescription"
+                    maxlength="1000"
+                    placeholder="Provide additional information for the moderation team..."></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="listing-btn secondary" type="button" data-close-modal="reportModal">
+                    Cancel
+                </button>
+                <button class="listing-btn primary" type="submit">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Submit report
+                </button>
+            </div>
+
+        </form>
     </div>
 </div>
 
-<!-- ===== SCRIPTS ===== -->
+<!-- ================================================================
+     CONTACT MODAL
+     ================================================================ -->
+<div class="listing-modal" id="contactModal" aria-hidden="true">
+    <div class="listing-modal-panel" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+
+        <div class="modal-head">
+            <div>
+                <div class="modal-title" id="contactModalTitle">Contact seller</div>
+                <div class="modal-subtitle">
+                    Start a conversation about this listing.
+                </div>
+            </div>
+
+            <button class="modal-close" type="button" data-close-modal="contactModal" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form class="modal-body" id="contactForm">
+
+            <div class="modal-context">
+                <div class="modal-context-label">Listing</div>
+                <div class="modal-context-value" id="contactListingName">k</div>
+            </div>
+
+            <div class="modal-field">
+                <label for="contactMessage">Message</label>
+                <textarea id="contactMessage" maxlength="1000">Hi Salawu Lucky, I'm interested in your listing.</textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="listing-btn secondary" type="button" data-close-modal="contactModal">
+                    Cancel
+                </button>
+                <button class="listing-btn primary" type="submit">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Send message
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!-- ================================================================
+     IMAGE LIGHTBOX
+     ================================================================ -->
+<div class="lightbox" id="imageLightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close image">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+    <img id="lightboxImage" src="" alt="Listing preview">
+</div>
+
+<!-- Toast -->
+<div class="listing-toast" id="listingToast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="listingToastMessage">Done</span>
+</div>
+
+<!-- Existing global scripts -->
 <script src="/assets/js/global.js"></script>
 <script src="/assets/js/modal.js"></script>
 <script src="/assets/js/showAlert.js"></script>
 
 <script>
-    (function() {
-        'use strict';
+(function () {
+    'use strict';
 
-        // ─── Helpers ──────────────────────────────────────────────
-        function getParam(name) {
-            const url = new URL(window.location.href);
-            return url.searchParams.get(name);
+    /* ================================================================
+       API DATA
+       Replace this object with your GET /listing/<id>/ response.
+       ================================================================ */
+
+    const listingData = {
+        id: 7,
+        title: "k",
+        description: "Why This Happens\r\nThe escapeHtml() function is used to prevent XSS attacks by converting special characters (<, >, &, etc.) into HTML entities. This is correct for user‑provided text but incorrect for already‑safe HTML like our status badges.\r\n\r\nThe fix adds a simple isHtml flag to skip escaping for fields that already contain safe HTML.",
+        price: 3900,
+        category: "Academic Services",
+        sub_category: "Printing",
+        badge: "almost_new",
+        listing_type: "freebie",
+        is_hot_sale: true,
+        location: "Main Gate",
+        hotspots: [
+            "Main Gate",
+            "Faculty of Science Block"
+        ],
+        image: "http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp",
+        created_at: "yesterday",
+
+        seller: {
+            id: 2,
+            name: "Salawu Lucky",
+            profile_picture: "http://localhost/media/profile_pictures/profile_picture_2_a235c0f2c4.webp",
+            phone: "08064160381",
+            department: "Computer Science",
+            level: 5,
+            matric_no: "ajp/1234561",
+            member_since: 2026,
+            average_rating: 3.5,
+            total_reviews: 2,
+            email_verified: true,
+            hall_verified: false,
+            student_id_verified: true,
+            badges: [
+                "verified",
+                "trusted",
+                "hall_verified",
+                "top_seller"
+            ],
+            visibility: true,
+            is_owner: true,
+            trust_score: 70
+        },
+
+        reviews: [
+            {
+                from: "Salawu Lucky",
+                rating: 3,
+                comment: "eewewe",
+                date: "10 hours ago"
+            },
+            {
+                from: "Admin Admin",
+                rating: 4,
+                comment: "this is a good\r\napp",
+                date: "10 hours ago"
+            }
+        ],
+
+        review_count: 2,
+        avg_rating: 3.5
+    };
+
+    // ================================================================
+    // SIMILAR LISTINGS (mock data – replace with real API call)
+    // ================================================================
+    const similarListings = [
+        {
+            id: 101,
+            title: "Mathematics textbooks",
+            description: "Set of 4 core math textbooks for 200-level students.",
+            price: 4500,
+            sub_category: "Books",
+            image: "http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp"
+        },
+        {
+            id: 102,
+            title: "Programming tutor",
+            description: "Python, Java, and C++ tutoring – 2 hours per session.",
+            price: 2000,
+            sub_category: "Tutoring",
+            image: "http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp"
+        },
+        {
+            id: 103,
+            title: "Scientific calculator",
+            description: "Casio FX-991EX, barely used, perfect for engineering.",
+            price: 8000,
+            sub_category: "Electronics",
+            image: "http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp"
+        },
+        {
+            id: 104,
+            title: "Project writing service",
+            description: "Professional research and writing for final year projects.",
+            price: 15000,
+            sub_category: "Academic Services",
+            image: "http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp"
+        },
+        {
+            id: 105,
+            title: "Used laptop for sale",
+            description: "Dell Latitude 7490 – i5, 16GB RAM, 512GB SSD.",
+            price: 250000,
+            sub_category: "Electronics",
+            image: "http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp"
+        },
+        {
+            id: 106,
+            title: "Room for rent",
+            description: "Self-contained room near campus, very clean and secure.",
+            price: 120000,
+            sub_category: "Housing",
+            image: "http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp"
+        },
+        {
+            id: 107,
+            title: "Graphic design gigs",
+            description: "Flyers, logos, banners – affordable student rates.",
+            price: 5000,
+            sub_category: "Creative Services",
+            image: "http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp"
+        },
+        {
+            id: 108,
+            title: "Study table & chair",
+            description: "Wooden study table with adjustable chair – like new.",
+            price: 35000,
+            sub_category: "Furniture",
+            image: "http://localhost/media/Listing_images/Listing_image_k_750b0dae2b.webp"
+        }
+    ];
+
+    /* ================================================================
+       HELPERS
+       ================================================================ */
+
+    const $ = (id) => document.getElementById(id);
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function capitalize(value) {
+        if (!value) return "—";
+        return String(value)
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function initials(name) {
+        return String(name || "")
+            .trim()
+            .split(/\s+/)
+            .slice(0, 2)
+            .map(part => part[0] || "")
+            .join("")
+            .toUpperCase();
+    }
+
+    function formatPrice(price) {
+        const value = Number(price || 0);
+
+        if (value === 0) {
+            return "Free";
         }
 
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            if (dateStr.includes('ago')) return dateStr;
-            try {
-                const d = new Date(dateStr);
-                return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-            } catch (_) {
-                return dateStr;
+        return "₦" + value.toLocaleString("en-NG");
+    }
+
+    function stars(rating, sizeClass = "") {
+        const numeric = Number(rating || 0);
+        const rounded = Math.round(numeric);
+
+        let html = "";
+
+        for (let i = 1; i <= 5; i++) {
+            html += `<i class="${i <= rounded ? "fa-solid" : "fa-regular"} fa-star ${sizeClass}"></i>`;
+        }
+
+        return html;
+    }
+
+    function showToast(message, type = "success") {
+        const toast = $("listingToast");
+        const icon = toast.querySelector("i");
+
+        $("listingToastMessage").textContent = message;
+
+        toast.className = `listing-toast ${type} visible`;
+
+        if (type === "warning") {
+            icon.className = "fa-solid fa-triangle-exclamation";
+        } else if (type === "danger") {
+            icon.className = "fa-solid fa-circle-exclamation";
+        } else {
+            icon.className = "fa-solid fa-circle-check";
+        }
+
+        clearTimeout(window.__listingToastTimer);
+
+        window.__listingToastTimer = setTimeout(() => {
+            toast.classList.remove("visible");
+        }, 2800);
+    }
+
+    function openModal(id) {
+        const modal = $(id);
+        if (!modal) return;
+
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(id) {
+        const modal = $(id);
+        if (!modal) return;
+
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+
+        if (!document.querySelector(".listing-modal.active") &&
+            !$("imageLightbox").classList.contains("active")) {
+            document.body.style.overflow = "";
+        }
+    }
+
+    /* ================================================================
+       CONDITION DISPLAY
+       ================================================================ */
+
+    function getConditionDisplay(badge) {
+        const map = {
+            almost_new: {
+                text: "Almost New",
+                icon: "✨"
+            },
+            new: {
+                text: "New",
+                icon: "🆕"
+            },
+            used: {
+                text: "Used",
+                icon: "📦"
+            },
+            good: {
+                text: "Good Condition",
+                icon: "👍"
+            },
+            fair: {
+                text: "Fair Condition",
+                icon: "👌"
+            }
+        };
+
+        return map[badge] || {
+            text: capitalize(badge),
+            icon: "🏷️"
+        };
+    }
+
+    /* ================================================================
+       RENDER
+       ================================================================ */
+
+    function renderListing() {
+
+        const condition = getConditionDisplay(listingData.badge);
+        const seller = listingData.seller;
+
+        $("listingTitle").textContent = listingData.title || "Untitled listing";
+        $("listingId").textContent = listingData.id;
+        $("createdAt").textContent = listingData.created_at || "recently";
+
+        // Description – escapeHTML but keep newlines via white-space: pre-line
+        $("listingDescription").textContent = listingData.description || "No description provided.";
+
+        $("listingCategory").innerHTML = `
+            <i class="fa-solid fa-layer-group"></i>
+            ${escapeHtml(listingData.category)}
+        `;
+
+        $("listingPrice").textContent = formatPrice(listingData.price);
+
+        if (Number(listingData.price) === 0) {
+            $("listingPrice").classList.add("free");
+        } else {
+            $("listingPrice").classList.remove("free");
+        }
+
+        $("listingCondition").textContent = condition.text;
+        $("listingLocation").textContent = listingData.location || "Not specified";
+        $("listingType").textContent = capitalize(listingData.listing_type);
+        $("hotSaleText").textContent =
+            listingData.is_hot_sale ? "Hot sale" : "Regular listing";
+
+        // Detail grid – now includes sub‑category
+        $("detailCategory").textContent = listingData.category || "—";
+        $("detailSubCategory").textContent = listingData.sub_category || "—";
+        $("detailCondition").textContent = condition.text;
+        $("detailType").textContent = capitalize(listingData.listing_type);
+        $("detailCreated").textContent = capitalize(listingData.created_at);
+
+        /* Image */
+        $("listingImage").src = listingData.image || "";
+        $("listingImage").alt = listingData.title || "Listing image";
+
+        if (!listingData.image) {
+            $("listingImage").style.display = "none";
+
+            const gallery = $("listingGallery");
+
+            if (!gallery.querySelector(".gallery-placeholder")) {
+                const placeholder = document.createElement("div");
+                placeholder.className = "gallery-placeholder";
+                placeholder.innerHTML = '<i class="fa-regular fa-image"></i>';
+                gallery.appendChild(placeholder);
             }
         }
 
-        function renderStars(rating) {
-            const full = Math.floor(rating);
-            const half = rating % 1 >= 0.5 ? 1 : 0;
-            let html = '';
-            for (let i = 0; i < full; i++) html += '<i class="fa-solid fa-star"></i>';
-            if (half) html += '<i class="fa-solid fa-star-half-stroke"></i>';
-            const empty = 5 - full - half;
-            for (let i = 0; i < empty; i++) html += '<i class="fa-regular fa-star empty"></i>';
-            return html;
+        /* Listing type */
+        $("listingTypePill").innerHTML = `
+            <i class="fa-solid ${listingData.listing_type === "freebie" ? "fa-gift" : "fa-tag"}"></i>
+            ${escapeHtml(capitalize(listingData.listing_type))}
+        `;
+
+        /* Hot sale */
+        if (listingData.is_hot_sale) {
+            $("listingTypePill").insertAdjacentHTML(
+                "afterend",
+                `<span class="gallery-badge hot-pill">
+                    <i class="fa-solid fa-fire"></i> Hot sale
+                </span>`
+            );
         }
 
-        function getInitials(name) {
-            if (!name) return '?';
-            const parts = name.trim().split(' ');
-            if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-            return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-        }
+        /* Hotspots */
+        const hotspots = Array.isArray(listingData.hotspots)
+            ? listingData.hotspots
+            : [];
 
-        // ─── DOM refs ──────────────────────────────────────────────
-        const wrapper = document.getElementById('listingDetailWrapper');
-        const modal = document.getElementById('imageModal');
-        const modalImg = document.getElementById('modalImage');
-        const modalClose = document.getElementById('modalClose');
-        const mobileBar = document.getElementById('mobileActionBar');
+        $("hotspotList").innerHTML = hotspots.length
+            ? hotspots.map(location => `
+                <span class="hotspot">
+                    <i class="fa-solid fa-location-dot"></i>
+                    ${escapeHtml(location)}
+                </span>
+            `).join("")
+            : `
+                <span class="hotspot">
+                    <i class="fa-solid fa-location-dot"></i>
+                    ${escapeHtml(listingData.location || "Location not specified")}
+                </span>
+            `;
 
-        // ─── Modal controls ────────────────────────────────────────
-        function openModal(src) {
-            if (!src) return;
-            modalImg.src = src;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+        /* Seller */
+        $("sellerName").textContent = seller.name || "Unknown seller";
+        $("sellerDepartment").textContent = seller.department || "Department not provided";
+        $("sellerLevel").textContent = seller.level ?? "—";
 
-        function closeModal() {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
+        $("sellerDepartmentDetail").textContent = seller.department || "—";
+        $("sellerLevelDetail").textContent = seller.level ?? "—";
+        $("sellerMatric").textContent = seller.matric_no || "—";
+        $("sellerPhone").textContent = seller.phone || "—";
+        $("sellerSince").textContent = seller.member_since || "—";
 
-        modalClose.addEventListener('click', closeModal);
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
+        $("sellerRating").textContent =
+            Number(seller.average_rating || 0).toFixed(1);
+
+        $("sellerReviews").textContent =
+            seller.total_reviews || 0;
+
+        $("trustScore").textContent =
+            seller.trust_score ?? 0;
+
+        $("sellerStars").innerHTML =
+            stars(seller.average_rating);
+
+        $("sellerImage").src = seller.profile_picture || "";
+        $("sellerImage").alt = seller.name || "Seller profile";
+
+        $("sellerInitials").textContent = initials(seller.name);
+
+        /* Owner */
+        $("ownerChip").style.display =
+            seller.is_owner ? "inline-flex" : "none";
+
+        /* Verification */
+        const verification = [];
+
+        verification.push({
+            verified: seller.email_verified,
+            icon: "fa-envelope",
+            label: "Email"
         });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+
+        verification.push({
+            verified: seller.student_id_verified,
+            icon: "fa-id-card",
+            label: "Student ID"
         });
 
-        // ─── Fetch and render ──────────────────────────────────────
-        const listingId = getParam('id');
-        if (!listingId) {
-            wrapper.innerHTML = `
-                <div class="state-empty">
-                    <span class="icon"><i class="fa-regular fa-circle-exclamation"></i></span>
-                    <h3>Missing Listing ID</h3>
-                    <p>No listing ID was provided in the URL. Please check the link and try again.</p>
-                    <a href="explore.html" class="btn-back"><i class="fa-regular fa-arrow-left"></i> Back to Explore</a>
+        verification.push({
+            verified: seller.hall_verified,
+            icon: "fa-house",
+            label: "Hall"
+        });
+
+        $("verificationLine").innerHTML = verification.map(item => `
+            <span class="verification-chip ${item.verified ? "verified" : ""}">
+                <i class="fa-solid ${item.icon}"></i>
+                ${item.verified ? "Verified" : "Not verified"} · ${item.label}
+            </span>
+        `).join("");
+
+        /* Reviews */
+        $("avgRating").textContent =
+            Number(listingData.avg_rating || 0).toFixed(1);
+
+        $("avgRatingStars").innerHTML =
+            stars(listingData.avg_rating);
+
+        $("reviewCountBadge").textContent =
+            `${listingData.review_count || 0} ${listingData.review_count === 1 ? "review" : "reviews"}`;
+
+        const reviews = Array.isArray(listingData.reviews)
+            ? listingData.reviews
+            : [];
+
+        if (!reviews.length) {
+
+            $("reviewList").innerHTML = `
+                <div class="empty-review">
+                    <i class="fa-regular fa-star"></i>
+                    <div style="margin-top:6px;">No reviews yet.</div>
+                </div>
+            `;
+
+        } else {
+
+            $("reviewList").innerHTML = reviews.map(review => `
+                <article class="review-item">
+
+                    <div class="review-top">
+
+                        <div class="review-author">
+
+                            <div class="review-avatar">
+                                ${escapeHtml(initials(review.from))}
+                            </div>
+
+                            <div>
+                                <div class="review-author-name">
+                                    ${escapeHtml(review.from)}
+                                </div>
+
+                                <div class="review-date">
+                                    ${escapeHtml(review.date || "recently")}
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="review-stars">
+                            ${stars(review.rating)}
+                        </div>
+
+                    </div>
+
+                    <div class="review-comment">
+                        ${escapeHtml(review.comment || "No comment provided.")}
+                    </div>
+
+                </article>
+            `).join("");
+        }
+
+        /* ============================================================
+           SIMILAR LISTINGS
+           ============================================================ */
+        renderSimilarListings();
+    }
+
+    /* ================================================================
+       RENDER SIMILAR LISTINGS
+       ================================================================ */
+    function renderSimilarListings() {
+        const grid = $("similarGrid");
+
+        if (!similarListings.length) {
+            grid.innerHTML = `
+                <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-muted);font-size:11px;">
+                    No similar listings available.
                 </div>
             `;
             return;
         }
 
-        async function loadListing() {
-            wrapper.innerHTML = `
-                <div class="spinner-box">
-                    <div class="spinner-ring"></div>
-                    <p>Loading listing details…</p>
-                </div>
-            `;
-
-            try {
-                const url = `${CAMPUS_URL}listing-details/${listingId}`;
-                const response = await fetchWithAuth(url, { method: 'GET' });
-                if (!response.ok) {
-                    if (response.status === 404) throw new Error('Listing not found');
-                    throw new Error(`Server error (${response.status})`);
-                }
-                const result = await response.json();
-                if (!result.is_success) throw new Error(result.message || 'Failed to load listing');
-                renderListing(result.data);
-            } catch (err) {
-                console.error('Load error:', err);
-                wrapper.innerHTML = `
-                    <div class="state-empty">
-                        <span class="icon"><i class="fa-regular fa-triangle-exclamation"></i></span>
-                        <h3>${err.message === 'Listing not found' ? 'Listing Not Found' : 'Something went wrong'}</h3>
-                        <p>${err.message === 'Listing not found' ? 'The listing you\'re looking for doesn\'t exist or has been removed.' : err.message || 'Could not load the listing. Please try again later.'}</p>
-                        <a href="explore.html" class="btn-back"><i class="fa-regular fa-arrow-left"></i> Back to Explore</a>
-                    </div>
-                `;
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.error(err.message || 'Failed to load listing', { duration: 2500 });
-                }
-            }
-        }
-
-        function renderListing(data) {
-            const {
-                id, title, description, price, category, badge, listing_type,
-                is_hot_sale, location, hotspots, image, created_at,
-                seller, reviews, review_count, avg_rating
-            } = data;
-
-            // ─── Badge ─────────────────────────────────────────────
-            let badgeClass = badge || 'sell';
-            let badgeLabel = (badge || listing_type || 'sell').toUpperCase();
-            if (is_hot_sale) {
-                badgeClass = 'hot';
-                badgeLabel = '🔥 HOT';
-            }
-            if (price === 0) {
-                badgeClass = 'free';
-                badgeLabel = '🆓 FREE';
-            }
-
-            // ─── Price ─────────────────────────────────────────────
-            const priceDisplay = price === 0 ?
-                '<span class="free-tag">Free</span>' :
-                '₦' + price.toLocaleString();
-
-            // ─── Hotspots ──────────────────────────────────────────
-            const hotspotsHtml = hotspots && hotspots.length ?
-                hotspots.map(h => `<span class="hotspot-tag"><i class="fa-solid fa-location-dot"></i> ${h}</span>`).join('') :
-                '';
-
-            // ─── Owner / Manage button ─────────────────────────────
-            const isOwner = seller.is_owner === true;
-            const manageLabel = 'Manage Listing';
-            let ownerButton = '';
-            if (isOwner) {
-                ownerButton = `
-                    <a href="my-listing-details.html?id=${id}&title=${encodeURIComponent(title)}" class="btn-secondary btn-owner">
-                        <i class="fa-regular fa-pen-to-square"></i> ${manageLabel}
-                    </a>
-                `;
-            }
-
-            // ─── Contact Seller ────────────────────────────────────
-            const contactButton = `
-                <button class="btn-primary" id="contactSellerBtn">
-                    <i class="fa-regular fa-comment"></i> Contact Seller
-                </button>
-            `;
-
-            // ─── Seller Card ───────────────────────────────────────
-            const showSellerDetails = seller.visibility !== false;
-            let sellerHtml = '';
-
-            if (showSellerDetails) {
-                const avatarSrc = seller.profile_picture || '';
-                const avatarContent = avatarSrc ?
-                    `<img src="${avatarSrc}" alt="${seller.name || 'Seller'}" />` :
-                    `<span style="font-weight:600; font-size:22px;">${getInitials(seller.name)}</span>`;
-
-                const badgesHtml = seller.badges && seller.badges.length ?
-                    seller.badges.map(b => `<span class="badge-item"><i class="fa-regular fa-circle-check"></i> ${b.replace('_', ' ')}</span>`).join('') :
-                    '';
-
-                const trustColor = seller.trust_score >= 70 ? 'var(--green)' :
-                                 (seller.trust_score >= 40 ? 'var(--star)' : 'var(--red)');
-
-                let detailsHtml = '';
-                const details = [
-                    { icon: 'fa-phone', label: seller.phone },
-                    { icon: 'fa-building', label: seller.department },
-                    { icon: 'fa-graduation-cap', label: seller.level ? `Level ${seller.level}` : '' },
-                    { icon: 'fa-id-card', label: seller.matric_no },
-                ];
-                const detailItems = details.filter(d => d.label);
-                if (detailItems.length) {
-                    detailsHtml = detailItems.map(d =>
-                        `<div class="detail-item"><i class="fa-regular ${d.icon}"></i> ${d.label}</div>`
-                    ).join('');
-                }
-
-                sellerHtml = `
-                    <div class="seller-card">
-                        <div class="seller-top">
-                            <div class="seller-avatar" id="sellerAvatar">
-                                ${avatarContent}
-                            </div>
-                            <div class="seller-info">
-                                <div class="seller-name">
-                                    ${seller.name || 'Anonymous Seller'}
-                                    <span class="trust-badge"><i class="fa-regular fa-star"></i> ${seller.trust_score || 0}% Trust</span>
-                                </div>
-                                <div class="seller-meta">
-                                    <span><i class="fa-regular fa-calendar"></i> Member since ${seller.member_since || 'N/A'}</span>
-                                    ${seller.email_verified ? `<span><i class="fa-regular fa-envelope"></i> Verified email</span>` : ''}
-                                    ${seller.hall_verified ? `<span><i class="fa-regular fa-building"></i> Hall verified</span>` : ''}
-                                    ${seller.student_id_verified ? `<span><i class="fa-regular fa-id-card"></i> ID verified</span>` : ''}
-                                </div>
-                                ${badgesHtml ? `<div class="seller-badges">${badgesHtml}</div>` : ''}
-                            </div>
-                        </div>
-                        ${detailsHtml ? `<div class="seller-details">${detailsHtml}</div>` : ''}
-                        <div class="seller-ratings">
-                            <span class="stars">${renderStars(avg_rating || 0)}</span>
-                            <span class="rating-text">${avg_rating ? avg_rating.toFixed(1) : 'No'} (${review_count || 0} review${review_count !== 1 ? 's' : ''})</span>
-                            <span class="trust-score" style="color:${trustColor}">
-                                <i class="fa-regular fa-star"></i> Trust ${seller.trust_score || 0}%
-                            </span>
-                        </div>
-                    </div>
-                `;
-
-                setTimeout(() => {
-                    const avatarEl = document.getElementById('sellerAvatar');
-                    if (avatarEl && avatarSrc) {
-                        avatarEl.addEventListener('click', function(e) {
-                            e.stopPropagation();
-                            openModal(avatarSrc);
-                        });
-                    }
-                }, 0);
-            } else {
-                sellerHtml = `
-                    <div class="seller-card">
-                        <div class="seller-top">
-                            <div class="seller-avatar" style="cursor:default; background:var(--bg-input);">
-                                <i class="fa-regular fa-user-lock" style="font-size:24px;"></i>
-                            </div>
-                            <div class="seller-info">
-                                <div class="seller-name">
-                                    Private Seller
-                                    <span class="trust-badge"><i class="fa-regular fa-star"></i> ${seller.trust_score || 0}% Trust</span>
-                                </div>
-                                <div class="seller-meta">
-                                    <span><i class="fa-regular fa-eye-slash"></i> Profile is private</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="seller-ratings" style="border-top: none; padding-top:0; margin-top: 6px;">
-                            <span class="stars">${renderStars(avg_rating || 0)}</span>
-                            <span class="rating-text">${avg_rating ? avg_rating.toFixed(1) : 'No'} (${review_count || 0})</span>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // ─── Reviews ────────────────────────────────────────────
-            let reviewsHtml = '';
-            if (reviews && reviews.length) {
-                reviewsHtml = reviews.map(r => `
-                    <div class="review-item">
-                        <div class="review-top">
-                            <span class="review-author">${r.from || 'Anonymous'}</span>
-                            <span class="review-date">${formatDate(r.date)}</span>
-                        </div>
-                        <div class="review-stars">${renderStars(r.rating)}</div>
-                        <div class="review-comment">${r.comment || ''}</div>
-                    </div>
-                `).join('');
-            } else {
-                reviewsHtml = `<div class="no-reviews">No reviews yet. Be the first to review!</div>`;
-            }
-
-            // ─── Assemble page ─────────────────────────────────────
-            const html = `
-                <!-- Hero -->
-                <div class="listing-hero">
-                    <div class="hero-image" id="heroImage">
-                        <img src="${image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='200' y='160' font-family='Arial' font-size='24' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E"}" alt="${title}" loading="lazy" onerror="this.style.display='none';" />
-                        <span class="badge-ribbon ${badgeClass}">${badgeLabel}</span>
-                        <span class="image-zoom-hint"><i class="fa-regular fa-expand"></i> Click to zoom</span>
-                    </div>
-                    <div class="hero-info">
-                        <h1 class="listing-title">${title}</h1>
-                        <div class="listing-sub">
-                            <span><i class="fa-regular fa-calendar"></i> ${formatDate(created_at)}</span>
-                            <span><i class="fa-regular fa-folder"></i> ${category || 'Uncategorized'}</span>
-                            <span><i class="fa-regular fa-tag"></i> ${listing_type || 'N/A'}</span>
-                            ${location ? `<span><i class="fa-regular fa-location-dot"></i> ${location}</span>` : ''}
-                        </div>
-                        <div class="listing-price">${priceDisplay}</div>
-                        ${description ? `<div class="listing-description">${description}</div>` : ''}
-                        ${hotspotsHtml ? `<div class="hotspot-strip">${hotspotsHtml}</div>` : ''}
-                        <div class="action-group">
-                            ${contactButton}
-                            ${ownerButton}
-                        </div>
+        grid.innerHTML = similarListings.map(item => `
+            <div class="similar-card" data-id="${item.id}">
+                <img class="similar-img" src="${escapeHtml(item.image || '')}" alt="${escapeHtml(item.title)}" loading="lazy">
+                <div class="similar-body">
+                    <div class="similar-title">${escapeHtml(item.title)}</div>
+                    <div class="similar-desc">${escapeHtml(item.description || '')}</div>
+                    <div class="similar-meta">
+                        <span class="similar-price">${formatPrice(item.price)}</span>
+                        <span class="similar-subcat">${escapeHtml(item.sub_category || '')}</span>
                     </div>
                 </div>
+            </div>
+        `).join("");
 
-                <!-- Seller -->
-                ${sellerHtml}
-
-                <!-- Reviews -->
-                <div class="reviews-section">
-                    <div class="review-header">
-                        <h3><i class="fa-regular fa-comment"></i> Reviews</h3>
-                        <span class="rating-summary">
-                            <i class="fa-regular fa-star"></i> ${avg_rating ? avg_rating.toFixed(1) : 'No'} (${review_count || 0})
-                        </span>
-                    </div>
-                    ${reviewsHtml}
-                </div>
-            `;
-
-            wrapper.innerHTML = html;
-
-            // ─── Mobile action bar ──────────────────────────────────
-            let mobileButtons = `
-                <button class="btn-primary" id="mobileContactBtn">
-                    <i class="fa-regular fa-comment"></i> Contact
-                </button>
-            `;
-            if (isOwner) {
-                mobileButtons += `
-                    <a href="my-listing-details.html?id=${id}&title=${encodeURIComponent(title)}" class="btn-secondary btn-owner">
-                        <i class="fa-regular fa-pen-to-square"></i> ${manageLabel}
-                    </a>
-                `;
-            }
-            mobileBar.innerHTML = mobileButtons;
-
-            // ─── Event Listeners ──────────────────────────────────
-
-            // Hero image click → modal
-            const heroImg = document.getElementById('heroImage');
-            if (heroImg && image) {
-                heroImg.addEventListener('click', function() {
-                    openModal(image);
-                });
-            }
-
-            // Contact Seller (desktop + mobile)
-            const contactBtns = [
-                document.getElementById('contactSellerBtn'),
-                document.getElementById('mobileContactBtn')
-            ];
-            contactBtns.forEach(btn => {
-                if (btn) {
-                    btn.addEventListener('click', function() {
-                        if (typeof showAlert !== 'undefined') {
-                            showAlert.info('Contact feature coming soon! 🚀', { duration: 2000 });
-                        } else {
-                            alert('Contact feature coming soon!');
-                        }
-                    });
-                }
+        // Click handler to navigate to listing details
+        grid.querySelectorAll(".similar-card").forEach(card => {
+            card.addEventListener("click", function () {
+                const id = this.dataset.id;
+                // Replace with your actual route
+                window.location.href = `listing-details.html?id=${id}`;
             });
+        });
+    }
+
+    /* ================================================================
+       IMAGE LIGHTBOX
+       ================================================================ */
+
+    $("zoomImageBtn").addEventListener("click", () => {
+
+        if (!listingData.image) {
+            showToast("No listing image is available.", "warning");
+            return;
         }
 
-        // ─── Start ─────────────────────────────────────────────────
-        loadListing();
+        $("lightboxImage").src = listingData.image;
 
-        // Expose for debugging
-        window.__listing = { loadListing, renderListing };
+        $("imageLightbox").classList.add("active");
+        $("imageLightbox").setAttribute("aria-hidden", "false");
 
-    })();
+        document.body.style.overflow = "hidden";
+    });
+
+    $("listingImage").addEventListener("click", () => {
+        $("zoomImageBtn").click();
+    });
+
+    function closeLightbox() {
+
+        $("imageLightbox").classList.remove("active");
+        $("imageLightbox").setAttribute("aria-hidden", "true");
+
+        if (!document.querySelector(".listing-modal.active")) {
+            document.body.style.overflow = "";
+        }
+    }
+
+    $("lightboxClose").addEventListener("click", closeLightbox);
+
+    $("imageLightbox").addEventListener("click", (event) => {
+        if (event.target === $("imageLightbox")) {
+            closeLightbox();
+        }
+    });
+
+    /* ================================================================
+       CONTACT SELLER
+       ================================================================ */
+
+    $("contactSellerBtn").addEventListener("click", () => {
+
+        if (listingData.seller.is_owner) {
+            showToast("This is your listing.", "warning");
+            return;
+        }
+
+        $("contactListingName").textContent = listingData.title;
+
+        openModal("contactModal");
+    });
+
+    $("contactForm").addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        const message = $("contactMessage").value.trim();
+
+        if (!message) {
+            showToast("Please enter a message.", "warning");
+            $("contactMessage").focus();
+            return;
+        }
+
+        /*
+         * REAL API INTEGRATION:
+         *
+         * await fetchWithAuth("/api/messages/", {
+         *     method: "POST",
+         *     headers: { "Content-Type": "application/json" },
+         *     body: JSON.stringify({
+         *         listing_id: listingData.id,
+         *         seller_id: listingData.seller.id,
+         *         message
+         *     })
+         * });
+         */
+
+        closeModal("contactModal");
+
+        showToast(
+            "Message prepared. Connect this button to your messaging API.",
+            "success"
+        );
+    });
+
+    /* ================================================================
+       SELLER PROFILE
+       ================================================================ */
+
+    $("viewProfileBtn").addEventListener("click", () => {
+
+        /*
+         * Replace this with your actual seller profile route.
+         *
+         * Example:
+         * window.location.href =
+         *     `/profile.html?id=${listingData.seller.id}`;
+         */
+
+        showToast(
+            `Seller profile: ${listingData.seller.name}`,
+            "success"
+        );
+    });
+
+    /* ================================================================
+       REPORT
+       ================================================================ */
+
+    $("reportListingBtn").addEventListener("click", () => {
+
+        $("reportListingName").textContent = listingData.title;
+
+        openModal("reportModal");
+    });
+
+    $("reportForm").addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        const reason = $("reportReason").value;
+        const description = $("reportDescription").value.trim();
+
+        if (!reason) {
+            showToast("Please select a report reason.", "warning");
+            $("reportReason").focus();
+            return;
+        }
+
+        /*
+         * REAL API INTEGRATION:
+         *
+         * await fetchWithAuth("/api/listings/7/report/", {
+         *     method: "POST",
+         *     headers: { "Content-Type": "application/json" },
+         *     body: JSON.stringify({
+         *         reason,
+         *         description
+         *     })
+         * });
+         */
+
+        closeModal("reportModal");
+
+        $("reportForm").reset();
+
+        showToast(
+            "Report submitted successfully.",
+            "success"
+        );
+    });
+
+    /* ================================================================
+       MODAL CLOSE
+       ================================================================ */
+
+    document.querySelectorAll("[data-close-modal]").forEach(button => {
+
+        button.addEventListener("click", () => {
+            closeModal(button.dataset.closeModal);
+        });
+
+    });
+
+    document.querySelectorAll(".listing-modal").forEach(modal => {
+
+        modal.addEventListener("click", (event) => {
+
+            if (event.target === modal) {
+                closeModal(modal.id);
+            }
+
+        });
+
+    });
+
+    document.addEventListener("keydown", (event) => {
+
+        if (event.key === "Escape") {
+
+            document.querySelectorAll(".listing-modal.active")
+                .forEach(modal => closeModal(modal.id));
+
+            if ($("imageLightbox").classList.contains("active")) {
+                closeLightbox();
+            }
+        }
+
+    });
+
+    /* ================================================================
+       IMAGE ERROR FALLBACK
+       ================================================================ */
+
+    $("listingImage").addEventListener("error", function () {
+
+        this.style.display = "none";
+
+        const gallery = $("listingGallery");
+
+        if (!gallery.querySelector(".gallery-placeholder")) {
+
+            const placeholder = document.createElement("div");
+
+            placeholder.className = "gallery-placeholder";
+
+            placeholder.innerHTML = `
+                <i class="fa-regular fa-image"></i>
+            `;
+
+            gallery.appendChild(placeholder);
+        }
+
+    });
+
+    /* ================================================================
+       INITIAL RENDER
+       ================================================================ */
+
+    renderListing();
+
+})();
 </script>
 
 </body>
