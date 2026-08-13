@@ -852,7 +852,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -1849,7 +1849,7 @@
                     }
                     isEditMode = true;
                     renderAll();
-                    showToast('Editing enabled. Modify allowed fields.', 'success');
+                    showAlert.success('Editing enabled. Modify allowed fields.', {duration: 300});
                 }
             }
 
@@ -1900,9 +1900,9 @@
                     currentProfile = { ...currentProfile, ...updatedData };
                     isEditMode = false;
                     renderAll();
-                    showToast('Profile updated successfully!', 'success');
+                    showAlert.success('Profile updated successfully!', {duration: 300});
                 } catch (error) {
-                    showToast(error.message || 'Update failed. Please try again.', 'danger');
+                    showAlert.error(error.message || 'Update failed. Please try again.');
                     // Revert local changes
                     currentProfile = oldProfile;
                     renderAll();
@@ -1922,7 +1922,7 @@
                     renderAll();
                     showToast('Profile refreshed.', 'success');
                 } catch (error) {
-                    showToast('Failed to refresh profile.', 'danger');
+                    showAlert.error('Failed to refresh profile.');
                 }
             }
 
@@ -1954,12 +1954,12 @@
                         setAvatarImage(newUrl);
                         $('imageModalImg').src = newUrl;
                         renderPersonalInfo();
-                        showToast('Profile picture updated!', 'success');
+                        showAlert.success('Profile picture updated!', {duration: 300});
                     } else {
                         throw new Error('No picture URL returned.');
                     }
                 } catch (error) {
-                    showToast(error.message || 'Upload failed. Please try again.', 'danger');
+                    showAlert.error(error.message || 'Upload failed. Please try again.');
                 } finally {
                     showAvatarSpinner(false);
                     $('avatarUpload').value = '';

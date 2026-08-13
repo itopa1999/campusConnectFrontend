@@ -971,7 +971,7 @@
 
 <div class="app-container">
 
-    <!-- ===== HEADER (injected by global.js) ===== -->
+    
 
     <!-- ===== LOCATION ===== -->
     <div class="location-bar">
@@ -1274,7 +1274,7 @@
             } else {
                 updatePointsBalance();
                 if (typeof showAlert !== 'undefined') {
-                    showAlert.success('Points balance refreshed', { duration: 1500 });
+                    showToast('Points balance refreshed', 'success');
                 }
             }
         });
@@ -2075,9 +2075,7 @@
             setHelp('categoryHelp', 'Select a category, then optionally choose a subcategory.', false);
             updateTotalPointsDisplay();
             goToStep(1);
-            if (typeof showAlert !== 'undefined') {
-                showAlert.info('Form has been reset.');
-            }
+            showToast('Form has been reset.', 'success');
         }
 
         // ============================================================

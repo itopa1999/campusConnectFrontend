@@ -542,7 +542,7 @@
 
 <div class="app-container">
 
-    <!-- ===== HEADER (injected by global.js) ===== -->
+    
 
     <!-- ===== LOCATION ===== -->
     <div class="location-bar">
@@ -823,9 +823,6 @@
                 if (action === 'removed') {
                     // Show toast with undo
                     showToast(`"${removedItem.title}" removed from favourites`, 'warning');
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert.info(`"${removedItem.title}" removed`, { duration: 1500 });
-                    }
                 } else {
                     // Should not happen: if toggle returns 'added' (maybe double-click)
                     // Revert: put item back
@@ -850,9 +847,7 @@
                 if (action === 'added') {
                     allItems.splice(index, 0, item);
                     renderFavourites();
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert.success('Restored to favourites!', { duration: 1500 });
-                    }
+                    showToast('Restored to favourites!', 'success');
                 } else {
                     showToast('Could not restore. Please try again.', 'danger');
                 }

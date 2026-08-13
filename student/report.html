@@ -228,7 +228,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -515,9 +515,7 @@
 
             // ─── Cancel ─────────────────────────────────────────────────
             cancelBtn.addEventListener('click', function() {
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.info('Report discarded.', { duration: 1500 });
-                }
+                showToast('Report discarded.', 'success');
                 form.reset();
                 // Reset to default state
                 document.querySelector('input[name="report_type"][value="listing"]').checked = true;

@@ -424,7 +424,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -790,9 +790,7 @@
                 try {
                     const data = await fetchIdStatus();
                     renderStatus(data);
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert.info('Reset to current status.', { duration: 1500 });
-                    }
+                    showToast('Reset to current status.', 'success');
                 } catch (err) {
                     console.error('Error re‑fetching status:', err);
                 }

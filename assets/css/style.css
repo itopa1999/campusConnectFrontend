@@ -2033,3 +2033,24 @@ body {
     color: var(--green);
     transition: color var(--transition);
 }
+
+
+@media (max-width: 768px) {
+
+    .app-container {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-content {
+        flex: 1;
+    }
+
+    .demo-note {
+        flex-shrink: 0;
+        margin: 0;
+        padding: 8px 0 5px;
+    }
+
+}

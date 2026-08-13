@@ -343,7 +343,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -620,9 +620,7 @@
 
             // ─── Cancel ─────────────────────────────────────────────────
             cancelBtn.addEventListener('click', function() {
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.info('Feedback discarded.', { duration: 1500 });
-                }
+                showToast('Feedback discarded.', 'success');
                 form.reset();
                 fileInput.value = '';
                 const container = document.querySelector('.file-preview-container');

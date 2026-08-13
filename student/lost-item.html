@@ -1134,7 +1134,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -1462,7 +1462,7 @@
                     renderItems();
                 } catch (error) {
                     console.error('Fetch lost items error:', error);
-                    showToast(error.message || 'Failed to load lost items.', 'danger');
+                    showAlert.error(error.message || 'Failed to load lost items.');
                     grid.innerHTML = `
                         <div class="lost-empty">
                             <span class="empty-icon"><i class="fas fa-compass"></i></span>
@@ -1644,12 +1644,12 @@
                     formFields.classList.add('hidden');
                     successState.classList.add('active');
                     modalSubmit.style.display = 'none';
-                    showToast('Claim submitted! You\'ll be contacted soon.', 'success');
+                    showAlert.success('Claim submitted! You\'ll be contacted soon.', { duration: 3000 });
                     // Optionally refresh the list to update status
                     fetchLostItems(searchQuery);
                 } catch (error) {
                     console.error('Claim error:', error);
-                    showToast(error.message || 'Claim submission failed.', 'danger');
+                    showAlert.error(error.message || 'Claim submission failed.');
                     modalSubmit.disabled = false;
                     modalSubmit.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Claim';
                 }
@@ -1765,13 +1765,13 @@
 
                 try {
                     await submitReport(formData);
-                    showToast('Lost item reported successfully!', 'success');
+                    showAlert.success('Lost item reported successfully!', {duration: 300});
                     closeAddModal();
                     // Refresh list
                     fetchLostItems(searchQuery);
                 } catch (error) {
                     console.error('Report error:', error);
-                    showToast(error.message || 'Failed to report item.', 'danger');
+                    showAlert.error(error.message || 'Failed to report item.');
                     addModalSubmit.disabled = false;
                     addModalSubmit.classList.remove('loading');
                     addModalSubmit.innerHTML = '<span class="btn-text"><i class="fas fa-paper-plane"></i> Report Item</span><span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>';

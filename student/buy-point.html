@@ -1126,7 +1126,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -1834,9 +1834,6 @@
                 } catch (error) {
                     console.error('Payment error:', error);
                     showToast(error.message || 'Payment failed. Please try again.', 'danger');
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert.error(error.message || 'Payment failed. Please try again.');
-                    }
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;

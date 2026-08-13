@@ -870,7 +870,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -901,7 +901,7 @@
         </div>
 
         <!-- ===== MAIN ===== -->
-        <main class="main-content">
+        <main class="main-content" style="padding-top: 12px;">
             <!-- ===== ENHANCED TABS ===== -->
             <div class="section-tabs" id="sectionTabs">
                 <button class="tab-btn active" data-section="hot_sales">
@@ -1452,12 +1452,12 @@
                                     icon.classList.remove('far');
                                     icon.classList.add('fas');
                                     icon.style.color = '#e74c3c';
-                                    showAlert.success('Added to favourites ❤️', { duration: 1500 });
+                                    showToast('Added to favourites ❤️', 'success');
                                 } else {
                                     icon.classList.remove('fas');
                                     icon.classList.add('far');
                                     icon.style.color = '';
-                                    showAlert.info('Removed from favourites', { duration: 1500 });
+                                    showToast('Removed from favourites', 'success');
                                 }
                             } catch (error) {
                                 // Revert
@@ -1881,7 +1881,7 @@
                 delete activeFilters.dateTo;
                 applyAllFilters();
                 if (typeof showAlert !== 'undefined') {
-                    showAlert.info('Filters reset.', { duration: 1500 });
+                    showToast('Filters reset.', 'success');
                 }
             });
 

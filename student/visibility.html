@@ -298,7 +298,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -599,9 +599,7 @@
                 isDirty = false;
                 saveBtn.disabled = true;
 
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.info('Changes discarded.', { duration: 1500 });
-                }
+                showToast('Changes discarded.', 'success');
             }
 
             // ─── Event Listeners ──────────────────────────────────────

@@ -869,8 +869,6 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
-
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
             <i class="fas fa-location-dot"></i>
@@ -945,10 +943,7 @@
 
         </main>
 
-        <!-- Demo note -->
-        <div class="demo-note">
-            <span>CampusHub</span> • Explore
-        </div>
+        
 
         <!-- ===== FILTER SIDEBAR ===== -->
         <div class="filter-overlay" id="filterOverlay"></div>
@@ -1009,6 +1004,11 @@
                 <button class="btn-apply" id="filterApply">Apply Filters</button>
             </div>
         </aside>
+
+        <!-- Demo note -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Explore
+        </div>
 
     </div>
 
@@ -1451,12 +1451,12 @@
                                     icon.classList.remove('far');
                                     icon.classList.add('fas');
                                     icon.style.color = '#e74c3c';
-                                    showAlert.success('Added to favourites ❤️', { duration: 1500 });
+                                    showToast('Added to favourites ❤️', 'success');
                                 } else {
                                     icon.classList.remove('fas');
                                     icon.classList.add('far');
                                     icon.style.color = '';
-                                    showAlert.info('Removed from favourites', { duration: 1500 });
+                                    showToast('Removed from favourites', 'success');
                                 }
                             } catch (error) {
                                 // Revert
@@ -1879,9 +1879,7 @@
                 delete activeFilters.dateFrom;
                 delete activeFilters.dateTo;
                 applyAllFilters();
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.info('Filters reset.', { duration: 1500 });
-                }
+                showToast('Filters reset.', 'success');
             });
 
             // Pagination buttons

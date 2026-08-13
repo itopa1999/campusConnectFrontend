@@ -298,7 +298,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -608,9 +608,7 @@
             // ─── Cancel ─────────────────────────────────────────────────
 
             async function handleCancel() {
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.info('Changes discarded.', { duration: 1500 });
-                }
+                showToast('Changes discarded.', 'success');
                 // Re‑fetch and reset to current status
                 try {
                     const data = await fetchHallStatus();

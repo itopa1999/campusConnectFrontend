@@ -581,7 +581,7 @@
 
     <div class="app-container">
 
-        <!-- ===== HEADER (injected by global.js) ===== -->
+        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -783,11 +783,11 @@
                         
                         renderNotifications();
                     } else {
-                        showToast(result.message || 'Failed to load notifications', 'danger');
+                        showAlert.error(result.message || 'Failed to load notifications');
                     }
                 } catch (error) {
                     console.error('Fetch notifications error:', error);
-                    showToast('Failed to load notifications. Please try again.', 'danger');
+                    showAlert.error('Failed to load notifications. Please try again.');
                     list.innerHTML = `
                         <div class="notif-empty">
                             <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
@@ -812,11 +812,11 @@
                         showToast(result.message || 'Marked as read', 'success');
                         await fetchNotifications(currentPage);
                     } else {
-                        showToast(result.message || 'Failed to mark as read', 'danger');
+                        showAlert.error(result.message || 'Failed to mark as read');
                     }
                 } catch (error) {
                     console.error('Mark as read error:', error);
-                    showToast('Failed to mark as read. Please try again.', 'danger');
+                    showAlert.error('Failed to mark as read. Please try again.');
                 }
             }
 
@@ -832,11 +832,11 @@
                         showToast(result.message || 'Notification deleted', 'success');
                         await fetchNotifications(currentPage);
                     } else {
-                        showToast(result.message || 'Failed to delete notification', 'danger');
+                        showAlert.error(result.message || 'Failed to delete notification');
                     }
                 } catch (error) {
                     console.error('Delete notification error:', error);
-                    showToast('Failed to delete notification. Please try again.', 'danger');
+                    showAlert.error('Failed to delete notification. Please try again.');
                 }
             }
 
@@ -857,11 +857,11 @@
                         showToast(result.message || 'All notifications marked as read', 'success');
                         await fetchNotifications(currentPage);
                     } else {
-                        showToast(result.message || 'Failed to mark all as read', 'danger');
+                        showAlert.error(result.message || 'Failed to mark all as read');
                     }
                 } catch (error) {
                     console.error('Mark all as read error:', error);
-                    showToast('Failed to mark all as read. Please try again.', 'danger');
+                    showAlert.error('Failed to mark all as read. Please try again.');
                 }
             }
 
@@ -884,11 +884,11 @@
                             showToast(result.message || 'All notifications deleted', 'success');
                             await fetchNotifications(1);
                         } else {
-                            showToast(result.message || 'Failed to delete all notifications', 'danger');
+                            showAlert.error(result.message || 'Failed to delete all notifications');
                         }
                     } catch (error) {
                         console.error('Delete all error:', error);
-                        showToast('Failed to delete all notifications. Please try again.', 'danger');
+                        showAlert.error('Failed to delete all notifications. Please try again.');
                     }
                 };
 
