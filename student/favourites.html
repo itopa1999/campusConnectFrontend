@@ -536,21 +536,6 @@
             font-weight: 500;
         }
 
-        .demo-note {
-            text-align: center;
-            font-size: 10px;
-            color: var(--text-muted);
-            padding: 8px 0 4px;
-            letter-spacing: 0.3px;
-            background: var(--bg-app);
-            border-top: 1px solid var(--border-color);
-            transition: background var(--transition), color var(--transition), border-color var(--transition);
-        }
-        .demo-note span {
-            font-weight: 600;
-            color: var(--green);
-            transition: color var(--transition);
-        }
     </style>
 </head>
 <body>
@@ -608,7 +593,7 @@
 
     <!-- ===== DEMO NOTE ===== -->
     <div class="demo-note">
-        <span>CampusHub</span> • Favourites • heart to remove • real‑time
+        <span>CampusHub</span> • Favourites
     </div>
 
 </div>
@@ -937,7 +922,6 @@
                 const items = await fetchAllFavourites();
                 allItems = items;
                 renderFavourites();
-                console.log('📟 Favourites page initialized.');
             } catch (error) {
                 console.error('Init error:', error);
                 grid.innerHTML = `
@@ -952,6 +936,8 @@
                     showAlert.error('Failed to load favourites.', { duration: 2000 });
                 }
             }
+
+            console.log('📟 Favourites page initialized.');
         }
 
         if (document.readyState === 'loading') {

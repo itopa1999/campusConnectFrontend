@@ -2015,4 +2015,21 @@ body {
         max-width: 90%;
         bottom: 90px;
     }
-} 
+}
+
+/* ─── Demo note ─── */
+.demo-note {
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-muted);
+    padding: 8px 0 4px;
+    letter-spacing: 0.3px;
+    background: var(--bg-app);
+    border-top: 1px solid var(--border-color);
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.demo-note span {
+    font-weight: 600;
+    color: var(--green);
+    transition: color var(--transition);
+}
