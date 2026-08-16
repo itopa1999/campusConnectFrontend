@@ -472,7 +472,6 @@
 
         try {
             const response = await makeRequest();
-            // ✅ Intercept successful responses to update notification dot
             if (response.ok) {
                 handleNotificationFromResponse(response);
             }
@@ -655,6 +654,7 @@
                 { icon: 'fas fa-building', label: 'Hall Verification', id: 'hall-verified' },
                 { icon: 'fas fa-eye', label: 'Change Visibility', id: 'change-visibility' },
                 { icon: 'fas fa-shield-halved', label: 'Add 2FA', id: 'add-2fa' },
+                { icon: 'fas fa-info-circle', label: 'Student Loan', id: 'loan' },
                 { icon: 'fas fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },
                 { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
                 { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
@@ -854,6 +854,7 @@
             'report-issue': 'report.html',
             'help-improve': 'help-improve.html',
             'about-us': 'about-us.html',
+            'loan': 'student-loan.html',
             'term-condition': 'terms-privacy.html',
             'change-password': 'change-password.html',
         };
@@ -905,17 +906,17 @@
         const header = document.createElement('header');
         header.className = 'app-header';
         header.innerHTML = `
-            <div class="logo" id="logoContainer">
+            <div class="logo" title="Logo" id="logoContainer">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <span>CampusHub <small>NG</small></span>
             </div>
             <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                <button class="theme-toggle" title="Switch mode" id="themeToggle" aria-label="Toggle dark mode">
                     <i class="fa-regular fa-sun"></i>
                     <i class="fa-regular fa-moon"></i>
                 </button>
-                ${isAuth ? `<i class="fa-regular fa-bell ${hasUnread ? 'badge-dot' : ''}" id="notificationBell"></i>` : ''}
-                <i class="fa-regular fa-user-circle" id="profileIcon"></i>
+                ${isAuth ? `<i class="fa-regular fa-bell ${hasUnread ? 'badge-dot' : ''}" title="Notification" id="notificationBell"></i>` : ''}
+                <i class="fa-regular fa-user-circle" title="Side bar" id="profileIcon"></i>
             </div>
         `;
 
@@ -1079,7 +1080,7 @@
         const btn = document.createElement('button');
         btn.className = 'scroll-top-btn';
         btn.setAttribute('aria-label', 'Scroll to top');
-        btn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+        btn.innerHTML = '<i class="fa-solid fa-arrow-up" title="Scroll to top"></i>';
         btn.style.cssText = `
             position: fixed;
             bottom: 90px;
