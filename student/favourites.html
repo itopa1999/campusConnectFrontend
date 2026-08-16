@@ -674,7 +674,7 @@
             if (query) {
                 filtered = allItems.filter(item =>
                     item.title.toLowerCase().includes(query) ||
-                    item.category.toLowerCase().includes(query) ||
+                    item.category.name.toLowerCase().includes(query) ||
                     (item.hotspots && item.hotspots.toLowerCase().includes(query))
                 );
             }
@@ -708,7 +708,7 @@
             }
 
             grid.innerHTML = pageItems.map(item => {
-                const icon = getCategoryIcon(item.category);
+                const icon = item.category.icon || 'fa fa-tag';
                 const badgeClass = getBadgeClass(item.badge);
                 const badgeLabel = getBadgeLabel(item.badge);
                 const imgSrc = getImageUrl(item);
@@ -733,7 +733,7 @@
                             <div class="price">${priceDisplay}</div>
                             <div class="meta">
                                 <span class="location"><i class="fa-solid fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
-                                <span class="category-tag"><i class="fa-solid ${icon}"></i> ${item.category}</span>
+                                <span class="category-tag"><i class="fa-solid ${icon}"></i> ${item.category.name}</span>
                             </div>
                         </div>
                     </div>
@@ -928,7 +928,7 @@
                     </div>
                 `;
                 if (typeof showAlert !== 'undefined') {
-                    showAlert.error('Failed to load favourites.', { duration: 2000 });
+                    showAlert.error('Failed to load favourites.');
                 }
             }
 

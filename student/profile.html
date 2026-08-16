@@ -1849,7 +1849,7 @@
                     }
                     isEditMode = true;
                     renderAll();
-                    showAlert.success('Editing enabled. Modify allowed fields.', {duration: 300});
+                    showAlert.success('Editing enabled. Modify allowed fields.');
                 }
             }
 
@@ -1900,7 +1900,8 @@
                     currentProfile = { ...currentProfile, ...updatedData };
                     isEditMode = false;
                     renderAll();
-                    showAlert.success('Profile updated successfully!', {duration: 300});
+                    refreshProfile()
+                    showAlert.success('Profile updated successfully!');
                 } catch (error) {
                     showAlert.error(error.message || 'Update failed. Please try again.');
                     // Revert local changes
@@ -1954,7 +1955,7 @@
                         setAvatarImage(newUrl);
                         $('imageModalImg').src = newUrl;
                         renderPersonalInfo();
-                        showAlert.success('Profile picture updated!', {duration: 300});
+                        showAlert.success('Profile picture updated!');
                     } else {
                         throw new Error('No picture URL returned.');
                     }

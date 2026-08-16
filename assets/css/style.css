@@ -2054,3 +2054,7 @@ body {
     }
 
 }
+
+.review-card .review-comment {
+    white-space: pre-wrap;
+}

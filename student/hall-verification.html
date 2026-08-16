@@ -51,57 +51,7 @@
             transition: color var(--transition);
         }
 
-        /* ─── Verified Card (display only) ─── */
-        .hall-verified-card {
-            text-align: center;
-            padding: 12px 0 8px;
-        }
-        .hall-verified-card .check-icon {
-            font-size: 56px;
-            color: var(--green);
-            display: block;
-            margin-bottom: 6px;
-        }
-        .hall-verified-card h3 {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            transition: color var(--transition);
-        }
-        .hall-verified-card .hall-details {
-            background: var(--bg-input);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin: 12px auto 0;
-            max-width: 320px;
-            text-align: left;
-            transition: background var(--transition);
-        }
-        .hall-verified-card .hall-details .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 14px;
-            transition: border-color var(--transition);
-        }
-        .hall-verified-card .hall-details .detail-row:last-child {
-            border-bottom: none;
-        }
-        .hall-verified-card .hall-details .detail-label {
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .hall-verified-card .hall-details .detail-value {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-        .dark-mode .hall-verified-card .hall-details {
-            background: var(--bg-input);
-        }
-
-        /* ─── Status Display (for unverified) ─── */
+        /* ─── Status Display ─── */
         .hall-status-display {
             display: flex;
             flex-direction: column;
@@ -118,28 +68,44 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+        }
+        .hall-status-display .status-badge.pending {
             background: #fef3e8;
             color: #e67e22;
-        }
-        .hall-status-display .status-badge.verified {
-            background: var(--green-bg);
-            color: var(--green);
         }
         .hall-status-display .status-badge.rejected {
             background: #fde8e8;
             color: var(--red);
         }
-        .dark-mode .hall-status-display .status-badge {
+        .hall-status-display .status-badge.not-submitted {
+            background: var(--bg-input);
+            color: var(--text-muted2);
+            border: 1px solid var(--border-color);
+        }
+        .hall-status-display .status-badge.approved {
+            background: var(--green-bg);
+            color: var(--green);
+            border: 2px solid var(--green);
+            font-size: 18px;
+            padding: 6px 28px;
+        }
+        .dark-mode .hall-status-display .status-badge.pending {
             background: #3a2a1a;
             color: #f39c12;
-        }
-        .dark-mode .hall-status-display .status-badge.verified {
-            background: #1a3a2a;
-            color: #2ecc71;
         }
         .dark-mode .hall-status-display .status-badge.rejected {
             background: #3a1a1a;
             color: #e74c3c;
+        }
+        .dark-mode .hall-status-display .status-badge.not-submitted {
+            background: #2a2a2a;
+            color: #999;
+            border-color: #3a3a3a;
+        }
+        .dark-mode .hall-status-display .status-badge.approved {
+            background: #1a3a2a;
+            color: #2ecc71;
+            border-color: #2ecc71;
         }
 
         .hall-status-display .status-message {
@@ -148,6 +114,50 @@
             margin-top: 6px;
             text-align: center;
             transition: color var(--transition);
+        }
+
+        /* ─── Rejection Reason Box ─── */
+        .rejection-box {
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: #fde8e8;
+            border-radius: 12px;
+            border-left: 4px solid var(--red);
+        }
+        .rejection-box p {
+            font-size: 13px;
+            color: var(--red);
+            margin: 0;
+            line-height: 1.5;
+        }
+        .rejection-box .rejection-reason {
+            margin-top: 6px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border: 1px solid rgba(231, 76, 60, 0.15);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .rejection-box .rejection-reason strong {
+            color: var(--red);
+        }
+        .dark-mode .rejection-box {
+            background: #3a1a1a;
+            border-left-color: #e74c3c;
+        }
+        .dark-mode .rejection-box p {
+            color: #f8a0a0;
+        }
+        .dark-mode .rejection-box .rejection-reason {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(231, 76, 60, 0.2);
+            color: #d0d0d0;
+        }
+        .dark-mode .rejection-box .rejection-reason strong {
+            color: #ff6b6b;
         }
 
         /* ─── Form Elements ─── */
@@ -188,6 +198,12 @@
             border-color: var(--red);
             box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
         }
+        .hall-card .form-input:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
         .hall-card .help-text {
             font-size: 12px;
             color: var(--text-muted);
@@ -215,6 +231,10 @@
             cursor: pointer;
             transition: all 0.2s;
             min-width: 120px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         .hall-actions .btn-submit {
             background: var(--green);
@@ -245,6 +265,10 @@
             margin-right: 6px;
         }
         .btn-submit.loading .btn-text {
+            display: none;
+        }
+
+        .hall-actions.hidden {
             display: none;
         }
 
@@ -287,8 +311,9 @@
                 font-size: 13px;
                 padding: 10px 0;
             }
-            .hall-verified-card .hall-details {
-                max-width: 100%;
+            .rejection-box .rejection-reason {
+                font-size: 12px;
+                padding: 6px 10px;
             }
         }
 
@@ -297,8 +322,6 @@
 <body>
 
     <div class="app-container">
-
-        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -329,37 +352,30 @@
                     <!-- Content (hidden until loaded) -->
                     <div id="hallContent" style="display:none;">
 
-                        <!-- Status Display (shown when NOT verified) -->
+                        <!-- Status Display -->
                         <div class="hall-status-display" id="statusDisplay">
-                            <span class="status-badge" id="statusBadge">Not Verified</span>
+                            <span class="status-badge not-submitted" id="statusBadge">Not Submitted</span>
                             <div class="status-message" id="statusMessage">
-                                Please provide your hall details to get verified.
+                                Please fill in your hall details to get verified.
                             </div>
                         </div>
 
-                        <!-- Verified Card (shown when student_hall_verified_status === 'approved') -->
-                        <div id="verifiedCard" style="display:none;">
-                            <div class="hall-verified-card">
-                                <span class="check-icon"><i class="fas fa-circle-check"></i></span>
-                                <h3>Hall Verified ✅</h3>
-                                <div class="hall-details" id="hallDetails">
-                                    <div class="detail-row">
-                                        <span class="detail-label">Hall of Residence</span>
-                                        <span class="detail-value" id="displayHall">—</span>
-                                    </div>
-                                    <div class="detail-row">
-                                        <span class="detail-label">Room / Flat Number</span>
-                                        <span class="detail-value" id="displayRoom">—</span>
-                                    </div>
-                                </div>
-                                <p style="font-size:14px; color:var(--text-secondary); margin-top:12px;">
-                                    This information helps other students trust you and find you on campus.
-                                </p>
+                        <!-- Rejection Reason (visible only when status === 'Rejected') -->
+                        <div id="rejectionContainer" class="rejection-box" style="display:none;">
+                            <p>
+                                <i class="fas fa-circle-xmark"></i>
+                                <strong>Rejected:</strong> Your hall verification was not approved.
+                            </p>
+                            <div id="rejectionReasonContainer" style="display:none;" class="rejection-reason">
+                                <strong>Reason:</strong> <span id="rejectionReasonText"></span>
                             </div>
+                            <p style="margin-top:8px; font-size:12px; opacity:0.8;">
+                                Please update your details and resubmit.
+                            </p>
                         </div>
 
-                        <!-- Form (shown when status is not 'approved') -->
-                        <form id="hallForm" autocomplete="off" style="display:none;">
+                        <!-- Form (always visible; read‑only when approved) -->
+                        <form id="hallForm" autocomplete="off">
 
                             <!-- Hall Name -->
                             <div class="form-group">
@@ -413,9 +429,9 @@
             const content = document.getElementById('hallContent');
             const statusBadge = document.getElementById('statusBadge');
             const statusMessage = document.getElementById('statusMessage');
-            const verifiedCard = document.getElementById('verifiedCard');
-            const displayHall = document.getElementById('displayHall');
-            const displayRoom = document.getElementById('displayRoom');
+            const rejectionContainer = document.getElementById('rejectionContainer');
+            const rejectionReasonContainer = document.getElementById('rejectionReasonContainer');
+            const rejectionReasonText = document.getElementById('rejectionReasonText');
             const hallForm = document.getElementById('hallForm');
             const hallNameInput = document.getElementById('hallName');
             const roomNumberInput = document.getElementById('roomNumber');
@@ -423,6 +439,7 @@
             const roomNumberHelp = document.getElementById('roomNumberHelp');
             const submitBtn = document.getElementById('submitBtn');
             const cancelBtn = document.getElementById('cancelBtn');
+            const hallActions = document.getElementById('hallActions');
 
             // ─── API Calls ──────────────────────────────────────────────
 
@@ -468,59 +485,91 @@
             // ─── Render UI ──────────────────────────────────────────────
 
             function renderHallStatus(data) {
-                const { student_hall_verified, student_hall_verified_status, hall_residence, hall_number } = data;
+                const { student_hall_verified_status, hall_residence, hall_number, hall_verified_status_rejection_reason } = data;
 
                 loadingState.style.display = 'none';
                 content.style.display = 'block';
 
-                const isApproved = (student_hall_verified_status === 'approved');
+                // Determine status: 'Approved', 'Pending', 'Rejected', or null → 'Not Submitted'
+                const status = student_hall_verified_status;
+                const isApproved = (status === 'Approved');
+                const isRejected = (status === 'Rejected');
+
+                // ── Always show the form ──
+                hallForm.style.display = 'block';
+
+                // ── Pre‑fill form fields ──
+                hallNameInput.value = hall_residence || '';
+                roomNumberInput.value = hall_number || '';
+
+                // ── Disable inputs if approved ──
+                hallNameInput.disabled = isApproved;
+                roomNumberInput.disabled = isApproved;
+
+                // ── Show/hide action buttons ──
+                if (isApproved) {
+                    hallActions.classList.add('hidden');
+                    submitBtn.style.display = 'none';
+                    cancelBtn.style.display = 'none';
+                } else {
+                    hallActions.classList.remove('hidden');
+                    submitBtn.style.display = 'flex';
+                    cancelBtn.style.display = 'flex';
+                }
+
+                // ── Rejection reason (only when rejected) ──
+                if (isRejected) {
+                    rejectionContainer.style.display = 'block';
+                    if (hall_verified_status_rejection_reason) {
+                        rejectionReasonContainer.style.display = 'block';
+                        rejectionReasonText.textContent = hall_verified_status_rejection_reason;
+                    } else {
+                        rejectionReasonContainer.style.display = 'none';
+                    }
+                } else {
+                    rejectionContainer.style.display = 'none';
+                }
+
+                // ── Set status badge and message ──
+                let statusLabel = '';
+                let badgeClass = '';
+                let msg = '';
 
                 if (isApproved) {
-                    // Show verified card
-                    verifiedCard.style.display = 'block';
-                    hallForm.style.display = 'none';
-                    statusBadge.textContent = 'Verified';
-                    statusBadge.className = 'status-badge verified';
-                    statusMessage.textContent = 'Your hall has been verified! This helps build trust with other students.';
-                    displayHall.textContent = hall_residence || '—';
-                    displayRoom.textContent = hall_number || '—';
-                } else {
-                    // Show form
-                    verifiedCard.style.display = 'none';
-                    hallForm.style.display = 'block';
+                    statusLabel = 'Verified ✅';
+                    badgeClass = 'approved';
+                    msg = 'Your hall is verified. These details are confirmed and cannot be edited.';
+                } else if (isRejected) {
+                    statusLabel = 'Rejected';
+                    badgeClass = 'rejected';
+                    msg = 'Your hall verification was rejected. Please update your details and resubmit.';
+                } else if (status === 'Pending') {
+                    statusLabel = 'Pending Review';
+                    badgeClass = 'pending';
+                    msg = 'Your hall verification is currently under review. You can update your details below.';
+                } else { // null or anything else
+                    statusLabel = 'Not Submitted';
+                    badgeClass = 'not-submitted';
+                    msg = 'Please fill in your hall details to get verified.';
+                }
 
-                    // Determine status label & message
-                    let statusLabel = 'Not Verified';
-                    let statusMsg = 'Please provide your hall details to get verified.';
-                    let badgeClass = '';
+                statusBadge.textContent = statusLabel;
+                statusBadge.className = 'status-badge ' + badgeClass;
+                statusMessage.textContent = msg;
 
-                    if (student_hall_verified_status === 'pending') {
-                        statusLabel = 'Pending Review';
-                        statusMsg = 'Your hall verification is currently under review. You can update your details below.';
-                        badgeClass = 'pending';
-                    } else if (student_hall_verified_status === 'rejected') {
-                        statusLabel = 'Rejected';
-                        statusMsg = 'Your hall verification was rejected. Please update your details and resubmit.';
-                        badgeClass = 'rejected';
-                    }
+                // ── Clear help messages ──
+                hallNameHelp.textContent = '';
+                hallNameHelp.className = 'help-text';
+                roomNumberHelp.textContent = '';
+                roomNumberHelp.className = 'help-text';
 
-                    statusBadge.textContent = statusLabel;
-                    statusBadge.className = 'status-badge ' + badgeClass;
-                    statusMessage.textContent = statusMsg;
+                // ── Reset submit button ──
+                submitBtn.disabled = true;
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = `<span class="btn-text"><i class="fas fa-paper-plane"></i> Submit for Verification</span><span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>`;
 
-                    // Pre‑fill form fields if data exists
-                    hallNameInput.value = hall_residence || '';
-                    roomNumberInput.value = hall_number || '';
-                    // Clear help messages
-                    hallNameHelp.textContent = '';
-                    hallNameHelp.className = 'help-text';
-                    roomNumberHelp.textContent = '';
-                    roomNumberHelp.className = 'help-text';
-                    // Reset submit button
-                    submitBtn.disabled = true;
-                    submitBtn.classList.remove('loading');
-                    submitBtn.innerHTML = `<span class="btn-text"><i class="fas fa-paper-plane"></i> Submit for Verification</span><span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>`;
-                    // Validate after pre‑filling (will enable if both fields have values)
+                // ── Validate (will enable if not approved and both fields have values) ──
+                if (!isApproved) {
                     validateForm();
                 }
             }
@@ -568,6 +617,7 @@
 
             async function handleSubmit(e) {
                 e.preventDefault();
+                if (submitBtn.disabled) return;
                 if (!validateForm()) return;
 
                 const payload = {
@@ -585,7 +635,7 @@
                     const updated = await fetchHallStatus();
                     renderHallStatus(updated);
                     if (typeof showAlert !== 'undefined') {
-                        showAlert.success('Hall verification submitted! We\'ll review it shortly.', { duration: 3000 });
+                        showAlert.success('Hall verification submitted! We\'ll review it shortly.');
                     }
                 } catch (error) {
                     console.error('Submission error:', error);
@@ -594,12 +644,12 @@
                     } else {
                         alert('Submission failed: ' + error.message);
                     }
-                    // Re-enable submit button
+                    // Re‑enable submit button
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('loading');
                 } finally {
                     // In case the status didn't change and form is still shown, re‑validate
-                    if (hallForm.style.display !== 'none') {
+                    if (!hallActions.classList.contains('hidden')) {
                         validateForm();
                     }
                 }

@@ -505,7 +505,7 @@
                             const data = await fetchMethods();
                             renderMethods(data);
                             if (typeof showAlert !== 'undefined') {
-                                showAlert.success(`${methodName} disabled.`, { duration: 2000 });
+                                showAlert.success(`${methodName} disabled.`);
                             }
                         } catch (err) {
                             console.error(err);
@@ -550,7 +550,7 @@
                                 const data = await fetchMethods();
                                 renderMethods(data);
                                 if (typeof showAlert !== 'undefined') {
-                                    showAlert.success(`${methodName} enabled.`, { duration: 2000 });
+                                    showAlert.success(`${methodName} enabled.`);
                                 }
                             }
                         } catch (err) {
@@ -676,7 +676,7 @@
                                 const methods = await fetchMethods();
                                 renderMethods(methods);
                                 if (typeof showAlert !== 'undefined') {
-                                    showAlert.success('TOTP enabled successfully!', { duration: 3000 });
+                                    showAlert.success('TOTP enabled successfully!');
                                 }
                             }
                         } catch (err) {
@@ -766,7 +766,7 @@
                                 // Refresh methods
                                 fetchMethods().then(data => renderMethods(data)).catch(console.error);
                                 if (typeof showAlert !== 'undefined') {
-                                    showAlert.success('TOTP enabled and backup codes saved!', { duration: 3000 });
+                                    showAlert.success('TOTP enabled and backup codes saved!');
                                 }
                             });
                         }
@@ -833,7 +833,7 @@
                             modalInstance.close();
                             fetchMethods().then(data => renderMethods(data)).catch(console.error);
                             if (typeof showAlert !== 'undefined') {
-                                showAlert.success('TOTP enabled and backup codes saved!', { duration: 3000 });
+                                showAlert.success('TOTP enabled and backup codes saved!');
                             }
                         });
                     }

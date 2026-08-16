@@ -1,11 +1,11 @@
 // =========================================================================
 // 1.  CONSTANTS & CONFIG
 // =========================================================================
-const AUTH_URL = 'http://localhost/v1/user/api/auth/';
-const REPORT_URL = 'http://localhost/v1/user/api/report/';
-const CAMPUS_URL = 'http://localhost/v1/campus/api/campus/';
-const REFRESH_URL = 'http://localhost/v1/user/api/';
-const NOTIFICATIONS_URL = 'http://localhost/v1/user/api/notifications/';
+const AUTH_URL = 'http://127.0.0.1:8000/v1/user/api/auth/';
+const REPORT_URL = 'http://127.0.0.1:8000/v1/user/api/report/';
+const CAMPUS_URL = 'http://127.0.0.1:8000/v1/campus/api/campus/';
+const REFRESH_URL = 'http://127.0.0.1:8000/v1/user/api/';
+const NOTIFICATIONS_URL = 'http://127.0.0.1:8000/v1/user/api/notifications/';
 
 // =========================================================================
 // 2.  UTILITY FUNCTIONS (no DOM dependencies)

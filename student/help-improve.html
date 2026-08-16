@@ -397,13 +397,6 @@
                             <div class="help-text" id="descHelp"></div>
                         </div>
 
-                        <!-- Email (Optional) -->
-                        <div class="form-group">
-                            <label for="email">Email <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
-                            <input type="email" id="email" class="form-input" placeholder="your@email.com (so we can follow up)" />
-                            <div class="help-text" id="emailHelp"></div>
-                        </div>
-
                         <!-- Screenshot / Attachment -->
                         <div class="form-group">
                             <label>Screenshot or Attachment <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
@@ -456,13 +449,11 @@
             const typeSelect = document.getElementById('feedbackType');
             const subjectInput = document.getElementById('subject');
             const descInput = document.getElementById('description');
-            const emailInput = document.getElementById('email');
             const fileInput = document.getElementById('feedbackFile');
 
             const typeHelp = document.getElementById('typeHelp');
             const subjectHelp = document.getElementById('subjectHelp');
             const descHelp = document.getElementById('descHelp');
-            const emailHelp = document.getElementById('emailHelp');
 
             const submitBtn = document.getElementById('submitBtn');
             const cancelBtn = document.getElementById('cancelBtn');
@@ -520,20 +511,6 @@
                     clearFieldHelp(descHelp);
                 }
 
-                // Email (optional, but validate if filled)
-                const email = emailInput.value.trim();
-                if (email) {
-                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailPattern.test(email)) {
-                        setFieldHelp(emailHelp, 'Please enter a valid email address.');
-                        isValid = false;
-                    } else {
-                        clearFieldHelp(emailHelp);
-                    }
-                } else {
-                    clearFieldHelp(emailHelp);
-                }
-
                 submitBtn.disabled = !isValid;
                 return isValid;
             }
@@ -551,7 +528,6 @@
             // ─── Input events ──────────────────────────────────────────
             typeSelect.addEventListener('change', validateForm);
             subjectInput.addEventListener('input', validateForm);
-            emailInput.addEventListener('input', validateForm);
 
             // ─── Submit ─────────────────────────────────────────────────
             form.addEventListener('submit', function(e) {
@@ -562,7 +538,6 @@
                     type: typeSelect.value,
                     subject: subjectInput.value.trim(),
                     description: descInput.value.trim(),
-                    email: emailInput.value.trim() || null,
                     attachment: fileInput.files[0] ? fileInput.files[0].name : null,
                 };
 
@@ -579,7 +554,7 @@
                         console.log('📝 Feedback submitted:', feedbackData);
 
                         if (typeof showAlert !== 'undefined') {
-                            showAlert.success('Thank you for your feedback! 🎉', { duration: 4000 });
+                            showAlert.success('Thank you for your feedback! 🎉');
                         } else {
                             alert('Thank you for your feedback!');
                         }

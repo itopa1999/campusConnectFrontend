@@ -130,6 +130,11 @@
             background: #fde8e8;
             color: var(--red);
         }
+        .id-status-display .status-badge.neutral {
+            background: var(--bg-input);
+            color: var(--text-muted2);
+            border: 1px solid var(--border-color);
+        }
         .dark-mode .id-status-display .status-badge.pending {
             background: #3a2a1a;
             color: #f39c12;
@@ -142,6 +147,11 @@
         .dark-mode .id-status-display .status-badge.rejected {
             background: #3a1a1a;
             color: #e74c3c;
+        }
+        .dark-mode .id-status-display .status-badge.neutral {
+            background: #2a2a2a;
+            color: #999;
+            border-color: #3a3a3a;
         }
 
         .id-status-display .status-message {
@@ -316,6 +326,10 @@
             cursor: pointer;
             transition: all 0.2s;
             min-width: 120px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         .id-actions .btn-submit {
             background: var(--green);
@@ -359,6 +373,53 @@
             font-size: 14px;
             color: var(--text-secondary);
             transition: color var(--transition);
+        }
+
+        /* ─── Rejected box (now includes reason) ─── */
+        .rejected-box {
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: #fde8e8;
+            border-radius: 12px;
+            border-left: 4px solid var(--red);
+        }
+        .rejected-box p {
+            font-size: 13px;
+            color: var(--red);
+            margin: 0;
+            line-height: 1.5;
+        }
+        .rejected-box .rejection-reason {
+            margin-top: 6px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border: 1px solid rgba(231, 76, 60, 0.15);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .rejected-box .rejection-reason strong {
+            color: var(--red);
+        }
+        .rejected-box i {
+            margin-right: 6px;
+        }
+        .dark-mode .rejected-box {
+            background: #3a1a1a;
+            border-left-color: #e74c3c;
+        }
+        .dark-mode .rejected-box p {
+            color: #f8a0a0;
+        }
+        .dark-mode .rejected-box .rejection-reason {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(231, 76, 60, 0.2);
+            color: #d0d0d0;
+        }
+        .dark-mode .rejected-box .rejection-reason strong {
+            color: #ff6b6b;
         }
 
         /* ─── Loading shimmer ─── */
@@ -415,16 +476,17 @@
                 font-size: 16px;
                 padding: 6px 20px;
             }
+            .rejected-box .rejection-reason {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
         }
-
 
     </style>
 </head>
 <body>
 
     <div class="app-container">
-
-        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -475,20 +537,34 @@
                                 <span id="idImagePlaceholder">📄</span>
                                 <img id="idImage" src="" alt="Student ID" style="display:none;" />
                             </div>
-                            <div class="status-badge" id="statusBadge">Pending</div>
+                            <div class="status-badge" id="statusBadge">Not Uploaded</div>
                             <div class="status-message" id="statusMessage">
-                                Your ID is under review. We'll notify you once it's approved.
+                                You haven't uploaded your student ID yet.
                             </div>
                         </div>
 
-                        <!-- Approved State (shown if status === 'approved') -->
+                        <!-- Approved State (shown if status === 'Approved') -->
                         <div id="approvedState" class="approved-message" style="display:none;">
                             <span class="check-icon"><i class="fas fa-circle-check"></i></span>
-                            <h3>ID Verified ✅</h3>
+                            <h3>ID Verified</h3>
                             <p>Your student ID has been approved. You now have a verified badge and higher trust score.</p>
                         </div>
 
-                        <!-- Upload Area (shown if NOT approved) -->
+                        <!-- Rejected State (now includes reason) -->
+                        <div id="rejectedState" class="rejected-box" style="display:none;">
+                            <p>
+                                <i class="fas fa-circle-xmark"></i>
+                                <strong>Rejected:</strong> Your ID was not approved.
+                            </p>
+                            <div id="rejectionReasonContainer" style="display:none;" class="rejection-reason">
+                                <strong>Reason:</strong> <span id="rejectionReasonText"></span>
+                            </div>
+                            <p style="margin-top:8px; font-size:12px; opacity:0.8;">
+                                Please upload a clearer image and try again.
+                            </p>
+                        </div>
+
+                        <!-- Upload Area (shown if NOT Approved) -->
                         <div id="uploadArea" style="display:none;">
                             <p style="font-size:13px; color:var(--text-muted); margin-bottom:4px; transition:color var(--transition);">
                                 <i class="fas fa-cloud-arrow-up"></i> Upload a clear photo of your student ID.
@@ -512,14 +588,6 @@
                                 </button>
                                 <button class="btn-cancel" id="cancelBtn">Cancel</button>
                             </div>
-                        </div>
-
-                        <!-- Rejected message (extra) -->
-                        <div id="rejectedState" style="display:none; margin-top:12px; padding:12px 16px; background:#fde8e8; border-radius:12px; border-left:4px solid var(--red);">
-                            <p style="font-size:13px; color:var(--red); margin:0;">
-                                <i class="fas fa-circle-xmark"></i>
-                                <strong>Rejected:</strong> Your ID was not approved. Please upload a clearer image and try again.
-                            </p>
                         </div>
 
                     </div><!-- /idContent -->
@@ -555,8 +623,10 @@
             const statusBadge = document.getElementById('statusBadge');
             const statusMessage = document.getElementById('statusMessage');
             const approvedState = document.getElementById('approvedState');
-            const uploadArea = document.getElementById('uploadArea');
             const rejectedState = document.getElementById('rejectedState');
+            const rejectionReasonContainer = document.getElementById('rejectionReasonContainer');
+            const rejectionReasonText = document.getElementById('rejectionReasonText');
+            const uploadArea = document.getElementById('uploadArea');
             const fileInput = document.getElementById('idFileInput');
             const submitBtn = document.getElementById('submitIdBtn');
             const cancelBtn = document.getElementById('cancelBtn');
@@ -606,98 +676,114 @@
 
             function renderStatus(data) {
                 const {
-                    student_id_verified,  
-                    student_id_verified_status,
-                    student_id_photo_url
+                    student_id_verified,          // boolean (may be inconsistent)
+                    student_id_verified_status,   // 'Approved' | 'Rejected' | 'Pending' | null
+                    student_id_photo_url,
+                    student_id_verified_rejection_reason  // string | null
                 } = data;
 
-                // Determine display status (normalised)
-                let displayStatus = (student_id_verified_status || 'pending').toLowerCase();
-                // Ensure we have one of the three
-                if (!['approved', 'rejected', 'pending'].includes(displayStatus)) {
+                // ─── Determine display status ──────────────────────────────
+                let displayStatus = 'not_uploaded';
+                let statusLabel = 'Not Uploaded';
+                let statusClass = 'neutral';
+
+                if (student_id_verified_status === 'Approved') {
+                    displayStatus = 'approved';
+                    statusLabel = 'Approved';
+                    statusClass = 'approved';
+                } else if (student_id_verified_status === 'Rejected') {
+                    displayStatus = 'rejected';
+                    statusLabel = 'Rejected';
+                    statusClass = 'rejected';
+                } else if (student_id_verified_status === 'Pending') {
                     displayStatus = 'pending';
+                    statusLabel = 'Pending';
+                    statusClass = 'pending';
+                } else {
+                    // null or anything else → not uploaded
+                    displayStatus = 'not_uploaded';
+                    statusLabel = 'Not Uploaded';
+                    statusClass = 'neutral';
                 }
+
                 const isApproved = (displayStatus === 'approved');
                 const isRejected = (displayStatus === 'rejected');
                 const isPending = (displayStatus === 'pending');
+                const isNotUploaded = (displayStatus === 'not_uploaded');
 
-                // Hide loading, show content
+                // ─── Hide loading, show content ──────────────────────────────
                 loadingState.style.display = 'none';
                 content.style.display = 'block';
 
-                // ── Image ──
-                // Hide the image container when approved (per requirement)
+                // ─── Image ──────────────────────────────────────────────────────
                 if (isApproved) {
                     idImageContainer.style.display = 'none';
                 } else {
                     idImageContainer.style.display = 'flex';
                     if (student_id_photo_url) {
-                        idImage.src = student_id_photo_url || (
-                        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='200' y='160' font-family='Arial' font-size='24' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E"
-                    );
+                        idImage.src = student_id_photo_url;
                         idImage.style.display = 'block';
                         idImagePlaceholder.style.display = 'none';
                     } else {
                         idImage.style.display = 'none';
                         idImagePlaceholder.style.display = 'flex';
+                        idImagePlaceholder.textContent = '📄';
                     }
                 }
 
-                // ── Status Badge ──
-                statusBadge.textContent = isApproved ? 'Approved' : (isRejected ? 'Rejected' : 'Pending');
-                statusBadge.className = 'status-badge ' + displayStatus;
+                // ─── Status Badge ──────────────────────────────────────────────
+                statusBadge.textContent = statusLabel;
+                statusBadge.className = 'status-badge ' + statusClass;
 
-                // ── Status Message ──
+                // ─── Status Message ────────────────────────────────────────────
                 let msg = '';
                 if (isApproved) {
                     msg = 'Your ID is verified. You have a verified badge and higher trust score.';
                 } else if (isRejected) {
                     msg = 'Your ID was rejected. Please upload a clearer image.';
-                } else { // pending
+                } else if (isPending) {
                     msg = 'Your ID is under review. We\'ll notify you once it\'s approved.';
+                } else { // not_uploaded
+                    msg = 'You haven\'t uploaded your student ID yet. Upload it now to verify your identity and boost your trust score.';
                 }
                 statusMessage.textContent = msg;
 
-                // ── Show/hide sections ──
+                // ─── Show/hide sections ────────────────────────────────────────
                 approvedState.style.display = isApproved ? 'block' : 'none';
-                rejectedState.style.display = isRejected ? 'block' : 'none';
 
-                // Upload area: visible only if NOT approved AND NOT pending? Actually we allow upload if verified is false (i.e., not approved)
-                const canUpload = !student_id_verified; // false means not verified → can upload
+                // ─── Rejected state with reason ─────────────────────────────────
+                if (isRejected) {
+                    rejectedState.style.display = 'block';
+                    if (student_id_verified_rejection_reason) {
+                        rejectionReasonContainer.style.display = 'block';
+                        rejectionReasonText.textContent = student_id_verified_rejection_reason;
+                    } else {
+                        rejectionReasonContainer.style.display = 'none';
+                    }
+                } else {
+                    rejectedState.style.display = 'none';
+                }
+
+                // Upload area: visible if NOT approved
+                const canUpload = !isApproved;
                 uploadArea.style.display = canUpload ? 'block' : 'none';
 
-                // If approved, disable upload entirely
                 if (isApproved) {
                     fileInput.disabled = true;
                     fileDropZone.style.pointerEvents = 'none';
                     fileDropZone.style.opacity = '0.5';
                     fileDropZone.style.cursor = 'not-allowed';
-                    // Clear any file selection
                     fileInput.value = '';
                     const container = fileDropZone.querySelector('.file-preview-container');
                     if (container) container.innerHTML = '';
                     fileDropZone.classList.remove('has-file');
                     submitBtn.disabled = true;
                 } else {
-                    // Enable upload
                     fileInput.disabled = false;
                     fileDropZone.style.pointerEvents = 'auto';
                     fileDropZone.style.opacity = '1';
                     fileDropZone.style.cursor = 'pointer';
-                    // If rejected or pending, keep upload enabled
-                    // Clear previous selection only if we want to force new upload? 
-                    // Actually we keep the file input as is; user can choose new file.
-                }
-
-                // If rejected, we can keep upload area visible and user can upload again.
-                // The file input may still have a previous file; we can optionally clear it.
-                // But we want the user to be able to re-upload, so we don't clear automatically.
-                // However, we should clear the preview if there is one, because the old file might be invalid now.
-                // We'll clear the preview on render if status is rejected or pending.
-                if (!isApproved) {
-                    // Clear preview if status changed (so user starts fresh)
-                    // But we don't want to clear if they just uploaded and it's pending.
-                    // A better approach: only clear if the status is rejected (to force re-upload)
+                    // If rejected, clear the preview so user can re-upload
                     if (isRejected) {
                         fileInput.value = '';
                         const container = fileDropZone.querySelector('.file-preview-container');
@@ -752,7 +838,7 @@
                     renderStatus(newData);
 
                     if (typeof showAlert !== 'undefined') {
-                        showAlert.success('ID uploaded successfully! It will be reviewed shortly.', { duration: 3000 });
+                        showAlert.success('ID uploaded successfully! It will be reviewed shortly.');
                     }
 
                     // Clear file input and preview

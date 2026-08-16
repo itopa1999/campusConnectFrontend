@@ -11,11 +11,11 @@
     // ============================================================
     // API ENDPOINTS
     // ============================================================
-    const AUTH_URL = 'http://localhost/v1/user/api/auth/';
-    const CAMPUS_URL = 'http://localhost/v1/campus/api/campus/';
-    const NOTIFICATIONS_URL = 'http://localhost/v1/user/api/notifications/';
-    const LOGOUT_URL = 'http://localhost/v1/user/api/auth/logout-user';
-    const REFRESH_POINTS_URL = 'http://localhost/v1/user/api/';
+    const AUTH_URL = 'http://127.0.0.1:8000/v1/user/api/auth/';
+    const CAMPUS_URL = 'http://127.0.0.1:8000/v1/campus/api/campus/';
+    const NOTIFICATIONS_URL = 'http://127.0.0.1:8000/v1/user/api/notifications/';
+    const LOGOUT_URL = 'http://127.0.0.1:8000/v1/user/api/auth/logout-user';
+    const REFRESH_POINTS_URL = 'http://127.0.0.1:8000/v1/user/api/';
     const X_KEY_ID = '1';
     const PLATFORM = 'web';
 
@@ -658,7 +658,7 @@
                 { icon: 'fas fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },
                 { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
                 { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
-                { icon: 'fas fa-file-contract', label: 'Term & Condition', id: 'term-condition' },
+                { icon: 'fas fa-file-contract', label: 'Terms & Conditions', id: 'term-condition' },
                 { icon: 'fas fa-key', label: 'Change Password', id: 'change-password' },
                 { icon: 'fas fa-right-from-bracket', label: 'Logout', id: 'logout' },
             ];
@@ -667,6 +667,7 @@
             menuItems = [
                 { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
                 { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
+                { icon: 'fas fa-file-contract', label: 'Terms & Conditions', id: 'term-condition' },
             ];
         }
 
@@ -1063,11 +1064,7 @@
             filterApply.addEventListener('click', function() {
                 console.log('Filters applied!');
                 closeSidebar();
-                if (typeof showAlert !== 'undefined') {
-                    showAlert.success('Filters applied!');
-                } else {
-                    alert('Filters applied! (This is a demo)');
-                }
+                    showToast('Filters applied!', 'success');             
             });
         }
     }

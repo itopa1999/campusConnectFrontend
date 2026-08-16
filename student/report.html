@@ -264,6 +264,10 @@
                                     <input type="radio" name="report_type" value="user" />
                                     <span class="checkmark-radio"></span> User
                                 </label>
+                                <label class="form-check">
+                                    <input type="radio" name="report_type" value="support" />
+                                    <span class="checkmark-radio"></span> Support
+                                </label>
                             </div>
                         </div>
 
@@ -277,8 +281,15 @@
                         <!-- User Identifier -->
                         <div class="form-group" id="userIdGroup" style="display:none;">
                             <label for="userIdentifier">Username or User ID <span style="color:var(--red);">*</span></label>
-                            <input type="text" id="userIdentifier" class="form-input" placeholder="e.g., @john_doe or ID 5678" />
+                            <input type="text" id="userIdentifier" class="form-input" placeholder="e.g., john doe or email" />
                             <div class="help-text" id="userHelp"></div>
+                        </div>
+
+                        <!-- Support Identifier -->
+                        <div class="form-group" id="supportIdGroup" style="display:none;">
+                            <label for="supportIdentifier">Support <span style="color:var(--red);">*</span></label>
+                            <input type="text" id="supportIdentifier" class="form-input" placeholder="e.g., How can we help you" />
+                            <div class="help-text" id="supportHelp"></div>
                         </div>
 
                         <!-- Reason -->
@@ -340,13 +351,16 @@
             const form = document.getElementById('reportForm');
             const listingGroup = document.getElementById('listingIdGroup');
             const userGroup = document.getElementById('userIdGroup');
+            const supportGroup = document.getElementById('supportIdGroup');
             const listingInput = document.getElementById('listingIdentifier');
             const userInput = document.getElementById('userIdentifier');
+            const supportInput = document.getElementById('supportIdentifier');
             const reasonSelect = document.getElementById('reason');
             const detailsInput = document.getElementById('details');
 
             const listingHelp = document.getElementById('listingHelp');
             const userHelp = document.getElementById('userHelp');
+            const supportHelp = document.getElementById('supportHelp');
             const reasonHelp = document.getElementById('reasonHelp');
             const detailsHelp = document.getElementById('detailsHelp');
 
@@ -359,17 +373,35 @@
                     if (this.value === 'listing') {
                         listingGroup.style.display = 'block';
                         userGroup.style.display = 'none';
+                        supportGroup.style.display = 'none';
                         listingInput.required = true;
                         userInput.required = false;
+                        supportInput.required = false;
+                        supportInput.value = '';
                         listingInput.value = '';
                         userInput.value = '';
                         clearFieldHelp(listingHelp);
                         clearFieldHelp(userHelp);
-                    } else {
+                    } else if (this.value === 'user'){
                         listingGroup.style.display = 'none';
+                        supportGroup.style.display = 'none';
                         userGroup.style.display = 'block';
                         listingInput.required = false;
                         userInput.required = true;
+                        supportInput.required = false;
+                        supportInput.value = '';
+                        listingInput.value = '';
+                        userInput.value = '';
+                        clearFieldHelp(listingHelp);
+                        clearFieldHelp(userHelp);
+                    } else if (this.value === 'support'){
+                        listingGroup.style.display = 'none';
+                        userGroup.style.display = 'none';
+                        supportGroup.style.display = 'block';
+                        listingInput.required = false;
+                        userInput.required = false;
+                        supportInput.required = true;
+                        supportInput.value = '';
                         listingInput.value = '';
                         userInput.value = '';
                         clearFieldHelp(listingHelp);
@@ -404,13 +436,21 @@
                     } else {
                         clearFieldHelp(listingHelp);
                     }
-                } else {
+                } else if (reportType === 'user') {
                     const val = userInput.value.trim();
                     if (!val) {
-                        setFieldHelp(userHelp, 'Please enter a username or user ID.');
+                        setFieldHelp(userHelp, 'Please enter a student name or email.');
                         isValid = false;
                     } else {
                         clearFieldHelp(userHelp);
+                    }
+                } else if (reportType === 'support') {
+                    const val = supportInput.value.trim();
+                    if (!val) {
+                        setFieldHelp(supportHelp, 'What do you need us for.');
+                        isValid = false;
+                    } else {
+                        clearFieldHelp(supportHelp);
                     }
                 }
 
@@ -470,7 +510,7 @@
                         console.log('📢 Report submitted:', reportData);
 
                         if (typeof showAlert !== 'undefined') {
-                            showAlert.success('Report submitted! We\'ll review it shortly.', { duration: 4000 });
+                            showAlert.success('Report submitted! We\'ll review it shortly.');
                         } else {
                             alert('Report submitted! We\'ll review it shortly.');
                         }

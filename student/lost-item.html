@@ -1127,6 +1127,32 @@
             font-size: 14px;
         }
 
+        /* ─── Modal button content centering ─── */
+        .verify-modal .modal-footer .btn-submit,
+        .add-modal .modal-footer .btn-submit {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* Ensure icons are aligned */
+        .verify-modal .modal-footer .btn-submit i,
+        .add-modal .modal-footer .btn-submit i {
+            display: inline-block;
+            margin: 0;
+        }
+
+        /* Loading state spinner */
+        .add-modal .modal-footer .btn-submit.loading {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
 
     </style>
 </head>
@@ -1494,7 +1520,7 @@
             async function submitReport(formData) {
                 const response = await fetchWithAuth(REPORT_API, {
                     method: 'POST',
-                    body: formData, // multipart/form-data
+                    body: formData,
                 });
                 if (!response.ok) {
                     const err = await response.json().catch(() => ({}));
@@ -1644,7 +1670,7 @@
                     formFields.classList.add('hidden');
                     successState.classList.add('active');
                     modalSubmit.style.display = 'none';
-                    showAlert.success('Claim submitted! You\'ll be contacted soon.', { duration: 3000 });
+                    showAlert.success('Claim submitted! You\'ll be contacted soon.');
                     // Optionally refresh the list to update status
                     fetchLostItems(searchQuery);
                 } catch (error) {
@@ -1765,10 +1791,8 @@
 
                 try {
                     await submitReport(formData);
-                    showAlert.success('Lost item reported successfully!', {duration: 300});
                     closeAddModal();
-                    // Refresh list
-                    fetchLostItems(searchQuery);
+                    showAlert.success('Lost item reported successfully!');
                 } catch (error) {
                     console.error('Report error:', error);
                     showAlert.error(error.message || 'Failed to report item.');

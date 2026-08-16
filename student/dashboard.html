@@ -39,6 +39,7 @@
             gap: 12px;
         }
         .dash-welcome .greeting .avatar {
+            cursor: pointer;
             width: 44px;
             height: 44px;
             border-radius: 50%;
@@ -1261,339 +1262,337 @@
             background: linear-gradient(135deg, #4a0e4e, #1a0b2e);
         }
 
-/* ─── Banner Slide with Image Blend ─── */
-.banner-carousel {
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--border-color);
-}
+        /* ─── Banner Slide with Image Blend ─── */
+        .banner-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-color);
+        }
 
-.banner-carousel .carousel-track {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-    height: 100%;
-}
+        .banner-carousel .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
 
-.banner-carousel .carousel-slide {
-    position: relative;
-    min-height: 150px;
-    flex: 0 0 100%;
-    padding: 20px 30px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-}
+        .banner-carousel .carousel-slide {
+            position: relative;
+            min-height: 150px;
+            flex: 0 0 100%;
+            padding: 20px 30px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
 
-/* ─── Content ─── */
-.banner-carousel .carousel-slide .slide-content {
-    position: relative;
-    z-index: 2;
-    color: #fff;
-    max-width: 55%;
-}
+        /* ─── Content ─── */
+        .banner-carousel .carousel-slide .slide-content {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+            max-width: 55%;
+        }
 
-.banner-carousel .carousel-slide .slide-content h2 {
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 4px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    line-height: 1.2;
-}
+        .banner-carousel .carousel-slide .slide-content h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            line-height: 1.2;
+        }
 
-.banner-carousel .carousel-slide .slide-content p {
-    font-size: 14px;
-    opacity: 0.9;
-    margin-bottom: 8px;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-}
+        .banner-carousel .carousel-slide .slide-content p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        }
 
-.banner-carousel .carousel-slide .slide-content .slide-cta {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 6px 20px;
-    border-radius: 30px;
-    font-size: 13px;
-    font-weight: 700;
-    display: inline-block;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
+        .banner-carousel .carousel-slide .slide-content .slide-cta {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-block;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.banner-carousel .carousel-slide .slide-content .slide-cta:hover {
-    background: rgba(255, 255, 255, 0.35);
-    transform: scale(1.02);
-}
+        .banner-carousel .carousel-slide .slide-content .slide-cta:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.02);
+        }
 
-/* ─── Image (positioned on right, blends with background) ─── */
-.banner-carousel .carousel-slide .slide-image {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 45%;
-    overflow: hidden;
-    z-index: 1;
-    pointer-events: none;
-}
+        /* ─── Image (positioned on right, blends with background) ─── */
+        .banner-carousel .carousel-slide .slide-image {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 45%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-.banner-carousel .carousel-slide .slide-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.15;
-    transition: opacity 0.3s ease;
-}
+        .banner-carousel .carousel-slide .slide-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.15;
+            transition: opacity 0.3s ease;
+        }
 
-/* ─── Gradient overlay (blends image into background) ─── */
-.banner-carousel .carousel-slide .slide-image::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to left, transparent 40%, var(--slide-bg, #0d8a3e) 70%);
-    pointer-events: none;
-}
+        /* ─── Gradient overlay (blends image into background) ─── */
+        .banner-carousel .carousel-slide .slide-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to left, transparent 40%, var(--slide-bg, #0d8a3e) 70%);
+            pointer-events: none;
+        }
 
-/* ─── Overlay (keeps text readable) ─── */
-.banner-carousel .carousel-slide .slide-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.05) 60%, rgba(0, 0, 0, 0.15) 100%);
-    z-index: 1;
-    pointer-events: none;
-}
+        /* ─── Overlay (keeps text readable) ─── */
+        .banner-carousel .carousel-slide .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.05) 60%, rgba(0, 0, 0, 0.15) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
 
-/* ─── Dots ─── */
-.banner-carousel .carousel-dots {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 3;
-}
-.banner-carousel .carousel-dots .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4);
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-.banner-carousel .carousel-dots .dot.active {
-    background: #ffffff;
-    transform: scale(1.2);
-}
-.banner-carousel .carousel-dots .dot:hover {
-    background: rgba(255, 255, 255, 0.7);
-}
+        /* ─── Dots ─── */
+        .banner-carousel .carousel-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 3;
+        }
+        .banner-carousel .carousel-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .banner-carousel .carousel-dots .dot.active {
+            background: #ffffff;
+            transform: scale(1.2);
+        }
+        .banner-carousel .carousel-dots .dot:hover {
+            background: rgba(255, 255, 255, 0.7);
+        }
 
-/* ─── MOBILE ────────────────────────────────────────────── */
-@media (max-width: 600px) {
-    .banner-carousel .carousel-slide {
-        min-height: 120px;
-        padding: 16px 18px;
-    }
+        /* ─── MOBILE ────────────────────────────────────────────── */
+        @media (max-width: 600px) {
+            .banner-carousel .carousel-slide {
+                min-height: 120px;
+                padding: 16px 18px;
+            }
 
-    .banner-carousel .carousel-slide .slide-content {
-        max-width: 60%;
-    }
+            .banner-carousel .carousel-slide .slide-content {
+                max-width: 60%;
+            }
 
-    .banner-carousel .carousel-slide .slide-content h2 {
-        font-size: 15px !important;
-        margin-bottom: 2px;
-    }
+            .banner-carousel .carousel-slide .slide-content h2 {
+                font-size: 15px !important;
+                margin-bottom: 2px;
+            }
 
-    .banner-carousel .carousel-slide .slide-content p {
-        font-size: 11px !important;
-        margin-bottom: 6px;
-        opacity: 0.85;
-    }
+            .banner-carousel .carousel-slide .slide-content p {
+                font-size: 11px !important;
+                margin-bottom: 6px;
+                opacity: 0.85;
+            }
 
-    .banner-carousel .carousel-slide .slide-content .slide-cta {
-        font-size: 10px !important;
-        padding: 4px 14px !important;
-    }
+            .banner-carousel .carousel-slide .slide-content .slide-cta {
+                font-size: 10px !important;
+                padding: 4px 14px !important;
+            }
 
-    .banner-carousel .carousel-slide .slide-image {
-        width: 45%;
-    }
+            .banner-carousel .carousel-slide .slide-image {
+                width: 45%;
+            }
 
-    .banner-carousel .carousel-slide .slide-image img {
-        opacity: 0.25;
-    }
+            .banner-carousel .carousel-slide .slide-image img {
+                opacity: 0.25;
+            }
 
-    .banner-carousel .carousel-slide .slide-image::after {
-        background: linear-gradient(to left, transparent 5%, var(--slide-bg, #0d8a3e) 90%);
-    }
+            .banner-carousel .carousel-slide .slide-image::after {
+                background: linear-gradient(to left, transparent 5%, var(--slide-bg, #0d8a3e) 90%);
+            }
 
-    .banner-carousel .carousel-dots {
-        bottom: 6px;
-        gap: 6px;
-    }
-    .banner-carousel .carousel-dots .dot {
-        width: 6px;
-        height: 6px;
-    }
-}
+            .banner-carousel .carousel-dots {
+                bottom: 6px;
+                gap: 6px;
+            }
+            .banner-carousel .carousel-dots .dot {
+                width: 6px;
+                height: 6px;
+            }
+        }
 
-/* ─── VERY SMALL PHONES ────────────────────────────────── */
-@media (max-width: 400px) {
-    .banner-carousel .carousel-slide {
-        min-height: 100px;
-        padding: 12px 14px;
-    }
+        /* ─── VERY SMALL PHONES ────────────────────────────────── */
+        @media (max-width: 400px) {
+            .banner-carousel .carousel-slide {
+                min-height: 100px;
+                padding: 12px 14px;
+            }
 
-    .banner-carousel .carousel-slide .slide-content h2 {
-        font-size: 13px !important;
-    }
+            .banner-carousel .carousel-slide .slide-content h2 {
+                font-size: 13px !important;
+            }
 
-    .banner-carousel .carousel-slide .slide-content p {
-        font-size: 10px !important;
-    }
+            .banner-carousel .carousel-slide .slide-content p {
+                font-size: 10px !important;
+            }
 
-    .banner-carousel .carousel-slide .slide-content .slide-cta {
-        font-size: 9px !important;
-        padding: 3px 10px !important;
-    }
+            .banner-carousel .carousel-slide .slide-content .slide-cta {
+                font-size: 9px !important;
+                padding: 3px 10px !important;
+            }
 
-    .banner-carousel .carousel-slide .slide-image {
-        width: 40%;
-    }
-}
+            .banner-carousel .carousel-slide .slide-image {
+                width: 40%;
+            }
+        }
 
-/* ─── Verification Banner (now also shows missing fields) ─── */
-.verification-banner {
-    background: var(--bg-card);
-    border-radius: var(--radius-card);
-    padding: 16px 20px;
-    border: 1px solid var(--border-color);
-    border-left: 4px solid #f39c12;
-    box-shadow: var(--shadow-card);
-    transition: all var(--transition);
-    margin-bottom: 20px;
-}
-.dark-mode .verification-banner {
-    border-left-color: #f1c40f;
-}
-.verification-banner .banner-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px 12px;
-    margin-bottom: 10px;
-}
-.verification-banner .banner-header .banner-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-.verification-banner .banner-header .banner-title i {
-    color: #f39c12;
-    font-size: 20px;
-}
-.verification-banner .banner-header .banner-progress {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    background: var(--bg-input);
-    padding: 4px 16px;
-    border-radius: 30px;
-    border: 1px solid var(--border-color);
-}
-.verification-banner .banner-fields {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 12px;
-    list-style: none;
-    padding: 0;
-    margin: 0 0 10px 0;
-}
-.verification-banner .banner-fields li {
-    font-size: 13px;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--bg-input);
-    padding: 4px 14px 4px 10px;
-    border-radius: 30px;
-    border: 1px solid var(--border-color);
-    transition: all 0.2s;
-}
-.verification-banner .banner-fields li:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    border-color: #f39c12;
-}
-.verification-banner .banner-fields li i {
-    color: #e67e22;
-    font-size: 12px;
-}
-.verification-banner .banner-fields li a {
-    color: var(--text-primary);
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-.verification-banner .banner-fields li a:hover {
-    color: var(--green);
-}
-.verification-banner .banner-cta {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 4px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.verification-banner .banner-cta a {
-    color: var(--green);
-    font-weight: 600;
-    text-decoration: none;
-}
-.verification-banner .banner-cta a:hover {
-    text-decoration: underline;
-}
-@media (max-width: 480px) {
-    .verification-banner {
-        padding: 14px 16px;
-    }
-    .verification-banner .banner-header .banner-title {
-        font-size: 14px;
-    }
-    .verification-banner .banner-header .banner-progress {
-        font-size: 11px;
-        padding: 2px 12px;
-    }
-    .verification-banner .banner-fields li {
-        font-size: 12px;
-        padding: 3px 10px 3px 8px;
-    }
-}
+        /* ─── Verification Banner (now also shows missing fields) ─── */
+        .verification-banner {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 16px 20px;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #f39c12;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition);
+            margin-bottom: 20px;
+        }
+        .dark-mode .verification-banner {
+            border-left-color: #f1c40f;
+        }
+        .verification-banner .banner-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            margin-bottom: 10px;
+        }
+        .verification-banner .banner-header .banner-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .verification-banner .banner-header .banner-title i {
+            color: #f39c12;
+            font-size: 20px;
+        }
+        .verification-banner .banner-header .banner-progress {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--bg-input);
+            padding: 4px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+        .verification-banner .banner-fields {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            list-style: none;
+            padding: 0;
+            margin: 0 0 10px 0;
+        }
+        .verification-banner .banner-fields li {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-input);
+            padding: 4px 14px 4px 10px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        .verification-banner .banner-fields li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            border-color: #f39c12;
+        }
+        .verification-banner .banner-fields li i {
+            color: #e67e22;
+            font-size: 12px;
+        }
+        .verification-banner .banner-fields li a {
+            color: var(--text-primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .verification-banner .banner-fields li a:hover {
+            color: var(--green);
+        }
+        .verification-banner .banner-cta {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .verification-banner .banner-cta a {
+            color: var(--green);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .verification-banner .banner-cta a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 480px) {
+            .verification-banner {
+                padding: 14px 16px;
+            }
+            .verification-banner .banner-header .banner-title {
+                font-size: 14px;
+            }
+            .verification-banner .banner-header .banner-progress {
+                font-size: 11px;
+                padding: 2px 12px;
+            }
+            .verification-banner .banner-fields li {
+                font-size: 12px;
+                padding: 3px 10px 3px 8px;
+            }
+        }
 
 
-</style>
+    </style>
 </head>
 <body>
 
     <div class="app-container">
-
-        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -1682,14 +1681,8 @@
                 </div>
             </div>
 
-            <div class="mini-banner">
-                <div class="banner-text">
-                    <h3>🎓 Fresher's Deal</h3>
-                    <p>Get 15% off your first purchase</p>
-                </div>
-                <span class="banner-cta">Shop now</span>
-            </div>
-
+            <!-- ===== MINI BANNER (rendered by JS) ===== -->
+            <div id="miniBannerContainer"></div>
 
             <!-- ===== TABS ===== -->
             <div class="dash-tabs" id="dashTabs">
@@ -2040,6 +2033,10 @@
                 trustScoreValue.textContent = trustScore + '%';
                 trustScoreFill.style.width = trustScore + '%';
 
+                userAvatar.addEventListener('click', function() {
+                    window.location.href = 'profile.html';
+                })
+
                 // User name & avatar
                 if (stats.first_name) {
                     userName.textContent = stats.first_name;
@@ -2103,16 +2100,38 @@
                     });
                 });
             }
+
+            // ============================================================
+            // RENDER: MINI BANNER (Fresher's Deal)
+            // ============================================================
+            function renderMiniBanner() {
+                const container = document.getElementById('miniBannerContainer');
+                if (!container) return;
+
+                container.innerHTML = `
+                    <div class="mini-banner">
+                        <div class="banner-text">
+                            <h3>🎓 Fresher's Deal</h3>
+                            <p>Get 15% off your first purchase</p>
+                        </div>
+                        <span class="banner-cta" id="fresherDealBtn">Shop now</span>
+                    </div>
+                `;
+
+                // Click handler for the button – you can change this later
+                document.getElementById('fresherDealBtn')?.addEventListener('click', function() {
+                    // Example: navigate to a shop page or show an alert
+                    window.location.href = '/student/explore.html';
+                    // Or you can do: alert('Fresher\'s Deal clicked!');
+                });
+            }
+
             // ============================================================
             // RENDER: LISTINGS (with backend search)
             // ============================================================
             async function renderListings() {
-                // Show loading state
                 showLoading(listingContainer);
-                
-                // Fetch from backend with search query
                 const data = await fetchListings(listingSearchQuery);
-                
                 if (!data || !data.data) {
                     listingContainer.innerHTML = `
                         <div class="dash-empty">
@@ -2128,7 +2147,7 @@
                 const pagination = data.data.pagination || {};
                 const total = pagination.total_items || listings.length;
                 const totalPages = pagination.total_pages || 1;
-                
+
                 listingResultCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
                 listingCountBadge.textContent = total;
                 listingPageInfo.textContent = `Page ${pagination.page || 1} of ${totalPages}`;
@@ -2146,29 +2165,46 @@
                     return;
                 }
 
+                // ─── Status mapping ──────────────────────────────────────────
+                const listingStatusMap = {
+                    'Active': 'active',
+                    'Pending': 'pending',
+                    'Sold': 'sold',
+                    'Expired': 'expired',
+                    'Rejected': 'reject',
+                    'Hidden': 'hidden'
+                };
+
                 listingContainer.innerHTML = listings.map(item => {
                     const statusClass = listingStatusMap[item.status] || 'hidden';
-                    const statusLabel = item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'Unknown';
-                    const priceDisplay = item.price;
+                    const statusLabel = item.status || 'Unknown';
+                    const priceDisplay = item.price || 'Free';
                     const locationStr = item.location && item.location.length > 0 ? item.location[0] : 'Campus';
-                    const imageUrl = item.image || (
-                        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='200' y='160' font-family='Arial' font-size='24' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E"
-                    );
+
+                    // ─── Category display (with icon if available) ──────────
+                    let categoryDisplay = 'Uncategorized';
+                    if (item.category) {
+                        const iconHtml = item.category.icon ? `<i class="${item.category.icon}"></i> ` : '';
+                        categoryDisplay = `${iconHtml}${item.category.name || 'Uncategorized'}`;
+                    }
+
+                    // ─── Image fallback ──────────────────────────────────────
+                    const imageUrl = item.image || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'200\' y=\'160\' font-family=\'Arial\' font-size=\'24\' fill=\'%23999\' text-anchor=\'middle\'%3ENo Image%3C/text%3E%3C/svg%3E';
 
                     return `
                         <div class="dash-listing-card" data-id="${item.id}">
                             <div class="thumb">
                                 <img src="${imageUrl}" 
-                                     alt="${item.title || 'Listing'}" 
-                                     loading="lazy"
-                                     onerror="this.style.display='none';this.parentElement.textContent='📦';this.parentElement.style.fontSize='28px';this.parentElement.style.color='var(--text-muted2)';" />
+                                    alt="${item.title || 'Listing'}" 
+                                    loading="lazy"
+                                    onerror="this.style.display='none';this.parentElement.textContent='📦';this.parentElement.style.fontSize='28px';this.parentElement.style.color='var(--text-muted2)';" />
                             </div>
                             <div class="info">
                                 <div class="title">${item.title || 'Untitled'}</div>
                                 <div class="meta-row">
                                     <span class="badge-status ${statusClass}">${statusLabel}</span>
                                     <span class="location-tag"><i class="fa-solid fa-location-dot"></i> ${locationStr}</span>
-                                    <span>${item.category || 'Uncategorized'}</span>
+                                    <span>${categoryDisplay}</span>
                                     <span>${item.created_at_humanized || 'Recently'}</span>
                                 </div>
                             </div>
@@ -2180,6 +2216,7 @@
                     `;
                 }).join('');
 
+                // Click handler
                 listingContainer.querySelectorAll('.dash-listing-card').forEach(card => {
                     card.addEventListener('click', function() {
                         const id = this.dataset.id;
@@ -2363,6 +2400,9 @@
                 }
             }
 
+            // Make switchTab globally accessible for the banner placeholder
+            window.switchTab = switchTab;
+
             tabs.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const tab = this.dataset.tab;
@@ -2468,7 +2508,14 @@
                     await renderListings();
                     
                     // Render quick links
-                    renderQuickLinks()
+                    renderQuickLinks();
+
+                    // Render mini banner
+                    renderMiniBanner();
+
+                    // Fetch and render banner carousel
+                    const bannerItems = await fetchBannerItems();
+                    renderBannerSlides(bannerItems);
 
                 } catch (error) {
                     console.error('Error loading dashboard:', error);
@@ -2479,118 +2526,146 @@
             }
 
             // ─── Carousel ──────────────────────────────────────────
-// RENDER BANNER SLIDES (using demo data)
-function renderBannerSlides() {
-    const track = document.getElementById('carouselTrack');
-    const dotsContainer = document.getElementById('carouselDots');
-    if (!track || !dotsContainer) return;
 
-    track.innerHTML = '';
-    dotsContainer.innerHTML = '';
+            async function fetchBannerItems() {
+                try {
+                    const response = await fetchWithAuth(`${CAMPUS_URL}listings/categorized?section=banner`, {
+                        method: 'GET',
+                    });
+                    if (!response.ok) throw new Error('Failed to fetch banner listings');
+                    const data = await response.json();
+                    return data.data?.items || [];
+                } catch (error) {
+                    console.error('Banner fetch error:', error);
+                    return [];
+                }
+            }
 
-    const bannerItems = [
-        {
-            id: 12,
-            title: "love is goos",
-            price: 0,
-            category: "Roommates & Shared Apartments",
-            image: "http://localhost/v1/media/listing_images/listing_image_love_is_goos_9c72291a04.webp"
-        },
-        {
-            id: 7,
-            title: "Laptop hp E2w",
-            price: 300000,
-            category: "Laptops & Computers",
-            image: "http://localhost/v1/media/listing_images/listing_image_Laptop_hp_E2w_4668f10c03.webp"
-        },
-        {
-            id: 14,
-            title: "GNS 101 Past Questions",
-            price: 4000,
-            category: "Past Questions",
-            image: null
-        }
-    ];
+            // ─── Render banner slides with real data ──────────────────────
+            function renderBannerSlides(items) {
+                const track = document.getElementById('carouselTrack');
+                const dotsContainer = document.getElementById('carouselDots');
+                if (!track || !dotsContainer) return;
 
-    const gradients = [
-        { bg: 'linear-gradient(135deg, #0d8a3e, #1a3a2a)', color: '#0d8a3e' },
-        { bg: 'linear-gradient(135deg, #1a1a2e, #16213e)', color: '#1a1a2e' },
-        { bg: 'linear-gradient(135deg, #4a0e4e, #1a0b2e)', color: '#4a0e4e' }
-    ];
+                track.innerHTML = '';
+                dotsContainer.innerHTML = '';
 
-    bannerItems.forEach((item, index) => {
-        const slide = document.createElement('div');
-        slide.className = 'carousel-slide';
-        const grad = gradients[index % gradients.length];
-        slide.style.background = grad.bg;
-        slide.style.setProperty('--slide-bg', grad.color);
+                // If no items, show a placeholder slide
+                if (!items || items.length === 0) {
+                    const slide = document.createElement('div');
+                    slide.className = 'carousel-slide';
+                    slide.style.background = 'linear-gradient(135deg, #2c3e50, #1a1a2e)';
+                    slide.style.setProperty('--slide-bg', '#2c3e50');
+                    slide.innerHTML = `
+                        <div class="slide-content">
+                            <h2>🚀 Promote Your Listing</h2>
+                            <p>Create a banner ad to get more visibility!</p>
+                            <span class="slide-cta" onclick="window.switchTab('listings'); document.getElementById('listingSearchInput').scrollIntoView({ behavior: 'smooth', block: 'center' });">Open a Listing</span>
+                        </div>
+                        <div class="slide-image">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%234a4a4a'/%3E%3Ctext x='100' y='110' font-family='Arial' font-size='16' fill='%23999' text-anchor='middle'%3ENo Ads%3C/text%3E%3C/svg%3E" alt="No banner" />
+                        </div>
+                        <div class="slide-overlay"></div>
+                    `;
+                    track.appendChild(slide);
+                    // Add a single dot (inactive)
+                    const dot = document.createElement('span');
+                    dot.className = 'dot active';
+                    dotsContainer.appendChild(dot);
+                    return;
+                }
 
-        let imgUrl = item.image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23ccc'/%3E%3Ctext x='100' y='110' font-family='Arial' font-size='16' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
-        const priceDisplay = item.price === 0 ? 'Free' : `₦${item.price.toLocaleString()}`;
+                const gradients = [
+                    { bg: 'linear-gradient(135deg, #0d8a3e, #1a3a2a)', color: '#0d8a3e' },
+                    { bg: 'linear-gradient(135deg, #1a1a2e, #16213e)', color: '#1a1a2e' },
+                    { bg: 'linear-gradient(135deg, #4a0e4e, #1a0b2e)', color: '#4a0e4e' },
+                    { bg: 'linear-gradient(135deg, #b7950b, #6e4b0a)', color: '#b7950b' },
+                    { bg: 'linear-gradient(135deg, #1f618d, #1a3a4a)', color: '#1f618d' },
+                ];
 
-        slide.innerHTML = `
-            <div class="slide-content">
-                <h2>${item.title}</h2>
-                <p>${item.category} • ${priceDisplay}</p>
-                <span class="slide-cta" data-id="${item.id}" data-title="${item.title}">Shop Now →</span>
-            </div>
-            <div class="slide-image">
-                <img src="${imgUrl}" alt="${item.title}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23ccc%22/%3E%3Ctext x=%22100%22 y=%22110%22 font-family=%22Arial%22 font-size=%2216%22 fill=%22%23999%22 text-anchor=%22middle%22%3ENo Image%3C/text%3E%3C/svg%3E'" />
-            </div>
-            <div class="slide-overlay"></div>
-        `;
+                items.forEach((item, index) => {
+                    const slide = document.createElement('div');
+                    slide.className = 'carousel-slide';
+                    const grad = gradients[index % gradients.length];
+                    slide.style.background = grad.bg;
+                    slide.style.setProperty('--slide-bg', grad.color);
 
-        track.appendChild(slide);
+                    // Image fallback
+                    let imgUrl = item.image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23ccc'/%3E%3Ctext x='100' y='110' font-family='Arial' font-size='16' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
+                    const priceDisplay = item.price || 'Free';
 
-        const dot = document.createElement('span');
-        dot.className = 'dot' + (index === 0 ? ' active' : '');
-        dot.dataset.index = index;
-        dot.addEventListener('click', function() {
-            goToSlide(parseInt(this.dataset.index));
-        });
-        dotsContainer.appendChild(dot);
-    });
+                    slide.innerHTML = `
+                        <div class="slide-content">
+                            <h2><i class="${item.category_icon || 'fas fa-tag'}"></i> ${item.title || 'Untitled'}</h2>
+                            <p>${item.category || 'Uncategorized'} • ${priceDisplay}</p>
+                            <span class="slide-cta" data-id="${item.id}" data-title="${item.title}">View Details →</span>
+                        </div>
+                        <div class="slide-image">
+                            <img src="${imgUrl}" alt="${item.title}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23ccc%22/%3E%3Ctext x=%22100%22 y=%22110%22 font-family=%22Arial%22 font-size=%2216%22 fill=%22%23999%22 text-anchor=%22middle%22%3ENo Image%3C/text%3E%3C/svg%3E'" />
+                        </div>
+                        <div class="slide-overlay"></div>
+                    `;
 
-    // ─── Click handler ──────────────────────────────────────────
-    track.querySelectorAll('.slide-cta').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const id = this.dataset.id;
-            const title = this.dataset.title || '';
-            const encodedTitle = encodeURIComponent(title);
-            window.location.href = `listing-details.html?id=${id}&title=${encodedTitle}`;
-        });
-    });
+                    track.appendChild(slide);
 
-    // ─── Carousel controls ──────────────────────────────────────
-    const slides = track.querySelectorAll('.carousel-slide');
-    const dots = dotsContainer.querySelectorAll('.dot');
-    let currentIndex = 0;
+                    const dot = document.createElement('span');
+                    dot.className = 'dot' + (index === 0 ? ' active' : '');
+                    dot.dataset.index = index;
+                    dot.addEventListener('click', function() {
+                        goToSlide(parseInt(this.dataset.index));
+                    });
+                    dotsContainer.appendChild(dot);
+                });
 
-    function goToSlide(index) {
-        if (index < 0) index = slides.length - 1;
-        if (index >= slides.length) index = 0;
-        currentIndex = index;
-        track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === currentIndex);
-        });
-    }
+                // ─── Click handler for CTA buttons ─────────────────────────
+                track.querySelectorAll('.slide-cta').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.dataset.id;
+                        const title = this.dataset.title || '';
+                        const encodedTitle = encodeURIComponent(title);
+                        window.location.href = `listing-details.html?id=${id}&title=${encodedTitle}`;
+                    });
+                });
 
-    let intervalId = setInterval(() => {
-        goToSlide(currentIndex + 1);
-    }, 4000);
+                // ─── Click on entire slide (except buttons) ────────────────
+                track.querySelectorAll('.carousel-slide').forEach(slide => {
+                    slide.addEventListener('click', function(e) {
+                        // Ignore if clicked on a button or inside button
+                        if (e.target.closest('.slide-cta')) return;
+                        const btn = this.querySelector('.slide-cta');
+                        if (btn) btn.click();
+                    });
+                });
 
-    const carousel = track.closest('.banner-carousel');
-    carousel.addEventListener('mouseenter', () => clearInterval(intervalId));
-    carousel.addEventListener('mouseleave', () => {
-        clearInterval(intervalId);
-        intervalId = setInterval(() => goToSlide(currentIndex + 1), 4000);
-    });
+                // ─── Carousel controls ──────────────────────────────────────
+                const slides = track.querySelectorAll('.carousel-slide');
+                const dots = dotsContainer.querySelectorAll('.dot');
+                let currentIndex = 0;
 
-    goToSlide(0);
-}
+                function goToSlide(index) {
+                    if (index < 0) index = slides.length - 1;
+                    if (index >= slides.length) index = 0;
+                    currentIndex = index;
+                    track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === currentIndex);
+                    });
+                }
 
+                let intervalId = setInterval(() => {
+                    goToSlide(currentIndex + 1);
+                }, 4000);
+
+                const carousel = track.closest('.banner-carousel');
+                carousel.addEventListener('mouseenter', () => clearInterval(intervalId));
+                carousel.addEventListener('mouseleave', () => {
+                    clearInterval(intervalId);
+                    intervalId = setInterval(() => goToSlide(currentIndex + 1), 4000);
+                });
+
+                goToSlide(0);
+            }
 
 
             // ============================================================
@@ -2600,8 +2675,6 @@ function renderBannerSlides() {
                 // Show loading states for tabs
                 showTabLoading(expiringContainer);
                 showTabLoading(reviewContainer);
-                renderBannerSlides();
-
 
                 // Load all data
                 loadAllData();
