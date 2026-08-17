@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <!-- Global Styles -->
-    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/studentStyle.css" />
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
     <!-- Page-Specific Styles -->
@@ -1757,7 +1757,7 @@
     </div>
 
     <!-- ===== SCRIPTS ===== -->
-    <script src="/assets/js/global.js"></script>
+    <script src="/assets/js/studentGlobal.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
 
@@ -1812,12 +1812,12 @@
             // ============================================================
             let listings = [];
             let listingsPage = 1;
-            const perPage = 10;
+            let totalListingPages = 1;
             let listingSearchQuery = '';
 
             let reviews = [];
             let reviewsPage = 1;
-            const reviewsPerPage = 10;
+            let totalReviewPages = 1;
             let reviewSearchQuery = '';
 
             let expirings = [];
@@ -1870,11 +1870,11 @@
                 }
             }
 
-            async function fetchListings(search = '') {
+            async function fetchListings(page = 1, search = '') {
                 try {
-                    let url = `${CAMPUS_URL}dashboard-listing`;
+                    let url = `${CAMPUS_URL}dashboard-listing?page=${page}`;
                     if (search && search.trim()) {
-                        url += '?search=' + encodeURIComponent(search.trim());
+                        url += '&search=' + encodeURIComponent(search.trim());
                     }
                     
                     const response = await fetchWithAuth(url, {
@@ -1909,11 +1909,11 @@
                 }
             }
 
-            async function fetchReviews(search = '') {
+            async function fetchReviews(page = 1, search = '') {
                 try {
-                    let url = `${CAMPUS_URL}dashboard-reviews`;
+                    let url = `${CAMPUS_URL}dashboard-reviews?page=${page}`;
                     if (search && search.trim()) {
-                        url += '?search=' + encodeURIComponent(search.trim());
+                        url += '&search=' + encodeURIComponent(search.trim());
                     }
                     
                     const response = await fetchWithAuth(url, {
@@ -2127,11 +2127,12 @@
             }
 
             // ============================================================
-            // RENDER: LISTINGS (with backend search)
+            // RENDER: LISTINGS (with backend search + pagination)
             // ============================================================
-            async function renderListings() {
+            async function renderListings(page = 1) {
+                listingsPage = page;
                 showLoading(listingContainer);
-                const data = await fetchListings(listingSearchQuery);
+                const data = await fetchListings(page, listingSearchQuery);
                 if (!data || !data.data) {
                     listingContainer.innerHTML = `
                         <div class="dash-empty">
@@ -2146,11 +2147,12 @@
                 listings = data.data.all_listings || [];
                 const pagination = data.data.pagination || {};
                 const total = pagination.total_items || listings.length;
-                const totalPages = pagination.total_pages || 1;
+                totalListingPages = pagination.total_pages || 1;
+                const currentPage = pagination.page || 1;
 
                 listingResultCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
                 listingCountBadge.textContent = total;
-                listingPageInfo.textContent = `Page ${pagination.page || 1} of ${totalPages}`;
+                listingPageInfo.textContent = `Page ${currentPage} of ${totalListingPages}`;
                 listingPrev.disabled = !pagination.has_previous;
                 listingNext.disabled = !pagination.has_next;
 
@@ -2226,6 +2228,13 @@
                 });
             }
 
+            // ─── Change listing page ──────────────────────────────────────
+            function changeListingPage(delta) {
+                const newPage = listingsPage + delta;
+                if (newPage < 1 || newPage > totalListingPages) return;
+                renderListings(newPage);
+            }
+
             // ============================================================
             // RENDER: EXPIRING
             // ============================================================
@@ -2282,14 +2291,13 @@
             }
 
             // ============================================================
-            // RENDER: REVIEWS (with backend search)
+            // RENDER: REVIEWS (with backend search + pagination)
             // ============================================================
-            async function renderReviews() {
-                // Show loading state
+            async function renderReviews(page = 1) {
+                reviewsPage = page;
                 showLoading(reviewContainer);
                 
-                // Fetch from backend with search query
-                const data = await fetchReviews(reviewSearchQuery);
+                const data = await fetchReviews(page, reviewSearchQuery);
                 
                 if (!data || !data.data) {
                     reviewContainer.innerHTML = `
@@ -2305,11 +2313,12 @@
                 reviews = data.data.reviews || [];
                 const pagination = data.data.pagination || {};
                 const total = pagination.total_items || reviews.length;
-                const totalPages = pagination.total_pages || 1;
+                totalReviewPages = pagination.total_pages || 1;
+                const currentPage = pagination.page || 1;
                 
                 reviewResultCount.textContent = `${total} result${total !== 1 ? 's' : ''}`;
                 reviewCountBadge.textContent = total;
-                reviewPageInfo.textContent = `Page ${pagination.page || 1} of ${totalPages}`;
+                reviewPageInfo.textContent = `Page ${currentPage} of ${totalReviewPages}`;
                 reviewPrev.disabled = !pagination.has_previous;
                 reviewNext.disabled = !pagination.has_next;
 
@@ -2352,6 +2361,13 @@
                 }).join('');
             }
 
+            // ─── Change review page ──────────────────────────────────────
+            function changeReviewPage(delta) {
+                const newPage = reviewsPage + delta;
+                if (newPage < 1 || newPage > totalReviewPages) return;
+                renderReviews(newPage);
+            }
+
             // ============================================================
             // LOAD EXPIRING (Lazy)
             // ============================================================
@@ -2376,7 +2392,7 @@
                 
                 showTabLoading(reviewContainer);
                 reviewsLoaded = true;
-                await renderReviews();
+                await renderReviews(1);
             }
 
             // ============================================================
@@ -2392,7 +2408,7 @@
                 });
 
                 if (tabId === 'listings') {
-                    renderListings();
+                    renderListings(listingsPage);
                 } else if (tabId === 'expiring') {
                     loadExpiring();
                 } else if (tabId === 'reviews') {
@@ -2420,7 +2436,7 @@
                 
                 clearTimeout(listingSearchTimeout);
                 listingSearchTimeout = setTimeout(() => {
-                    renderListings();
+                    renderListings(1);
                 }, 400);
             });
 
@@ -2428,7 +2444,7 @@
                 listingSearchInput.value = '';
                 listingSearchQuery = '';
                 this.classList.remove('visible');
-                renderListings();
+                renderListings(1);
             });
 
             let reviewSearchTimeout;
@@ -2438,7 +2454,7 @@
                 
                 clearTimeout(reviewSearchTimeout);
                 reviewSearchTimeout = setTimeout(() => {
-                    renderReviews();
+                    renderReviews(1);
                 }, 400);
             });
 
@@ -2446,26 +2462,24 @@
                 reviewSearchInput.value = '';
                 reviewSearchQuery = '';
                 this.classList.remove('visible');
-                renderReviews();
+                renderReviews(1);
             });
 
             // ============================================================
             // PAGINATION
             // ============================================================
             listingPrev.addEventListener('click', function() {
-                // TODO: Implement pagination with backend
-                // For now, just reload
-                renderListings();
+                changeListingPage(-1);
             });
             listingNext.addEventListener('click', function() {
-                renderListings();
+                changeListingPage(1);
             });
 
             reviewPrev.addEventListener('click', function() {
-                renderReviews();
+                changeReviewPage(-1);
             });
             reviewNext.addEventListener('click', function() {
-                renderReviews();
+                changeReviewPage(1);
             });
 
             // ============================================================
@@ -2505,7 +2519,7 @@
                     }
 
                     // Load listings (always loaded on page load)
-                    await renderListings();
+                    await renderListings(1);
                     
                     // Render quick links
                     renderQuickLinks();
@@ -2685,7 +2699,7 @@
                 console.log('📟 Dashboard page initialized');
             }
 
-            // Wait for global.js to inject header/nav
+            // Wait for studentGlobal.js to inject header/nav
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {

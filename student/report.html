@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <!-- Global Styles -->
-    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/studentStyle.css" />
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
     <!-- Page-Specific Styles -->
@@ -220,15 +220,11 @@
                 gap: 12px;
             }
         }
-
-
     </style>
 </head>
 <body>
 
     <div class="app-container">
-
-        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -287,23 +283,17 @@
 
                         <!-- Support Identifier -->
                         <div class="form-group" id="supportIdGroup" style="display:none;">
-                            <label for="supportIdentifier">Support <span style="color:var(--red);">*</span></label>
-                            <input type="text" id="supportIdentifier" class="form-input" placeholder="e.g., How can we help you" />
+                            <label for="supportIdentifier">Subject <span style="color:var(--red);">*</span></label>
+                            <input type="text" id="supportIdentifier" class="form-input" placeholder="e.g., Payment not reflecting" />
                             <div class="help-text" id="supportHelp"></div>
                         </div>
 
-                        <!-- Reason -->
+                        <!-- Reason (Dynamic) -->
                         <div class="form-group">
                             <label for="reason">Reason for Report <span style="color:var(--red);">*</span></label>
                             <div class="form-select-wrap">
                                 <select id="reason" class="form-select" required>
                                     <option value="">Select a reason...</option>
-                                    <option value="spam">Spam or Misleading</option>
-                                    <option value="harassment">Harassment or Bullying</option>
-                                    <option value="offensive">Offensive Content</option>
-                                    <option value="scam">Scam or Fraud</option>
-                                    <option value="counterfeit">Counterfeit or Fake Item</option>
-                                    <option value="other">Other</option>
                                 </select>
                             </div>
                             <div class="help-text" id="reasonHelp"></div>
@@ -339,244 +329,345 @@
     </div>
 
     <!-- ===== SCRIPTS ===== -->
-    <script src="/assets/js/global.js"></script>
+    <script src="/assets/js/studentGlobal.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
 
-    <script>
-        (function() {
-            'use strict';
+<script>
+    (function() {
+        'use strict';
 
-            // ─── DOM refs ──────────────────────────────────────────────
-            const form = document.getElementById('reportForm');
-            const listingGroup = document.getElementById('listingIdGroup');
-            const userGroup = document.getElementById('userIdGroup');
-            const supportGroup = document.getElementById('supportIdGroup');
-            const listingInput = document.getElementById('listingIdentifier');
-            const userInput = document.getElementById('userIdentifier');
-            const supportInput = document.getElementById('supportIdentifier');
+        // ─── Dynamic Reason Mapping ──────────────────────────────
+        const reasonMap = {
+            listing: [
+                { value: 'spam', label: 'Spam or Misleading' },
+                { value: 'harassment', label: 'Harassment or Bullying' },
+                { value: 'offensive', label: 'Offensive Content' },
+                { value: 'scam', label: 'Scam or Fraud' },
+                { value: 'counterfeit', label: 'Counterfeit or Fake Item' },
+                { value: 'incorrect_category', label: 'Incorrect Category' },
+                { value: 'damaged', label: 'Damaged Item' },
+                { value: 'other', label: 'Other' }
+            ],
+            user: [
+                { value: 'harassment', label: 'Harassment or Bullying' },
+                { value: 'offensive_profile', label: 'Offensive Profile' },
+                { value: 'scam', label: 'Scam or Fraud' },
+                { value: 'impersonation', label: 'Impersonation' },
+                { value: 'spam', label: 'Spam' },
+                { value: 'unfair_review', label: 'Unfair Review' },
+                { value: 'other', label: 'Other' }
+            ],
+            support: [
+                { value: 'technical', label: 'Technical Issue' },
+                { value: 'payment', label: 'Payment Problem' },
+                { value: 'account_access', label: 'Account Access' },
+                { value: 'bug_report', label: 'Bug Report' },
+                { value: 'feature_request', label: 'Feature Request' },
+                { value: 'data_privacy', label: 'Data Privacy' },
+                { value: 'other', label: 'Other' }
+            ]
+        };
+
+        const typeToIssueMap = {
+            'listing': 'Listing',
+            'user': 'User',
+            'support': 'Support'
+        };
+
+        function updateReasons(type) {
             const reasonSelect = document.getElementById('reason');
-            const detailsInput = document.getElementById('details');
-
-            const listingHelp = document.getElementById('listingHelp');
-            const userHelp = document.getElementById('userHelp');
-            const supportHelp = document.getElementById('supportHelp');
-            const reasonHelp = document.getElementById('reasonHelp');
-            const detailsHelp = document.getElementById('detailsHelp');
-
-            const submitBtn = document.getElementById('submitBtn');
-            const cancelBtn = document.getElementById('cancelBtn');
-
-            // ─── Toggle report type ──────────────────────────────────
-            document.querySelectorAll('input[name="report_type"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'listing') {
-                        listingGroup.style.display = 'block';
-                        userGroup.style.display = 'none';
-                        supportGroup.style.display = 'none';
-                        listingInput.required = true;
-                        userInput.required = false;
-                        supportInput.required = false;
-                        supportInput.value = '';
-                        listingInput.value = '';
-                        userInput.value = '';
-                        clearFieldHelp(listingHelp);
-                        clearFieldHelp(userHelp);
-                    } else if (this.value === 'user'){
-                        listingGroup.style.display = 'none';
-                        supportGroup.style.display = 'none';
-                        userGroup.style.display = 'block';
-                        listingInput.required = false;
-                        userInput.required = true;
-                        supportInput.required = false;
-                        supportInput.value = '';
-                        listingInput.value = '';
-                        userInput.value = '';
-                        clearFieldHelp(listingHelp);
-                        clearFieldHelp(userHelp);
-                    } else if (this.value === 'support'){
-                        listingGroup.style.display = 'none';
-                        userGroup.style.display = 'none';
-                        supportGroup.style.display = 'block';
-                        listingInput.required = false;
-                        userInput.required = false;
-                        supportInput.required = true;
-                        supportInput.value = '';
-                        listingInput.value = '';
-                        userInput.value = '';
-                        clearFieldHelp(listingHelp);
-                        clearFieldHelp(userHelp);
-                    }
-                    validateForm();
-                });
+            reasonSelect.innerHTML = '<option value="">Select a reason...</option>';
+            const reasons = reasonMap[type] || [];
+            reasons.forEach(reason => {
+                const option = document.createElement('option');
+                option.value = reason.value;
+                option.textContent = reason.label;
+                reasonSelect.appendChild(option);
             });
+            if (typeof validateForm === 'function') validateForm();
+        }
 
-            // ─── Helpers ──────────────────────────────────────────────
-            function clearFieldHelp(el) {
-                el.textContent = '';
-                el.className = 'help-text';
-            }
+        // ─── DOM refs ──────────────────────────────────────────────
+        const form = document.getElementById('reportForm');
+        const listingGroup = document.getElementById('listingIdGroup');
+        const userGroup = document.getElementById('userIdGroup');
+        const supportGroup = document.getElementById('supportIdGroup');
+        const listingInput = document.getElementById('listingIdentifier');
+        const userInput = document.getElementById('userIdentifier');
+        const supportInput = document.getElementById('supportIdentifier');
+        const reasonSelect = document.getElementById('reason');
+        const detailsInput = document.getElementById('details');
 
-            function setFieldHelp(el, message, isError = true) {
-                el.textContent = message;
-                el.className = 'help-text' + (isError ? ' error' : '');
-            }
+        const listingHelp = document.getElementById('listingHelp');
+        const userHelp = document.getElementById('userHelp');
+        const supportHelp = document.getElementById('supportHelp');
+        const reasonHelp = document.getElementById('reasonHelp');
+        const detailsHelp = document.getElementById('detailsHelp');
 
-            // ─── Validation ────────────────────────────────────────────
-            function validateForm() {
-                let isValid = true;
-                const reportType = document.querySelector('input[name="report_type"]:checked').value;
+        const submitBtn = document.getElementById('submitBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
 
-                // Validate identifier
-                if (reportType === 'listing') {
-                    const val = listingInput.value.trim();
-                    if (!val) {
-                        setFieldHelp(listingHelp, 'Please enter a listing ID or title.');
-                        isValid = false;
-                    } else {
-                        clearFieldHelp(listingHelp);
-                    }
-                } else if (reportType === 'user') {
-                    const val = userInput.value.trim();
-                    if (!val) {
-                        setFieldHelp(userHelp, 'Please enter a student name or email.');
-                        isValid = false;
-                    } else {
-                        clearFieldHelp(userHelp);
-                    }
-                } else if (reportType === 'support') {
-                    const val = supportInput.value.trim();
-                    if (!val) {
-                        setFieldHelp(supportHelp, 'What do you need us for.');
-                        isValid = false;
-                    } else {
-                        clearFieldHelp(supportHelp);
-                    }
+        // ─── Toggle report type ──────────────────────────────────
+        document.querySelectorAll('input[name="report_type"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const type = this.value;
+                updateReasons(type);
+
+                if (type === 'listing') {
+                    listingGroup.style.display = 'block';
+                    userGroup.style.display = 'none';
+                    supportGroup.style.display = 'none';
+                    listingInput.required = true;
+                    userInput.required = false;
+                    supportInput.required = false;
+                    supportInput.value = '';
+                    userInput.value = '';
+                    clearFieldHelp(listingHelp);
+                    clearFieldHelp(userHelp);
+                    clearFieldHelp(supportHelp);
+                } else if (type === 'user') {
+                    listingGroup.style.display = 'none';
+                    supportGroup.style.display = 'none';
+                    userGroup.style.display = 'block';
+                    listingInput.required = false;
+                    userInput.required = true;
+                    supportInput.required = false;
+                    supportInput.value = '';
+                    listingInput.value = '';
+                    clearFieldHelp(listingHelp);
+                    clearFieldHelp(userHelp);
+                    clearFieldHelp(supportHelp);
+                } else if (type === 'support') {
+                    listingGroup.style.display = 'none';
+                    userGroup.style.display = 'none';
+                    supportGroup.style.display = 'block';
+                    listingInput.required = false;
+                    userInput.required = false;
+                    supportInput.required = true;
+                    supportInput.value = '';
+                    listingInput.value = '';
+                    userInput.value = '';
+                    clearFieldHelp(listingHelp);
+                    clearFieldHelp(userHelp);
+                    clearFieldHelp(supportHelp);
                 }
+                validateForm();
+            });
+        });
 
-                // Validate reason
-                if (!reasonSelect.value) {
-                    setFieldHelp(reasonHelp, 'Please select a reason for the report.');
+        // ─── Helpers ──────────────────────────────────────────────
+        function clearFieldHelp(el) {
+            el.textContent = '';
+            el.className = 'help-text';
+        }
+
+        function setFieldHelp(el, message, isError = true) {
+            el.textContent = message;
+            el.className = 'help-text' + (isError ? ' error' : '');
+        }
+
+        // ─── Validation ────────────────────────────────────────────
+        function validateForm() {
+            let isValid = true;
+            const reportType = document.querySelector('input[name="report_type"]:checked').value;
+
+            if (reportType === 'listing') {
+                const val = listingInput.value.trim();
+                if (!val) {
+                    setFieldHelp(listingHelp, 'Please enter a listing ID or title.');
                     isValid = false;
                 } else {
-                    clearFieldHelp(reasonHelp);
+                    clearFieldHelp(listingHelp);
                 }
-
-                // Details are optional, but if they exceed a limit we can warn
-                if (detailsInput.value.length > 500) {
-                    setFieldHelp(detailsHelp, 'Details are too long (max 500 characters).', true);
+            } else if (reportType === 'user') {
+                const val = userInput.value.trim();
+                if (!val) {
+                    setFieldHelp(userHelp, 'Please enter a student name or email.');
                     isValid = false;
                 } else {
-                    clearFieldHelp(detailsHelp);
+                    clearFieldHelp(userHelp);
                 }
-
-                submitBtn.disabled = !isValid;
-                return isValid;
+            } else if (reportType === 'support') {
+                const val = supportInput.value.trim();
+                if (!val) {
+                    setFieldHelp(supportHelp, 'Please provide a subject for your support request.');
+                    isValid = false;
+                } else {
+                    clearFieldHelp(supportHelp);
+                }
             }
 
-            // ─── Input events ──────────────────────────────────────────
-            listingInput.addEventListener('input', validateForm);
-            userInput.addEventListener('input', validateForm);
-            reasonSelect.addEventListener('change', validateForm);
-            detailsInput.addEventListener('input', validateForm);
+            if (!reasonSelect.value) {
+                setFieldHelp(reasonHelp, 'Please select a reason for the report.');
+                isValid = false;
+            } else {
+                clearFieldHelp(reasonHelp);
+            }
 
-            // ─── Submit ─────────────────────────────────────────────────
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (!validateForm()) return;
+            if (detailsInput.value.length > 500) {
+                setFieldHelp(detailsHelp, 'Details are too long (max 500 characters).', true);
+                isValid = false;
+            } else {
+                clearFieldHelp(detailsHelp);
+            }
 
-                const reportType = document.querySelector('input[name="report_type"]:checked').value;
-                const identifier = reportType === 'listing' ? listingInput.value.trim() : userInput.value.trim();
-                const reason = reasonSelect.value;
-                const details = detailsInput.value.trim();
+            submitBtn.disabled = !isValid;
+            return isValid;
+        }
 
-                const reportData = {
-                    type: reportType,
-                    identifier: identifier,
-                    reason: reason,
-                    details: details || 'No additional details provided.',
-                };
+        // ─── Input events ──────────────────────────────────────────
+        listingInput.addEventListener('input', validateForm);
+        userInput.addEventListener('input', validateForm);
+        supportInput.addEventListener('input', validateForm);
+        reasonSelect.addEventListener('change', validateForm);
+        detailsInput.addEventListener('input', validateForm);
 
-                // Confirm submission via Modal
-                const doSubmit = () => {
-                    submitBtn.disabled = true;
-                    submitBtn.classList.add('loading');
+        // ─── Submit ─────────────────────────────────────────────────
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!validateForm()) return;
 
-                    // Simulate API call
-                    setTimeout(() => {
-                        submitBtn.classList.remove('loading');
-                        submitBtn.disabled = false;
+            const reportType = document.querySelector('input[name="report_type"]:checked').value;
+            const issueType = typeToIssueMap[reportType] || 'Listing';
 
-                        console.log('📢 Report submitted:', reportData);
+            let identifier = '';
+            if (reportType === 'listing') identifier = listingInput.value.trim();
+            else if (reportType === 'user') identifier = userInput.value.trim();
+            else if (reportType === 'support') identifier = supportInput.value.trim();
 
-                        if (typeof showAlert !== 'undefined') {
-                            showAlert.success('Report submitted! We\'ll review it shortly.');
-                        } else {
-                            alert('Report submitted! We\'ll review it shortly.');
+            const reasonValue = reasonSelect.value;
+            const reasonLabel = reasonSelect.options[reasonSelect.selectedIndex]?.text || reasonValue;
+            const details = detailsInput.value.trim();
+
+            // Build message: include reason and user's details
+            let message = 'Reason: ' + reasonLabel;
+            if (details) {
+                message += '\n\n' + details;
+            }
+
+            // Get authenticated user data
+            const user = window.getUserData ? window.getUserData() : null;
+            const reporterName = user ? (user.first_name + ' ' + user.last_name).trim() || user.username : '';
+            const reporterEmail = user ? user.email : '';
+
+            const payload = {
+                issue_type: issueType,
+                listing_identifier: reportType === 'listing' ? identifier : '',
+                reported_user_identifer: reportType === 'user' ? identifier : '',
+                message: message,
+                reporter_name: reporterName,
+                reporter_email: reporterEmail
+            };
+
+            // ─── Confirm submission via Modal ──────────────────────
+            const doSubmit = async () => {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
+
+                try {
+                    const response = await window.fetchWithAuth(
+                        `${USER_URL}report/submit`,
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
                         }
+                    );
 
+                    const result = await response.json();
+                    if (result.status_code === 201 || result.is_success) {
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.success(result.message || 'Report submitted! We\'ll review it shortly.');
+                        } else {
+                            alert(result.message || 'Report submitted! We\'ll review it shortly.');
+                        }
                         // Reset form
                         form.reset();
-                        // Reset to default state (listing visible)
                         document.querySelector('input[name="report_type"][value="listing"]').checked = true;
+                        updateReasons('listing');
                         listingGroup.style.display = 'block';
                         userGroup.style.display = 'none';
+                        supportGroup.style.display = 'none';
                         listingInput.required = true;
                         userInput.required = false;
+                        supportInput.required = false;
                         clearFieldHelp(listingHelp);
                         clearFieldHelp(userHelp);
+                        clearFieldHelp(supportHelp);
                         clearFieldHelp(reasonHelp);
                         clearFieldHelp(detailsHelp);
                         submitBtn.disabled = true;
-
-                    }, 1500);
-                };
-
-                if (typeof Modal !== 'undefined') {
-                    const modal = new Modal({
-                        title: 'Confirm Report',
-                        body: `
-                                <p>You are about to report a <strong>${reportType}</strong> for <strong>${reason}</strong>.</p>
-                                <p style="color:var(--text-muted); font-size:13px;">Please ensure your report is accurate. False reports may lead to account restrictions.</p>
-                                <p style="color:var(--text-muted); font-size:13px;"><strong>Identifier:</strong> ${identifier}</p>
-                            `,
-                        type: 'danger',
-                        confirmText: 'Submit Report',
-                        cancelText: 'Cancel',
-                        onConfirm: doSubmit
-                    });
-                    modal.open();
-                } else {
-                    if (confirm(`Submit report for ${reportType}: ${identifier}?`)) {
-                        doSubmit();
+                    } else {
+                        const errorMsg = result.message || 'Failed to submit report. Please try again.';
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.error(errorMsg);
+                        } else {
+                            alert(errorMsg);
+                        }
                     }
+                } catch (error) {
+                    console.error('Report submission error:', error);
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.error('Network error. Please check your connection and try again.');
+                    } else {
+                        alert('Network error. Please check your connection and try again.');
+                    }
+                } finally {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
                 }
-            });
+            };
 
-            // ─── Cancel ─────────────────────────────────────────────────
-            cancelBtn.addEventListener('click', function() {
+            if (typeof Modal !== 'undefined') {
+                const modal = new Modal({
+                    title: 'Confirm Report',
+                    body: `
+                        <p>You are about to report a <strong>${reportType}</strong> for <strong>${reasonLabel}</strong>.</p>
+                        <p style="color:var(--text-muted); font-size:13px;">Please ensure your report is accurate. False reports may lead to account restrictions.</p>
+                        <p style="color:var(--text-muted); font-size:13px;"><strong>Identifier:</strong> ${identifier || 'N/A'}</p>
+                    `,
+                    type: 'danger',
+                    confirmText: 'Submit Report',
+                    cancelText: 'Cancel',
+                    onConfirm: doSubmit
+                });
+                modal.open();
+            } else {
+                if (confirm(`Submit report for ${reportType}: ${identifier}?`)) {
+                    doSubmit();
+                }
+            }
+        });
+
+        // ─── Cancel ─────────────────────────────────────────────────
+        cancelBtn.addEventListener('click', function() {
+            if (typeof showToast !== 'undefined') {
                 showToast('Report discarded.', 'success');
-                form.reset();
-                // Reset to default state
-                document.querySelector('input[name="report_type"][value="listing"]').checked = true;
-                listingGroup.style.display = 'block';
-                userGroup.style.display = 'none';
-                listingInput.required = true;
-                userInput.required = false;
-                clearFieldHelp(listingHelp);
-                clearFieldHelp(userHelp);
-                clearFieldHelp(reasonHelp);
-                clearFieldHelp(detailsHelp);
-                submitBtn.disabled = true;
-            });
+            }
+            form.reset();
+            document.querySelector('input[name="report_type"][value="listing"]').checked = true;
+            updateReasons('listing');
+            listingGroup.style.display = 'block';
+            userGroup.style.display = 'none';
+            supportGroup.style.display = 'none';
+            listingInput.required = true;
+            userInput.required = false;
+            supportInput.required = false;
+            clearFieldHelp(listingHelp);
+            clearFieldHelp(userHelp);
+            clearFieldHelp(supportHelp);
+            clearFieldHelp(reasonHelp);
+            clearFieldHelp(detailsHelp);
+            submitBtn.disabled = true;
+        });
 
-            // ─── Init ──────────────────────────────────────────────────
-            setTimeout(validateForm, 100);
-
-            console.log('📟 Report page initialized.');
-
-        })();
-    </script>
+        // ─── Init ──────────────────────────────────────────────────
+        updateReasons('listing');
+        setTimeout(validateForm, 100);
+        console.log('📟 Report page initialized with dynamic reasons.');
+    })();
+</script>
 
 </body>
 </html>

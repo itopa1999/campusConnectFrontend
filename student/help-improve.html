@@ -9,10 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <!-- Global Styles -->
-    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/studentStyle.css" />
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
-    <!-- Page-Specific Styles -->
     <style>
         .feedback-wrapper {
             max-width: 640px;
@@ -50,7 +49,6 @@
             transition: color var(--transition);
         }
 
-        /* ─── Form Elements ─── */
         .feedback-card .form-group {
             margin-bottom: 18px;
         }
@@ -103,11 +101,7 @@
         .feedback-card .help-text.error {
             color: var(--red);
         }
-        .feedback-card .help-text.success {
-            color: var(--green);
-        }
 
-        /* ─── Character Counter ─── */
         .char-counter {
             text-align: right;
             font-size: 12px;
@@ -122,150 +116,6 @@
             color: var(--red);
         }
 
-        /* ─── File Drop Zone (reuse from form-helpers) ─── */
-        .file-drop-zone {
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 24px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: var(--bg-input);
-            position: relative;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 4px;
-        }
-        .file-drop-zone:hover {
-            border-color: var(--green);
-            background: var(--bg-card);
-        }
-        .file-drop-zone.dragover {
-            border-color: var(--green);
-            background: var(--green-bg);
-            transform: scale(1.01);
-            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08);
-        }
-        .file-drop-zone.has-file {
-            border-color: var(--green);
-            background: var(--green-bg);
-            border-style: solid;
-        }
-        .file-drop-zone .drop-icon {
-            font-size: 32px;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-        .file-drop-zone:hover .drop-icon {
-            color: var(--green);
-        }
-        .file-drop-zone .drop-text {
-            font-size: 14px;
-            color: var(--text-secondary);
-            transition: color var(--transition);
-        }
-        .file-drop-zone .drop-text strong {
-            color: var(--green);
-            cursor: pointer;
-        }
-        .file-drop-zone .drop-hint {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .file-drop-zone .file-preview-container {
-            width: 100%;
-            max-width: 320px;
-            margin-top: 4px;
-        }
-        .file-drop-zone .file-preview {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 10px 16px;
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            width: 100%;
-        }
-        .file-drop-zone .file-preview-image {
-            flex-direction: column;
-            padding: 12px;
-        }
-        .file-drop-zone .file-preview-image img {
-            max-width: 80px;
-            max-height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-        .file-drop-zone .file-preview .file-icon {
-            font-size: 28px;
-            color: var(--green);
-        }
-        .file-drop-zone .file-preview .file-info {
-            flex: 1;
-            text-align: left;
-        }
-        .file-drop-zone .file-preview .file-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            word-break: break-all;
-        }
-        .file-drop-zone .file-preview .file-size {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .file-drop-zone .file-preview .file-remove {
-            background: none;
-            border: none;
-            color: var(--red);
-            cursor: pointer;
-            font-size: 18px;
-            padding: 4px 8px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-        .file-drop-zone .file-preview .file-remove:hover {
-            background: rgba(231, 76, 60, 0.10);
-        }
-        .file-drop-zone .drop-error {
-            color: var(--red);
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: 4px;
-        }
-        .file-drop-zone input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .dark-mode .file-drop-zone {
-            background: var(--bg-input);
-            border-color: var(--border-color);
-        }
-        .dark-mode .file-drop-zone:hover {
-            background: var(--bg-card);
-        }
-        .dark-mode .file-drop-zone.dragover {
-            background: var(--green-bg);
-        }
-        .dark-mode .file-drop-zone.has-file {
-            background: var(--green-bg);
-        }
-        .dark-mode .file-drop-zone .file-preview {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-        }
-
-        /* ─── Actions ─── */
         .feedback-actions {
             display: flex;
             gap: 12px;
@@ -315,7 +165,6 @@
             display: none;
         }
 
-        /* ─── Responsive ─── */
         @media (max-width: 480px) {
             .feedback-card {
                 padding: 16px 18px;
@@ -328,22 +177,12 @@
                 font-size: 13px;
                 padding: 10px 0;
             }
-            .file-drop-zone {
-                padding: 18px 16px;
-                min-height: 100px;
-            }
-            .file-drop-zone .drop-icon {
-                font-size: 28px;
-            }
         }
-
     </style>
 </head>
 <body>
 
     <div class="app-container">
-
-        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -358,7 +197,6 @@
 
             <div class="feedback-wrapper">
 
-                <!-- ===== FEEDBACK CARD ===== -->
                 <div class="feedback-card">
                     <div class="card-title">
                         <i class="fa-regular fa-lightbulb"></i> Help Us Improve
@@ -397,21 +235,6 @@
                             <div class="help-text" id="descHelp"></div>
                         </div>
 
-                        <!-- Screenshot / Attachment -->
-                        <div class="form-group">
-                            <label>Screenshot or Attachment <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
-                            <div class="file-drop-zone" id="fileDropZone">
-                                <div class="drop-icon"><i class="fa-regular fas fa-cloud-arrow-up"></i></div>
-                                <div class="drop-text">
-                                    Drop your file here or <strong>browse</strong>
-                                </div>
-                                <div class="drop-hint">JPG, PNG, PDF • Max 5MB</div>
-                                <div class="file-preview-container"></div>
-                                <div class="drop-error"></div>
-                                <input type="file" id="feedbackFile" accept=".jpg,.jpeg,.png,.pdf,image/*" />
-                            </div>
-                        </div>
-
                         <!-- Actions -->
                         <div class="feedback-actions">
                             <button type="submit" class="btn-submit" id="submitBtn">
@@ -421,9 +244,9 @@
                             <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
                         </div>
                     </form>
-                </div><!-- /feedback-card -->
+                </div>
 
-            </div><!-- /feedback-wrapper -->
+            </div>
 
         </main>
 
@@ -435,10 +258,9 @@
     </div>
 
     <!-- ===== SCRIPTS ===== -->
-    <script src="/assets/js/global.js"></script>
+    <script src="/assets/js/studentGlobal.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
-    <script src="/assets/js/form-helpers.js"></script>
 
     <script>
         (function() {
@@ -449,7 +271,6 @@
             const typeSelect = document.getElementById('feedbackType');
             const subjectInput = document.getElementById('subject');
             const descInput = document.getElementById('description');
-            const fileInput = document.getElementById('feedbackFile');
 
             const typeHelp = document.getElementById('typeHelp');
             const subjectHelp = document.getElementById('subjectHelp');
@@ -475,11 +296,21 @@
                 validateForm();
             });
 
+            // ─── Helpers ──────────────────────────────────────────────
+            function clearFieldHelp(el) {
+                el.textContent = '';
+                el.className = 'help-text';
+            }
+
+            function setFieldHelp(el, message) {
+                el.textContent = message;
+                el.className = 'help-text error';
+            }
+
             // ─── Validation ────────────────────────────────────────────
             function validateForm() {
                 let isValid = true;
 
-                // Type
                 if (!typeSelect.value) {
                     setFieldHelp(typeHelp, 'Please select a feedback type.');
                     isValid = false;
@@ -487,7 +318,6 @@
                     clearFieldHelp(typeHelp);
                 }
 
-                // Subject
                 const subject = subjectInput.value.trim();
                 if (!subject) {
                     setFieldHelp(subjectHelp, 'Please enter a subject.');
@@ -499,7 +329,6 @@
                     clearFieldHelp(subjectHelp);
                 }
 
-                // Description
                 const desc = descInput.value;
                 if (!desc.trim()) {
                     setFieldHelp(descHelp, 'Please enter a description.');
@@ -515,71 +344,97 @@
                 return isValid;
             }
 
-            function setFieldHelp(el, message) {
-                el.textContent = message;
-                el.className = 'help-text error';
-            }
-
-            function clearFieldHelp(el) {
-                el.textContent = '';
-                el.className = 'help-text';
-            }
-
             // ─── Input events ──────────────────────────────────────────
             typeSelect.addEventListener('change', validateForm);
             subjectInput.addEventListener('input', validateForm);
+            descInput.addEventListener('input', validateForm);
 
             // ─── Submit ─────────────────────────────────────────────────
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 if (!validateForm()) return;
 
-                const feedbackData = {
-                    type: typeSelect.value,
-                    subject: subjectInput.value.trim(),
-                    description: descInput.value.trim(),
-                    attachment: fileInput.files[0] ? fileInput.files[0].name : null,
+                const feedbackType = typeSelect.value;
+                const subject = subjectInput.value.trim();
+                const description = descInput.value.trim();
+
+                // Build the message with the type prefix
+                const typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || feedbackType;
+                const fullMessage = `[${typeLabel}]\nSubject: ${subject}\n\n${description}`;
+
+                // Get authenticated user data
+                const user = window.getUserData ? window.getUserData() : null;
+                const reporterName = user ? (user.first_name + ' ' + user.last_name).trim() || user.username : '';
+                const reporterEmail = user ? user.email : '';
+
+                const payload = {
+                    issue_type: 'Improve',
+                    listing_identifier: '',
+                    reported_user_identifer: '',
+                    message: fullMessage,
+                    reporter_name: reporterName,
+                    reporter_email: reporterEmail
                 };
 
-                // Confirm submission
-                const doSubmit = () => {
+                // ─── Confirm submission ──────────────────────────────
+                const doSubmit = async () => {
                     submitBtn.disabled = true;
                     submitBtn.classList.add('loading');
 
-                    // Simulate API call
-                    setTimeout(() => {
+                    try {
+                        const response = await window.fetchWithAuth(
+                            `${USER_URL}report/submit`,
+                            {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            }
+                        );
+
+                        const result = await response.json();
+                        if (result.status_code === 201 || result.is_success) {
+                            if (typeof showAlert !== 'undefined') {
+                                showAlert.success(result.message || 'Thank you for your feedback! 🎉');
+                            } else {
+                                alert(result.message || 'Thank you for your feedback!');
+                            }
+                            // Reset form
+                            form.reset();
+                            charCounter.textContent = `0 / ${MAX_DESC_LENGTH}`;
+                            charCounter.className = 'char-counter';
+                            clearFieldHelp(typeHelp);
+                            clearFieldHelp(subjectHelp);
+                            clearFieldHelp(descHelp);
+                            submitBtn.disabled = true;
+                        } else {
+                            const errorMsg = result.message || 'Failed to submit feedback. Please try again.';
+                            if (typeof showAlert !== 'undefined') {
+                                showAlert.error(errorMsg);
+                            } else {
+                                alert(errorMsg);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Feedback submission error:', error);
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.error('Network error. Please check your connection.');
+                        } else {
+                            alert('Network error. Please check your connection.');
+                        }
+                    } finally {
                         submitBtn.classList.remove('loading');
                         submitBtn.disabled = false;
-
-                        console.log('📝 Feedback submitted:', feedbackData);
-
-                        if (typeof showAlert !== 'undefined') {
-                            showAlert.success('Thank you for your feedback! 🎉');
-                        } else {
-                            alert('Thank you for your feedback!');
-                        }
-
-                        // Reset form
-                        form.reset();
-                        fileInput.value = '';
-                        const container = document.querySelector('.file-preview-container');
-                        if (container) container.innerHTML = '';
-                        document.getElementById('fileDropZone').classList.remove('has-file');
-                        charCounter.textContent = `0 / ${MAX_DESC_LENGTH}`;
-                        charCounter.className = 'char-counter';
-                        validateForm();
-
-                    }, 1500);
+                    }
                 };
 
                 if (typeof Modal !== 'undefined') {
                     const modal = new Modal({
                         title: 'Submit Feedback?',
                         body: `
-                                <p>You are about to submit feedback of type <strong>${feedbackData.type}</strong>.</p>
-                                <p style="color:var(--text-muted); font-size:13px;"><strong>Subject:</strong> ${feedbackData.subject}</p>
-                                <p style="color:var(--text-muted); font-size:13px;">Thank you for helping us improve CampusHub!</p>
-                            `,
+                            <p>You are about to submit feedback of type <strong>${typeLabel}</strong>.</p>
+                            <p style="color:var(--text-muted); font-size:13px;"><strong>Subject:</strong> ${subject}</p>
+                            <p style="color:var(--text-muted); font-size:13px;">Thank you for helping us improve CampusHub!</p>
+                        `,
                         type: 'info',
                         confirmText: 'Submit',
                         cancelText: 'Cancel',
@@ -595,20 +450,20 @@
 
             // ─── Cancel ─────────────────────────────────────────────────
             cancelBtn.addEventListener('click', function() {
-                showToast('Feedback discarded.', 'success');
+                if (typeof showToast !== 'undefined') {
+                    showToast('Feedback discarded.', 'success');
+                }
                 form.reset();
-                fileInput.value = '';
-                const container = document.querySelector('.file-preview-container');
-                if (container) container.innerHTML = '';
-                document.getElementById('fileDropZone').classList.remove('has-file');
                 charCounter.textContent = `0 / ${MAX_DESC_LENGTH}`;
                 charCounter.className = 'char-counter';
-                validateForm();
+                clearFieldHelp(typeHelp);
+                clearFieldHelp(subjectHelp);
+                clearFieldHelp(descHelp);
+                submitBtn.disabled = true;
             });
 
             // ─── Init ──────────────────────────────────────────────────
             setTimeout(validateForm, 100);
-
             console.log('📟 Help us improve page initialized.');
 
         })();

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Access Forbidden</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/studentStyle.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+
+    <style>
+        /* ─── Full-page 403 hero ─── */
+        .error-wrapper {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 16px 0 8px;
+        }
+
+        .error-hero {
+            text-align: center;
+            padding: 32px 20px 20px;
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .error-hero .error-illustration {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .error-hero .error-illustration .big-403 {
+            font-size: 110px;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -6px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background var(--transition);
+            opacity: 0.9;
+        }
+
+        .error-hero .error-illustration .floating-icon {
+            position: absolute;
+            bottom: 10px;
+            right: -20px;
+            font-size: 44px;
+            color: #e67e22;
+            opacity: 0.3;
+            animation: float 3s ease-in-out infinite;
+            -webkit-text-fill-color: initial;
+            transition: opacity var(--transition), color var(--transition);
+        }
+
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-12px) rotate(6deg);
+            }
+        }
+
+        .error-hero h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+
+        .error-hero .sub {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin: 0 auto 24px;
+            line-height: 1.6;
+            transition: color var(--transition);
+        }
+
+        .error-hero .sub i {
+            color: #e67e22;
+            margin: 0 3px;
+        }
+
+        /* ─── Action Buttons ─── */
+        .error-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .error-actions .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 34px;
+            border-radius: 50px;
+            background: #e67e22;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 6px 24px rgba(230, 126, 34, 0.30);
+        }
+
+        .error-actions .btn-primary i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .error-actions .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(230, 126, 34, 0.40);
+            background: #d35400;
+        }
+
+        .error-actions .btn-primary:hover i {
+            transform: translateX(-4px);
+        }
+
+        .error-actions .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 34px;
+            border-radius: 50px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 16px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .error-actions .btn-secondary i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .error-actions .btn-secondary:hover {
+            transform: translateY(-3px);
+            border-color: #e67e22;
+            background: rgba(230, 126, 34, 0.08);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .error-actions .btn-secondary:hover i {
+            transform: translateX(4px);
+            color: #e67e22;
+        }
+
+        /* ─── Quick Links ─── */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 8px 0 20px;
+            padding: 0 4px;
+        }
+
+        .quick-links .ql-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 16px 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            text-decoration: none;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-card);
+        }
+
+        .quick-links .ql-item:hover {
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-3px);
+            border-color: #e67e22;
+        }
+
+        .quick-links .ql-item .ql-icon {
+            font-size: 24px;
+            color: #e67e22;
+            display: block;
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+
+        .quick-links .ql-item .ql-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+
+        .quick-links .ql-item .ql-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Fun Easter Egg ─── */
+        .easter-egg {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            opacity: 0.5;
+            transition: opacity 0.3s ease, color var(--transition);
+            cursor: default;
+            user-select: none;
+        }
+
+        .easter-egg:hover {
+            opacity: 1;
+        }
+
+        .easter-egg i {
+            margin: 0 4px;
+            color: #e67e22;
+            opacity: 0.6;
+        }
+
+        /* ─── Dark Mode Overrides ─── */
+        .dark-mode .error-hero .error-illustration .big-403 {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dark-mode .error-hero .error-illustration .floating-icon {
+            opacity: 0.25;
+            color: #f39c12;
+        }
+
+        .dark-mode .error-actions .btn-secondary {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .error-actions .btn-secondary:hover {
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.08);
+        }
+
+        .dark-mode .quick-links .ql-item:hover {
+            border-color: #f39c12;
+        }
+
+        .dark-mode .error-actions .btn-primary {
+            background: #f39c12;
+            box-shadow: 0 6px 24px rgba(243, 156, 18, 0.25);
+        }
+
+        .dark-mode .error-actions .btn-primary:hover {
+            background: #e67e22;
+            box-shadow: 0 10px 40px rgba(243, 156, 18, 0.35);
+        }
+
+        /* ─── Animations ─── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 640px) {
+            .error-hero .error-illustration .big-403 {
+                font-size: 78px;
+                letter-spacing: -4px;
+            }
+            .error-hero .error-illustration .floating-icon {
+                font-size: 32px;
+                right: -14px;
+                bottom: 6px;
+            }
+            .error-hero h1 {
+                font-size: 22px;
+            }
+            .error-hero .sub {
+                font-size: 14px;
+                padding: 0 4px;
+            }
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            .error-actions .btn-primary,
+            .error-actions .btn-secondary {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+            .quick-links {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .quick-links .ql-item {
+                padding: 14px 10px;
+            }
+            .quick-links .ql-item .ql-icon {
+                font-size: 20px;
+            }
+            .quick-links .ql-item .ql-label {
+                font-size: 12px;
+            }
+            .quick-links .ql-item .ql-desc {
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .quick-links {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .error-hero .error-illustration .big-403 {
+                font-size: 62px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== LOCATION ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <main class="main-content" style="padding-top: 12px;">
+
+            <div class="error-wrapper">
+
+                <!-- ===== 403 HERO ===== -->
+                <section class="error-hero">
+
+                    <div class="error-illustration">
+                        <div class="big-403">403</div>
+                        <span class="floating-icon"><i class="fas fa-lock"></i></span>
+                    </div>
+
+                    <h1>Access Denied</h1>
+
+                    <p class="sub">
+                        <i class="fas fa-arrow-right"></i>
+                        You don't have permission to view this page.
+                        <br />
+                        This area is restricted to authorized students only.
+                    </p>
+
+                    <!-- ===== ACTIONS ===== -->
+                    <div class="error-actions">
+                        <a href="explore.html" class="btn-primary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Explore
+                        </a>
+                        <a href="index.html" class="btn-secondary">
+                            Home
+                            <i class="fas fa-house"></i>
+                        </a>
+                        <a href="about-us.html" class="btn-secondary">
+                            <i class="fas fa-envelope"></i>
+                            Contact Support
+                        </a>
+                    </div>
+
+                </section>
+
+                <!-- ===== QUICK LINKS ===== -->
+                <div class="quick-links">
+                    <a href="explore.html" class="ql-item">
+                        <span class="ql-icon"><i class="fas fa-store"></i></span>
+                        <div class="ql-label">Marketplace</div>
+                        <div class="ql-desc">Buy &amp; sell on campus</div>
+                    </a>
+                    <a href="profile.html" class="ql-item">
+                        <span class="ql-icon"><i class="fas fa-user"></i></span>
+                        <div class="ql-label">Profile</div>
+                        <div class="ql-desc">Your account</div>
+                    </a>
+                    <a href="about-us.html" class="ql-item">
+                        <span class="ql-icon"><i class="fas fa-info-circle"></i></span>
+                        <div class="ql-label">About Us</div>
+                        <div class="ql-desc">Who we are</div>
+                    </a>
+                    <a href="student-loan.html" class="ql-item">
+                        <span class="ql-icon"><i class="fas fa-hand-holding-dollar"></i></span>
+                        <div class="ql-label">Student Loan</div>
+                        <div class="ql-desc">Coming soon</div>
+                    </a>
+                </div>
+
+                <!-- ===== EASTER EGG ===== -->
+                <div class="easter-egg">
+                    <i class="fas fa-key"></i>
+                    Permission denied. But you can still explore.
+                    <i class="fas fa-key"></i>
+                </div>
+
+            </div><!-- /error-wrapper -->
+
+        </main>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • 403
+        </div>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/studentGlobal.js"></script>
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            console.log('🔒 403 — Access Forbidden. You shall not pass!');
+
+            // Optional: track 403 visits
+            if (typeof window !== 'undefined' && window.ga) {
+                // Google Analytics tracking placeholder
+            }
+
+            // Fun: click on the 403 number to reset the floating icon animation
+            const big403 = document.querySelector('.big-403');
+            if (big403) {
+                big403.addEventListener('click', function() {
+                    const icon = document.querySelector('.floating-icon');
+                    if (icon) {
+                        icon.style.animation = 'none';
+                        setTimeout(() => {
+                            icon.style.animation = 'float 3s ease-in-out infinite';
+                        }, 10);
+                    }
+                });
+            }
+        })();
+    </script>
+
+</body>
+</html>

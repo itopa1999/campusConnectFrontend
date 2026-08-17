@@ -1,5 +1,5 @@
 // ============================================================
-// global.js – Shared functionality for all pages
+// studentGlobal.js – Shared functionality for all pages
 // Includes: header, dark mode, filter sidebar, bottom nav,
 // scroll to top, desktop overlay, profile sidebar, auth, form guard
 // UPDATED: Unauthenticated user handling
@@ -16,6 +16,7 @@
     const NOTIFICATIONS_URL = 'http://127.0.0.1:8000/v1/user/api/notifications/';
     const LOGOUT_URL = 'http://127.0.0.1:8000/v1/user/api/auth/logout-user';
     const REFRESH_POINTS_URL = 'http://127.0.0.1:8000/v1/user/api/';
+    const USER_URL = 'http://127.0.0.1:8000/v1/user/api/';
     const X_KEY_ID = '1';
     const PLATFORM = 'web';
 
@@ -418,8 +419,8 @@
                     body = await response.clone().json();
                 } catch (_) {}
 
+                // ─── 429 Rate Limit ──────────────────────────────────────
                 if (response.status === 429 || body?.status_code === 429) {
-                    // Hide any spinner that might be showing
                     if (opts.showSpinner) {
                         hideGlobalSpinner();
                     }
@@ -428,10 +429,8 @@
                         const retryAfter = body?.retry_after || 30;
                         try {
                             await waitForRateLimit(retryAfter);
-                            // Retry the request with incremented retry count
                             return fetchWithAuth(url, options, retryCount + 1);
                         } catch (cancelError) {
-                            // User cancelled – re-throw so the caller sees the error
                             throw cancelError;
                         }
                     } else {
@@ -439,13 +438,30 @@
                     }
                 }
 
-                return response;
+                // ─── 403 Forbidden ──────────────────────────────────────
+                const isForbidden = body?.message?.toLowerCase().includes("access denied") || body?.status_code === 403;
 
+                if (isForbidden) {
+                    if (opts.showSpinner) {
+                        hideGlobalSpinner();
+                    }
+
+                    const currentPath = window.location.pathname;
+                    if (!currentPath.includes('403.html')) {
+                        sessionStorage.setItem('forbiddenAttemptedUrl', url);
+                        window.location.href = '403.html';
+                        return Promise.reject(new Error('Forbidden'));
+                    } else {
+                        return Promise.reject(new Error('Forbidden'));
+                    }
+                }
+
+                // ─── 401 Unauthorized ──────────────────────────────────
+                // ✅ Now this code runs because we removed the early return
                 const isUnauthorized = response.status === 401 || body?.status_code === 401;
 
                 if (isUnauthorized && retryCount === 0 && !opts.skipRefresh) {
                     if (!isRefreshing) {
-                        // Initiate refresh
                         isRefreshing = true;
                         try {
                             await refreshToken();
@@ -455,7 +471,6 @@
                             throw error;
                         }
                     } else {
-                        // Wait for the ongoing refresh
                         await new Promise((resolve, reject) => {
                             subscribeToRefresh(resolve, reject);
                         });
@@ -464,7 +479,9 @@
                     return makeRequest(retryCount + 1);
                 }
 
+                // ─── Return response ──────────────────────────────────
                 return response;
+
             } catch (error) {
                 throw error;
             }
@@ -1649,6 +1666,7 @@
     window.AUTH_URL = AUTH_URL;
     window.CAMPUS_URL = CAMPUS_URL;
     window.NOTIFICATIONS_URL = NOTIFICATIONS_URL;
+    window.USER_URL = USER_URL;
 
     window.fetchWithAuth = fetchWithAuth;
     window.showGlobalSpinner = showGlobalSpinner;
