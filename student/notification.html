@@ -585,7 +585,7 @@
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fa-solid fas fa-location-dot"></i>
             <div class="loc-text">
                 University of Benin <span>• Ugbowo</span>
             </div>
@@ -597,11 +597,11 @@
             <!-- ===== HEADER ===== -->
             <div class="notif-header" id="notifHeader">
                 <div class="notif-title">
-                    <span class="bell-icon"><i class="fa-regular fa-bell"></i></span>
+                    <span class="bell-icon"><i class="fa-regular fas fa-bell"></i></span>
                     <h2>Notifications</h2>
                 </div>
                 <div class="notif-badge">
-                    <i class="fa-regular fa-envelope"></i>
+                    <i class="fa-regular fas fa-envelope"></i>
                     <span id="unreadCountDisplay">0</span> unread
                 </div>
             </div>
@@ -609,15 +609,15 @@
             <!-- ===== FILTER TABS ===== -->
             <div class="notif-tabs" id="notifTabs">
                 <button class="tab-btn active" data-filter="all">
-                    <i class="fa-regular fa-bell"></i> All
+                    <i class="fa-regular fas fa-bell"></i> All
                     <span class="tab-badge" id="allCount">0</span>
                 </button>
                 <button class="tab-btn" data-filter="unread">
-                    <i class="fa-regular fa-envelope"></i> Unread
+                    <i class="fa-regular fas fa-envelope"></i> Unread
                     <span class="tab-badge unread-badge" id="unreadCountTab">0</span>
                 </button>
                 <button class="tab-btn" data-filter="read">
-                    <i class="fa-regular fa-envelope-open"></i> Read
+                    <i class="fa-regular fas fa-envelope-open"></i> Read
                     <span class="tab-badge" id="readCount">0</span>
                 </button>
             </div>
@@ -625,10 +625,10 @@
             <!-- ===== ACTION BAR ===== -->
             <div class="notif-actions" id="notifActions">
                 <button class="action-btn" id="markAllReadBtn" title="Mark all as read">
-                    <i class="fa-regular fa-circle-check"></i> Mark all read
+                    <i class="fa-regular fas fa-circle-check"></i> Mark all read
                 </button>
                 <button class="action-btn danger" id="deleteAllBtn" title="Delete all notifications">
-                    <i class="fa-regular fa-trash-can"></i> Delete all
+                    <i class="fa-regular fas fa-trash-can"></i> Delete all
                 </button>
                 <span class="action-spacer"></span>
                 <span class="result-count" id="notifResultCount">0 notifications</span>
@@ -641,9 +641,9 @@
 
             <!-- ===== PAGINATION ===== -->
             <div class="pagination-controls" id="notifPagination">
-                <button id="notifPrev" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                <button id="notifPrev" disabled><i class="fa-solid fas fa-chevron-left"></i> Prev</button>
                 <span class="page-info" id="notifPageInfo">Page 1</span>
-                <button id="notifNext">Next <i class="fa-solid fa-chevron-right"></i></button>
+                <button id="notifNext">Next <i class="fa-solid fas fa-chevron-right"></i></button>
             </div>
 
         </main>
@@ -790,7 +790,7 @@
                     showAlert.error('Failed to load notifications. Please try again.');
                     list.innerHTML = `
                         <div class="notif-empty">
-                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <span class="empty-icon"><i class="fa-regular fas fa-circle-xmark"></i></span>
                             <h3>Error loading notifications</h3>
                             <p>Please refresh the page to try again.</p>
                         </div>
@@ -942,7 +942,7 @@
                         'No read notifications.';
                     list.innerHTML = `
                         <div class="notif-empty">
-                            <span class="empty-icon"><i class="fa-regular fa-bell-slash"></i></span>
+                            <span class="empty-icon"><i class="fa-regular fas fa-bell-slash"></i></span>
                             <h3>${emptyMsg}</h3>
                             <p>${currentFilter === 'all' ? 'When you get notifications, they will appear here.' : ''}</p>
                         </div>
@@ -966,16 +966,16 @@
                                 <div class="notif-title-text">${item.title}</div>
                                 <div class="notif-message">${item.message}</div>
                                 <div class="notif-meta">
-                                    <span class="time"><i class="fa-regular fa-clock"></i> ${item.created_at}</span>
+                                    <span class="time"><i class="fa-regular fas fa-clock"></i> ${item.created_at}</span>
                                     <span class="read-badge ${readBadgeClass}">${readBadgeText}</span>
                                 </div>
                             </div>
                             <div class="notif-actions-right">
                                 <button class="mark-read-btn" data-id="${item.id}" title="${isUnread ? 'Mark as read' : 'Mark as unread'}">
-                                    ${isUnread ? '<i class="fa-regular fa-circle"></i>' : '<i class="fa-regular fa-circle-check"></i>'}
+                                    ${isUnread ? '<i class="fa-regular fas fa-circle"></i>' : '<i class="fa-regular fas fa-circle-check"></i>'}
                                 </button>
                                 <button class="delete-btn" data-id="${item.id}" title="Delete notification">
-                                    <i class="fa-regular fa-trash-can"></i>
+                                    <i class="fa-regular fas fa-trash-can"></i>
                                 </button>
                             </div>
                         </div>

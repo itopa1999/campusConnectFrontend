@@ -1130,7 +1130,7 @@
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fa-solid fas fa-location-dot"></i>
             <div class="loc-text">
                 University of Benin <span>• Ugbowo</span>
             </div>
@@ -1182,7 +1182,7 @@
                     <!-- FILTER ROW (compact collapsible) -->
                     <div class="filter-row" id="purchaseFilters">
                         <button title="Filter by date" class="filter-toggle-btn" id="purchaseFilterToggle">
-                            <i class="fa-solid fa-sliders-h"></i> Filters
+                            <i class="fa-solid fas fa-sliders-h"></i> Filters
                         </button>
                         <span class="result-count" id="purchaseResultCount">0 results</span>
                         <div class="filter-collapsible" id="purchaseFilterCollapsible">
@@ -1202,9 +1202,9 @@
                     </div>
 
                     <div class="pagination-controls" id="purchasePagination">
-                        <button id="purchasePrev" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                        <button id="purchasePrev" disabled><i class="fa-solid fas fa-chevron-left"></i> Prev</button>
                         <span class="page-info" id="purchasePageInfo">Page 1</span>
-                        <button id="purchaseNext">Next <i class="fa-solid fa-chevron-right"></i></button>
+                        <button id="purchaseNext">Next <i class="fa-solid fas fa-chevron-right"></i></button>
                     </div>
                 </div>
 
@@ -1213,7 +1213,7 @@
                     <!-- FILTER ROW (compact collapsible) -->
                     <div class="filter-row" id="transactionFilters">
                         <button title="Filter by date" class="filter-toggle-btn" id="transactionFilterToggle">
-                            <i class="fa-solid fa-sliders-h"></i> Filters
+                            <i class="fa-solid fas fa-sliders-h"></i> Filters
                         </button>
                         <span class="result-count" id="transactionResultCount">0 results</span>
                         <div class="filter-collapsible" id="transactionFilterCollapsible">
@@ -1233,9 +1233,9 @@
                     </div>
 
                     <div class="pagination-controls" id="transactionPagination">
-                        <button id="transactionPrev" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                        <button id="transactionPrev" disabled><i class="fa-solid fas fa-chevron-left"></i> Prev</button>
                         <span class="page-info" id="transactionPageInfo">Page 1</span>
-                        <button id="transactionNext">Next <i class="fa-solid fa-chevron-right"></i></button>
+                        <button id="transactionNext">Next <i class="fa-solid fas fa-chevron-right"></i></button>
                     </div>
                 </div>
 
@@ -1262,20 +1262,20 @@
                 <div class="gateway-label">Select Payment Gateway</div>
                 <div class="gateway-grid" id="gatewayGrid">
                     <div class="gateway-option" data-gateway="paystack">
-                        <span class="gateway-check"><i class="fa-solid fa-check"></i></span>
-                        <span class="gateway-icon"><i class="fa-regular fa-credit-card"></i></span>
+                        <span class="gateway-check"><i class="fa-solid fas fa-check"></i></span>
+                        <span class="gateway-icon"><i class="fa-regular fas fa-credit-card"></i></span>
                         <span class="gateway-name">Paystack</span>
                         <span style="font-size:10px;color:var(--text-muted2);display:block;">Card, Bank, USSD</span>
                     </div>
                     <div class="gateway-option" data-gateway="flutterwave">
-                        <span class="gateway-check"><i class="fa-solid fa-check"></i></span>
-                        <span class="gateway-icon"><i class="fa-regular fa-credit-card"></i></span>
+                        <span class="gateway-check"><i class="fa-solid fas fa-check"></i></span>
+                        <span class="gateway-icon"><i class="fa-regular fas fa-credit-card"></i></span>
                         <span class="gateway-name">Flutterwave</span>
                         <span style="font-size:10px;color:var(--text-muted2);display:block;">Card, Bank, QR</span>
                     </div>
                     <div class="gateway-option" data-gateway="monnify">
-                        <span class="gateway-check"><i class="fa-solid fa-check"></i></span>
-                        <span class="gateway-icon"><i class="fa-regular fa-credit-card"></i></span>
+                        <span class="gateway-check"><i class="fa-solid fas fa-check"></i></span>
+                        <span class="gateway-icon"><i class="fa-regular fas fa-credit-card"></i></span>
                         <span class="gateway-name">Monnify</span>
                         <span style="font-size:10px;color:var(--text-muted2);display:block;">Bank Transfer, Card</span>
                     </div>
@@ -1387,7 +1387,7 @@
                     showToast('Failed to load packages. Please refresh.', 'danger');
                     packagesGrid.innerHTML = `
                         <div class="cards-empty" style="grid-column:1/-1;">
-                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <span class="empty-icon"><i class="fa-regular fas fa-circle-xmark"></i></span>
                             <h4>Error loading packages</h4>
                             <p>Please refresh the page to try again.</p>
                         </div>
@@ -1427,7 +1427,7 @@
                         showToast(result.message || 'Failed to load purchases', 'danger');
                         purchaseContainer.innerHTML = `
                             <div class="cards-empty" style="grid-column:1/-1;">
-                                <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                                <span class="empty-icon"><i class="fa-regular fas fa-circle-xmark"></i></span>
                                 <h4>Error loading purchases</h4>
                                 <p>Please try again.</p>
                             </div>
@@ -1438,7 +1438,7 @@
                     showToast('Failed to load purchases. Please try again.', 'danger');
                     purchaseContainer.innerHTML = `
                         <div class="cards-empty" style="grid-column:1/-1;">
-                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <span class="empty-icon"><i class="fa-regular fas fa-circle-xmark"></i></span>
                             <h4>Error loading purchases</h4>
                             <p>Please refresh the page.</p>
                         </div>
@@ -1482,7 +1482,7 @@
                         showToast(result.message || 'Failed to load transactions', 'danger');
                         transactionContainer.innerHTML = `
                             <div class="cards-empty" style="grid-column:1/-1;">
-                                <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                                <span class="empty-icon"><i class="fa-regular fas fa-circle-xmark"></i></span>
                                 <h4>Error loading transactions</h4>
                                 <p>Please try again.</p>
                             </div>
@@ -1493,7 +1493,7 @@
                     showToast('Failed to load transactions. Please try again.', 'danger');
                     transactionContainer.innerHTML = `
                         <div class="cards-empty" style="grid-column:1/-1;">
-                            <span class="empty-icon"><i class="fa-regular fa-circle-xmark"></i></span>
+                            <span class="empty-icon"><i class="fa-regular fas fa-circle-xmark"></i></span>
                             <h4>Error loading transactions</h4>
                             <p>Please refresh the page.</p>
                         </div>
@@ -1510,7 +1510,7 @@
                 if (!packages || packages.length === 0) {
                     packagesGrid.innerHTML = `
                         <div class="cards-empty" style="grid-column:1/-1;">
-                            <span class="empty-icon"><i class="fa-regular fa-gift"></i></span>
+                            <span class="empty-icon"><i class="fa-regular fas fa-gift"></i></span>
                             <h4>No packages available</h4>
                             <p>Please check back later.</p>
                         </div>
@@ -1560,7 +1560,7 @@
                 if (!items || items.length === 0) {
                     purchaseContainer.innerHTML = `
                         <div class="cards-empty" style="grid-column:1/-1;">
-                            <span class="empty-icon"><i class="fa-regular fa-receipt"></i></span>
+                            <span class="empty-icon"><i class="fa-regular fas fa-receipt"></i></span>
                             <h4>No purchases found</h4>
                             <p>${purchaseDateFrom.value || purchaseDateTo.value ? 'Try adjusting your date filters.' : 'Buy points to see your purchase history here.'}</p>
                         </div>
@@ -1572,12 +1572,12 @@
                     const status = item.status || 'pending';
                     const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
                     const iconMap = {
-                        'completed': 'fa-regular fa-circle-check',
-                        'pending': 'fa-regular fa-clock',
-                        'failed': 'fa-regular fa-circle-xmark',
-                        'refunded': 'fa-regular fa-arrow-left'
+                        'completed': 'fa-regular fas fa-circle-check',
+                        'pending': 'fa-regular fas fa-clock',
+                        'failed': 'fa-regular fas fa-circle-xmark',
+                        'refunded': 'fa-regular fas fa-arrow-left'
                     };
-                    const iconClass = iconMap[status] || 'fa-regular fa-receipt';
+                    const iconClass = iconMap[status] || 'fa-regular fas fa-receipt';
                     
                     const date = item.created_at ? new Date(item.created_at).toLocaleDateString('en-GB', {
                         day: '2-digit',
@@ -1593,7 +1593,7 @@
                     const showRetry = status === 'pending' || status === 'failed';
                     const retryBtn = showRetry ? `
                         <button class="retry-btn" data-id="${item.id}" data-gateway="${item.gateway || ''}">
-                            <i class="fa-solid fa-rotate"></i> Retry
+                            <i class="fa-solid fas fa-rotate"></i> Retry
                         </button>
                     ` : '';
 
@@ -1608,7 +1608,7 @@
                                     ${item.gateway ? `via ${item.gateway.charAt(0).toUpperCase() + item.gateway.slice(1)}` : ''}
                                 </div>
                                 <div class="purchase-meta">
-                                    <span><i class="fa-regular fa-calendar"></i> ${date} at ${time}</span>
+                                    <span><i class="fa-regular fas fa-calendar"></i> ${date} at ${time}</span>
                                     ${item.payment_reference ? `<span class="ref-code">${item.payment_reference}</span>` : ''}
                                 </div>
                             </div>
@@ -1669,7 +1669,7 @@
                 if (!items || items.length === 0) {
                     transactionContainer.innerHTML = `
                         <div class="cards-empty" style="grid-column:1/-1;">
-                            <span class="empty-icon"><i class="fa-regular fa-arrow-right-arrow-left"></i></span>
+                            <span class="empty-icon"><i class="fa-regular fas fa-arrow-right-arrow-left"></i></span>
                             <h4>No transactions found</h4>
                             <p>${transactionDateFrom.value || transactionDateTo.value ? 'Try adjusting your date filters.' : 'Your transaction history will appear here.'}</p>
                         </div>
@@ -1712,7 +1712,7 @@
                                 <div class="txn-meta">
                                     <span class="type-badge ${typeClass}">${typeLabel}</span>
                                     ${item.reference ? `<span class="ref-code">${item.reference}</span>` : ''}
-                                    <span><i class="fa-regular fa-calendar"></i> ${date} at ${time}</span>
+                                    <span><i class="fa-regular fas fa-calendar"></i> ${date} at ${time}</span>
                                 </div>
                             </div>
                             <div class="txn-amount">
@@ -1790,7 +1790,7 @@
                 const originalText = submitBtn.innerHTML;
                 
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing…';
+                submitBtn.innerHTML = '<i class="fa-solid fas fa-spinner fas fa-spin"></i> Processing…';
 
                 try {
                     const payload = {
@@ -1912,16 +1912,16 @@
                 const collapsible = document.getElementById('purchaseFilterCollapsible');
                 collapsible.classList.toggle('open');
                 this.innerHTML = collapsible.classList.contains('open') 
-                    ? '<i class="fa-solid fa-sliders-h"></i> Hide Filters' 
-                    : '<i class="fa-solid fa-sliders-h"></i> Filters';
+                    ? '<i class="fa-solid fas fa-sliders-h"></i> Hide Filters' 
+                    : '<i class="fa-solid fas fa-sliders-h"></i> Filters';
             });
 
             document.getElementById('transactionFilterToggle')?.addEventListener('click', function() {
                 const collapsible = document.getElementById('transactionFilterCollapsible');
                 collapsible.classList.toggle('open');
                 this.innerHTML = collapsible.classList.contains('open') 
-                    ? '<i class="fa-solid fa-sliders-h"></i> Hide Filters' 
-                    : '<i class="fa-solid fa-sliders-h"></i> Filters';
+                    ? '<i class="fa-solid fas fa-sliders-h"></i> Hide Filters' 
+                    : '<i class="fa-solid fas fa-sliders-h"></i> Filters';
             });
 
             // ============================================================

@@ -319,7 +319,7 @@
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
-            <i class="fa-solid fa fa-location-dot"></i>
+            <i class="fa-solid fas fa-location-dot"></i>
             <div class="loc-text">
                 University of Benin <span>• Ugbowo</span>
             </div>
@@ -332,7 +332,7 @@
 
                 <div class="mfa-card" id="mfaCard">
                     <div class="card-title">
-                        <i class="fa-regular fa fa-shield-halved"></i> Two-Factor Authentication
+                        <i class="fa-regular fas fa-shield-halved"></i> Two-Factor Authentication
                     </div>
                     <div class="card-subtitle">Choose a method to secure your account with 2FA</div>
 
@@ -465,7 +465,7 @@
 
                     html += `
                         <div class="${cardClass}" data-value="${method.value}">
-                            ${isEnabled ? '<span class="active-badge"><i class="fa-regular fa-circle-check"></i> Active</span>' : ''}
+                            ${isEnabled ? '<span class="active-badge"><i class="fa-regular fas fa-circle-check"></i> Active</span>' : ''}
                             <div class="method-icon"><i class="${method.icon}"></i></div>
                             <div class="method-name">${method.name}</div>
                             <div class="method-desc">${method.description}</div>
@@ -499,7 +499,7 @@
                 if (action === 'disable') {
                     const doDisable = async () => {
                         btnElement.disabled = true;
-                        btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                        btnElement.innerHTML = '<i class="fa-solid fas fa-spinner fas fa-spin"></i>';
                         try {
                             await toggleMethod(value);
                             const data = await fetchMethods();
@@ -541,7 +541,7 @@
                 if (action === 'enable') {
                     const doEnable = async () => {
                         btnElement.disabled = true;
-                        btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                        btnElement.innerHTML = '<i class="fa-solid fas fa-spinner fas fa-spin"></i>';
                         try {
                             const toggleResult = await toggleMethod(value);
                             if (toggleResult && toggleResult.qr_code) {
@@ -660,9 +660,9 @@
                         }
                         errorEl.style.display = 'none';
                         verifyFooterBtn.disabled = true;
-                        verifyFooterBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                        verifyFooterBtn.innerHTML = '<i class="fa-solid fas fa-spinner fas fa-spin"></i>';
                         verifyBodyBtn.disabled = true;
-                        verifyBodyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                        verifyBodyBtn.innerHTML = '<i class="fa-solid fas fa-spinner fas fa-spin"></i>';
 
                         try {
                             const data = await verifyTotp(code);
@@ -790,7 +790,7 @@
                             <ul style="list-style:none; padding:0; margin:16px 0; display:flex; flex-direction:column; gap:6px; align-items:center;">
                                 ${codes.map(code => `<li style="background:var(--bg-input); padding:6px 16px; border-radius:30px; font-family:monospace; font-weight:600; font-size:16px; letter-spacing:2px;">${code}</li>`).join('')}
                             </ul>
-                            <button id="downloadBackupPdf" style="padding:8px 24px; border-radius:30px; border:none; background:var(--green); color:#fff; font-weight:600; cursor:pointer;"><i class="fa-regular fa-file-pdf"></i> Download PDF</button>
+                            <button id="downloadBackupPdf" style="padding:8px 24px; border-radius:30px; border:none; background:var(--green); color:#fff; font-weight:600; cursor:pointer;"><i class="fa-regular fas fa-file-pdf"></i> Download PDF</button>
                             <div style="margin-top:12px;">
                                 <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-secondary); justify-content:center;">
                                     <input type="checkbox" id="backupAck" /> I have saved these codes

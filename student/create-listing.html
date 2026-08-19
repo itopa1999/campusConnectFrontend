@@ -878,7 +878,7 @@
 
     <!-- ===== LOCATION ===== -->
     <div class="location-bar">
-        <i class="fa-solid fa-location-dot"></i>
+        <i class="fa-solid fas fa-location-dot"></i>
         <div class="loc-text">
             University of Benin <span>• Ugbowo</span>
         </div>
@@ -894,16 +894,16 @@
                 <!-- Points Balance Banner -->
                 <div class="points-balance-banner" id="pointsBalanceBanner">
                     <span class="balance-label">
-                        <i class="fa-regular fa-coins"></i> Points Balance
+                        <i class="fa-regular fas fa-coins"></i> Points Balance
                     </span>
                     <span class="balance-value" id="pointsBalanceDisplay">0</span>
                     <button class="balance-refresh" id="refreshPointsBtn" title="Refresh balance">
-                        <i class="fas fa-sync-alt"></i>
+                        <i class="fas fas fa-sync-alt"></i>
                     </button>
                 </div>
 
                 <div class="card-title">
-                    <i class="fa-regular fa-plus"></i> Create Listing
+                    <i class="fa-regular fas fa-plus"></i> Create Listing
                 </div>
                 <div class="card-subtitle">List an item, service, or accommodation for the campus community</div>
 
@@ -941,7 +941,7 @@
 
                     <div class="step-actions">
                         <button type="button" class="btn-next" id="step1Next" disabled>
-                            Next <i class="fa-solid fa-chevron-right"></i>
+                            Next <i class="fa-solid fas fa-chevron-right"></i>
                         </button>
                     </div>
                 </div>
@@ -1005,8 +1005,8 @@
                     </div>
 
                     <div class="step-actions">
-                        <button type="button" class="btn-prev" id="step2Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
-                        <button type="button" class="btn-next" id="step2Next">Next <i class="fa-solid fa-chevron-right"></i></button>
+                        <button type="button" class="btn-prev" id="step2Prev"><i class="fa-solid fas fa-chevron-left"></i> Back</button>
+                        <button type="button" class="btn-next" id="step2Next">Next <i class="fa-solid fas fa-chevron-right"></i></button>
                     </div>
                 </div>
 
@@ -1039,13 +1039,13 @@
 
                     <!-- Total Points -->
                     <div class="total-points-display" id="totalPointsDisplay">
-                        <span class="label"><i class="fa-regular fa-coins"></i> Total points to deduct:</span>
+                        <span class="label"><i class="fa-regular fas fa-coins"></i> Total points to deduct:</span>
                         <span class="points-value" id="totalPointsValue">1</span>
                     </div>
 
                     <div class="step-actions">
-                        <button type="button" class="btn-prev" id="step3Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
-                        <button type="button" class="btn-next" id="step3Next">Next <i class="fa-solid fa-chevron-right"></i></button>
+                        <button type="button" class="btn-prev" id="step3Prev"><i class="fa-solid fas fa-chevron-left"></i> Back</button>
+                        <button type="button" class="btn-next" id="step3Next">Next <i class="fa-solid fas fa-chevron-right"></i></button>
                     </div>
                 </div>
 
@@ -1059,10 +1059,10 @@
                     </div>
 
                     <div class="step-actions">
-                        <button type="button" class="btn-prev" id="step4Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
+                        <button type="button" class="btn-prev" id="step4Prev"><i class="fa-solid fas fa-chevron-left"></i> Back</button>
                         <button type="button" class="btn-submit" id="submitBtn">
-                            <span class="btn-text"><i class="fa-regular fa-paper-plane"></i> Create Listing</span>
-                            <span class="spinner-btn"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                            <span class="btn-text"><i class="fa-regular fas fa-paper-plane"></i> Create Listing</span>
+                            <span class="spinner-btn"><i class="fa-solid fas fa-spinner fas fa-spin"></i></span>
                         </button>
                     </div>
                 </div>
@@ -1261,9 +1261,9 @@
 
         function populateTypes(typeChoices) {
             const iconMap = {
-                'Sell': 'fa-regular fa-tag',
-                'Service': 'fa-regular fa-hands-helping',
-                'Accommodation': 'fa-regular fa-building',
+                'Sell': 'fa-regular fas fa-tag',
+                'Service': 'fa-regular fas fa-hands-helping',
+                'Accommodation': 'fa-regular fas fa-building',
             };
             const descMap = {
                 'Sell': 'Sell items you no longer need',
@@ -1278,8 +1278,8 @@
                 card.className = 'type-select-card';
                 card.dataset.value = val;
                 card.innerHTML = `
-                    <span class="check-mark"><i class="fa-solid fa-check"></i></span>
-                    <span class="type-icon"><i class="${iconMap[val] || 'fa-regular fa-circle'}"></i></span>
+                    <span class="check-mark"><i class="fa-solid fas fa-check"></i></span>
+                    <span class="type-icon"><i class="${iconMap[val] || 'fa-regular fas fa-circle'}"></i></span>
                     <div>
                         <div class="type-name">${val}</div>
                         <div class="type-desc">${descMap[val] || ''}</div>
@@ -1355,20 +1355,20 @@
                 const hasSubs = subs.length > 0;
                 const subHtml = hasSubs ?
                     subs.map(s => {
-                        const icon = s.icon || 'fa-regular fa-folder';
+                        const icon = s.icon || 'fa-regular fas fa-folder';
                         return `
                             <span class="subcategory-chip" data-id="${s.id}" data-category="${cat.id}">
                                 <span class="chip-icon"><i class="${icon}"></i></span>
                                 <span class="chip-label">
                                     ${s.name}
-                                    <span class="chip-check"><i class="fa-solid fa-check"></i></span>
+                                    <span class="chip-check"><i class="fa-solid fas fa-check"></i></span>
                                 </span>
                             </span>
                         `;
                     }).join('') :
                     `<div class="no-subcategories">No subcategories</div>`;
 
-                const catIcon = cat.icon || 'fa-regular fa-folder';
+                const catIcon = cat.icon || 'fa-regular fas fa-folder';
                 html += `
                     <div class="category-item" data-category="${cat.id}">
                         <div class="category-header" data-category="${cat.id}">
@@ -1377,7 +1377,7 @@
                                 <span class="cat-name">${cat.name}</span>
                             </div>
                             <button type="button" class="cat-toggle" data-category="${cat.id}">
-                                <i class="fa-regular fa-plus"></i>
+                                <i class="fa-regular fas fa-plus"></i>
                             </button>
                         </div>
                         <div class="subcategory-grid" data-category="${cat.id}">
@@ -1426,7 +1426,7 @@
             if (grid) {
                 grid.classList.toggle('open');
                 if (toggleBtn) {
-                    toggleBtn.className = grid.classList.contains('open') ? 'fa-regular fa-minus' : 'fa-regular fa-plus';
+                    toggleBtn.className = grid.classList.contains('open') ? 'fa-regular fas fa-minus' : 'fa-regular fas fa-plus';
                 }
             }
         }
@@ -1438,7 +1438,7 @@
                 chip.className = 'location-chip';
                 chip.dataset.id = loc.id;
                 chip.innerHTML = `
-                    <span class="chip-check"><i class="fa-solid fa-check"></i></span>
+                    <span class="chip-check"><i class="fa-solid fas fa-check"></i></span>
                     ${loc.name}
                     <span class="chip-desc">${loc.description || ''}</span>
                 `;
@@ -1462,7 +1462,7 @@
                 chip.className = 'badge-chip';
                 chip.dataset.value = b.value;
                 chip.innerHTML = `
-                    <span class="badge-radio"><i class="fa-solid fa-check"></i></span>
+                    <span class="badge-radio"><i class="fa-solid fas fa-check"></i></span>
                     ${b.label}
                 `;
                 chip.addEventListener('click', function() {
@@ -1482,7 +1482,7 @@
                 div.className = 'ads-check';
                 div.dataset.value = ad.value;
                 div.innerHTML = `
-                    <span class="check-box"><i class="fa-solid fa-check"></i></span>
+                    <span class="check-box"><i class="fa-solid fas fa-check"></i></span>
                     <span class="ads-label">
                         ${ad.label}
                         <small>${ad.description || 'Boost your listing'}</small>
@@ -2206,7 +2206,7 @@
                 pointsCostHtml = `
                     <div class="review-divider"></div>
                     <div class="review-item">
-                        <span class="review-label"><i class="fa-regular fa-coins"></i> Points to deduct</span>
+                        <span class="review-label"><i class="fa-regular fas fa-coins"></i> Points to deduct</span>
                         <span class="review-value points-cost ${insufficient ? 'insufficient' : ''}">
                             ${totalPoints} pts (1 base + ${totalPoints - 1} ads) ${insufficient ? '⚠️ Insufficient balance' : ''}
                         </span>
@@ -2443,7 +2443,7 @@
                 el.classList.remove('selected', 'checked');
             });
             document.querySelectorAll('.subcategory-grid.open').forEach(g => g.classList.remove('open'));
-            document.querySelectorAll('.cat-toggle i').forEach(i => i.className = 'fa-regular fa-plus');
+            document.querySelectorAll('.cat-toggle i').forEach(i => i.className = 'fa-regular fas fa-plus');
             formData.locations = [];
             formData.badge = '';
             formData.ads = {};

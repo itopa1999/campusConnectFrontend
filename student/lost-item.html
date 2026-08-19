@@ -1312,7 +1312,7 @@
                     <button class="btn-cancel" id="addModalCancel">Cancel</button>
                     <button class="btn-submit" id="addModalSubmit">
                         <span class="btn-text"><i class="fas fa-paper-plane"></i> Report Item</span>
-                        <span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>
+                        <span class="spinner-btn"><i class="fas fa-spinner fas fa-spin"></i></span>
                     </button>
                 </div>
             </div>
@@ -1652,7 +1652,7 @@
                 if (!currentClaimItem) return;
 
                 modalSubmit.disabled = true;
-                modalSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting…';
+                modalSubmit.innerHTML = '<i class="fas fa-spinner fas fa-spin"></i> Submitting…';
 
                 try {
                     await submitClaim(currentClaimItem.id, answer1, answer2);
@@ -1713,7 +1713,7 @@
                 });
                 addModalSubmit.disabled = false;
                 addModalSubmit.classList.remove('loading');
-                addModalSubmit.innerHTML = '<span class="btn-text"><i class="fas fa-paper-plane"></i> Report Item</span><span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>';
+                addModalSubmit.innerHTML = '<span class="btn-text"><i class="fas fa-paper-plane"></i> Report Item</span><span class="spinner-btn"><i class="fas fa-spinner fas fa-spin"></i></span>';
             }
 
             function closeAddModal() {
@@ -1761,7 +1761,7 @@
                     showAlert.error(error.message || 'Failed to report item.');
                     addModalSubmit.disabled = false;
                     addModalSubmit.classList.remove('loading');
-                    addModalSubmit.innerHTML = '<span class="btn-text"><i class="fas fa-paper-plane"></i> Report Item</span><span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>';
+                    addModalSubmit.innerHTML = '<span class="btn-text"><i class="fas fa-paper-plane"></i> Report Item</span><span class="spinner-btn"><i class="fas fa-spinner fas fa-spin"></i></span>';
                 }
             }
 

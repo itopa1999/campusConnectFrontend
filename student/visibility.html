@@ -348,7 +348,7 @@
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fa-solid fas fa-location-dot"></i>
             <div class="loc-text">
                 University of Benin <span>• Ugbowo</span>
             </div>
@@ -362,7 +362,7 @@
                 <!-- ===== VISIBILITY CARD ===== -->
                 <div class="vis-card" id="visCard">
                     <div class="card-title">
-                        <i class="fa-regular fa-eye"></i> Profile Visibility
+                        <i class="fa-regular fas fa-eye"></i> Profile Visibility
                     </div>
                     <div class="card-subtitle">Control who can see your profile and listings</div>
 
@@ -396,7 +396,7 @@
                         <!-- Feature Disabled Banner -->
                         <div class="feature-disabled-banner" id="featureDisabledBanner">
                             <p>
-                                <i class="fa-regular fa-circle-info info-icon"></i>
+                                <i class="fa-regular fas fa-circle-info info-icon"></i>
                                 <strong>Feature disabled:</strong> Profile visibility is currently hidden due to platform settings.
                                 You cannot change your visibility at this time.
                             </p>
@@ -405,7 +405,7 @@
                         <!-- Warning Banner -->
                         <div class="warning-banner" id="warningBanner">
                             <p>
-                                <i class="fa-regular fa-triangle-exclamation warning-icon"></i>
+                                <i class="fa-regular fas fa-triangle-exclamation warning-icon"></i>
                                 <strong>⚠️ Warning:</strong> Setting your profile to <strong>Private</strong> will hide your profile and listings from other students.
                                 This may reduce trust and discourage buyers from purchasing your items.
                                 Only switch to private if you have a strong reason.
@@ -415,7 +415,7 @@
                         <!-- Actions -->
                         <div class="vis-actions" id="visActions">
                             <button class="btn-save" id="saveBtn" disabled>
-                                <i class="fa-regular fa-floppy-disk"></i> Save Changes
+                                <i class="fa-regular fas fa-floppy-disk"></i> Save Changes
                             </button>
                             <button class="btn-cancel" id="cancelBtn">Cancel</button>
                         </div>
@@ -629,7 +629,7 @@
 
             async function performToggle() {
                 saveBtn.disabled = true;
-                saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+                saveBtn.innerHTML = '<i class="fa-solid fas fa-spinner fas fa-spin"></i> Saving…';
 
                 try {
                     // Toggle on backend
@@ -658,7 +658,7 @@
                         alert('Error: ' + error.message);
                     }
                 } finally {
-                    saveBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Changes';
+                    saveBtn.innerHTML = '<i class="fa-regular fas fa-floppy-disk"></i> Save Changes';
                     // Re‑evaluate dirty state
                     const currentStatus = toggle.checked ? 'public' : 'private';
                     isDirty = (currentStatus !== initialVisibility);

@@ -398,7 +398,7 @@
                             <div class="hall-actions" id="hallActions">
                                 <button type="submit" class="btn-submit" id="submitBtn">
                                     <span class="btn-text"><i class="fas fa-paper-plane"></i> Submit for Verification</span>
-                                    <span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>
+                                    <span class="spinner-btn"><i class="fas fa-spinner fas fa-spin"></i></span>
                                 </button>
                                 <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
                             </div>
@@ -572,7 +572,7 @@
                 // ── Reset submit button ──
                 submitBtn.disabled = true;
                 submitBtn.classList.remove('loading');
-                submitBtn.innerHTML = `<span class="btn-text"><i class="fas fa-paper-plane"></i> Submit for Verification</span><span class="spinner-btn"><i class="fas fa-spinner fa-spin"></i></span>`;
+                submitBtn.innerHTML = `<span class="btn-text"><i class="fas fa-paper-plane"></i> Submit for Verification</span><span class="spinner-btn"><i class="fas fa-spinner fas fa-spin"></i></span>`;
 
                 // ── Validate (will enable if not approved and both fields have values) ──
                 if (!isApproved) {

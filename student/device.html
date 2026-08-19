@@ -266,7 +266,7 @@
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fa-solid fas fa-location-dot"></i>
             <div class="loc-text">
                 University of Benin <span>• Ugbowo</span>
             </div>
@@ -280,7 +280,7 @@
                 <!-- ===== DEVICE CARD ===== -->
                 <div class="device-card" id="deviceCard">
                     <div class="card-title">
-                        <i class="fa-regular fa-laptop"></i> Active Devices
+                        <i class="fa-regular fas fa-laptop"></i> Active Devices
                     </div>
                     <div class="card-subtitle">Manage devices where you're signed in</div>
 
@@ -300,7 +300,7 @@
                         <!-- Actions (optional) -->
                         <div style="margin-top: 16px; display:flex; justify-content:flex-end;">
                             <button class="btn-cancel" id="refreshBtn" style="background:var(--bg-input); border:none; padding:8px 20px; border-radius:30px; font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all 0.2s;">
-                                <i class="fa-regular fa-rotate"></i> Refresh
+                                <i class="fa-regular fas fa-rotate"></i> Refresh
                             </button>
                         </div>
 
@@ -407,7 +407,7 @@
                 if (devices.length === 0) {
                     deviceList.innerHTML = `
                             <div class="device-empty">
-                                <span class="empty-icon"><i class="fa-regular fa-laptop"></i></span>
+                                <span class="empty-icon"><i class="fa-regular fas fa-laptop"></i></span>
                                 <h4>No active devices</h4>
                                 <p>You're not signed in on any other devices.</p>
                             </div>
@@ -438,14 +438,14 @@
                                             <span class="separator">•</span>
                                             <span>${device.os}</span>
                                             <span class="separator">•</span>
-                                            <span class="last-active"><i class="fa-regular fa-clock"></i> ${lastActiveFormatted}</span>
+                                            <span class="last-active"><i class="fa-regular fas fa-clock"></i> ${lastActiveFormatted}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="device-actions">
                                     ${!isCurrent ? `
                                         <button class="delete-btn" data-id="${device.id}" title="Remove this device" aria-label="Remove device">
-                                            <i class="fa-regular fa-trash-can"></i>
+                                            <i class="fa-regular fas fa-trash-can"></i>
                                         </button>
                                     ` : `
                                         <span style="font-size:12px; color:var(--text-muted); font-weight:500;">Current</span>
@@ -483,7 +483,7 @@
                     const removeBtn = document.querySelector(`.delete-btn[data-id="${device.id}"]`);
                     if (removeBtn) {
                         removeBtn.disabled = true;
-                        removeBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                        removeBtn.innerHTML = '<i class="fa-solid fas fa-spinner fas fa-spin"></i>';
                     }
 
                     setTimeout(() => {

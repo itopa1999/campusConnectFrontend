@@ -828,7 +828,7 @@
 
             async function submitId(file) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading…';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fas fa-spin"></i> Uploading…';
 
                 try {
                     await uploadIdImage(file);
@@ -858,7 +858,7 @@
                     // Re‑enable submit button (user may try again)
                     submitBtn.disabled = false;
                 } finally {
-                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit for Review';
+                    submitBtn.innerHTML = '<i class="fas fas fa-paper-plane"></i> Submit for Review';
                 }
             }
 

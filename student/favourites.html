@@ -546,7 +546,7 @@
 
     <!-- ===== LOCATION ===== -->
     <div class="location-bar">
-        <i class="fa-solid fa-location-dot"></i>
+        <i class="fa-solid fas fa-location-dot"></i>
         <div class="loc-text">
             University of Benin <span>• Ugbowo</span>
         </div>
@@ -558,11 +558,11 @@
         <!-- ===== FAVOURITES HEADER ===== -->
         <div class="fav-header" id="favHeader">
             <div class="fav-title">
-                <span class="heart-icon"><i class="fa-solid fa-heart"></i></span>
+                <span class="heart-icon"><i class="fa-solid fas fa-heart"></i></span>
                 <h2>My Favourites</h2>
             </div>
             <div class="fav-count-badge">
-                <i class="fa-regular fa-heart"></i>
+                <i class="fa-regular fas fa-heart"></i>
                 <span id="favCountDisplay">0</span>
             </div>
         </div>
@@ -570,7 +570,7 @@
         <!-- ===== SEARCH ===== -->
         <div class="fav-search-wrap">
             <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <i class="fa-solid fas fa-magnifying-glass"></i>
                 <input type="text" id="favSearchInput" placeholder="Search your favourites…" />
                 <button class="clear-fav-search" id="clearFavSearch" title="Clear search">&times;</button>
             </div>
@@ -584,9 +584,9 @@
 
         <!-- ===== PAGINATION ===== -->
         <div class="pagination-controls" id="favPagination">
-            <button id="favPrev" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+            <button id="favPrev" disabled><i class="fa-solid fas fa-chevron-left"></i> Prev</button>
             <span class="page-info" id="favPageInfo">Page 1</span>
-            <button id="favNext">Next <i class="fa-solid fa-chevron-right"></i></button>
+            <button id="favNext">Next <i class="fa-solid fas fa-chevron-right"></i></button>
         </div>
 
     </main>
@@ -698,7 +698,7 @@
             if (pageItems.length === 0) {
                 grid.innerHTML = `
                     <div class="fav-empty">
-                        <span class="empty-icon"><i class="fa-regular fa-heart"></i></span>
+                        <span class="empty-icon"><i class="fa-regular fas fa-heart"></i></span>
                         <h3>No favourites yet</h3>
                         <p>Start exploring and heart the items you love. They'll appear here.</p>
                         <a href="explore.html" class="explore-cta">Explore now</a>
@@ -708,7 +708,7 @@
             }
 
             grid.innerHTML = pageItems.map(item => {
-                const icon = item.category.icon || 'fa fa-tag';
+                const icon = item.category.icon || 'fas fa-tag';
                 const badgeClass = getBadgeClass(item.badge);
                 const badgeLabel = getBadgeLabel(item.badge);
                 const imgSrc = getImageUrl(item);
@@ -725,14 +725,14 @@
                             <div class="placeholder-icon" style="display:none; position:absolute; inset:0; align-items:center; justify-content:center; font-size:40px; color:var(--text-muted2); background:var(--bg-img-placeholder);">📦</div>
                             ${badgeLabel ? `<span class="tag ${badgeClass}">${badgeLabel}</span>` : ''}
                             <button class="fav-heart-btn" data-id="${item.id}" title="Remove from favourites">
-                                <i class="fa-solid fa-heart"></i>
+                                <i class="fa-solid fas fa-heart"></i>
                             </button>
                         </div>
                         <div class="info">
                             <div class="name" title="${item.title}">${item.title}</div>
                             <div class="price">${priceDisplay}</div>
                             <div class="meta">
-                                <span class="location"><i class="fa-solid fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
+                                <span class="location"><i class="fa-solid fas fa-location-dot"></i> ${item.hotspots || 'Campus'}</span>
                                 <span class="category-tag"><i class="fa-solid ${icon}"></i> ${item.category.name}</span>
                             </div>
                         </div>
@@ -921,7 +921,7 @@
                 console.error('Init error:', error);
                 grid.innerHTML = `
                     <div class="fav-empty">
-                        <span class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                        <span class="empty-icon"><i class="fa-solid fas fa-triangle-exclamation"></i></span>
                         <h3>Could not load favourites</h3>
                         <p>${error.message || 'Please try again later.'}</p>
                         <button class="explore-cta" onclick="location.reload()">Retry</button>
