@@ -292,7 +292,7 @@
             showAlert.error('Session expired. Please login again.');
         }
         setTimeout(() => {
-            window.location.href = '/auth/auth.html';
+            window.location.href = 'login.html';
         }, 1000);
     }
 
@@ -385,7 +385,7 @@
                 showAlert.warning('Session timed out. Please login again.', { duration: 2000 });
             }
             setTimeout(() => {
-                window.location.href = '/auth/auth.html';
+                window.location.href = 'login.html';
             }, 300);
             return Promise.reject(new Error('User not authenticated'));
         }
@@ -439,8 +439,10 @@
                 }
 
                 // ─── 403 Forbidden ──────────────────────────────────────
-                const isForbidden = body?.message?.toLowerCase().includes("access denied") || body?.status_code === 403;
-
+                const isForbidden =
+                    (typeof body?.message === "string" &&
+                        body.message.toLowerCase().includes("access denied")) ||
+                    body?.status_code === 403;
                 if (isForbidden) {
                     if (opts.showSpinner) {
                         hideGlobalSpinner();
@@ -533,7 +535,7 @@
                 showAlert.info('Logged out successfully.', { duration: 1500 });
             }
             setTimeout(() => {
-                window.location.href = '/auth/auth.html';
+                window.location.href = 'login.html';
             }, 500);
         }
     }
@@ -671,20 +673,21 @@
                 { icon: 'fas fa-building', label: 'Hall Verification', id: 'hall-verified' },
                 { icon: 'fas fa-eye', label: 'Change Visibility', id: 'change-visibility' },
                 { icon: 'fas fa-shield-halved', label: 'Add 2FA', id: 'add-2fa' },
-                { icon: 'fas fa-info-circle', label: 'Student Loan', id: 'loan' },
+                { icon: 'fas fa-hand-holding-dollar', label: 'Student Loan', id: 'loan' },
                 { icon: 'fas fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },
                 { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
-                { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
+                { icon: 'fas fa-circle-info', label: 'About us', id: 'about-us' },
                 { icon: 'fas fa-file-contract', label: 'Terms & Conditions', id: 'term-condition' },
                 { icon: 'fas fa-key', label: 'Change Password', id: 'change-password' },
                 { icon: 'fas fa-right-from-bracket', label: 'Logout', id: 'logout' },
             ];
         } else {
-            // Unauthenticated: only About Us and Help us Improve
             menuItems = [
                 { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
-                { icon: 'fas fa-info-circle', label: 'About us', id: 'about-us' },
+                { icon: 'fas fa-circle-info', label: 'About us', id: 'about-us' },
                 { icon: 'fas fa-file-contract', label: 'Terms & Conditions', id: 'term-condition' },
+                { icon: 'fas fa-right-to-bracket', label: 'Sign in', id: 'sign-in' },
+                { icon: 'fas fa-user-plus', label: 'Sign up', id: 'sign-up' },
             ];
         }
 
@@ -692,6 +695,8 @@
         menuItems.forEach((item, index) => {
             const isLast = index === menuItems.length - 1;
             const isLogout = item.id === 'logout';
+            const isSignIn = item.id === 'sign-in';
+            const isSignUp = item.id === 'sign-up';
 
             let divStyle = `
                 display:flex;
@@ -699,7 +704,7 @@
                 gap:14px;
                 padding:14px 24px;
                 cursor:pointer;
-                transition:background 0.2s;
+                transition:background 0.2s, transform 0.2s;
                 color:var(--text-primary,#1a1a1a);
             `;
 
@@ -711,25 +716,101 @@
                 transition:color 0.2s;
             `;
 
+            /*
+            * LOGOUT
+            */
             if (isLogout) {
                 divStyle += `
-                    background: linear-gradient(135deg, #ff4d4d, #cc0000);
-                    color: #ffffff;
-                    border-radius: 10px;
-                    margin: 4px 12px 0 12px;
-                    padding: 14px 20px;
+                    background:linear-gradient(135deg,#ff4d4d,#cc0000);
+                    color:#ffffff;
+                    border-radius:10px;
+                    margin:4px 12px 0 12px;
+                    padding:14px 20px;
                 `;
+
                 iconStyle += `
-                    color: #ffffff !important;
+                    color:#ffffff !important;
+                `;
+            }
+
+            /*
+            * SIGN IN
+            */
+            else if (isSignIn) {
+                divStyle += `
+                    background:var(--surface-secondary,#f5f7f6);
+                    color:var(--text-primary,#1a1a1a);
+                    border-radius:10px;
+                    margin:4px 12px 0 12px;
+                    padding:14px 20px;
+                `;
+
+                iconStyle += `
+                    color:#2c7a5e !important;
+                `;
+            }
+
+            /*
+            * SIGN UP
+            */
+            else if (isSignUp) {
+                divStyle += `
+                    background:linear-gradient(135deg,#2c7a5e,#1f5e48);
+                    color:#ffffff;
+                    border-radius:10px;
+                    margin:4px 12px 0 12px;
+                    padding:14px 20px;
+                `;
+
+                iconStyle += `
+                    color:#ffffff !important;
                 `;
             }
 
             itemsHTML += `
-                <div class="profile-menu-item" data-action="${item.id}" style="${divStyle}">
-                    <i class="${item.icon}" style="${iconStyle}"></i>
-                    <span style="font-size:14px;font-weight:500;">${item.label}</span>
+                <div
+                    class="profile-menu-item"
+                    data-action="${item.id}"
+                    style="${divStyle}"
+                    onmouseover="
+                        if ('${isLogout}' !== 'true' && '${isSignUp}' !== 'true') {
+                            this.style.background='var(--surface-secondary,#f5f7f6)';
+                        } else {
+                            this.style.transform='translateY(-1px)';
+                        }
+                    "
+                    onmouseout="
+                        if ('${isLogout}' !== 'true' && '${isSignUp}' !== 'true') {
+                            this.style.background='transparent';
+                        } else {
+                            this.style.transform='translateY(0)';
+                        }
+                    "
+                >
+                    <i
+                        class="${item.icon}"
+                        style="${iconStyle}"
+                    ></i>
+
+                    <span style="
+                        font-size:14px;
+                        font-weight:500;
+                    ">
+                        ${item.label}
+                    </span>
                 </div>
-                ${!isLast && !isLogout ? `<div style="margin:0 24px;height:1px;background:var(--border-color,#f0f0f0);"></div>` : ''}
+
+                ${
+                    !isLast && !isLogout && !isSignIn && !isSignUp
+                        ? `
+                            <div style="
+                                margin:0 24px;
+                                height:1px;
+                                background:var(--border-color,#f0f0f0);
+                            "></div>
+                        `
+                        : ''
+                }
             `;
         });
 
@@ -873,6 +954,8 @@
             'about-us': 'about-us.html',
             'loan': 'student-loan.html',
             'term-condition': 'terms-privacy.html',
+            'sign-in': 'login.html',
+            'sign-up': 'signup.html',
             'change-password': 'change-password.html',
         };
 
@@ -1435,6 +1518,18 @@
     // ============================================================
 
     function renderBottomNav(activePage) {
+
+         // ─── Hide on auth pages ──────────────────────────────────
+        const authPaths = ['/login', '/2fa-verify', '/forgot-password', '/signup'];
+        const currentPath = window.location.pathname;
+        const shouldHide = authPaths.some(path => currentPath.includes(path));
+
+        if (shouldHide) {
+            const existingNav = document.querySelector('.bottom-nav');
+            if (existingNav) existingNav.remove();
+            return;
+        }
+
         if (document.querySelector('.bottom-nav')) return;
 
         const validPages = ['dashboard', 'explore', 'favourites', 'lost-item'];
@@ -1559,7 +1654,7 @@
                 showAlert.warning('Please login to access this page.', { duration: 2000 });
             }
             setTimeout(() => {
-                window.location.href = '/auth/auth.html';
+                window.location.href = 'login.html';
             }, 300);
             return false;
         }

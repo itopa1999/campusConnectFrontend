@@ -6,6 +6,14 @@
 //   Delete:   new Modal({ title: 'Delete?', body: '...', type: 'danger', confirmText: 'Delete' })
 //   Warning:  new Modal({ title: 'Warning', body: '...', type: 'warning', confirmText: 'Proceed' })
 //   Confirm:  new Modal({ title: 'Confirm', body: '...', type: 'success', confirmText: 'OK' })
+//
+// 🚀 Form Validation Integration:
+//   const result = await Modal.confirmForm({
+//     title: 'Submit Feedback',
+//     formHtml: '<input class="form-input" ...>',
+//     onValidate: (data) => { ... } // optional extra validation
+//   });
+//   if (result) { console.log('Submitted:', result); }
 // ============================================================
 
 class Modal {
@@ -72,7 +80,6 @@ class Modal {
      * Build the modal DOM structure
      */
     _build() {
-        // Remove any existing modal with same instance
         if (this._element) {
             this._element.remove();
             this._overlay?.remove();
@@ -120,12 +127,8 @@ class Modal {
             overflow: hidden;
         `;
 
-        // Size variants
-        if (this.options.size === 'sm') {
-            modal.style.maxWidth = '400px';
-        } else if (this.options.size === 'lg') {
-            modal.style.maxWidth = '720px';
-        }
+        if (this.options.size === 'sm') modal.style.maxWidth = '400px';
+        else if (this.options.size === 'lg') modal.style.maxWidth = '720px';
 
         // --- Header ---
         let header = null;
@@ -260,14 +263,12 @@ class Modal {
 
         // --- Event Listeners ---
 
-        // Close on overlay click
         if (this.options.closeOnOverlay) {
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) this.close();
             });
         }
 
-        // Close on ESC
         if (this.options.closeOnEsc) {
             this._escHandler = (e) => {
                 if (e.key === 'Escape' && this.isOpen) this.close();
@@ -275,14 +276,12 @@ class Modal {
             document.addEventListener('keydown', this._escHandler);
         }
 
-        // Button click handlers
         const confirmBtn = footer?.querySelector('.modal-confirm-btn');
         const cancelBtn = footer?.querySelector('.modal-cancel-btn');
 
         if (confirmBtn) {
             confirmBtn.addEventListener('click', (e) => {
                 if (typeof this.options.onConfirm === 'function') {
-                    // Call callback; if it returns false, do NOT close.
                     const result = this.options.onConfirm(this, e);
                     if (result !== false) {
                         this.close();
@@ -318,7 +317,6 @@ class Modal {
         const modal = this._element;
 
         overlay.style.display = 'flex';
-        // Trigger reflow for animation
         void overlay.offsetWidth;
         overlay.style.opacity = '1';
         modal.style.opacity = '1';
@@ -400,6 +398,245 @@ class Modal {
             footerEl.remove();
             this.options.footer = null;
         }
+    }
+
+    // ============================================================
+    // 🚀 FORM INTEGRATION
+    // ============================================================
+
+    /**
+     * Embed a form into the modal body and attach validation using CampusForms.
+     * @param {string|HTMLFormElement} formHtmlOrEl - HTML string or DOM element of the form.
+     * @param {Object} [options] - Additional options.
+     * @param {Function} [options.onValidate] - Extra validation callback, receives form data.
+     * @param {Function} [options.onSubmit] - Custom submit handler (instead of default).
+     * @param {string} [options.submitText='Submit'] - Text for the submit button.
+     * @param {string} [options.cancelText='Cancel'] - Text for the cancel button.
+     * @returns {this} - The modal instance (chainable).
+     */
+    setForm(formHtmlOrEl, options = {}) {
+        // Build form HTML if string, or clone element
+        let formEl;
+        if (typeof formHtmlOrEl === 'string') {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = formHtmlOrEl;
+            formEl = wrapper.querySelector('form');
+            if (!formEl) {
+                throw new Error('setForm: No <form> element found in the provided HTML.');
+            }
+        } else if (formHtmlOrEl instanceof HTMLFormElement) {
+            formEl = formHtmlOrEl.cloneNode(true);
+        } else {
+            throw new Error('setForm: Expected a string or HTMLFormElement.');
+        }
+
+        // Ensure form has novalidate to use CampusForms
+        formEl.setAttribute('novalidate', '');
+
+        // Inject form into modal body
+        const bodyEl = this._element?.querySelector('.modal-body');
+        if (!bodyEl) throw new Error('Modal body not found.');
+        bodyEl.innerHTML = '';
+        bodyEl.appendChild(formEl);
+
+        // Adjust footer: show submit/cancel
+        const theme = this.themes[this.options.type] || this.themes.default;
+        const footer = this._element?.querySelector('.modal-footer');
+        if (footer) {
+            footer.innerHTML = `
+                <button class="modal-cancel-btn btn-reset" style="
+                    padding: 10px 24px;
+                    border-radius: 30px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    border: none;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    background: var(--bg-input, #f3f4f6);
+                    color: var(--text-secondary, #4a4a4a);
+                ">${options.cancelText || this.options.cancelText || 'Cancel'}</button>
+                <button class="modal-confirm-btn ${theme.btnClass}" id="modalFormSubmit">${options.submitText || 'Submit'}</button>
+            `;
+        } else {
+            // If no footer, create one
+            const newFooter = document.createElement('div');
+            newFooter.className = 'modal-footer';
+            newFooter.style.cssText = `
+                padding: 16px 24px 24px;
+                border-top: 1px solid var(--border-color, #f0f0f0);
+                display: flex;
+                gap: 12px;
+                justify-content: flex-end;
+                flex-shrink: 0;
+                flex-wrap: wrap;
+            `;
+            newFooter.innerHTML = `
+                <button class="modal-cancel-btn btn-reset" style="
+                    padding: 10px 24px;
+                    border-radius: 30px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    border: none;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    background: var(--bg-input, #f3f4f6);
+                    color: var(--text-secondary, #4a4a4a);
+                ">${options.cancelText || this.options.cancelText || 'Cancel'}</button>
+                <button class="modal-confirm-btn ${theme.btnClass}" id="modalFormSubmit">${options.submitText || 'Submit'}</button>
+            `;
+            this._element?.appendChild(newFooter);
+        }
+
+        // Re-bind events
+        const submitBtn = this._element?.querySelector('#modalFormSubmit');
+        const cancelBtnEl = this._element?.querySelector('.modal-cancel-btn');
+
+        // Store form validation state
+        let formData = null;
+        const validate = (e) => {
+            e.preventDefault();
+            const validationResult = window.CampusForms?.validateForm(formEl);
+            if (!validationResult || !validationResult.isValid) {
+                // Show error messages already handled by helper
+                return false;
+            }
+            // Gather form data
+            const data = new FormData(formEl);
+            const obj = {};
+            data.forEach((value, key) => { obj[key] = value; });
+
+            // Custom validation
+            if (typeof options.onValidate === 'function') {
+                const extra = options.onValidate(obj, formEl);
+                if (extra === false) return false;
+                if (typeof extra === 'object') Object.assign(obj, extra);
+            }
+            formData = obj;
+            return true;
+        };
+
+        // Submit handler
+        const onSubmit = (e) => {
+            if (options.onSubmit) {
+                // Custom submit handler
+                options.onSubmit(e, formEl, this);
+                return;
+            }
+            if (validate(e)) {
+                // Close modal with success
+                this.options.onConfirm = () => {
+                    // Return the data via the modal's result mechanism
+                    this._result = formData;
+                };
+                this.close();
+            }
+        };
+
+        submitBtn?.addEventListener('click', onSubmit);
+        cancelBtnEl?.addEventListener('click', () => {
+            this._result = null;
+            this.close();
+        });
+
+        // Also allow Enter key on form fields
+        formEl.addEventListener('submit', (e) => {
+            e.preventDefault();
+            onSubmit(e);
+        });
+
+        return this;
+    }
+
+    /**
+     * Get the result of a form modal (resolves after close).
+     * Used with setForm() – returns form data if confirmed, null if cancelled.
+     * @returns {Promise<any>}
+     */
+    getFormResult() {
+        return new Promise((resolve) => {
+            const originalClose = this.close.bind(this);
+            this.close = () => {
+                originalClose();
+                resolve(this._result || null);
+                // Restore original close
+                this.close = originalClose;
+            };
+            // If already closed, resolve immediately
+            if (!this.isOpen) {
+                resolve(this._result || null);
+            }
+        });
+    }
+
+    // ============================================================
+    // STATIC HELPER: Modal.confirmForm()
+    // ============================================================
+
+    /**
+     * Static method to create a modal with a form, validate it, and return a Promise.
+     * @param {Object} options
+     * @param {string} options.title - Modal title.
+     * @param {string|HTMLFormElement} options.form - Form HTML string or DOM element.
+     * @param {string} [options.confirmText='Submit'] - Confirm button text.
+     * @param {string} [options.cancelText='Cancel'] - Cancel button text.
+     * @param {Function} [options.onValidate] - Extra validation callback.
+     * @param {string} [options.type='default'] - Modal type.
+     * @param {string} [options.size='md'] - Modal size.
+     * @param {Object} [options.modalOptions] - Additional options for Modal constructor.
+     * @returns {Promise<any>} - Resolves with form data on confirm, or null on cancel.
+     */
+    static confirmForm(options) {
+        return new Promise((resolve) => {
+            const modalOptions = {
+                title: options.title || 'Submit Form',
+                type: options.type || 'default',
+                size: options.size || 'md',
+                showConfirm: false, // will be controlled by setForm
+                showCancel: false,   // will be controlled by setForm
+                ...options.modalOptions,
+                onClose: () => {
+                    // If no result, resolve null
+                    if (modal._result === undefined) {
+                        resolve(null);
+                    }
+                }
+            };
+
+            const modal = new Modal(modalOptions);
+            modal.setForm(options.form, {
+                submitText: options.confirmText || 'Submit',
+                cancelText: options.cancelText || 'Cancel',
+                onValidate: options.onValidate,
+                onSubmit: (e, formEl, modalInstance) => {
+                    // Use CampusForms validateForm
+                    const validationResult = window.CampusForms?.validateForm(formEl);
+                    if (!validationResult || !validationResult.isValid) {
+                        return;
+                    }
+                    const data = new FormData(formEl);
+                    const obj = {};
+                    data.forEach((value, key) => { obj[key] = value; });
+                    if (typeof options.onValidate === 'function') {
+                        const extra = options.onValidate(obj, formEl);
+                        if (extra === false) return;
+                        if (typeof extra === 'object') Object.assign(obj, extra);
+                    }
+                    modal._result = obj;
+                    modal.close();
+                    resolve(obj);
+                }
+            });
+            modal.open();
+
+            // If modal is closed without submitting, resolve null
+            const originalClose = modal.close.bind(modal);
+            modal.close = () => {
+                originalClose();
+                if (modal._result === undefined) {
+                    resolve(null);
+                }
+            };
+        });
     }
 }
 

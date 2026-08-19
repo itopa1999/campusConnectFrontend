@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Two-Factor Authentication</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/studentStyle.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
+
+    <style>
+        /* ─── All existing styles (unchanged) ──────────────────────── */
+        .verify-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-app);
+            padding: 20px;
+            transition: background var(--transition);
+        }
+
+        .verify-container {
+            width: 100%;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        .verify-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 40px 32px 36px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+        }
+
+        .verify-card .brand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .verify-card .brand .brand-icon {
+            font-size: 40px;
+            color: var(--green);
+            display: block;
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+
+        .verify-card .brand h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+            letter-spacing: -0.5px;
+            transition: color var(--transition);
+        }
+
+        .verify-card .brand h1 span {
+            color: var(--green);
+            transition: color var(--transition);
+        }
+
+        .verify-card .brand p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 4px 0 0;
+            transition: color var(--transition);
+        }
+
+        .verify-card .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            line-height: 1.5;
+            transition: color var(--transition);
+        }
+
+        .verify-card .subtitle .method-label {
+            font-weight: 600;
+            color: var(--green);
+            transition: color var(--transition);
+        }
+
+        .verify-card .subtitle .method-hint {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+
+        .verify-card .method-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin: 16px 0 20px;
+            padding: 8px 16px;
+            background: var(--bg-input);
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .verify-card .method-toggle .toggle-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color var(--transition);
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 8px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .verify-card .method-toggle .toggle-label.active {
+            color: var(--text-primary);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .verify-card .method-toggle .toggle-label .icon {
+            margin-right: 6px;
+        }
+
+        .verify-card .method-toggle .toggle-slider {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .verify-card .method-toggle .toggle-slider .slider-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .verify-card .method-toggle .toggle-slider.active {
+            background: var(--green);
+        }
+
+        .verify-card .method-toggle .toggle-slider.active .slider-thumb {
+            transform: translateX(20px);
+        }
+
+        .verify-card .code-input-group {
+            margin: 20px 0 18px;
+        }
+
+        .verify-card .code-input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            transition: color var(--transition);
+        }
+
+        .verify-card .code-input-group .code-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .verify-card .code-input-group .code-inputs input {
+            width: 48px;
+            height: 56px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            font-family: inherit;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            transition: all 0.25s ease;
+            outline: none;
+            caret-color: var(--green);
+        }
+
+        .verify-card .code-input-group .code-inputs input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
+            background: var(--bg-card);
+        }
+
+        .verify-card .code-input-group .code-inputs input.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
+        }
+
+        .verify-card .code-input-group .code-inputs input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .verify-card .code-input-group .help-text {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            transition: color var(--transition);
+        }
+
+        .verify-card .code-input-group .help-text.error {
+            color: var(--red);
+        }
+
+        .verify-card .code-input-group .help-text.success {
+            color: var(--green);
+        }
+
+        .verify-card .code-input-group .backup-input-wrap {
+            display: none;
+            position: relative;
+        }
+
+        .verify-card .code-input-group .backup-input-wrap.visible {
+            display: block;
+        }
+
+        .verify-card .code-input-group .backup-input-wrap input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            outline: none;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+        }
+
+        .verify-card .code-input-group .backup-input-wrap input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
+            background: var(--bg-card);
+        }
+
+        .verify-card .code-input-group .backup-input-wrap input.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
+        }
+
+        .verify-card .code-input-group .backup-input-wrap input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+            font-family: inherit;
+            letter-spacing: 1px;
+            text-transform: none;
+        }
+
+        /* ─── ✅ FIX: Override global .form-input styles ──────────── */
+        .verify-card .code-input-group .backup-input-wrap input.form-input {
+            border: 2px solid var(--border-color) !important;
+            background: var(--bg-input) !important;
+            padding: 14px 16px !important;
+            box-shadow: none !important;
+            border-radius: 12px !important;
+            margin: 0 !important;
+            font-family: 'Courier New', monospace !important;
+            letter-spacing: 2px !important;
+            text-transform: uppercase !important;
+        }
+        .verify-card .code-input-group .backup-input-wrap input.form-input:focus {
+            border-color: var(--green) !important;
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10) !important;
+            background: var(--bg-card) !important;
+        }
+        .verify-card .code-input-group .backup-input-wrap input.form-input.error {
+            border-color: var(--red) !important;
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10) !important;
+        }
+
+        .verify-card .btn-verify {
+            width: 100%;
+            padding: 13px 0;
+            border-radius: 30px;
+            border: none;
+            background: var(--green);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: inherit;
+            margin-top: 4px;
+        }
+
+        .verify-card .btn-verify:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+
+        .verify-card .btn-verify:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .verify-card .btn-verify .spinner {
+            display: none;
+        }
+
+        .verify-card .btn-verify.loading .spinner {
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .verify-card .btn-verify.loading .btn-text {
+            display: none;
+        }
+
+        .verify-card .footer-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 18px;
+        }
+
+        .verify-card .footer-actions .back-link {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .verify-card .footer-actions .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .verify-card .footer-actions .back-link i {
+            margin-right: 4px;
+        }
+
+        .verify-card .alert {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            border: 1px solid transparent;
+        }
+
+        .verify-card .alert.visible {
+            display: block;
+        }
+
+        .verify-card .alert.error {
+            background: rgba(231, 76, 60, 0.08);
+            border-color: rgba(231, 76, 60, 0.25);
+            color: var(--red);
+        }
+
+        .verify-card .alert.success {
+            background: rgba(13, 138, 62, 0.08);
+            border-color: rgba(13, 138, 62, 0.25);
+            color: var(--green);
+        }
+
+        .dark-mode .verify-card .alert.error {
+            background: rgba(231, 76, 60, 0.12);
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+
+        .dark-mode .verify-card .alert.success {
+            background: rgba(13, 138, 62, 0.12);
+            border-color: rgba(13, 138, 62, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .verify-card { padding: 28px 20px 24px; }
+            .verify-card .brand h1 { font-size: 22px; }
+            .verify-card .brand .brand-icon { font-size: 32px; }
+            .verify-card .code-input-group .code-inputs input { width: 40px; height: 48px; font-size: 18px; }
+            .verify-card .code-input-group .code-inputs { gap: 6px; }
+            .verify-card .btn-verify { font-size: 15px; padding: 12px 0; }
+            .verify-card .method-toggle { gap: 10px; padding: 6px 12px; flex-wrap: wrap; }
+            .verify-card .method-toggle .toggle-label { font-size: 12px; }
+        }
+
+        @media (min-width: 768px) {
+            .verify-container { max-width: 460px; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .verify-card .code-input-group .code-inputs input:not(:disabled) {
+            animation: fadeInUp 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="verify-page">
+        <div class="verify-container">
+            <div class="verify-card">
+
+                <div class="brand">
+                    <span class="brand-icon"><i class="fa-solid fa-shield-halved"></i></span>
+                    <h1>Campus<span>Hub</span></h1>
+                    <p>Two-Factor Authentication</p>
+                </div>
+
+                <div class="subtitle">
+                    <div>Enter the verification code from your</div>
+                    <div class="method-label" id="methodLabel">authenticator app</div>
+                    <div class="method-hint" id="methodHint">Open your authenticator app to get your 6-digit code</div>
+                </div>
+
+                <div class="alert" id="verifyAlert"></div>
+
+                <div class="method-toggle" id="methodToggle">
+                    <span class="toggle-label active" data-method="totp">
+                        <span class="icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
+                        Authenticator
+                    </span>
+                    <div class="toggle-slider" id="toggleSlider" role="button" tabindex="0" aria-label="Toggle verification method">
+                        <span class="slider-thumb"></span>
+                    </div>
+                    <span class="toggle-label" data-method="backup">
+                        <span class="icon"><i class="fa-solid fa-key"></i></span>
+                        Backup Code
+                    </span>
+                </div>
+
+                <form id="verifyForm" autocomplete="off" novalidate>
+
+                    <div class="code-input-group">
+
+                        <div id="totpInputs">
+                            <label for="codeInput1">Verification Code</label>
+                            <div class="code-inputs" id="codeInputsContainer">
+                                <input type="text" id="codeInput1" maxlength="1" inputmode="numeric" pattern="[0-9]" required />
+                                <input type="text" id="codeInput2" maxlength="1" inputmode="numeric" pattern="[0-9]" required />
+                                <input type="text" id="codeInput3" maxlength="1" inputmode="numeric" pattern="[0-9]" required />
+                                <input type="text" id="codeInput4" maxlength="1" inputmode="numeric" pattern="[0-9]" required />
+                                <input type="text" id="codeInput5" maxlength="1" inputmode="numeric" pattern="[0-9]" required />
+                                <input type="text" id="codeInput6" maxlength="1" inputmode="numeric" pattern="[0-9]" required />
+                            </div>
+                            <div class="help-text" id="codeHelp">Enter the 6-digit code</div>
+                        </div>
+
+                        <div class="backup-input-wrap" id="backupInputWrap">
+                            <label for="backupCodeInput">Backup Code</label>
+                            <!-- ✅ Added class="form-input" and validation attributes -->
+                            <input
+                            type="text"
+                            id="backupCodeInput"
+                            class="form-input"
+                            placeholder="e.g. A1B2C3D4"
+                            maxlength="8"
+                            minlength="8"
+                            required
+                            pattern="[A-Z0-9]{8}"
+                            autocomplete="off"
+                            spellcheck="false"
+                            />
+                            <div class="help-text" id="backupHelp">Enter your 8-character recovery backup code</div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-verify" id="verifyBtn">
+                        <span class="spinner"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                        <span class="btn-text"><i class="fa-regular fa-check-circle"></i> Verify</span>
+                    </button>
+
+                </form>
+
+                <div class="footer-actions">
+                    <a href="login.html" class="back-link">
+                        <i class="fa-regular fa-arrow-left"></i> Back to sign in
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/studentGlobal.js"></script>
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+
+    <!-- ✅ Load the form helper -->
+    <script src="/assets/js/form-helpers.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const form = document.getElementById('verifyForm');
+            const verifyBtn = document.getElementById('verifyBtn');
+            const alertEl = document.getElementById('verifyAlert');
+
+            const codeInputs = [
+                document.getElementById('codeInput1'),
+                document.getElementById('codeInput2'),
+                document.getElementById('codeInput3'),
+                document.getElementById('codeInput4'),
+                document.getElementById('codeInput5'),
+                document.getElementById('codeInput6'),
+            ];
+            const codeHelp = document.getElementById('codeHelp');
+
+            const backupInput = document.getElementById('backupCodeInput');
+            const backupWrap = document.getElementById('backupInputWrap');
+            const backupHelp = document.getElementById('backupHelp');
+
+            const totpContainer = document.getElementById('totpInputs');
+
+            const toggleSlider = document.getElementById('toggleSlider');
+            const toggleLabels = document.querySelectorAll('.toggle-label');
+            const methodLabel = document.getElementById('methodLabel');
+            const methodHint = document.getElementById('methodHint');
+            const methodToggle = document.getElementById('methodToggle');
+
+            // ─── State ──────────────────────────────────────────────────
+            let isBackupMode = false;
+            let isSubmitting = false;
+
+            // ─── Get 2FA data from session ────────────────────────────
+            let userId = null;
+            let activeMethod = 'totp';
+            let platform = 'web';
+
+            try {
+                const stored = sessionStorage.getItem('2fa_data');
+                if (!stored) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                const data = JSON.parse(stored);
+                userId = data.user_id;
+                activeMethod = data.active_method || 'totp';
+                platform = data.platform || 'web';
+            } catch (e) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // ─── Helpers ──────────────────────────────────────────────
+            function showAlert(message, type = 'error') {
+                alertEl.textContent = message;
+                alertEl.className = 'alert visible ' + type;
+            }
+
+            function hideAlert() {
+                alertEl.className = 'alert';
+                alertEl.textContent = '';
+            }
+
+            function setButtonLoading(btn, loading) {
+                if (loading) {
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                } else {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                }
+            }
+
+            function getTOTPCode() {
+                return codeInputs.map(inp => inp.value).join('');
+            }
+
+            function getBackupCode() {
+                return backupInput.value.trim().toUpperCase();
+            }
+
+            function clearTOTPInputs() {
+                codeInputs.forEach(inp => { inp.value = ''; });
+                codeInputs[0].focus();
+            }
+
+            function setInputsError(isError) {
+                codeInputs.forEach(inp => inp.classList.toggle('error', isError));
+                backupInput.classList.toggle('error', isError);
+            }
+
+            function setHelpText(el, message, isError = true) {
+                el.textContent = message;
+                el.className = 'help-text' + (isError ? ' error' : '');
+            }
+
+            function clearHelpText(el) {
+                el.textContent = '';
+                el.className = 'help-text';
+            }
+
+            // ─── Method Switch ─────────────────────────────────────────
+            function setMethod(method) {
+                isBackupMode = (method === 'backup');
+
+                toggleLabels.forEach(label => {
+                    const isActive = label.dataset.method === method;
+                    label.classList.toggle('active', isActive);
+                });
+                toggleSlider.classList.toggle('active', isBackupMode);
+
+                if (!isBackupMode) {
+                    totpContainer.style.display = 'block';
+                    backupWrap.classList.remove('visible');
+                    methodLabel.textContent = 'authenticator app';
+                    methodHint.textContent = 'Open your authenticator app to get your 6-digit code';
+                    codeHelp.textContent = 'Enter the 6-digit code';
+                    // Focus first TOTP input after a short delay
+                    setTimeout(() => codeInputs[0].focus(), 100);
+                } else {
+                    totpContainer.style.display = 'none';
+                    backupWrap.classList.add('visible');
+                    methodLabel.textContent = 'backup code';
+                    methodHint.textContent = 'Enter one of your recovery backup codes';
+                    backupHelp.textContent = 'Enter your 8-character recovery backup code';
+                    setTimeout(() => backupInput.focus(), 100);
+                }
+
+                setInputsError(false);
+                clearHelpText(codeHelp);
+                clearHelpText(backupHelp);
+                hideAlert();
+
+                const btnText = verifyBtn.querySelector('.btn-text');
+                btnText.innerHTML = isBackupMode ?
+                    '<i class="fa-regular fa-key"></i> Verify Backup Code' :
+                    '<i class="fa-regular fa-check-circle"></i> Verify';
+            }
+
+            // ─── Toggle events ─────────────────────────────────────────
+            toggleSlider.addEventListener('click', function() {
+                setMethod(isBackupMode ? 'totp' : 'backup');
+            });
+
+            toggleLabels.forEach(label => {
+                label.addEventListener('click', function() {
+                    const method = this.dataset.method;
+                    const current = isBackupMode ? 'backup' : 'totp';
+                    if (method !== current) setMethod(method);
+                });
+            });
+
+            toggleSlider.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+
+            // ─── TOTP input auto-advance ──────────────────────────────
+            codeInputs.forEach((input, index) => {
+                input.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/\D/g, '');
+                    if (this.value.length === 1) {
+                        if (index < codeInputs.length - 1) {
+                            codeInputs[index + 1].focus();
+                        } else {
+                            this.blur();
+                        }
+                    }
+                    this.classList.remove('error');
+                    clearHelpText(codeHelp);
+                    hideAlert();
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        codeInputs[index - 1].focus();
+                        codeInputs[index - 1].value = '';
+                    }
+                    if (e.key === 'ArrowLeft' && index > 0) codeInputs[index - 1].focus();
+                    if (e.key === 'ArrowRight' && index < codeInputs.length - 1) codeInputs[index + 1].focus();
+                    if (e.key === 'Enter') form.dispatchEvent(new Event('submit'));
+                });
+
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    const digits = paste.replace(/\D/g, '').slice(0, 6);
+                    if (digits) {
+                        const chars = digits.split('');
+                        codeInputs.forEach((inp, i) => {
+                            inp.value = i < chars.length ? chars[i] : '';
+                        });
+                        const lastFilled = Math.min(chars.length, codeInputs.length) - 1;
+                        if (lastFilled < codeInputs.length - 1) {
+                            codeInputs[lastFilled + 1].focus();
+                        } else {
+                            codeInputs[lastFilled].blur();
+                        }
+                        hideAlert();
+                    }
+                });
+            });
+
+            // ─── Backup input – use CampusForms for validation ──────
+            // We'll add real‑time validation using the helper
+            backupInput.addEventListener('input', function() {
+                // Convert to uppercase and remove invalid chars (already handled by input)
+                // The helper will validate on submit, but we can also update UI
+                this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+                // Clear error state
+                this.classList.remove('error');
+                clearHelpText(backupHelp);
+                hideAlert();
+            });
+
+            backupInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') form.dispatchEvent(new Event('submit'));
+            });
+
+            // ─── Validation ────────────────────────────────────────────
+            function validateForm() {
+                hideAlert();
+                setInputsError(false);
+                clearHelpText(codeHelp);
+                clearHelpText(backupHelp);
+
+                let isValid = true;
+
+                if (!isBackupMode) {
+                    const code = getTOTPCode();
+                    if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+                        setHelpText(codeHelp, 'Please enter a valid 6-digit code.', true);
+                        codeInputs.forEach(inp => inp.classList.add('error'));
+                        isValid = false;
+                    }
+                } else {
+                    // Use CampusForms to validate the backup input
+                    const result = CampusForms.validateForm(form);
+                    if (!result.isValid) {
+                        // The helper already shows help text on the field
+                        // But we also need to show our own backupHelp if needed
+                        // We'll check if the backup input has error class
+                        if (backupInput.classList.contains('error')) {
+                            // The helper already set the help text, but we want to show our backupHelp too?
+                            // Actually we can sync: if helper adds error, we can display custom message.
+                            // But we'll just rely on helper's message.
+                            // However, the helper uses the field's .help-text, which is backupHelp.
+                            // So we don't need extra.
+                        }
+                        // Also check if the backup input is empty or invalid
+                        const backup = getBackupCode();
+                        if (!backup || !/^[A-Z0-9]{8}$/.test(backup)) {
+                            // The helper will catch this if we have pattern and required
+                            // but if not, we can manually set.
+                            // Since we set pattern="[A-Z0-9]{8}" and required, the helper will catch it.
+                        }
+                        isValid = false;
+                    }
+                }
+
+                return isValid;
+            }
+
+            // ─── Submit ──────────────────────────────────────────────────
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                if (isSubmitting) return;
+                if (!validateForm()) return;
+
+                isSubmitting = true;
+                setButtonLoading(verifyBtn, true);
+                hideAlert();
+
+                const code = isBackupMode ? getBackupCode() : getTOTPCode();
+                const method = isBackupMode ? 'backup' : activeMethod;
+
+                const X_KEY_ID = 1;
+
+                try {
+                    const response = await fetch(`${AUTH_URL}2fa/login-totp`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-Key-Id': X_KEY_ID,
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            user_id: userId,
+                            platform: platform,
+                            code: code,
+                            method: method,
+                        }),
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.is_success === true) {
+                        // ─── ✅ SUCCESS – store user & set auth state ──
+                        const user = result.data.user;
+                        const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
+
+                        if (typeof window.setUserData === 'function') {
+                            window.setUserData(user, rememberMe);
+                        } else {
+                            const storage = rememberMe ? localStorage : sessionStorage;
+                            storage.setItem('user', JSON.stringify({
+                                user_id: user.user_id,
+                                email: user.email,
+                                profile_pic: user.profile_pic,
+                                point_bal: user.point_bal,
+                                trusting_score: user.trusting_score,
+                                is_student_id_verified: user.is_student_id_verified,
+                                is_hall_verified: user.is_hall_verified,
+                                total_favourites: user.total_favourites,
+                                has_unread_notifications: user.has_unread_notifications
+                            }));
+                        }
+
+                        if (typeof window.updateHeaderUser === 'function') {
+                            window.updateHeaderUser();
+                        }
+
+                        sessionStorage.removeItem('2fa_data');
+
+                        showAlert('Login successful! Redirecting…', 'success');
+
+                        setTimeout(() => {
+                            const redirectCookie = getCookie('redirect_after_login');
+                            if (!redirectCookie) {
+                                window.location.href = 'dashboard.html';
+                                return;
+                            }
+                            const redirectPath = decodeURIComponent(redirectCookie);
+                            deleteCookie('redirect_after_login');
+                            window.location.href = redirectPath;
+                        }, 1000);
+
+                    } else {
+                        const errorMsg = result.message || 'Invalid code. Please try again.';
+                        showAlert(errorMsg, 'error');
+                        setInputsError(true);
+
+                        if (!isBackupMode) {
+                            setHelpText(codeHelp, errorMsg, true);
+                            clearTOTPInputs();
+                        } else {
+                            setHelpText(backupHelp, errorMsg, true);
+                            backupInput.value = '';
+                            backupInput.focus();
+                        }
+
+                        form.style.animation = 'shake 0.4s ease';
+                        setTimeout(() => { form.style.animation = ''; }, 400);
+
+                        isSubmitting = false;
+                        setButtonLoading(verifyBtn, false);
+                    }
+
+                } catch (err) {
+                    console.error('Verification error:', err);
+                    showAlert('Network error. Please try again.', 'error');
+                    isSubmitting = false;
+                    setButtonLoading(verifyBtn, false);
+                }
+            });
+
+            // ─── Cookie helpers ──────────────────────────────────────
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+
+            function deleteCookie(name) {
+                document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            }
+
+            // ─── Init ──────────────────────────────────────────────────
+            function init() {
+                if (activeMethod === 'email') {
+                    methodToggle.style.display = 'none';
+                    methodLabel.textContent = 'email';
+                    methodHint.textContent = `We've sent a verification code to your email address.`;
+                    codeHelp.textContent = 'Enter the 6-digit code sent to your email';
+                    totpContainer.style.display = 'block';
+                    backupWrap.classList.remove('visible');
+                    isBackupMode = false;
+                } else {
+                    methodToggle.style.display = 'flex';
+                    setMethod('totp');
+                }
+
+                setTimeout(() => {
+                    if (activeMethod === 'email' || !isBackupMode) {
+                        codeInputs[0].focus();
+                    } else {
+                        backupInput.focus();
+                    }
+                }, 400);
+
+                console.log('🔐 2FA verification page initialized with CampusForms.');
+            }
+
+            init();
+
+            window.__verify = {
+                form,
+                isBackupMode: () => isBackupMode,
+                setMethod,
+                getTOTPCode,
+                getBackupCode,
+                validateForm,
+                payload: () => ({
+                    user_id: userId,
+                    platform: platform,
+                    code: isBackupMode ? getBackupCode() : getTOTPCode(),
+                    method: isBackupMode ? 'backup' : activeMethod,
+                })
+            };
+
+        })();
+    </script>
+
+</body>
+</html>

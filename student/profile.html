@@ -22,7 +22,7 @@
             padding: 0 0 20px;
         }
 
-        /* --- Hero (softer green, dark mode ready) --- */
+        /* --- Hero --- */
         .profile-hero {
             background: linear-gradient(135deg, #4c8b6a, #2d6b4f);
             border-radius: var(--radius-card);
@@ -45,8 +45,6 @@
             border-radius: 50%;
             box-shadow: 0 0 0 30px rgba(255,255,255,.02), 0 0 0 60px rgba(255,255,255,.015);
         }
-
-        /* Dark mode hero */
         .dark-mode .profile-hero {
             background: linear-gradient(135deg, #1a2a22, #0d1a14);
             border-color: #2a3a2a;
@@ -62,7 +60,6 @@
         .dark-mode .profile-hero .progress-track {
             background: rgba(255,255,255,.06);
         }
-
         .hero-top {
             position: relative;
             z-index: 1;
@@ -72,7 +69,7 @@
             flex-wrap: wrap;
         }
 
-        /* --- Avatar with camera overlay --- */
+        /* --- Avatar --- */
         .avatar-wrapper {
             position: relative;
             flex-shrink: 0;
@@ -111,8 +108,6 @@
         .avatar-wrapper .avatar .initials.hidden {
             display: none;
         }
-
-        /* Camera overlay button */
         .avatar-wrapper .camera-overlay {
             position: absolute;
             bottom: -2px;
@@ -149,7 +144,6 @@
             border-color: var(--bg-card);
         }
 
-        /* Avatar spinner overlay */
         .avatar-spinner {
             position: absolute;
             top: 0;
@@ -212,7 +206,6 @@
             font-weight: 700;
         }
 
-        /* --- Edit status badge --- */
         .edit-status-badge {
             display: inline-flex;
             align-items: center;
@@ -227,40 +220,14 @@
             border: 1px solid rgba(255,255,255,.1);
             color: #fff;
         }
-        .edit-status-badge i {
-            font-size: 9px;
-        }
-        .edit-status-badge.always {
-            background: rgba(46,204,113,.25);
-            border-color: rgba(46,204,113,.3);
-            color: #b8f0c8;
-        }
-        .edit-status-badge.available {
-            background: rgba(52,152,219,.25);
-            border-color: rgba(52,152,219,.3);
-            color: #a8d8f8;
-        }
-        .edit-status-badge.locked {
-            background: rgba(231,76,60,.2);
-            border-color: rgba(231,76,60,.25);
-            color: #f8b0b0;
-        }
-        .dark-mode .edit-status-badge {
-            background: rgba(255,255,255,.06);
-            border-color: rgba(255,255,255,.05);
-        }
-        .dark-mode .edit-status-badge.always {
-            background: rgba(46,204,113,.12);
-            border-color: rgba(46,204,113,.15);
-        }
-        .dark-mode .edit-status-badge.available {
-            background: rgba(52,152,219,.12);
-            border-color: rgba(52,152,219,.15);
-        }
-        .dark-mode .edit-status-badge.locked {
-            background: rgba(231,76,60,.12);
-            border-color: rgba(231,76,60,.15);
-        }
+        .edit-status-badge i { font-size: 9px; }
+        .edit-status-badge.always { background: rgba(46,204,113,.25); border-color: rgba(46,204,113,.3); color: #b8f0c8; }
+        .edit-status-badge.available { background: rgba(52,152,219,.25); border-color: rgba(52,152,219,.3); color: #a8d8f8; }
+        .edit-status-badge.locked { background: rgba(231,76,60,.2); border-color: rgba(231,76,60,.25); color: #f8b0b0; }
+        .dark-mode .edit-status-badge { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.05); }
+        .dark-mode .edit-status-badge.always { background: rgba(46,204,113,.12); border-color: rgba(46,204,113,.15); }
+        .dark-mode .edit-status-badge.available { background: rgba(52,152,219,.12); border-color: rgba(52,152,219,.15); }
+        .dark-mode .edit-status-badge.locked { background: rgba(231,76,60,.12); border-color: rgba(231,76,60,.15); }
 
         .hero-actions {
             position: relative;
@@ -290,11 +257,7 @@
             white-space: nowrap;
         }
         .hero-actions .btn:hover:not(:disabled) { transform: translateY(-1px); }
-        .hero-actions .btn:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .hero-actions .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
         .btn-light { background: #fff; color: var(--green); }
         .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.2); }
         .btn-green { background: var(--green); color: #fff; }
@@ -369,21 +332,9 @@
         .stat-icon.warning { background: #fef3e8; color: #e67e22; }
         .stat-icon.danger { background: #fde8e8; color: var(--red); }
         .stat-icon.blue { background: #e8f0fe; color: #2980b9; }
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 10px;
-            font-weight: 600;
-        }
-        .stat-value {
-            color: var(--text-primary);
-            font-size: 18px;
-            font-weight: 800;
-            line-height: 1.2;
-        }
-        .stat-sub {
-            color: var(--text-muted);
-            font-size: 10px;
-        }
+        .stat-label { color: var(--text-muted); font-size: 10px; font-weight: 600; }
+        .stat-value { color: var(--text-primary); font-size: 18px; font-weight: 800; line-height: 1.2; }
+        .stat-sub { color: var(--text-muted); font-size: 10px; }
 
         /* --- Content Grid --- */
         .content-grid {
@@ -391,10 +342,7 @@
             gap: 16px;
             align-items: start;
         }
-        .stack {
-            display: grid;
-            gap: 16px;
-        }
+        .stack { display: grid; gap: 16px; }
 
         /* --- Cards --- */
         .profile-card {
@@ -421,11 +369,7 @@
             font-weight: 750;
         }
         .card-title i { color: var(--green); }
-        .card-subtitle {
-            color: var(--text-muted);
-            font-size: 11px;
-            margin-top: 2px;
-        }
+        .card-subtitle { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
 
         /* --- Info Grid --- */
         .info-grid {
@@ -454,29 +398,30 @@
             font-weight: 650;
             overflow-wrap: anywhere;
         }
-        .info-value.muted {
-            color: var(--text-muted);
-            font-weight: 500;
-        }
+        .info-value.muted { color: var(--text-muted); font-weight: 500; }
 
-        /* Editable inputs */
-        .edit-input {
-            width: 100%;
-            padding: 4px 8px;
-            border-radius: 8px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 13px;
+        /* Editable inputs – with .form-input override */
+        .profile-card .edit-input.form-input {
+            border: 2px solid var(--border-color) !important;
+            background: var(--bg-card) !important;
+            padding: 4px 8px !important;
+            box-shadow: none !important;
+            border-radius: 8px !important;
+            margin: 0 !important;
             font-weight: 600;
-            outline: none;
-            transition: border-color .2s, box-shadow .2s;
         }
-        .edit-input:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 3px rgba(13,138,62,.08);
+        .profile-card .edit-input.form-input:focus {
+            border-color: var(--green) !important;
+            box-shadow: 0 0 0 3px rgba(13, 138, 62, 0.08) !important;
         }
-        .edit-input.select {
+        .profile-card .edit-input.form-input.error {
+            border-color: var(--red) !important;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.08) !important;
+        }
+        .profile-card .edit-input.form-input.success {
+            border-color: var(--green) !important;
+        }
+        .profile-card .edit-input.form-input.select {
             appearance: none;
             padding-right: 30px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
@@ -501,52 +446,53 @@
         .status.neutral { color: var(--text-muted); background: var(--bg-input); }
 
         /* --- Verification rows --- */
-        .verify-list { display: grid; gap: 9px; }
+        .verify-list { display: grid; gap: 8px; }
         .verify-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 36px minmax(0, 1fr) auto;
             align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            gap: 11px;
+            min-height: 58px;
+            padding: 10px 11px;
             background: var(--bg-input);
-            flex-wrap: wrap;
+            border: 1px solid var(--border-color);
+            border-radius: 11px;
+            flex-wrap: nowrap;
         }
+        .verify-row.verified { border-color: rgba(13,138,62,.14); }
         .verify-icon {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+            border-radius: 10px;
             display: grid;
             place-items: center;
-            border-radius: 11px;
             background: var(--bg-card);
             color: var(--text-muted);
-            flex: 0 0 36px;
         }
-        .verify-row.verified .verify-icon {
-            background: var(--green-bg);
-            color: var(--green);
-        }
-        .verify-main { flex: 1; min-width: 0; }
-        .verify-title { color: var(--text-primary); font-size: 12px; font-weight: 700; }
-        .verify-detail { color: var(--text-muted); font-size: 10px; margin-top: 2px; }
-        .verify-action {
-            flex: 0 0 auto;
-        }
+        .verify-row.verified .verify-icon { background: var(--green-bg); color: var(--green); }
+        .verify-main { min-width: 0; flex: 1; }
+        .verify-title { color: var(--text-primary); font-size: 11px; line-height: 1.25; font-weight: 750; }
+        .verify-detail { color: var(--text-muted); font-size: 9px; line-height: 1.3; margin-top: 2px; }
+        .verify-row .status { flex: 0 0 auto; white-space: nowrap; }
+        .verify-action { flex: 0 0 auto; margin-left: 1px; }
         .verify-action .btn {
-            padding: 3px 12px;
-            font-size: 10px;
-            border-radius: 30px;
-            border: none;
-            font-weight: 700;
+            min-height: 28px;
+            padding: 5px 10px;
+            font-size: 9px;
+            border-radius: 999px;
+            border: 0;
+            font-weight: 750;
             cursor: pointer;
-            transition: .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
             background: var(--green);
             color: #fff;
+            transition: transform .18s ease, opacity .18s ease;
         }
-        .verify-action .btn:hover {
-            opacity: .85;
-            transform: scale(.96);
-        }
+        .verify-action .btn:hover { transform: translateY(-1px); opacity: .9; }
+        .verify-row.verified .verify-action { display: none; }
 
         /* --- Badges --- */
         .badges-list {
@@ -573,18 +519,8 @@
             background: var(--green-bg);
             color: var(--green);
         }
-        .badge-name {
-            color: var(--text-primary);
-            font-size: 12px;
-            font-weight: 750;
-            text-transform: capitalize;
-        }
-        .badge-desc {
-            color: var(--text-muted);
-            font-size: 10px;
-            line-height: 1.3;
-            margin-top: 2px;
-        }
+        .badge-name { color: var(--text-primary); font-size: 12px; font-weight: 750; text-transform: capitalize; }
+        .badge-desc { color: var(--text-muted); font-size: 10px; line-height: 1.3; margin-top: 2px; }
 
         /* --- Moderation --- */
         .moderation-banner {
@@ -600,15 +536,10 @@
             align-items: center;
             gap: 10px;
         }
-        .moderation-count {
-            font-size: 24px;
-            font-weight: 850;
-            color: #e67e22;
-        }
+        .moderation-count { font-size: 24px; font-weight: 850; color: #e67e22; }
         .moderation-title { font-size: 12px; font-weight: 750; color: var(--text-primary); }
         .moderation-note { font-size: 11px; line-height: 1.5; color: var(--text-secondary); margin-top: 4px; white-space: pre-line; }
 
-        /* --- Flags --- */
         .flags-list { display: grid; gap: 10px; }
         .flag-item {
             border: 1px solid var(--border-color);
@@ -624,19 +555,8 @@
             justify-content: space-between;
             gap: 10px;
         }
-        .flag-reason {
-            color: var(--text-primary);
-            font-size: 12px;
-            font-weight: 700;
-        }
-        .flag-meta {
-            margin-top: 8px;
-            color: var(--text-muted);
-            font-size: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px 12px;
-        }
+        .flag-reason { color: var(--text-primary); font-size: 12px; font-weight: 700; }
+        .flag-meta { margin-top: 8px; color: var(--text-muted); font-size: 10px; display: flex; flex-wrap: wrap; gap: 5px 12px; }
         .resolution-box {
             margin-top: 10px;
             padding: 10px;
@@ -644,35 +564,12 @@
             background: var(--bg-card);
             border: 1px dashed var(--border-color);
         }
-        .resolution-label {
-            color: var(--text-muted);
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            font-weight: 750;
-        }
-        .resolution-note {
-            color: var(--text-secondary);
-            font-size: 11px;
-            line-height: 1.45;
-            margin-top: 3px;
-        }
+        .resolution-label { color: var(--text-muted); font-size: 9px; text-transform: uppercase; letter-spacing: .5px; font-weight: 750; }
+        .resolution-note { color: var(--text-secondary); font-size: 11px; line-height: 1.45; margin-top: 3px; }
 
-        /* --- Missing fields --- */
-        .missing-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-        }
-        .missing-chip {
-            color: #e67e22;
-            background: #fef3e8;
-            border: 1px solid rgba(230,126,34,.13);
-            border-radius: 30px;
-            padding: 4px 10px;
-            font-size: 10px;
-            font-weight: 650;
-        }
+        /* --- Missing --- */
+        .missing-list { display: flex; flex-wrap: wrap; gap: 7px; }
+        .missing-chip { color: #e67e22; background: #fef3e8; border: 1px solid rgba(230,126,34,.13); border-radius: 30px; padding: 4px 10px; font-size: 10px; font-weight: 650; }
 
         /* --- Meta list --- */
         .meta-list { display: grid; gap: 10px; }
@@ -687,7 +584,7 @@
         .meta-key { color: var(--text-muted); font-size: 11px; }
         .meta-value { color: var(--text-primary); font-size: 11px; font-weight: 650; text-align: right; }
 
-        /* --- Image preview modal --- */
+        /* --- Image modal --- */
         .image-modal {
             position: fixed;
             top: 0;
@@ -705,10 +602,7 @@
             transition: opacity .3s ease;
             cursor: zoom-out;
         }
-        .image-modal.active {
-            display: flex;
-            opacity: 1;
-        }
+        .image-modal.active { display: flex; opacity: 1; }
         .image-modal img {
             max-width: 90%;
             max-height: 80vh;
@@ -730,18 +624,12 @@
             transition: opacity .2s;
             padding: 8px 12px;
         }
-        .image-modal .close-modal:hover {
-            opacity: 1;
-        }
+        .image-modal .close-modal:hover { opacity: 1; }
 
         /* --- Responsive --- */
         @media (min-width: 820px) {
-            .content-grid {
-                grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr);
-            }
-            .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
+            .content-grid { grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
         }
         @media (max-width: 819px) {
             .content-grid { grid-template-columns: 1fr; }
@@ -762,49 +650,35 @@
             .profile-card { padding: 14px; }
             .card-header { flex-direction: column; align-items: stretch; }
             .card-title { font-size: 14px; }
-            .verify-row { grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; }
-            .verify-action { text-align: right; }
+            .verify-row { grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; min-height: 54px; padding: 9px 10px; }
+            .verify-title { font-size: 10px; }
+            .verify-detail { font-size: 8.5px; }
+            .verify-row .status { font-size: 8px; padding: 3px 7px; }
+            .verify-action .btn { min-height: 26px; padding: 4px 8px; font-size: 8px; }
         }
         @media (max-width: 400px) {
             .hero-top { flex-direction: column; align-items: center; text-align: center; }
             .hero-badges { justify-content: center; }
-            .verify-action { text-align: center; }
         }
 
-        /* ===== Compact verification + dark moderation patch ===== */
-        .verify-list{display:grid;gap:8px}
-        .verify-row{display:grid;grid-template-columns:36px minmax(0,1fr) auto;align-items:center;gap:11px;min-height:58px;padding:10px 11px;background:var(--bg-input);border:1px solid var(--border-color);border-radius:11px;flex-wrap:nowrap}
-        .verify-row.verified{border-color:rgba(13,138,62,.14)}
-        .verify-icon{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;background:var(--bg-card);color:var(--text-muted)}
-        .verify-row.verified .verify-icon{background:var(--green-bg);color:var(--green)}
-        .verify-main{min-width:0;flex:1}
-        .verify-title{color:var(--text-primary);font-size:11px;line-height:1.25;font-weight:750}
-        .verify-detail{color:var(--text-muted);font-size:9px;line-height:1.3;margin-top:2px}
-        .verify-row .status{flex:0 0 auto;white-space:nowrap}
-        .verify-action{flex:0 0 auto;margin-left:1px}
-        .verify-action .btn{min-height:28px;padding:5px 10px;font-size:9px;border-radius:999px;border:0;font-weight:750;cursor:pointer;display:inline-flex;align-items:center;gap:5px;background:var(--green);color:#fff;transition:transform .18s ease,opacity .18s ease}
-        .verify-action .btn:hover{transform:translateY(-1px);opacity:.9}
-        .verify-row.verified .verify-action{display:none}
-        .dark-mode .moderation-banner{background:#29251e;border-color:#4b3c25;color:#f4eadb}
-        .dark-mode .moderation-title{color:#f5f5f5}
-        .dark-mode .moderation-note{color:#c8c8c8}
-        .dark-mode .moderation-count{color:#ffb454}
-        .dark-mode .flag-item{background:#202522;border-color:#353d38;border-left-color:#ff6570;color:#f1f3f2;box-shadow:none}
-        .dark-mode .flag-item.resolved{border-left-color:#45c979;background:#1f2823}
-        .dark-mode .flag-reason{color:#f4f6f5}
-        .dark-mode .flag-meta{color:#aeb7b2}
-        .dark-mode .resolution-box{background:#181c1a;border-color:#3c4640}
-        .dark-mode .resolution-label{color:#929d97}
-        .dark-mode .resolution-note{color:#d0d5d2}
-        .dark-mode .status.success{color:#68e39a;background:#153522;border-color:#245b39}
-        .dark-mode .status.warning{color:#ffc56f;background:#3a2c1a;border-color:#5a4424}
-        .dark-mode .status.danger{color:#ff858e;background:#3a2025;border-color:#5a2c33}
-        .dark-mode .status.neutral{color:#b9c1bd;background:#252b28;border-color:#3a423e}
-        .dark-mode #flagsCard{background:var(--bg-card);border-color:var(--border-color)}
-        @media(max-width:540px){.verify-row{grid-template-columns:34px minmax(0,1fr) auto;align-items:center;min-height:54px;padding:9px 10px}.verify-title{font-size:10px}.verify-detail{font-size:8.5px}.verify-row .status{font-size:8px;padding:3px 7px}.verify-action .btn{min-height:26px;padding:4px 8px;font-size:8px}}
-        @media(max-width:360px){.verify-row{grid-template-columns:32px minmax(0,1fr) auto;gap:8px}.verify-icon{width:32px;height:32px}.verify-detail{display:none}}
+        /* Dark mode overrides (already using CSS variables) */
+        .dark-mode .moderation-banner { background: #29251e; border-color: #4b3c25; color: #f4eadb; }
+        .dark-mode .moderation-title { color: #f5f5f5; }
+        .dark-mode .moderation-note { color: #c8c8c8; }
+        .dark-mode .moderation-count { color: #ffb454; }
+        .dark-mode .flag-item { background: #202522; border-color: #353d38; border-left-color: #ff6570; color: #f1f3f2; }
+        .dark-mode .flag-item.resolved { border-left-color: #45c979; background: #1f2823; }
+        .dark-mode .flag-reason { color: #f4f6f5; }
+        .dark-mode .flag-meta { color: #aeb7b2; }
+        .dark-mode .resolution-box { background: #181c1a; border-color: #3c4640; }
+        .dark-mode .resolution-label { color: #929d97; }
+        .dark-mode .resolution-note { color: #d0d5d2; }
+        .dark-mode .status.success { color: #68e39a; background: #153522; border-color: #245b39; }
+        .dark-mode .status.warning { color: #ffc56f; background: #3a2c1a; border-color: #5a4424; }
+        .dark-mode .status.danger { color: #ff858e; background: #3a2025; border-color: #5a2c33; }
+        .dark-mode .status.neutral { color: #b9c1bd; background: #252b28; border-color: #3a423e; }
 
-        /* --- Loading state for the whole page --- */
+        /* Loading / Error states */
         .profile-loading {
             display: flex;
             flex-direction: column;
@@ -822,37 +696,20 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        .profile-loading.hidden {
-            display: none;
-        }
-        #profileContent.hidden {
-            display: none;
-        }
-        #profileError.hidden {
-            display: none;
-        }
-        #profileError {
-            text-align: center;
-            padding: 40px 20px;
-        }
-        #profileError h3 {
-            margin: 0 0 8px;
-            color: var(--red);
-        }
-        #profileError p {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-        #profileError .btn {
-            margin-top: 16px;
-        }
+        .profile-loading.hidden { display: none; }
+        #profileContent.hidden { display: none; }
+        #profileError.hidden { display: none; }
+        #profileError { text-align: center; padding: 40px 20px; }
+        #profileError h3 { margin: 0 0 8px; color: var(--red); }
+        #profileError p { color: var(--text-muted); font-size: 14px; }
+        #profileError .btn { margin-top: 16px; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
 
-        
+        <!-- Header (studentGlobal.js will inject it) -->
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -1120,6 +977,9 @@
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
 
+    <!-- ✅ Load the form helper -->
+    <script src="/assets/js/form-helpers.js"></script>
+
     <!-- ===== PROFILE SCRIPT ===== -->
     <script>
         (function() {
@@ -1216,27 +1076,20 @@
             // ============================================================
             function checkEditRestriction(profile) {
                 if (!profile) return { allowed: true, daysRemaining: 0, nextDate: null, reason: 'always' };
-
                 const editDay = profile.edit_day ?? 0;
                 let modifiedAt = profile.modified_at;
-
-                // If modified_at is null, use today's date
                 let modifiedDate;
                 if (modifiedAt) {
                     modifiedDate = new Date(modifiedAt);
                 } else {
-                    modifiedDate = new Date(); // today
+                    modifiedDate = new Date();
                 }
-
-                // If editDay is 0, always allowed
                 if (editDay === 0) {
                     return { allowed: true, daysRemaining: 0, nextDate: null, reason: 'always' };
                 }
-
                 const now = new Date();
                 const diffTime = now - modifiedDate;
                 const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
                 if (diffDays >= editDay) {
                     return { allowed: true, daysRemaining: 0, nextDate: null, reason: 'available' };
                 } else {
@@ -1281,7 +1134,6 @@
                 }
             }
 
-
             // ============================================================
             // API: FETCH PROFILE
             // ============================================================
@@ -1293,17 +1145,14 @@
                         showSpinner: true,
                         spinnerText: 'Loading profile...'
                     });
-
                     if (!response.ok) {
                         const err = await response.json().catch(() => ({}));
                         throw new Error(err.message || `HTTP ${response.status}`);
                     }
-
                     const result = await response.json();
                     if (!result.is_success) {
                         throw new Error(result.message || 'Failed to load profile');
                     }
-
                     return result.data;
                 } catch (error) {
                     console.error('Fetch profile error:', error);
@@ -1323,17 +1172,14 @@
                         showSpinner: true,
                         spinnerText: 'Updating profile...'
                     });
-
                     if (!response.ok) {
                         const err = await response.json().catch(() => ({}));
                         throw new Error(err.message || `HTTP ${response.status}`);
                     }
-
                     const result = await response.json();
                     if (!result.is_success) {
                         throw new Error(result.message || 'Update failed');
                     }
-
                     return result.data;
                 } catch (error) {
                     console.error('Update profile error:', error);
@@ -1350,17 +1196,14 @@
                         method: 'PATCH',
                         body: formData,
                     });
-
                     if (!response.ok) {
                         const err = await response.json().catch(() => ({}));
                         throw new Error(err.message || `HTTP ${response.status}`);
                     }
-
                     const result = await response.json();
                     if (!result.is_success) {
                         throw new Error(result.message || 'Picture upload failed');
                     }
-
                     return result.data;
                 } catch (error) {
                     console.error('Upload picture error:', error);
@@ -1378,13 +1221,10 @@
                 $('memberSince').textContent = currentProfile.member_since;
                 $('completionText').textContent = `${currentProfile.profile_completion}%`;
                 $('completionBar').style.width = `${Math.min(100, Math.max(0, currentProfile.profile_completion))}%`;
-
                 setAvatarImage(currentProfile.profile_picture);
-
                 $('studentBadge').innerHTML = currentProfile.student_id_verified
                     ? '<i class="fa-solid fa-id-card"></i> Student ID verified'
                     : '<i class="fa-solid fa-id-card"></i> Student ID pending';
-
                 $('emailBadge').innerHTML = currentProfile.email_verified
                     ? '<i class="fa-solid fa-circle-check"></i> Email verified'
                     : '<i class="fa-solid fa-circle-xmark"></i> Email not verified';
@@ -1394,7 +1234,6 @@
                 if (!currentProfile) return;
                 const unresolved = currentProfile.flags?.filter(f => !f.is_resolved).length || 0;
                 const resolved = (currentProfile.flags?.length || 0) - unresolved;
-
                 $('points').textContent = Number(currentProfile.points || 0).toLocaleString();
                 $('trustScore').textContent = currentProfile.trust_score;
                 $('flagCount').textContent = currentProfile.flags?.length || 0;
@@ -1403,6 +1242,7 @@
                 $('reviewCount').textContent = `${currentProfile.review_count || 0} review${currentProfile.review_count === 1 ? '' : 's'}`;
             }
 
+            // ─── Personal info (with form-input) ──────────────────────
             function renderPersonalInfo() {
                 if (!currentProfile) return;
                 const grid = $('personalInfoGrid');
@@ -1416,7 +1256,7 @@
                         key: 'matric_number',
                         label: 'Matric number',
                         value: currentProfile.matric_number,
-                        editable: isPhoneEditable && !currentProfile.matric_number // only if empty
+                        editable: isPhoneEditable && !currentProfile.matric_number
                     },
                     { key: 'profile_picture_status', label: 'Profile picture', value: currentProfile.profile_picture ? 'Uploaded' : 'Not uploaded', editable: false }
                 ];
@@ -1425,11 +1265,11 @@
                     let val = f.value;
                     let inputHtml = '';
                     if (f.editable) {
-                        // Matric number field – only show if empty
                         if (f.key === 'matric_number') {
-                            inputHtml = `<input class="edit-input" type="text" data-field="matric_number" value="${escapeHtml(val || '')}" placeholder="Enter matric number">`;
+                            inputHtml = `<input class="edit-input form-input" type="text" data-field="matric_number" value="${escapeHtml(val || '')}" placeholder="Enter matric number">`;
                         } else {
-                            inputHtml = `<input class="edit-input" type="tel" data-field="phone" value="${escapeHtml(val)}" placeholder="Phone number">`;
+                            // Phone field – add data-validate="phone"
+                            inputHtml = `<input class="edit-input form-input" type="tel" data-field="phone" data-validate="phone" value="${escapeHtml(val)}" placeholder="Phone number">`;
                         }
                     } else {
                         inputHtml = `<div class="info-value ${!val ? 'muted' : ''}">${escapeHtml(display(val))}</div>`;
@@ -1443,6 +1283,7 @@
                 }).join('');
             }
 
+            // ─── Student info (with form-input) ───────────────────────
             function renderStudentInfo() {
                 if (!currentProfile) return;
                 const grid = $('studentInfoGrid');
@@ -1469,11 +1310,11 @@
                         if (f.key === 'level') {
                             const levels = [1, 2, 3, 4, 5, 6, 7];
                             const options = levels.map(l => `<option value="${l}" ${l === val ? 'selected' : ''}>Level ${l}</option>`).join('');
-                            inputHtml = `<select class="edit-input select" data-field="level">${options}</select>`;
+                            inputHtml = `<select class="edit-input form-input select" data-field="level">${options}</select>`;
                         } else if (f.key === 'department') {
-                            inputHtml = `<input class="edit-input" type="text" data-field="department" value="${escapeHtml(val || '')}" placeholder="Enter department">`;
+                            inputHtml = `<input class="edit-input form-input" type="text" data-field="department" value="${escapeHtml(val || '')}" placeholder="Enter department">`;
                         } else if (f.key === 'faculty') {
-                            inputHtml = `<input class="edit-input" type="text" data-field="faculty" value="${escapeHtml(val || '')}" placeholder="Enter faculty">`;
+                            inputHtml = `<input class="edit-input form-input" type="text" data-field="faculty" value="${escapeHtml(val || '')}" placeholder="Enter faculty">`;
                         }
                     } else {
                         if (f.isHtml) {
@@ -1491,7 +1332,6 @@
                 }).join('');
             }
 
-            
             function renderVerifications() {
                 if (!currentProfile) return;
                 const container = $('verificationList');
@@ -1592,15 +1432,12 @@
                 const container = $('flagsList');
                 const flags = currentProfile.flags || [];
                 const unresolved = flags.filter(f => !f.is_resolved).length;
-
                 $('flagHeaderStatus').className = `status ${unresolved ? 'danger' : 'success'}`;
                 $('flagHeaderStatus').innerHTML = unresolved
                     ? `<i class="fa-solid fa-triangle-exclamation"></i> ${unresolved} unresolved`
                     : '<i class="fa-solid fa-check"></i> All resolved';
-
                 $('warningCount').textContent = currentProfile.moderation?.warning_count || 0;
                 $('moderationNotes').textContent = currentProfile.moderation?.notes || 'No moderation notes.';
-
                 if (!flags.length) {
                     container.innerHTML = `
                         <div class="info-item" style="text-align:center;">
@@ -1608,7 +1445,6 @@
                         </div>`;
                     return;
                 }
-
                 container.innerHTML = flags.map((flag, index) => {
                     const resolved = flag.is_resolved;
                     return `
@@ -1639,7 +1475,6 @@
                         </article>
                     `;
                 }).join('');
-
                 container.querySelectorAll('.reply-flag-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
                         if (typeof showAlert !== 'undefined') {
@@ -1716,26 +1551,18 @@
             // ============================================================
             function renderEditStatus() {
                 if (!currentProfile) return;
-
-                // Calculate restriction
                 editRestriction = checkEditRestriction(currentProfile);
-
-                // Find or create the badge element
                 let badge = document.querySelector('.edit-status-badge');
                 if (!badge) {
                     badge = document.createElement('span');
                     badge.className = 'edit-status-badge';
-                    // Insert before the edit button
                     const editBtn = $('editProfileBtn');
                     if (editBtn) {
                         editBtn.parentNode.insertBefore(badge, editBtn);
                     }
                 }
-
-                // Update badge
                 const isAllowed = editRestriction.allowed;
                 let icon, text, className;
-
                 if (editRestriction.reason === 'always') {
                     icon = 'fa-regular fa-infinity';
                     text = 'Always editable';
@@ -1750,11 +1577,8 @@
                     text = days === 1 ? 'Available tomorrow' : `Available in ${days} days`;
                     className = 'locked';
                 }
-
                 badge.className = `edit-status-badge ${className}`;
                 badge.innerHTML = `<i class="${icon}"></i> ${text}`;
-
-                // Update edit button state
                 if (editBtn) {
                     if (isAllowed && !isEditMode) {
                         editBtn.disabled = false;
@@ -1767,11 +1591,8 @@
                         } else {
                             editBtn.title = 'Editing is currently locked.';
                         }
-                    } else {
-                        // In edit mode, button is hidden (replaced by Save/Cancel)
                     }
                 }
-
                 return isAllowed;
             }
 
@@ -1780,11 +1601,8 @@
             // ============================================================
             function updateHeroActions() {
                 const container = $('heroActions');
-
-                // Remove existing badge if any
                 const oldBadge = container.querySelector('.edit-status-badge');
                 if (oldBadge) oldBadge.remove();
-
                 if (isEditMode) {
                     container.innerHTML = `
                         <button class="btn btn-green" id="saveProfileBtn"><i class="fa-solid fa-check"></i> Save</button>
@@ -1793,22 +1611,15 @@
                     $('saveProfileBtn').addEventListener('click', saveProfile);
                     $('cancelEditBtn').addEventListener('click', toggleEdit);
                 } else {
-                    // Rebuild with edit button + badge
                     container.innerHTML = `
                         <span class="edit-status-badge"></span>
                         <button class="btn btn-light" id="editProfileBtn"><i class="fa-solid fa-pen"></i> Edit</button>
                         <button class="btn btn-ghost" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
                     `;
-
-                    // Re-bind events
                     const newEditBtn = $('editProfileBtn');
                     const newRefreshBtn = $('refreshBtn');
-
-                    // Apply restriction to button
-                    const isAllowed = renderEditStatus(); // This updates the badge and button state
-
+                    const isAllowed = renderEditStatus();
                     newEditBtn.addEventListener('click', function() {
-                        // Check if editing is allowed (in case badge state changed)
                         const restriction = checkEditRestriction(currentProfile);
                         if (!restriction.allowed) {
                             const nextDate = restriction.nextDate;
@@ -1821,22 +1632,19 @@
                         }
                         toggleEdit();
                     });
-
                     newRefreshBtn.addEventListener('click', refreshProfile);
                 }
             }
 
             // ============================================================
-            // EDIT TOGGLE & SAVE
+            // EDIT TOGGLE & SAVE (with CampusForms validation)
             // ============================================================
             function toggleEdit() {
                 if (isEditMode) {
-                    // Cancel: discard changes
                     isEditMode = false;
                     renderAll();
                     showToast('Edit cancelled.', 'warning');
                 } else {
-                    // Check if editing is allowed
                     const restriction = checkEditRestriction(currentProfile);
                     if (!restriction.allowed) {
                         const nextDate = restriction.nextDate;
@@ -1856,27 +1664,39 @@
             async function saveProfile() {
                 if (isSaving) return;
 
-                // Gather all editable fields
+                // Gather all editable inputs
                 const phoneInput = document.querySelector('input[data-field="phone"]');
                 const levelSelect = document.querySelector('select[data-field="level"]');
                 const departmentInput = document.querySelector('input[data-field="department"]');
                 const facultyInput = document.querySelector('input[data-field="faculty"]');
                 const matricInput = document.querySelector('input[data-field="matric_number"]');
 
+                // Create a temporary form to validate with CampusForms
+                const tempForm = document.createElement('form');
+                const inputs = [phoneInput, levelSelect, departmentInput, facultyInput, matricInput]
+                    .filter(el => el !== null);
+                inputs.forEach(el => tempForm.appendChild(el.cloneNode(true)));
+
+                // Run CampusForms validation
+                const result = CampusForms.validateForm(tempForm, { clearOthers: false });
+                if (!result.isValid) {
+                    const firstError = Object.values(result.errors)[0];
+                    if (firstError) {
+                        showAlert.error(firstError);
+                    } else {
+                        showAlert.error('Please fix the highlighted fields.');
+                    }
+                    return;
+                }
+
+                // Extract values from actual inputs
                 const newPhone = phoneInput ? phoneInput.value.trim() : currentProfile.phone;
                 const newLevel = levelSelect ? parseInt(levelSelect.value, 10) : currentProfile.level;
                 const newDepartment = departmentInput ? departmentInput.value.trim() : currentProfile.department;
                 const newFaculty = facultyInput ? facultyInput.value.trim() : currentProfile.faculty;
                 const newMatric = matricInput ? matricInput.value.trim() : currentProfile.matric_number;
 
-                // Validate phone
-                if (newPhone && !/^[0-9+()\- ]{7,15}$/.test(newPhone)) {
-                    showToast('Please enter a valid phone number.', 'warning');
-                    phoneInput?.focus();
-                    return;
-                }
-
-                // Build payload with only changed fields
+                // Build payload
                 const payload = {};
                 if (newPhone !== currentProfile.phone) payload.phone = newPhone;
                 if (newLevel !== currentProfile.level) payload.level = newLevel;
@@ -1896,15 +1716,13 @@
 
                 try {
                     const updatedData = await updateProfile(payload);
-                    // Merge updated data
                     currentProfile = { ...currentProfile, ...updatedData };
                     isEditMode = false;
                     renderAll();
-                    refreshProfile()
+                    refreshProfile();
                     showAlert.success('Profile updated successfully!');
                 } catch (error) {
                     showAlert.error(error.message || 'Update failed. Please try again.');
-                    // Revert local changes
                     currentProfile = oldProfile;
                     renderAll();
                 } finally {
@@ -1941,12 +1759,9 @@
                     showToast('Image too large. Max 5MB.', 'warning');
                     return;
                 }
-
                 showAvatarSpinner(true);
-
                 const formData = new FormData();
                 formData.append('profile_picture', file);
-
                 try {
                     const result = await updateProfilePicture(formData);
                     const newUrl = result.profile_picture_url || result.data?.profile_picture_url;
@@ -1998,7 +1813,6 @@
                 renderAccountStatus();
                 renderReputation();
                 updateHeroActions();
-                // renderEditStatus is called inside updateHeroActions
             }
 
             // ============================================================
@@ -2008,7 +1822,6 @@
                 loadingEl.classList.remove('hidden');
                 contentEl.classList.add('hidden');
                 errorEl.classList.add('hidden');
-
                 try {
                     const data = await fetchProfile();
                     currentProfile = data;
@@ -2033,14 +1846,12 @@
                     }
                     this.value = '';
                 });
-
-                // Avatar click – open full image
+                // Avatar click
                 $('avatarWrapper').addEventListener('click', function(e) {
                     if (e.target.closest('.camera-overlay')) return;
                     openImageModal();
                 });
-
-                // Image modal close
+                // Image modal
                 $('imageModalClose').addEventListener('click', closeImageModal);
                 $('imageModal').addEventListener('click', function(e) {
                     if (e.target === this) closeImageModal();
@@ -2050,15 +1861,12 @@
                         closeImageModal();
                     }
                 });
-
                 // Retry button
                 retryBtn.addEventListener('click', loadProfile);
-
                 // Initial load
                 loadProfile();
             });
 
-            // Fallback if DOM already loaded
             if (document.readyState === 'complete' || document.readyState === 'interactive') {
                 setTimeout(() => {
                     if (!loadingEl.classList.contains('hidden') || contentEl.classList.contains('hidden')) {
@@ -2066,8 +1874,8 @@
                     }
                 }, 200);
             }
-            
-            console.log('📟 Profile page initialized.');
+
+            console.log('📟 Profile page initialized with CampusForms.');
         })();
     </script>
 

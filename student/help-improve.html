@@ -65,32 +65,35 @@
             margin-left: 2px;
         }
 
+        /* ✅ Override global .form-input styles */
         .feedback-card .form-input,
         .feedback-card .form-textarea,
         .feedback-card .form-select {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.25s ease;
-            outline: none;
+            padding: 12px 16px !important;
+            border-radius: 12px !important;
+            border: 2px solid var(--border-color) !important;
+            background: var(--bg-input) !important;
+            color: var(--text-primary) !important;
+            font-size: 14px !important;
+            font-family: inherit !important;
+            transition: all 0.25s ease !important;
+            outline: none !important;
+            box-shadow: none !important;
+            margin: 0 !important;
         }
         .feedback-card .form-input:focus,
         .feedback-card .form-textarea:focus,
         .feedback-card .form-select:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
-            background: var(--bg-card);
+            border-color: var(--green) !important;
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10) !important;
+            background: var(--bg-card) !important;
         }
         .feedback-card .form-input.error,
         .feedback-card .form-textarea.error,
         .feedback-card .form-select.error {
-            border-color: var(--red);
-            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
+            border-color: var(--red) !important;
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10) !important;
         }
         .feedback-card .help-text {
             font-size: 12px;
@@ -203,12 +206,13 @@
                     </div>
                     <div class="card-subtitle">Your feedback makes CampusHub better. Share your suggestions, report bugs, or request features.</div>
 
-                    <form id="feedbackForm" autocomplete="off">
+                    <form id="feedbackForm" autocomplete="off" novalidate>
 
                         <!-- Feedback Type -->
                         <div class="form-group">
                             <label for="feedbackType">Feedback Type <span class="required-star">*</span></label>
                             <div class="form-select-wrap">
+                                <!-- ✅ Added class="form-select" -->
                                 <select id="feedbackType" class="form-select" required>
                                     <option value="">Select a type...</option>
                                     <option value="suggestion">💡 Suggestion</option>
@@ -223,14 +227,16 @@
                         <!-- Subject -->
                         <div class="form-group">
                             <label for="subject">Subject <span class="required-star">*</span></label>
-                            <input type="text" id="subject" class="form-input" placeholder="Brief summary of your feedback" required />
+                            <!-- ✅ Added class="form-input" and minlength -->
+                            <input type="text" id="subject" class="form-input" placeholder="Brief summary of your feedback" required minlength="3" />
                             <div class="help-text" id="subjectHelp"></div>
                         </div>
 
                         <!-- Description -->
                         <div class="form-group">
                             <label for="description">Description <span class="required-star">*</span></label>
-                            <textarea id="description" class="form-textarea" rows="4" placeholder="Please provide detailed feedback..." required></textarea>
+                            <!-- ✅ Added class="form-textarea" and maxlength -->
+                            <textarea id="description" class="form-textarea" rows="4" placeholder="Please provide detailed feedback..." required maxlength="500"></textarea>
                             <div class="char-counter" id="charCounter">0 / 500</div>
                             <div class="help-text" id="descHelp"></div>
                         </div>
@@ -261,6 +267,9 @@
     <script src="/assets/js/studentGlobal.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
+
+    <!-- ✅ Load form helper -->
+    <script src="/assets/js/form-helpers.js"></script>
 
     <script>
         (function() {
@@ -293,51 +302,21 @@
                 } else {
                     charCounter.className = 'char-counter';
                 }
+                // Let the helper handle validation as well
                 validateForm();
             });
 
-            // ─── Helpers ──────────────────────────────────────────────
-            function clearFieldHelp(el) {
-                el.textContent = '';
-                el.className = 'help-text';
-            }
-
-            function setFieldHelp(el, message) {
-                el.textContent = message;
-                el.className = 'help-text error';
-            }
-
-            // ─── Validation ────────────────────────────────────────────
+            // ─── Validation using CampusForms ──────────────────────
             function validateForm() {
-                let isValid = true;
+                // Run CampusForms validation
+                const result = CampusForms.validateForm(form, { clearOthers: true });
+                let isValid = result.isValid;
 
-                if (!typeSelect.value) {
-                    setFieldHelp(typeHelp, 'Please select a feedback type.');
-                    isValid = false;
-                } else {
-                    clearFieldHelp(typeHelp);
-                }
-
-                const subject = subjectInput.value.trim();
-                if (!subject) {
-                    setFieldHelp(subjectHelp, 'Please enter a subject.');
-                    isValid = false;
-                } else if (subject.length < 3) {
-                    setFieldHelp(subjectHelp, 'Subject must be at least 3 characters.');
-                    isValid = false;
-                } else {
-                    clearFieldHelp(subjectHelp);
-                }
-
+                // Additional: ensure description length doesn't exceed max (though maxlength on textarea handles it, but we double-check)
                 const desc = descInput.value;
-                if (!desc.trim()) {
-                    setFieldHelp(descHelp, 'Please enter a description.');
+                if (desc.length > MAX_DESC_LENGTH) {
+                    CampusForms.setFieldHelp(descInput, `Description is too long (max ${MAX_DESC_LENGTH} characters).`, 'error');
                     isValid = false;
-                } else if (desc.length > MAX_DESC_LENGTH) {
-                    setFieldHelp(descHelp, `Description is too long (max ${MAX_DESC_LENGTH} characters).`);
-                    isValid = false;
-                } else {
-                    clearFieldHelp(descHelp);
                 }
 
                 submitBtn.disabled = !isValid;
@@ -345,9 +324,10 @@
             }
 
             // ─── Input events ──────────────────────────────────────────
-            typeSelect.addEventListener('change', validateForm);
-            subjectInput.addEventListener('input', validateForm);
-            descInput.addEventListener('input', validateForm);
+            form.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(el => {
+                el.addEventListener('input', validateForm);
+                el.addEventListener('change', validateForm);
+            });
 
             // ─── Submit ─────────────────────────────────────────────────
             form.addEventListener('submit', function(e) {
@@ -358,11 +338,9 @@
                 const subject = subjectInput.value.trim();
                 const description = descInput.value.trim();
 
-                // Build the message with the type prefix
                 const typeLabel = typeSelect.options[typeSelect.selectedIndex]?.text || feedbackType;
                 const fullMessage = `[${typeLabel}]\nSubject: ${subject}\n\n${description}`;
 
-                // Get authenticated user data
                 const user = window.getUserData ? window.getUserData() : null;
                 const reporterName = user ? (user.first_name + ' ' + user.last_name).trim() || user.username : '';
                 const reporterEmail = user ? user.email : '';
@@ -376,7 +354,6 @@
                     reporter_email: reporterEmail
                 };
 
-                // ─── Confirm submission ──────────────────────────────
                 const doSubmit = async () => {
                     submitBtn.disabled = true;
                     submitBtn.classList.add('loading');
@@ -395,31 +372,25 @@
                         if (result.status_code === 201 || result.is_success) {
                             if (typeof showAlert !== 'undefined') {
                                 showAlert.success(result.message || 'Thank you for your feedback! 🎉');
-                            } else {
-                                alert(result.message || 'Thank you for your feedback!');
                             }
-                            // Reset form
                             form.reset();
                             charCounter.textContent = `0 / ${MAX_DESC_LENGTH}`;
                             charCounter.className = 'char-counter';
-                            clearFieldHelp(typeHelp);
-                            clearFieldHelp(subjectHelp);
-                            clearFieldHelp(descHelp);
+                            // Clear all help texts using helper
+                            form.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(el => {
+                                CampusForms.clearFieldHelp(el);
+                            });
                             submitBtn.disabled = true;
                         } else {
                             const errorMsg = result.message || 'Failed to submit feedback. Please try again.';
                             if (typeof showAlert !== 'undefined') {
                                 showAlert.error(errorMsg);
-                            } else {
-                                alert(errorMsg);
                             }
                         }
                     } catch (error) {
                         console.error('Feedback submission error:', error);
                         if (typeof showAlert !== 'undefined') {
                             showAlert.error('Network error. Please check your connection.');
-                        } else {
-                            alert('Network error. Please check your connection.');
                         }
                     } finally {
                         submitBtn.classList.remove('loading');
@@ -456,15 +427,15 @@
                 form.reset();
                 charCounter.textContent = `0 / ${MAX_DESC_LENGTH}`;
                 charCounter.className = 'char-counter';
-                clearFieldHelp(typeHelp);
-                clearFieldHelp(subjectHelp);
-                clearFieldHelp(descHelp);
+                form.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(el => {
+                    CampusForms.clearFieldHelp(el);
+                });
                 submitBtn.disabled = true;
             });
 
             // ─── Init ──────────────────────────────────────────────────
             setTimeout(validateForm, 100);
-            console.log('📟 Help us improve page initialized.');
+            console.log('📟 Help us improve page initialized with CampusForms.');
 
         })();
     </script>

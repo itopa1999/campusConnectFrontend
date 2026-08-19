@@ -12,13 +12,10 @@
     <link rel="stylesheet" href="/assets/css/studentStyle.css" />
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
-    <!-- Page-Specific Styles -->
     <style>
         /* ============================================================
-           LOST ITEMS PAGE SPECIFIC STYLES
+           LOST ITEMS PAGE SPECIFIC STYLES (unchanged)
            ============================================================ */
-
-        /* ─── Page Header ─── */
         .lost-header {
             display: flex;
             align-items: center;
@@ -77,7 +74,6 @@
             text-align: center;
         }
 
-        /* ─── Search Bar ─── */
         .lost-search-wrap {
             display: flex;
             align-items: center;
@@ -146,7 +142,6 @@
             transition: color var(--transition);
         }
 
-        /* ─── Lost Items Grid ─── */
         .lost-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -359,7 +354,6 @@
             }
         }
 
-        /* ─── Pagination ─── */
         .pagination-controls {
             display: flex;
             justify-content: center;
@@ -403,7 +397,6 @@
             transition: color var(--transition);
         }
 
-        /* ─── Empty State ─── */
         .lost-empty {
             text-align: center;
             padding: 60px 20px;
@@ -433,7 +426,6 @@
             transition: color var(--transition);
         }
 
-        /* ─── Loading shimmer ─── */
         .shimmer-lost {
             background: var(--bg-card);
             border-radius: var(--radius-card);
@@ -464,18 +456,11 @@
             margin-bottom: 0;
         }
         @keyframes shimmerPulse {
-            0%,
-            100% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 1;
-            }
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
-        /* ============================================================
-           VERIFICATION MODAL
-           ============================================================ */
+        /* ─── Verification Modal ─── */
         .verify-overlay {
             position: fixed;
             top: 0;
@@ -648,24 +633,30 @@
             font-weight: 500;
             transition: color var(--transition);
         }
-        .verify-modal .modal-body .form-group input {
+
+        /* ✅ Override for .form-input inside claim modal */
+        .verify-modal .form-input {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 14px;
-            transition: all 0.25s ease;
-            outline: none;
+            padding: 12px 16px !important;
+            border-radius: 12px !important;
+            border: 2px solid var(--border-color) !important;
+            background: var(--bg-input) !important;
+            color: var(--text-primary) !important;
+            font-size: 14px !important;
+            font-family: inherit !important;
+            transition: all 0.25s ease !important;
+            outline: none !important;
+            box-shadow: none !important;
+            margin: 0 !important;
         }
-        .verify-modal .modal-body .form-group input:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
-            background: var(--bg-card);
+        .verify-modal .form-input:focus {
+            border-color: var(--green) !important;
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10) !important;
+            background: var(--bg-card) !important;
         }
-        .verify-modal .modal-body .form-group input::placeholder {
-            color: var(--text-muted);
+        .verify-modal .form-input.error {
+            border-color: var(--red) !important;
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10) !important;
         }
 
         .verify-modal .modal-footer {
@@ -685,6 +676,10 @@
             cursor: pointer;
             transition: all 0.2s;
             min-width: 100px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         .verify-modal .modal-footer .btn-cancel {
             background: var(--bg-input);
@@ -707,7 +702,6 @@
             transform: none;
         }
 
-        /* ─── Success state inside modal ─── */
         .verify-modal .modal-body .success-state {
             display: none;
             text-align: center;
@@ -758,7 +752,6 @@
         }
 
         @media (max-width: 480px) {
-
             .verify-modal {
                 max-width: 100%;
                 margin: 10px;
@@ -888,34 +881,35 @@
             color: var(--red);
             margin-left: 2px;
         }
-        .add-modal .modal-body .form-group .form-input,
-        .add-modal .modal-body .form-group .form-textarea {
+
+        /* ✅ Override for .form-input and .form-textarea inside add modal */
+        .add-modal .form-input,
+        .add-modal .form-textarea {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-primary);
-            font-size: 14px;
-            transition: all 0.25s ease;
-            outline: none;
-            font-family: inherit;
+            padding: 12px 16px !important;
+            border-radius: 12px !important;
+            border: 2px solid var(--border-color) !important;
+            background: var(--bg-input) !important;
+            color: var(--text-primary) !important;
+            font-size: 14px !important;
+            font-family: inherit !important;
+            transition: all 0.25s ease !important;
+            outline: none !important;
+            box-shadow: none !important;
+            margin: 0 !important;
         }
-        .add-modal .modal-body .form-group .form-input:focus,
-        .add-modal .modal-body .form-group .form-textarea:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
-            background: var(--bg-card);
+        .add-modal .form-input:focus,
+        .add-modal .form-textarea:focus {
+            border-color: var(--green) !important;
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10) !important;
+            background: var(--bg-card) !important;
         }
-        .add-modal .modal-body .form-group .form-textarea {
-            min-height: 80px;
-            resize: vertical;
+        .add-modal .form-input.error,
+        .add-modal .form-textarea.error {
+            border-color: var(--red) !important;
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10) !important;
         }
-        .add-modal .modal-body .form-group .form-input.error,
-        .add-modal .modal-body .form-group .form-textarea.error {
-            border-color: var(--red);
-            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
-        }
+
         .add-modal .modal-body .help-text {
             font-size: 12px;
             color: var(--text-muted);
@@ -926,7 +920,6 @@
             color: var(--red);
         }
 
-        /* File drop zone inside add modal */
         .add-modal .file-drop-zone {
             border: 2px dashed var(--border-color);
             border-radius: 12px;
@@ -1071,6 +1064,10 @@
             cursor: pointer;
             transition: all 0.2s;
             min-width: 100px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         .add-modal .modal-footer .btn-cancel {
             background: var(--bg-input);
@@ -1103,7 +1100,6 @@
             display: none;
         }
 
-        /* ─── Add button ─── */
         .add-lost-btn {
             background: var(--green);
             color: #fff;
@@ -1126,41 +1122,11 @@
         .add-lost-btn i {
             font-size: 14px;
         }
-
-        /* ─── Modal button content centering ─── */
-        .verify-modal .modal-footer .btn-submit,
-        .add-modal .modal-footer .btn-submit {
-            display: inline-flex !important;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        /* Ensure icons are aligned */
-        .verify-modal .modal-footer .btn-submit i,
-        .add-modal .modal-footer .btn-submit i {
-            display: inline-block;
-            margin: 0;
-        }
-
-        /* Loading state spinner */
-        .add-modal .modal-footer .btn-submit.loading {
-            display: inline-flex !important;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-
     </style>
 </head>
 <body>
 
     <div class="app-container">
-
-        
 
         <!-- ===== LOCATION ===== -->
         <div class="location-bar">
@@ -1242,15 +1208,15 @@
                         Answer the verification questions below to claim this item. If your answers match, you'll be contacted via email or phone.
                     </div>
 
-                    <!-- Form fields -->
+                    <!-- Form fields (✅ added class="form-input") -->
                     <div class="form-fields" id="formFields">
                         <div class="form-group">
                             <label><span class="q-number">Q1.</span> <span class="question-text" id="q1Text">Verification question 1</span></label>
-                            <input type="text" id="q1Input" placeholder="Type your answer…" autocomplete="off" />
+                            <input type="text" id="q1Input" class="form-input" placeholder="Type your answer…" autocomplete="off" required />
                         </div>
                         <div class="form-group">
                             <label><span class="q-number">Q2.</span> <span class="question-text" id="q2Text">Verification question 2</span></label>
-                            <input type="text" id="q2Input" placeholder="Type your answer…" autocomplete="off" />
+                            <input type="text" id="q2Input" class="form-input" placeholder="Type your answer…" autocomplete="off" required />
                         </div>
                     </div>
 
@@ -1284,7 +1250,7 @@
                     <button class="modal-close" id="addModalClose">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form id="addLostForm" autocomplete="off">
+                    <form id="addLostForm" autocomplete="off" novalidate>
                         <!-- Item Name -->
                         <div class="form-group">
                             <label for="addItemName">Item Name <span class="required-star">*</span></label>
@@ -1439,7 +1405,7 @@
 
             function getImageUrl(item) {
                 if (item.image) return item.image;
-                return ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='200' y='160' font-family='Arial' font-size='24' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E");
+                return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='200' y='160' font-family='Arial' font-size='24' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
             }
 
             function formatDate(dateStr) {
@@ -1472,7 +1438,7 @@
                     if (search.trim()) {
                         url += `?search=${encodeURIComponent(search.trim())}`;
                     }
-                    const response = await fetchWithAuth(url, { 
+                    const response = await fetchWithAuth(url, {
                         method: 'GET',
                         showSpinner: true,
                         spinnerText: 'Loading Items...'
@@ -1482,9 +1448,7 @@
                     if (!result.is_success) throw new Error(result.message || 'Unknown error');
                     allItems = result.data.items || [];
                     const pagination = result.data.pagination || {};
-                    // Update total count
                     lostCountDisplay.textContent = allItems.length;
-                    // Filtered items will be set by renderItems
                     renderItems();
                 } catch (error) {
                     console.error('Fetch lost items error:', error);
@@ -1634,6 +1598,11 @@
                 q1Input.placeholder = `Type your answer for Q1…`;
                 q2Input.placeholder = `Type your answer for Q2…`;
 
+                // ✅ Clear any helper errors
+                [q1Input, q2Input].forEach(el => {
+                    CampusForms.clearFieldHelp(el);
+                });
+
                 verifyOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
                 setTimeout(() => q1Input.focus(), 400);
@@ -1652,7 +1621,28 @@
                 }, 350);
             }
 
+            // ✅ Validate Claim Form using CampusForms
+            function validateClaimForm() {
+                // Create a temporary form with the two inputs
+                const tempForm = document.createElement('form');
+                const q1 = q1Input.cloneNode(true);
+                const q2 = q2Input.cloneNode(true);
+                q1.setAttribute('required', '');
+                q2.setAttribute('required', '');
+                tempForm.appendChild(q1);
+                tempForm.appendChild(q2);
+                const result = CampusForms.validateForm(tempForm, { clearOthers: false });
+                if (!result.isValid) {
+                    const firstError = Object.values(result.errors)[0];
+                    showToast(firstError || 'Please answer both verification questions.', 'warning');
+                    return false;
+                }
+                return true;
+            }
+
             async function handleClaimSubmit() {
+                if (!validateClaimForm()) return;
+
                 const answer1 = q1Input.value.trim();
                 const answer2 = q2Input.value.trim();
                 if (!answer1 || !answer2) {
@@ -1666,12 +1656,10 @@
 
                 try {
                     await submitClaim(currentClaimItem.id, answer1, answer2);
-                    // Success
                     formFields.classList.add('hidden');
                     successState.classList.add('active');
                     modalSubmit.style.display = 'none';
                     showAlert.success('Claim submitted! You\'ll be contacted soon.');
-                    // Optionally refresh the list to update status
                     fetchLostItems(searchQuery);
                 } catch (error) {
                     console.error('Claim error:', error);
@@ -1690,12 +1678,10 @@
             modalSubmit.addEventListener('click', handleClaimSubmit);
 
             q1Input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') { e.preventDefault();
-                    q2Input.focus(); }
+                if (e.key === 'Enter') { e.preventDefault(); q2Input.focus(); }
             });
             q2Input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') { e.preventDefault();
-                    handleClaimSubmit(); }
+                if (e.key === 'Enter') { e.preventDefault(); handleClaimSubmit(); }
             });
 
             document.addEventListener('keydown', function(e) {
@@ -1713,24 +1699,17 @@
             function openAddModal() {
                 addOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
-                // Set default date
                 const today = new Date().toISOString().split('T')[0];
                 addDateFound.value = today;
-                // Reset form
                 addLostForm.reset();
                 addDateFound.value = today;
-                // Clear file preview
                 const container = addFileDropZone.querySelector('.file-preview-container');
                 if (container) container.innerHTML = '';
                 addFileDropZone.classList.remove('has-file');
                 addFileInput.value = '';
-                // Clear errors
-                document.querySelectorAll('#addLostForm .help-text').forEach(el => {
-                    el.textContent = '';
-                    el.className = 'help-text';
-                });
-                document.querySelectorAll('#addLostForm .form-input, #addLostForm .form-textarea').forEach(el => {
-                    el.classList.remove('error');
+                // ✅ Clear helper errors
+                addLostForm.querySelectorAll('.form-input, .form-textarea').forEach(el => {
+                    CampusForms.clearFieldHelp(el);
                 });
                 addModalSubmit.disabled = false;
                 addModalSubmit.classList.remove('loading');
@@ -1740,35 +1719,18 @@
             function closeAddModal() {
                 addOverlay.classList.remove('active');
                 document.body.style.overflow = '';
-            }
-
-            // ─── Add modal form validation ────────────────────────────
-            function validateAddForm() {
-                let valid = true;
-                const fields = [
-                    { el: addItemName, help: document.getElementById('addItemNameHelp'), msg: 'Item name is required.' },
-                    { el: addDescription, help: document.getElementById('addDescriptionHelp'), msg: 'Description is required.' },
-                    { el: addLocation, help: document.getElementById('addLocationHelp'), msg: 'Location is required.' },
-                    { el: addDateFound, help: document.getElementById('addDateFoundHelp'), msg: 'Date is required.' },
-                    { el: addVerification1, help: document.getElementById('addVerification1Help'), msg: 'Verification question 1 is required.' },
-                    { el: addVerification2, help: document.getElementById('addVerification2Help'), msg: 'Verification question 2 is required.' },
-                ];
-                fields.forEach(f => {
-                    if (!f.el.value.trim()) {
-                        f.el.classList.add('error');
-                        f.help.textContent = f.msg;
-                        f.help.className = 'help-text error';
-                        valid = false;
-                    } else {
-                        f.el.classList.remove('error');
-                        f.help.textContent = '';
-                        f.help.className = 'help-text';
-                    }
+                // ✅ Clear helper errors on close
+                addLostForm.querySelectorAll('.form-input, .form-textarea').forEach(el => {
+                    CampusForms.clearFieldHelp(el);
                 });
-                return valid;
             }
 
-            // ─── Add form submit ──────────────────────────────────────
+            // ✅ Validate Add Form using CampusForms
+            function validateAddForm() {
+                const result = CampusForms.validateForm(addLostForm, { clearOthers: true });
+                return result.isValid;
+            }
+
             async function handleAddSubmit(e) {
                 e.preventDefault();
                 if (!validateAddForm()) return;
@@ -1793,6 +1755,7 @@
                     await submitReport(formData);
                     closeAddModal();
                     showAlert.success('Lost item reported successfully!');
+                    fetchLostItems(searchQuery);
                 } catch (error) {
                     console.error('Report error:', error);
                     showAlert.error(error.message || 'Failed to report item.');
@@ -1812,13 +1775,7 @@
             addModalSubmit.addEventListener('click', handleAddSubmit);
             addLostForm.addEventListener('submit', handleAddSubmit);
 
-            // Real-time validation on input
-            addItemName.addEventListener('input', validateAddForm);
-            addDescription.addEventListener('input', validateAddForm);
-            addLocation.addEventListener('input', validateAddForm);
-            addDateFound.addEventListener('change', validateAddForm);
-            addVerification1.addEventListener('input', validateAddForm);
-            addVerification2.addEventListener('input', validateAddForm);
+            // ✅ Real-time validation on input (optional) – we'll just use submit validation
 
             // ─── File drop zone for add modal ─────────────────────────
             function handleAddFileSelection() {
@@ -1831,7 +1788,6 @@
                     errorEl.textContent = '';
                     return;
                 }
-                // Validate size and type
                 if (file.size > 5 * 1024 * 1024) {
                     errorEl.textContent = 'File too large. Max 5MB.';
                     addFileInput.value = '';
@@ -1873,8 +1829,6 @@
             }
 
             addFileInput.addEventListener('change', handleAddFileSelection);
-
-            // Drag and drop for add modal
             addFileDropZone.addEventListener('dragover', function(e) {
                 e.preventDefault();
                 this.classList.add('dragover');
@@ -1905,7 +1859,6 @@
                 searchQuery = this.value;
                 clearSearch.classList.toggle('visible', !!this.value);
                 currentPage = 1;
-                // We'll fetch with search param from backend
                 fetchLostItems(searchQuery);
             });
 
@@ -1921,13 +1874,11 @@
             // PAGINATION
             // ============================================================
             prevBtn.addEventListener('click', function() {
-                if (currentPage > 1) { currentPage--;
-                    renderItems(); }
+                if (currentPage > 1) { currentPage--; renderItems(); }
             });
             nextBtn.addEventListener('click', function() {
                 const totalPages = Math.ceil(filteredItems.length / perPage);
-                if (currentPage < totalPages) { currentPage++;
-                    renderItems(); }
+                if (currentPage < totalPages) { currentPage++; renderItems(); }
             });
 
             // ============================================================
@@ -1949,7 +1900,7 @@
             // ============================================================
             function init() {
                 fetchLostItems('');
-                console.log('📟 Lost & Found page initialized.');
+                console.log('📟 Lost & Found page initialized with CampusForms.');
             }
 
             if (document.readyState === 'loading') {
@@ -1958,7 +1909,6 @@
                 setTimeout(init, 100);
             }
 
-            // Expose for debugging
             window.__lost = { fetch: fetchLostItems, render: renderItems };
 
         })();

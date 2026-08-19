@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Sign Up</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles (student version) -->
+    <link rel="stylesheet" href="/assets/css/studentStyle.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
+
+    <style>
+        /* ─── All existing styles (unchanged) ──────────────────────── */
+        .signup-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-app);
+            padding: 20px;
+            transition: background var(--transition);
+        }
+        .signup-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .signup-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 40px 32px 36px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+        }
+        .signup-card .brand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .signup-card .brand .brand-icon {
+            font-size: 40px;
+            color: var(--green);
+            display: block;
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+        .signup-card .brand h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+            letter-spacing: -0.5px;
+            transition: color var(--transition);
+        }
+        .signup-card .brand h1 span {
+            color: var(--green);
+            transition: color var(--transition);
+        }
+        .signup-card .brand p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 4px 0 0;
+            transition: color var(--transition);
+        }
+        .signup-card .form-group {
+            margin-bottom: 16px;
+        }
+        .signup-card .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+        .signup-card .form-group .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            transition: all 0.25s ease;
+        }
+        .signup-card .form-group .input-wrap:focus-within {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
+            background: var(--bg-card);
+        }
+        .signup-card .form-group .input-wrap.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
+        }
+        .signup-card .form-group .input-wrap.success {
+            border-color: var(--green);
+        }
+        .signup-card .form-group .input-wrap .input-icon {
+            padding: 0 0 0 14px;
+            color: var(--text-muted);
+            font-size: 16px;
+            transition: color var(--transition);
+            flex-shrink: 0;
+        }
+        .signup-card .form-group .input-wrap:focus-within .input-icon {
+            color: var(--green);
+        }
+        .signup-card .form-group .input-wrap input {
+            width: 100%;
+            padding: 12px 14px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: color var(--transition);
+        }
+        .signup-card .form-group .input-wrap input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+            transition: color var(--transition);
+        }
+        .signup-card .form-group .input-wrap .toggle-password {
+            padding: 0 14px 0 0;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+        .signup-card .form-group .input-wrap .toggle-password:hover {
+            color: var(--text-primary);
+        }
+        .signup-card .form-group .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+        .signup-card .form-group .help-text.error {
+            color: var(--red);
+        }
+        .signup-card .form-group .help-text.success {
+            color: var(--green);
+        }
+
+        /* ─── ✅ FIX: Override global .form-input styles ──────────── */
+        .signup-card .form-group .input-wrap input.form-input {
+            border: none !important;
+            background: transparent !important;
+            padding: 12px 14px !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+        }
+        .signup-card .form-group .input-wrap input.form-input.error,
+        .signup-card .form-group .input-wrap input.form-input.success {
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        /* ─── Password strength (unchanged) ────────────────────────── */
+        .password-strength {
+            margin-top: 6px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .password-strength .strength-bar {
+            flex: 1;
+            height: 4px;
+            border-radius: 4px;
+            background: var(--border-color);
+            transition: background 0.3s ease;
+            min-width: 30px;
+        }
+        .password-strength .strength-bar.active.weak {
+            background: var(--red);
+        }
+        .password-strength .strength-bar.active.medium {
+            background: #f39c12;
+        }
+        .password-strength .strength-bar.active.strong {
+            background: var(--green);
+        }
+        .password-strength .strength-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 48px;
+            text-align: right;
+            transition: color var(--transition);
+        }
+        .password-strength .strength-label.weak {
+            color: var(--red);
+        }
+        .password-strength .strength-label.medium {
+            color: #f39c12;
+        }
+        .password-strength .strength-label.strong {
+            color: var(--green);
+        }
+
+        .password-rules {
+            margin-top: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 16px;
+            padding: 0;
+            list-style: none;
+        }
+        .password-rules li {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color var(--transition);
+        }
+        .password-rules li .rule-icon {
+            font-size: 10px;
+            width: 14px;
+            text-align: center;
+            transition: color var(--transition);
+        }
+        .password-rules li.valid {
+            color: var(--green);
+        }
+        .password-rules li.valid .rule-icon {
+            color: var(--green);
+        }
+        .password-rules li.invalid {
+            color: var(--red);
+        }
+        .password-rules li.invalid .rule-icon {
+            color: var(--red);
+        }
+
+        /* ─── Terms (unchanged) ────────────────────────────────────── */
+        .signup-card .terms-group {
+            margin: 18px 0 20px;
+        }
+        .signup-card .terms-group .terms-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+            line-height: 1.4;
+        }
+        .signup-card .terms-group .terms-label input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .signup-card .terms-group .terms-label .checkmark {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+            transition: all 0.25s ease;
+        }
+        .signup-card .terms-group .terms-label .checkmark i {
+            font-size: 12px;
+            color: #fff;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.25s ease;
+        }
+        .signup-card .terms-group .terms-label input:checked+.checkmark {
+            background: var(--green);
+            border-color: var(--green);
+        }
+        .signup-card .terms-group .terms-label input:checked+.checkmark i {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .signup-card .terms-group .terms-label .terms-text a {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .signup-card .terms-group .terms-label .terms-text a:hover {
+            opacity: 0.8;
+        }
+        .signup-card .terms-group .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            padding-left: 32px;
+            transition: color var(--transition);
+        }
+        .signup-card .terms-group .help-text.error {
+            color: var(--red);
+        }
+
+        /* ─── Buttons, alerts, etc. (unchanged) ────────────────────── */
+        .signup-card .btn-signup {
+            width: 100%;
+            padding: 13px 0;
+            border-radius: 30px;
+            border: none;
+            background: var(--green);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: inherit;
+        }
+        .signup-card .btn-signup:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .signup-card .btn-signup:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .signup-card .btn-signup .spinner {
+            display: none;
+        }
+        .signup-card .btn-signup.loading .spinner {
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .signup-card .btn-signup.loading .btn-text {
+            display: none;
+        }
+
+        .signup-card .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 22px 0 18px;
+            color: var(--text-muted);
+            font-size: 12px;
+            transition: color var(--transition);
+        }
+        .signup-card .divider::before,
+        .signup-card .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+            transition: background var(--transition);
+        }
+        .signup-card .login-text {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .signup-card .login-text a {
+            color: var(--green);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .signup-card .login-text a:hover {
+            opacity: 0.8;
+        }
+
+        .signup-card .resend-verification {
+            text-align: center;
+            margin-top: 18px;
+            padding: 12px 14px;
+            background: var(--green-bg);
+            border-radius: 10px;
+            border: 1px solid rgba(13, 138, 62, 0.10);
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .signup-card .resend-verification .resend-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+        .signup-card .resend-verification .resend-text .resend-link {
+            color: var(--green);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 0;
+        }
+        .signup-card .resend-verification .resend-text .resend-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+        .signup-card .resend-verification .resend-text .resend-link:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+        .signup-card .resend-verification .resend-message {
+            font-size: 12px;
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+        .signup-card .resend-verification .resend-message.success {
+            color: var(--green);
+        }
+        .signup-card .resend-verification .resend-message.error {
+            color: var(--red);
+        }
+
+        .signup-card .alert {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            border: 1px solid transparent;
+        }
+        .signup-card .alert.visible {
+            display: block;
+        }
+        .signup-card .alert.error {
+            background: rgba(231, 76, 60, 0.08);
+            border-color: rgba(231, 76, 60, 0.25);
+            color: var(--red);
+        }
+        .signup-card .alert.success {
+            background: rgba(13, 138, 62, 0.08);
+            border-color: rgba(13, 138, 62, 0.25);
+            color: var(--green);
+        }
+        .dark-mode .signup-card .alert.error {
+            background: rgba(231, 76, 60, 0.12);
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+        .dark-mode .signup-card .alert.success {
+            background: rgba(13, 138, 62, 0.12);
+            border-color: rgba(13, 138, 62, 0.3);
+        }
+
+        .signup-card .name-row {
+            display: flex;
+            gap: 12px;
+        }
+        .signup-card .name-row .form-group {
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 480px) {
+            .signup-card { padding: 28px 20px 24px; }
+            .signup-card .brand h1 { font-size: 22px; }
+            .signup-card .brand .brand-icon { font-size: 32px; }
+            .signup-card .btn-signup { font-size: 15px; padding: 12px 0; }
+            .password-rules { gap: 2px 12px; }
+            .password-rules li { font-size: 10px; }
+        }
+        @media (max-width: 400px) {
+            .signup-card .name-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+        @media (min-width: 768px) {
+            .signup-container { max-width: 500px; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="signup-page">
+        <div class="signup-container">
+            <div class="signup-card">
+
+                <!-- Brand -->
+                <div class="brand">
+                    <span class="brand-icon"><i class="fa-solid fas fa-graduation-cap"></i></span>
+                    <h1>Campus<span>Hub</span></h1>
+                    <p>Create your account — join the community</p>
+                </div>
+
+                <!-- Alert -->
+                <div class="alert" id="signupAlert"></div>
+
+                <!-- Signup Form -->
+                <form id="signupFormElement" autocomplete="off" novalidate>
+
+                    <!-- Name Row -->
+                    <div class="name-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <div class="input-wrap" id="firstNameWrap">
+                                <span class="input-icon"><i class="fa-regular fas fa-user"></i></span>
+                                <!-- ✅ Added class="form-input" and minlength -->
+                                <input type="text" id="firstName" class="form-input" placeholder="John" required minlength="2" autocomplete="given-name" />
+                            </div>
+                            <div class="help-text" id="firstNameHelp"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <div class="input-wrap" id="lastNameWrap">
+                                <span class="input-icon"><i class="fa-regular fas fa-user"></i></span>
+                                <input type="text" id="lastName" class="form-input" placeholder="Doe" required minlength="2" autocomplete="family-name" />
+                            </div>
+                            <div class="help-text" id="lastNameHelp"></div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <div class="input-wrap" id="emailWrap">
+                            <span class="input-icon"><i class="fa-regular fas fa-envelope"></i></span>
+                            <input type="email" id="signupEmail" class="form-input" placeholder="you@uniben.edu" required autocomplete="email" />
+                        </div>
+                        <div class="help-text" id="emailHelp"></div>
+                    </div>
+
+                    <!-- WhatsApp / Phone -->
+                    <div class="form-group">
+                        <label for="phoneNumber">WhatsApp Number</label>
+                        <div class="input-wrap" id="whatsappWrap">
+                            <span class="input-icon"><i class="fa-brands fas fa-whatsapp"></i></span>
+                            <!-- ✅ data-validate="phone" for custom validation -->
+                            <input type="tel" id="phoneNumber" class="form-input" placeholder="+234 800 000 0000" required data-validate="phone" autocomplete="tel" />
+                        </div>
+                        <div class="help-text" id="whatsappHelp">Include country code (e.g. +234)</div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <div class="input-wrap" id="passwordWrap">
+                            <span class="input-icon"><i class="fa-regular fas fa-lock"></i></span>
+                            <!-- ✅ Added minlength and required -->
+                            <input type="password" id="signupPassword" class="form-input" placeholder="Create a strong password" required minlength="8" autocomplete="new-password" />
+                            <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
+                                <i class="fa-regular fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="help-text" id="passwordHelp"></div>
+
+                        <!-- Password strength meter -->
+                        <div class="password-strength" id="strengthMeter">
+                            <span class="strength-bar" id="strengthBar1"></span>
+                            <span class="strength-bar" id="strengthBar2"></span>
+                            <span class="strength-bar" id="strengthBar3"></span>
+                            <span class="strength-label" id="strengthLabel">Weak</span>
+                        </div>
+
+                        <!-- Password rules -->
+                        <ul class="password-rules" id="passwordRules">
+                            <li id="ruleLength" class="invalid">
+                                <span class="rule-icon"><i class="fa-regular fas fa-circle"></i></span>
+                                At least 8 characters
+                            </li>
+                            <li id="ruleUppercase" class="invalid">
+                                <span class="rule-icon"><i class="fa-regular fas fa-circle"></i></span>
+                                One uppercase letter
+                            </li>
+                            <li id="ruleLowercase" class="invalid">
+                                <span class="rule-icon"><i class="fa-regular fas fa-circle"></i></span>
+                                One lowercase letter
+                            </li>
+                            <li id="ruleNumber" class="invalid">
+                                <span class="rule-icon"><i class="fa-regular fas fa-circle"></i></span>
+                                One number
+                            </li>
+                            <li id="ruleSpecial" class="invalid">
+                                <span class="rule-icon"><i class="fa-regular fas fa-circle"></i></span>
+                                One special character (!@#$%^&*)
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="terms-group">
+                        <label class="terms-label">
+                            <input type="checkbox" id="termsCheck" />
+                            <span class="checkmark"><i class="fa-solid fas fa-check"></i></span>
+                            <span class="terms-text">
+                                I agree to the <a href="terms-privacy.html?tab=terms" target="_blank">Terms of Service</a> and
+                                <a href="terms-privacy.html?tab=privacy" target="_blank">Privacy Policy</a>
+                            </span>
+                        </label>
+                        <div class="help-text" id="termsHelp"></div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-signup" id="signupBtn">
+                        <span class="spinner"><i class="fa-solid fas fa-spinner fas fa-spin"></i></span>
+                        <span class="btn-text"><i class="fa-regular fas fa-user-plus"></i> Create free account</span>
+                    </button>
+
+                </form>
+
+                <!-- Divider -->
+                <div class="divider">or</div>
+
+                <!-- Login -->
+                <div class="login-text">
+                    Already have an account? <a href="login.html">Sign in</a>
+                </div>
+
+                <!-- Resend Verification -->
+                <div class="resend-verification">
+                    <div class="resend-text">
+                        Didn't receive your verification email?
+                        <button class="resend-link" id="resendLink" type="button">Resend it here</button>
+                    </div>
+                    <div class="resend-message" id="resendMessage"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/studentGlobal.js"></script>
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+
+    <!-- ✅ Load the form helper -->
+    <script src="/assets/js/form-helpers.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const form = document.getElementById('signupFormElement');
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const email = document.getElementById('signupEmail');
+            const phone = document.getElementById('phoneNumber');
+            const password = document.getElementById('signupPassword');
+            const termsCheck = document.getElementById('termsCheck');
+            const signupBtn = document.getElementById('signupBtn');
+            const togglePassword = document.getElementById('togglePassword');
+            const resendLink = document.getElementById('resendLink');
+            const resendMessage = document.getElementById('resendMessage');
+            const alertEl = document.getElementById('signupAlert');
+
+            // ─── Password rules refs ──────────────────────────────────
+            const ruleLength = document.getElementById('ruleLength');
+            const ruleUppercase = document.getElementById('ruleUppercase');
+            const ruleLowercase = document.getElementById('ruleLowercase');
+            const ruleNumber = document.getElementById('ruleNumber');
+            const ruleSpecial = document.getElementById('ruleSpecial');
+            const strengthBar1 = document.getElementById('strengthBar1');
+            const strengthBar2 = document.getElementById('strengthBar2');
+            const strengthBar3 = document.getElementById('strengthBar3');
+            const strengthLabel = document.getElementById('strengthLabel');
+
+            const X_KEY_ID = 1;
+
+            // ─── Helpers ──────────────────────────────────────────────
+            function showAlert(message, type = 'error') {
+                alertEl.textContent = message;
+                alertEl.className = 'alert visible ' + type;
+            }
+            function hideAlert() {
+                alertEl.className = 'alert';
+                alertEl.textContent = '';
+            }
+
+            function setButtonLoading(btn, loading, originalText) {
+                if (loading) {
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                    btn.querySelector('.btn-text').textContent = originalText || 'Creating account...';
+                } else {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                    btn.querySelector('.btn-text').innerHTML = '<i class="fa-regular fas fa-user-plus"></i> Create free account';
+                }
+            }
+
+            // ─── Password strength (unchanged) ──────────────────────
+            function checkPasswordRules(pwd) {
+                return {
+                    length: pwd.length >= 8,
+                    uppercase: /[A-Z]/.test(pwd),
+                    lowercase: /[a-z]/.test(pwd),
+                    number: /\d/.test(pwd),
+                    special: /[!@#$%^&*()_\-+={}[\]|\\;:'",.<>/?`~]/.test(pwd),
+                };
+            }
+            function updatePasswordUI(pwd) {
+                const rules = checkPasswordRules(pwd);
+                const isEmpty = pwd.length === 0;
+                const ruleMap = { length: ruleLength, uppercase: ruleUppercase, lowercase: ruleLowercase, number: ruleNumber, special: ruleSpecial };
+                let validCount = 0;
+                for (const [key, el] of Object.entries(ruleMap)) {
+                    const isValid = rules[key];
+                    el.className = isEmpty ? 'invalid' : (isValid ? 'valid' : 'invalid');
+                    el.querySelector('.rule-icon').innerHTML = isEmpty ?
+                        '<i class="fa-regular fas fa-circle"></i>' :
+                        (isValid ? '<i class="fa-regular fas fa-circle-check"></i>' : '<i class="fa-regular fas fa-circle-xmark"></i>');
+                    if (!isEmpty && isValid) validCount++;
+                }
+                const bars = [strengthBar1, strengthBar2, strengthBar3];
+                const strength = isEmpty ? 0 : Math.min(validCount, 5);
+                let level = 0, label = 'Weak', labelClass = 'weak';
+                if (!isEmpty) {
+                    if (strength <= 2) { level = 1; label = 'Weak'; labelClass = 'weak'; }
+                    else if (strength <= 3) { level = 2; label = 'Medium'; labelClass = 'medium'; }
+                    else { level = 3; label = 'Strong'; labelClass = 'strong'; }
+                }
+                bars.forEach((bar, idx) => {
+                    bar.className = 'strength-bar';
+                    if (idx < level) bar.classList.add('active', labelClass);
+                });
+                strengthLabel.textContent = isEmpty ? '' : label;
+                strengthLabel.className = 'strength-label' + (isEmpty ? '' : ' ' + labelClass);
+                return rules;
+            }
+
+            // ─── Validation (uses CampusForms + extra checks) ──────
+            function validateForm() {
+                hideAlert();
+
+                // 1) Run basic validation via CampusForms
+                const result = CampusForms.validateForm(form, { clearOthers: true });
+                let isValid = result.isValid;
+
+                // 2) Extra: WhatsApp phone validation (data-validate="phone" already handled by helper)
+                // But we need to re-validate because the helper uses a pattern that may be too strict.
+                // We'll override the helper's result for the phone field.
+                const phoneVal = phone.value.trim();
+                const phoneHelp = document.getElementById('whatsappHelp');
+                const phoneWrap = document.getElementById('whatsappWrap');
+                const phonePattern = /^\+[\d\s\-\(\)]{7,20}$/;
+                if (phoneVal && !phonePattern.test(phoneVal)) {
+                    CampusForms.setFieldHelp(phone, 'Include country code, e.g. +234 800 000 0000', 'error');
+                    // The helper already marks it as error if data-validate="phone" fails.
+                    // We'll just ensure it's marked.
+                }
+
+                // 3) Extra: Terms checkbox
+                const termsHelp = document.getElementById('termsHelp');
+                if (!termsCheck.checked) {
+                    termsHelp.textContent = 'You must agree to the Terms and Privacy Policy.';
+                    termsHelp.className = 'help-text error';
+                    isValid = false;
+                } else {
+                    termsHelp.textContent = '';
+                    termsHelp.className = 'help-text';
+                }
+
+                // 4) Extra: Password strength – ensure all rules pass
+                const pwd = password.value;
+                if (pwd) {
+                    const pwdRules = checkPasswordRules(pwd);
+                    const allValid = pwdRules.length && pwdRules.uppercase && pwdRules.lowercase &&
+                                     pwdRules.number && pwdRules.special;
+                    if (!allValid) {
+                        // The helper already has minlength, but we need to ensure strength is met
+                        const pwdHelp = document.getElementById('passwordHelp');
+                        // Only show extra message if there's no other error already
+                        if (!pwdHelp.classList.contains('error')) {
+                            CampusForms.setFieldHelp(password, 'Password does not meet all requirements.', 'error');
+                        }
+                        isValid = false;
+                    }
+                }
+
+                // Update button state
+                signupBtn.disabled = !isValid;
+                return isValid;
+            }
+
+            // ─── Toggle Password ─────────────────────────────────────
+            togglePassword.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                const isPassword = password.type === 'password';
+                password.type = isPassword ? 'text' : 'password';
+                icon.className = isPassword ? 'fa-regular fas fa-eye-slash' : 'fa-regular fas fa-eye';
+            });
+
+            // ─── Input events for real-time validation ──────────────
+            form.querySelectorAll('.form-input, #termsCheck').forEach(field => {
+                field.addEventListener('input', validateForm);
+                field.addEventListener('change', validateForm);
+            });
+            // Password also updates strength UI
+            password.addEventListener('input', function() {
+                updatePasswordUI(this.value);
+                validateForm();
+            });
+
+            // ─── Submit ──────────────────────────────────────────────
+            const REGISTER_URL = `${AUTH_URL}register`;
+            const signupOriginalText = 'Create free account';
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                if (!validateForm()) return;
+
+                setButtonLoading(signupBtn, true, signupOriginalText);
+
+                const payload = {
+                    first_name: firstName.value.trim(),
+                    last_name: lastName.value.trim(),
+                    email: email.value.trim(),
+                    phone: phone.value.trim(),
+                    password: password.value,
+                };
+
+                try {
+                    const response = await fetch(REGISTER_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-Key-Id': X_KEY_ID,
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify(payload),
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.is_success === true) {
+                        showAlert(result.message || 'Account created successfully! Please check your email for verification. 🎉', 'success');
+                        form.reset();
+                        termsCheck.checked = false;
+                        updatePasswordUI('');
+                        validateForm();
+                        setButtonLoading(signupBtn, false, signupOriginalText);
+                        // Redirect after 5 seconds
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 5000);
+                    } else {
+                        const errorMsg = result.message || 'Registration failed. Please try again.';
+                        showAlert(errorMsg, 'error');
+                        setButtonLoading(signupBtn, false, signupOriginalText);
+                        form.style.animation = 'shake 0.4s ease';
+                        setTimeout(() => { form.style.animation = ''; }, 400);
+                    }
+
+                } catch (err) {
+                    console.error('Signup error:', err);
+                    showAlert('Network error. Could not connect to server.', 'error');
+                    setButtonLoading(signupBtn, false, signupOriginalText);
+                }
+            });
+
+            // ─── Resend Verification ──────────────────────────────────
+            resendLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const emailVal = email.value.trim();
+                if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+                    showAlert('Please enter a valid email address first.', 'error');
+                    return;
+                }
+
+                const originalText = resendLink.textContent;
+                resendLink.textContent = 'Sending...';
+                resendLink.disabled = true;
+
+                const RESEND_URL = AUTH_URL + 'resend-verification';
+
+                fetch(RESEND_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-Key-Id': X_KEY_ID
+                    },
+                    body: JSON.stringify({ email: emailVal })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    resendLink.textContent = originalText;
+                    resendLink.disabled = false;
+                    if (data.is_success) {
+                        showAlert(data.message || 'Verification email resent successfully.', 'success');
+                    } else {
+                        const errMsg = data.message || 'If your email is registered, a verification link has been sent.';
+                        showAlert(errMsg, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Resend error:', error);
+                    resendLink.textContent = originalText;
+                    resendLink.disabled = false;
+                    showAlert('Unable to resend verification. Please try again later.', 'error');
+                });
+            });
+
+            // ─── Init ──────────────────────────────────────────────────
+            if (window.isAuthenticated && window.isAuthenticated()) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            setTimeout(() => firstName.focus(), 300);
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('email');
+            if (emailParam) {
+                email.value = emailParam;
+                validateForm();
+            }
+            updatePasswordUI('');
+            validateForm();
+            console.log('📝 Signup page initialized with CampusForms.');
+
+            window.__signup = {
+                form,
+                validateForm,
+                payload: () => ({
+                    first_name: firstName.value.trim(),
+                    last_name: lastName.value.trim(),
+                    email: email.value.trim(),
+                    phone: phone.value.trim(),
+                    password: password.value,
+                })
+            };
+
+        })();
+    </script>
+
+</body>
+</html>

@@ -13,13 +13,8 @@
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
     <style>
-        /* ============================================================
-           All existing styles (unchanged) – we keep everything
-           ============================================================ */
-        .create-wrapper {
-            max-width: 720px;
-            margin: 0 auto;
-        }
+        /* ─── All existing styles (unchanged) ────────────────────────── */
+        .create-wrapper { max-width: 720px; margin: 0 auto; }
         .create-card {
             background: var(--bg-card);
             border-radius: var(--radius-card);
@@ -39,10 +34,7 @@
             gap: 10px;
             transition: color var(--transition);
         }
-        .create-card .card-title i {
-            color: var(--green);
-            font-size: 22px;
-        }
+        .create-card .card-title i { color: var(--green); font-size: 22px; }
         .create-card .card-subtitle {
             font-size: 14px;
             color: var(--text-muted);
@@ -68,14 +60,8 @@
             align-items: center;
             gap: 8px;
         }
-        .points-balance-banner .balance-label i {
-            color: var(--green);
-        }
-        .points-balance-banner .balance-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--green);
-        }
+        .points-balance-banner .balance-label i { color: var(--green); }
+        .points-balance-banner .balance-value { font-size: 20px; font-weight: 700; color: var(--green); }
         .points-balance-banner .balance-refresh {
             background: none;
             border: none;
@@ -94,6 +80,7 @@
             background: var(--green-bg);
             border-color: rgba(46, 204, 113, 0.15);
         }
+
         .steps-progress {
             display: flex;
             align-items: center;
@@ -135,68 +122,95 @@
             background: var(--green-bg);
             color: var(--green);
         }
-        .steps-progress .step-dot .label {
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--text-muted);
-            transition: color var(--transition);
-            display: none;
-        }
+        .steps-progress .step-dot .label { font-size: 11px; font-weight: 500; color: var(--text-muted); transition: color var(--transition); display: none; }
         .steps-progress .step-dot.active .label,
-        .steps-progress .step-dot.completed .label {
-            color: var(--text-primary);
-        }
-        .steps-progress .step-line {
-            flex: 1;
-            height: 2px;
-            background: var(--border-color);
-            min-width: 16px;
-            transition: background var(--transition);
-        }
-        .steps-progress .step-line.completed {
-            background: var(--green);
-        }
+        .steps-progress .step-dot.completed .label { color: var(--text-primary); }
+        .steps-progress .step-line { flex: 1; height: 2px; background: var(--border-color); min-width: 16px; transition: background var(--transition); }
+        .steps-progress .step-line.completed { background: var(--green); }
         @media (min-width: 480px) {
-            .steps-progress .step-dot .label {
-                display: inline;
-            }
-            .steps-progress .step-dot {
-                gap: 8px;
-            }
+            .steps-progress .step-dot .label { display: inline; }
+            .steps-progress .step-dot { gap: 8px; }
         }
         @media (max-width: 480px) {
-            .steps-progress .step-dot .dot {
-                width: 24px;
-                height: 24px;
-                font-size: 10px;
-            }
-            .steps-progress .step-dot .label {
-                display: none;
-            }
+            .steps-progress .step-dot .dot { width: 24px; height: 24px; font-size: 10px; }
+            .steps-progress .step-dot .label { display: none; }
         }
-        .step-content {
-            display: none;
-            animation: fadeUp 0.4s ease;
+
+        .step-content { display: none; animation: fadeUp 0.4s ease; }
+        .step-content.active { display: block; }
+        .step-content .step-title { font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; transition: color var(--transition); }
+        .step-content .step-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; transition: color var(--transition); }
+
+        .type-select-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 8px;
         }
-        .step-content.active {
+        .type-select-card {
+            padding: 20px 14px;
+            border-radius: 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .type-select-card:hover {
+            border-color: var(--green);
+            background: var(--bg-card);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+        }
+        .type-select-card.selected {
+            border-color: var(--green);
+            background: var(--green-bg);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.08);
+        }
+        .type-select-card .type-icon {
+            font-size: 32px;
+            color: var(--green);
             display: block;
+            margin-bottom: 8px;
+            transition: transform 0.3s ease;
         }
-        .step-content .step-title {
-            font-size: 17px;
+        .type-select-card.selected .type-icon { transform: scale(1.1); }
+        .type-select-card .type-name {
+            font-size: 15px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 4px;
             transition: color var(--transition);
         }
-        .step-content .step-desc {
-            font-size: 13px;
+        .type-select-card .type-desc {
+            font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 16px;
+            margin-top: 2px;
             transition: color var(--transition);
         }
-        .create-card .form-group {
-            margin-bottom: 18px;
+        .type-select-card .check-mark {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--green);
+            color: #fff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
         }
+        .type-select-card.selected .check-mark { display: flex; }
+        @media (max-width: 480px) {
+            .type-select-grid { grid-template-columns: 1fr; }
+            .type-select-card { padding: 16px 12px; display: flex; align-items: center; gap: 14px; text-align: left; }
+            .type-select-card .type-icon { font-size: 24px; margin-bottom: 0; }
+            .type-select-card .check-mark { top: 4px; right: 4px; width: 18px; height: 18px; font-size: 10px; }
+        }
+
+        .create-card .form-group { margin-bottom: 18px; }
         .create-card .form-group label {
             display: block;
             font-size: 14px;
@@ -205,19 +219,14 @@
             margin-bottom: 4px;
             transition: color var(--transition);
         }
-        .create-card .form-group label .required-star {
-            color: var(--red);
-            margin-left: 2px;
-        }
+        .create-card .form-group label .required-star { color: var(--red); margin-left: 2px; }
         .create-card .form-group .help-text {
             font-size: 12px;
             color: var(--text-muted);
             margin-top: 4px;
             transition: color var(--transition);
         }
-        .create-card .form-group .help-text.error {
-            color: var(--red);
-        }
+        .create-card .form-group .help-text.error { color: var(--red); }
         .create-card .form-input,
         .create-card .form-textarea,
         .create-card .form-select {
@@ -246,12 +255,8 @@
             box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
         }
         .create-card .form-input:disabled,
-        .create-card .form-textarea:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        .create-card .form-textarea:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        /* ===== Category Accordion ===== */
         .category-accordion {
             border-radius: 12px;
             border: 2px solid var(--border-color);
@@ -265,9 +270,7 @@
             border-bottom: 1px solid var(--border-color);
             transition: border-color var(--transition);
         }
-        .category-accordion .category-item:last-child {
-            border-bottom: none;
-        }
+        .category-accordion .category-item:last-child { border-bottom: none; }
         .category-accordion .category-header {
             display: flex;
             align-items: center;
@@ -278,9 +281,7 @@
             transition: background 0.2s;
             gap: 10px;
         }
-        .category-accordion .category-header:hover {
-            background: var(--bg-card);
-        }
+        .category-accordion .category-header:hover { background: var(--bg-card); }
         .category-accordion .category-header .cat-info {
             display: flex;
             align-items: center;
@@ -308,17 +309,12 @@
             padding: 4px 8px;
             cursor: pointer;
         }
-        .category-accordion .category-header .cat-toggle.expanded {
-            transform: rotate(180deg);
-            color: var(--green);
-        }
+        .category-accordion .category-header .cat-toggle.expanded { transform: rotate(180deg); color: var(--green); }
         .category-accordion .category-header.selected {
             background: var(--green-bg);
             border-left: 4px solid var(--green);
         }
-        .category-accordion .category-header.selected .cat-name {
-            color: var(--green);
-        }
+        .category-accordion .category-header.selected .cat-name { color: var(--green); }
         .category-accordion .subcategory-grid {
             display: none;
             padding: 8px 16px 16px 16px;
@@ -328,9 +324,7 @@
             background: var(--bg-card);
             border-radius: 0 0 12px 12px;
         }
-        .category-accordion .subcategory-grid.open {
-            display: flex;
-        }
+        .category-accordion .subcategory-grid.open { display: flex; }
         .category-accordion .subcategory-chip {
             padding: 6px 16px;
             border-radius: 30px;
@@ -342,6 +336,9 @@
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .category-accordion .subcategory-chip:hover {
             border-color: var(--green);
@@ -352,19 +349,17 @@
             background: var(--green-bg);
             color: var(--green);
         }
-        .category-accordion .subcategory-chip .chip-label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .category-accordion .subcategory-chip .chip-icon {
+            font-size: 14px;
+            color: var(--text-muted);
         }
+        .category-accordion .subcategory-chip.selected .chip-icon { color: var(--green); }
         .category-accordion .subcategory-chip .chip-check {
             display: none;
             font-size: 12px;
             color: var(--green);
         }
-        .category-accordion .subcategory-chip.selected .chip-check {
-            display: inline;
-        }
+        .category-accordion .subcategory-chip.selected .chip-check { display: inline; }
         .category-accordion .no-subcategories {
             padding: 8px 16px 16px;
             font-size: 13px;
@@ -381,7 +376,6 @@
             background: var(--bg-card);
         }
 
-        /* Location chips etc. (unchanged) */
         .location-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -392,20 +386,10 @@
             padding-right: 6px;
             scrollbar-width: thin;
         }
-        .location-grid::-webkit-scrollbar {
-            width: 6px;
-        }
-        .location-grid::-webkit-scrollbar-track {
-            background: var(--bg-input);
-            border-radius: 10px;
-        }
-        .location-grid::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 10px;
-        }
-        .location-grid::-webkit-scrollbar-thumb:hover {
-            background: var(--green);
-        }
+        .location-grid::-webkit-scrollbar { width: 6px; }
+        .location-grid::-webkit-scrollbar-track { background: var(--bg-input); border-radius: 10px; }
+        .location-grid::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        .location-grid::-webkit-scrollbar-thumb:hover { background: var(--green); }
         .location-chip {
             display: flex;
             align-items: center;
@@ -445,39 +429,24 @@
             border-color: var(--green);
             color: #fff;
         }
-        .location-chip .chip-check i {
-            font-size: 11px;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .location-chip.selected .chip-check i {
-            opacity: 1;
-        }
+        .location-chip .chip-check i { font-size: 11px; opacity: 0; transition: opacity 0.2s; }
+        .location-chip.selected .chip-check i { opacity: 1; }
         .location-chip .chip-desc {
             font-size: 11px;
             color: var(--text-muted);
             font-weight: 400;
             margin-left: auto;
         }
-        .dark-mode .location-chip.selected {
-            background: rgba(46, 204, 113, 0.06);
-        }
-        @media (max-width: 480px) {
-            .location-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        .dark-mode .location-chip.selected { background: rgba(46, 204, 113, 0.06); }
+        @media (max-width: 480px) { .location-grid { grid-template-columns: 1fr; } }
 
-        /* Badge & Type chips (unchanged) */
-        .badge-grid,
-        .type-grid {
+        .badge-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 10px;
             margin-top: 4px;
         }
-        .badge-chip,
-        .type-chip {
+        .badge-chip {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -491,19 +460,16 @@
             font-weight: 500;
             color: var(--text-secondary);
         }
-        .badge-chip:hover,
-        .type-chip:hover {
+        .badge-chip:hover {
             border-color: var(--green);
             background: var(--bg-card);
         }
-        .badge-chip.selected,
-        .type-chip.selected {
+        .badge-chip.selected {
             border-color: var(--green);
             background: var(--green-bg);
             color: var(--green);
         }
-        .badge-chip .badge-radio,
-        .type-chip .type-radio {
+        .badge-chip .badge-radio {
             width: 18px;
             height: 18px;
             border-radius: 50%;
@@ -514,27 +480,16 @@
             flex-shrink: 0;
             transition: all 0.2s;
         }
-        .badge-chip.selected .badge-radio,
-        .type-chip.selected .type-radio {
-            border-color: var(--green);
-        }
-        .badge-chip .badge-radio i,
-        .type-chip .type-radio i {
+        .badge-chip.selected .badge-radio { border-color: var(--green); }
+        .badge-chip .badge-radio i {
             font-size: 10px;
             opacity: 0;
             transition: opacity 0.2s;
             color: var(--green);
         }
-        .badge-chip.selected .badge-radio i,
-        .type-chip.selected .type-radio i {
-            opacity: 1;
-        }
-        .dark-mode .badge-chip.selected,
-        .dark-mode .type-chip.selected {
-            background: rgba(46, 204, 113, 0.06);
-        }
+        .badge-chip.selected .badge-radio i { opacity: 1; }
+        .dark-mode .badge-chip.selected { background: rgba(46, 204, 113, 0.06); }
 
-        /* Ads checkboxes (unchanged) */
         .ads-group {
             display: flex;
             flex-direction: column;
@@ -582,9 +537,7 @@
             opacity: 0;
             transition: opacity 0.2s;
         }
-        .ads-check.checked .check-box i {
-            opacity: 1;
-        }
+        .ads-check.checked .check-box i { opacity: 1; }
         .ads-check .ads-label {
             flex: 1;
             font-size: 14px;
@@ -606,9 +559,7 @@
             border-radius: 20px;
             white-space: nowrap;
         }
-        .dark-mode .ads-check.checked {
-            background: rgba(46, 204, 113, 0.06);
-        }
+        .dark-mode .ads-check.checked { background: rgba(46, 204, 113, 0.06); }
 
         .total-points-display {
             margin-top: 12px;
@@ -631,11 +582,8 @@
             font-weight: 700;
             color: var(--green);
         }
-        .total-points-display .points-value.insufficient {
-            color: var(--red);
-        }
+        .total-points-display .points-value.insufficient { color: var(--red); }
 
-        /* File upload (unchanged) */
         .file-drop-zone {
             border: 2px dashed var(--border-color);
             border-radius: 12px;
@@ -682,9 +630,7 @@
             color: var(--text-muted);
             transition: color var(--transition);
         }
-        .file-drop-zone:hover .drop-icon {
-            color: var(--green);
-        }
+        .file-drop-zone:hover .drop-icon { color: var(--green); }
         .file-drop-zone .drop-text {
             font-size: 14px;
             color: var(--text-secondary);
@@ -698,11 +644,7 @@
             font-size: 12px;
             color: var(--text-muted);
         }
-        .file-drop-zone .file-preview-container {
-            width: 100%;
-            max-width: 280px;
-            margin-top: 4px;
-        }
+        .file-drop-zone .file-preview-container { width: 100%; max-width: 280px; margin-top: 4px; }
         .file-drop-zone .file-preview {
             display: flex;
             align-items: center;
@@ -727,10 +669,7 @@
             font-size: 28px;
             color: var(--green);
         }
-        .file-drop-zone .file-preview .file-info {
-            flex: 1;
-            text-align: left;
-        }
+        .file-drop-zone .file-preview .file-info { flex: 1; text-align: left; }
         .file-drop-zone .file-preview .file-name {
             font-size: 13px;
             font-weight: 600;
@@ -773,24 +712,15 @@
             background: var(--bg-input);
             border-color: var(--border-color);
         }
-        .dark-mode .file-drop-zone:hover {
-            background: var(--bg-card);
-        }
-        .dark-mode .file-drop-zone.dragover {
-            background: var(--green-bg);
-        }
-        .dark-mode .file-drop-zone.has-file {
-            background: var(--green-bg);
-        }
-        .dark-mode .file-drop-zone.has-image {
-            background: var(--green-bg);
-        }
+        .dark-mode .file-drop-zone:hover { background: var(--bg-card); }
+        .dark-mode .file-drop-zone.dragover { background: var(--green-bg); }
+        .dark-mode .file-drop-zone.has-file { background: var(--green-bg); }
+        .dark-mode .file-drop-zone.has-image { background: var(--green-bg); }
         .dark-mode .file-drop-zone .file-preview {
             background: var(--bg-card);
             border-color: var(--border-color);
         }
 
-        /* Review (unchanged) */
         .review-item {
             display: flex;
             justify-content: space-between;
@@ -798,9 +728,7 @@
             border-bottom: 1px solid var(--border-color);
             transition: border-color var(--transition);
         }
-        .review-item:last-child {
-            border-bottom: none;
-        }
+        .review-item:last-child { border-bottom: none; }
         .review-item .review-label {
             font-size: 14px;
             font-weight: 500;
@@ -863,9 +791,7 @@
             color: var(--green);
             font-weight: 700;
         }
-        .review-item .review-value .points-cost.insufficient {
-            color: var(--red);
-        }
+        .review-item .review-value .points-cost.insufficient { color: var(--red); }
         .review-divider {
             height: 1px;
             background: var(--border-color);
@@ -922,56 +848,33 @@
             cursor: not-allowed;
             transform: none;
         }
-        .btn-submit .spinner-btn {
-            display: none;
-        }
+        .btn-submit .spinner-btn { display: none; }
         .btn-submit.loading .spinner-btn {
             display: inline-block;
             margin-right: 6px;
         }
-        .btn-submit.loading .btn-text {
-            display: none;
-        }
+        .btn-submit.loading .btn-text { display: none; }
+
         @media (max-width: 480px) {
-            .create-card {
-                padding: 16px 18px;
-            }
-            .create-card .card-title {
-                font-size: 17px;
-            }
+            .create-card { padding: 16px 18px; }
+            .create-card .card-title { font-size: 17px; }
             .step-actions button {
                 min-width: 100px;
                 font-size: 13px;
                 padding: 10px 16px;
                 flex: 1;
             }
-            .badge-grid,
-            .type-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .points-balance-banner {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            .points-balance-banner .balance-value {
-                font-size: 18px;
-            }
-            .category-accordion .category-header {
-                padding: 10px 12px;
-            }
-            .category-accordion .subcategory-chip {
-                font-size: 12px;
-                padding: 4px 12px;
-            }
+            .badge-grid { grid-template-columns: 1fr 1fr; }
+            .points-balance-banner { flex-wrap: wrap; gap: 8px; }
+            .points-balance-banner .balance-value { font-size: 18px; }
+            .category-accordion .category-header { padding: 10px 12px; }
+            .category-accordion .subcategory-chip { font-size: 12px; padding: 4px 12px; }
         }
-
     </style>
 </head>
 <body>
 
 <div class="app-container">
-
-    
 
     <!-- ===== LOCATION ===== -->
     <div class="location-bar">
@@ -986,7 +889,6 @@
 
         <div class="create-wrapper">
 
-            <!-- ===== CREATE CARD ===== -->
             <div class="create-card">
 
                 <!-- Points Balance Banner -->
@@ -1003,23 +905,23 @@
                 <div class="card-title">
                     <i class="fa-regular fa-plus"></i> Create Listing
                 </div>
-                <div class="card-subtitle">List an item for sale, swap, or give away for free</div>
+                <div class="card-subtitle">List an item, service, or accommodation for the campus community</div>
 
                 <!-- Steps Progress -->
                 <div class="steps-progress" id="stepsProgress">
                     <div class="step-dot active" data-step="1">
                         <span class="dot">1</span>
-                        <span class="label">Details</span>
+                        <span class="label">Type</span>
                     </div>
                     <span class="step-line" id="line1"></span>
                     <div class="step-dot" data-step="2">
                         <span class="dot">2</span>
-                        <span class="label">Location</span>
+                        <span class="label">Basics</span>
                     </div>
                     <span class="step-line" id="line2"></span>
                     <div class="step-dot" data-step="3">
                         <span class="dot">3</span>
-                        <span class="label">Badges &amp; Image</span>
+                        <span class="label">Details</span>
                     </div>
                     <span class="step-line" id="line3"></span>
                     <div class="step-dot" data-step="4">
@@ -1028,68 +930,78 @@
                     </div>
                 </div>
 
-                <!-- ===== STEP 1: Details ===== -->
+                <!-- ===== STEP 1: Listing Type ===== -->
                 <div class="step-content active" id="step1">
-                    <div class="step-title">📝 Listing Details</div>
-                    <div class="step-desc">Tell us what you're listing. All fields marked with * are required.</div>
+                    <div class="step-title">🎯 What are you listing?</div>
+                    <div class="step-desc">Choose the type of listing you want to create.</div>
 
-                    <form id="step1Form">
-                        <!-- Title -->
-                        <div class="form-group">
-                            <label for="listingTitle">Listing Title <span class="required-star">*</span></label>
-                            <input type="text" id="listingTitle" class="form-input" placeholder="e.g., MacBook Pro 14-inch M3" required />
-                            <div class="help-text" id="titleHelp">Be specific – include brand, model, condition.</div>
-                        </div>
+                    <div class="type-select-grid" id="typeSelectGrid">
+                        <!-- Populated from API -->
+                    </div>
 
-                        <!-- Category Accordion -->
-                        <div class="form-group">
-                            <label>Category &amp; Subcategory <span class="required-star">*</span></label>
-                            <div class="category-accordion" id="categoryAccordion">
-                                <!-- Populated from API -->
-                            </div>
-                            <div class="help-text" id="categoryHelp">Select a category, then optionally choose a subcategory.</div>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="form-group">
-                            <label for="listingDescription">Description <span class="required-star">*</span></label>
-                            <textarea id="listingDescription" class="form-textarea" rows="3" placeholder="Describe your item in detail – condition, specs, reason for selling…" required></textarea>
-                            <div class="help-text" id="descHelp">Help buyers understand what you're offering.</div>
-                        </div>
-
-                        <!-- Price -->
-                        <div class="form-group">
-                            <label for="listingPrice">Price (₦) <span class="required-star">*</span></label>
-                            <input type="text" id="listingPrice" class="form-input" placeholder="0" required />
-                            <div class="help-text" id="priceHelp">Enter the price in Naira (₦). Set to 0 for free items.</div>
-                        </div>
-
-                        <!-- Listing Type -->
-                        <div class="form-group">
-                            <label>Listing Type <span class="required-star">*</span></label>
-                            <div class="type-grid" id="typeGrid">
-                                <!-- Populated from API -->
-                            </div>
-                            <div class="help-text" id="typeHelp">Choose "Freebie" if you're giving it away for free.</div>
-                        </div>
-
-                        <div class="step-actions">
-                            <button type="button" class="btn-next" id="step1Next">Next <i class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                    </form>
+                    <div class="step-actions">
+                        <button type="button" class="btn-next" id="step1Next" disabled>
+                            Next <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- ===== STEP 2: Location ===== -->
+                <!-- ===== STEP 2: Common Details ===== -->
                 <div class="step-content" id="step2">
-                    <div class="step-title">📍 Location / Hotspot</div>
-                    <div class="step-desc">Select where on campus this item is located. You can select multiple spots.</div>
+                    <div class="step-title">📝 Basic Details</div>
+                    <div class="step-desc">Fill in the essential information about your listing.</div>
 
+                    <!-- Title -->
+                    <div class="form-group">
+                        <label for="listingTitle">Listing Title <span class="required-star">*</span></label>
+                        <input type="text" id="listingTitle" class="form-input" placeholder="e.g., MacBook Pro 14-inch M3" required />
+                        <div class="help-text" id="titleHelp">Be specific – include brand, model, condition.</div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="listingDescription">Description <span class="required-star">*</span></label>
+                        <textarea id="listingDescription" class="form-textarea" rows="3" placeholder="Describe your item, service, or accommodation in detail…" required></textarea>
+                        <div class="help-text" id="descHelp">Help others understand what you're offering.</div>
+                    </div>
+
+                    <!-- Price (dynamic label) -->
+                    <div class="form-group" id="priceGroup">
+                        <label for="listingPrice" id="priceLabel">Price (₦) <span class="required-star">*</span></label>
+                        <input type="text" id="listingPrice" class="form-input" placeholder="0" required />
+                        <div class="help-text" id="priceHelp">Enter the price in Naira (₦). Set to 0 for free items.</div>
+                    </div>
+
+                    <!-- Negotiation -->
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="negotiationCheck" />
+                            Price is negotiable
+                        </label>
+                        <div class="help-text" id="negotiationHelp">Allow buyers to negotiate the price.</div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="form-group">
+                        <label>Listing Image <span class="required-star">*</span></label>
+                        <div class="file-drop-zone" id="fileDropZone">
+                            <div class="drop-icon"><i class="fa-regular fas fa-cloud-arrow-up"></i></div>
+                            <div class="drop-text">Drop your image here or <strong>browse</strong></div>
+                            <div class="drop-hint">JPG, PNG • Max 5MB • Minimum 400x400px</div>
+                            <div class="file-preview-container"></div>
+                            <div class="drop-error"></div>
+                            <input type="file" id="listingImage" accept=".jpg,.jpeg,.png,image/*" required />
+                        </div>
+                        <div class="help-text" id="imageHelp">Upload a clear photo (required).</div>
+                    </div>
+
+                    <!-- Locations -->
                     <div class="form-group">
                         <label>Select Locations <span class="required-star">*</span></label>
                         <div class="location-grid" id="locationGrid">
                             <!-- Populated from API -->
                         </div>
-                        <div class="help-text" id="locationHelp">Select at least one location where the item can be found.</div>
+                        <div class="help-text" id="locationHelp">Select at least one location where this can be found.</div>
                     </div>
 
                     <div class="step-actions">
@@ -1098,10 +1010,14 @@
                     </div>
                 </div>
 
-                <!-- ===== STEP 3: Badges & Image ===== -->
+                <!-- ===== STEP 3: Type‑Specific Details ===== -->
                 <div class="step-content" id="step3">
-                    <div class="step-title">🏷️ Badges &amp; Image</div>
-                    <div class="step-desc">Add a badge to highlight your listing, and upload an image.</div>
+                    <div class="step-title" id="step3Title">📋 Additional Details</div>
+                    <div class="step-desc" id="step3Desc">Provide more information specific to your listing type.</div>
+
+                    <div id="typeSpecificFields">
+                        <!-- Dynamically rendered based on selected type -->
+                    </div>
 
                     <!-- Badge -->
                     <div class="form-group">
@@ -1127,22 +1043,6 @@
                         <span class="points-value" id="totalPointsValue">1</span>
                     </div>
 
-                    <!-- Image Upload -->
-                    <div class="form-group">
-                        <label>Listing Image <span class="required-star">*</span></label>
-                        <div class="file-drop-zone" id="fileDropZone">
-                            <div class="drop-icon"><i class="fa-regular fas fa-cloud-arrow-up"></i></div>
-                            <div class="drop-text">
-                                Drop your image here or <strong>browse</strong>
-                            </div>
-                            <div class="drop-hint">JPG, PNG • Max 5MB • Minimum 400x400px</div>
-                            <div class="file-preview-container"></div>
-                            <div class="drop-error"></div>
-                            <input type="file" id="listingImage" accept=".jpg,.jpeg,.png,image/*" required />
-                        </div>
-                        <div class="help-text" id="imageHelp">Upload a clear photo of your item (required).</div>
-                    </div>
-
                     <div class="step-actions">
                         <button type="button" class="btn-prev" id="step3Prev"><i class="fa-solid fa-chevron-left"></i> Back</button>
                         <button type="button" class="btn-next" id="step3Next">Next <i class="fa-solid fa-chevron-right"></i></button>
@@ -1152,7 +1052,7 @@
                 <!-- ===== STEP 4: Review ===== -->
                 <div class="step-content" id="step4">
                     <div class="step-title">✅ Review &amp; Submit</div>
-                    <div class="step-desc">Please review all the details below before submitting your listing.</div>
+                    <div class="step-desc">Please review all the details below before submitting.</div>
 
                     <div id="reviewContainer">
                         <!-- Populated by JS -->
@@ -1188,16 +1088,13 @@
     (function() {
         'use strict';
 
-        // ============================================================
-        // DOM REFS
-        // ============================================================
+        // ─── DOM REFS (unchanged) ──────────────────────────────────
         const steps = {
             1: document.getElementById('step1'),
             2: document.getElementById('step2'),
             3: document.getElementById('step3'),
             4: document.getElementById('step4'),
         };
-
         const dots = document.querySelectorAll('.step-dot');
         const lines = {
             1: document.getElementById('line1'),
@@ -1213,50 +1110,87 @@
         const step4Prev = document.getElementById('step4Prev');
         const submitBtn = document.getElementById('submitBtn');
 
+        const typeSelectGrid = document.getElementById('typeSelectGrid');
         const titleInput = document.getElementById('listingTitle');
-        const categoryAccordion = document.getElementById('categoryAccordion');
         const descInput = document.getElementById('listingDescription');
         const priceInput = document.getElementById('listingPrice');
-        const typeGrid = document.getElementById('typeGrid');
-
+        const priceLabel = document.getElementById('priceLabel');
+        const priceHelp = document.getElementById('priceHelp');
+        const negotiationCheck = document.getElementById('negotiationCheck');
         const locationGrid = document.getElementById('locationGrid');
         const badgeGrid = document.getElementById('badgeGrid');
         const adsGroup = document.getElementById('adsGroup');
         const totalPointsValue = document.getElementById('totalPointsValue');
         const totalPointsDisplay = document.getElementById('totalPointsDisplay');
-
         const fileInput = document.getElementById('listingImage');
         const fileDropZone = document.getElementById('fileDropZone');
         const reviewContainer = document.getElementById('reviewContainer');
         const pointsBalanceDisplay = document.getElementById('pointsBalanceDisplay');
         const refreshPointsBtn = document.getElementById('refreshPointsBtn');
+        const typeSpecificFields = document.getElementById('typeSpecificFields');
+        const step3Title = document.getElementById('step3Title');
+        const step3Desc = document.getElementById('step3Desc');
 
-        // ============================================================
-        // STATE
-        // ============================================================
+        // ─── STATE ──────────────────────────────────────────────────
         let currentStep = 1;
+        let selectedType = null;
+        let allCategories = [];
+        let allSubcategories = [];
+        let categoriesMap = {};
+        let subcategoriesMap = {};
+        let advertTypes = [];
+        let userPoints = 0;
+        let totalPoints = 1;
+
         const formData = {
+            listing_type: '',
             title: '',
-            category: null,       // category id
-            subcategory: null,    // subcategory id (or null)
             description: '',
             price: 0,
-            type: '',
+            negotiation: false,
             locations: [],
-            badge: '',
-            ads: {},
             image: null,
             imageName: '',
+            badge: '',
+            ads: {},
+            category: null,
+            subcategory: null,
+            sell: {
+                condition: '',
+                brand: '',
+                model: '',
+                quantity: 1,
+                warranty: '',
+            },
+            service: {
+                delivery_time: '',
+                service_duration: '',
+                experience: null,
+                portfolio: '',
+                online_available: false,
+            },
+            accommodation: {
+                purpose: 'Rent Entire Unit',
+                property_type: '',
+                bedrooms: 1,
+                bathrooms: 1,
+                furnished: false,
+                rent_price: 0,
+                available_from: '',
+                lease_duration: '',
+                electricity: false,
+                water: false,
+                security: false,
+                parking: false,
+                distance_to_campus: '',
+                preferred_gender: 'Any',
+                preferred_student_type: 'Any',
+                max_occupants: 1,
+                roommate_notes: '',
+            }
         };
 
-        let advertTypes = [];
-        let totalPoints = 1;
-        let userPoints = 0;
-        let categoriesMap = {};    // id -> category object (with subcategories)
-
-        // ============================================================
-        // POINTS BALANCE
-        // ============================================================
+        // ─── Helper functions (unchanged) ──────────────────────────
         function updatePointsBalance() {
             const user = window.getUserData();
             if (user && user.point_bal !== undefined) {
@@ -1273,15 +1207,9 @@
                 window.refreshPointBalance();
             } else {
                 updatePointsBalance();
-                if (typeof showAlert !== 'undefined') {
-                    showToast('Points balance refreshed', 'success');
-                }
             }
         });
 
-        // ============================================================
-        // PRICE FORMATTING
-        // ============================================================
         function formatPrice(value) {
             let num = value.replace(/[^0-9]/g, '');
             if (num === '') return '';
@@ -1289,7 +1217,6 @@
             if (isNaN(intNum)) return '';
             return intNum.toLocaleString('en-US');
         }
-
         function parsePrice(value) {
             return parseInt(value.replace(/,/g, ''), 10) || 0;
         }
@@ -1302,18 +1229,15 @@
             let newPos = cursorPos + (formatted.length - raw.length);
             this.setSelectionRange(newPos, newPos);
         });
-
         priceInput.addEventListener('blur', function() {
-            if (this.value === '') {
-                this.value = '0';
-            }
+            if (this.value === '') this.value = '0';
             this.value = formatPrice(this.value);
             formData.price = parsePrice(this.value);
+            if (selectedType === 'Accommodation') {
+                formData.accommodation.rent_price = formData.price;
+            }
         });
 
-        // ============================================================
-        // FETCH LOOKUP DATA (includes subcategories)
-        // ============================================================
         const LOOKUP_API = `${CAMPUS_URL}get-lookup`;
 
         async function fetchLookup() {
@@ -1335,42 +1259,121 @@
             }
         }
 
-        // ============================================================
-        // POPULATE CATEGORY ACCORDION (with subcategories)
-        // ============================================================
+        function populateTypes(typeChoices) {
+            const iconMap = {
+                'Sell': 'fa-regular fa-tag',
+                'Service': 'fa-regular fa-hands-helping',
+                'Accommodation': 'fa-regular fa-building',
+            };
+            const descMap = {
+                'Sell': 'Sell items you no longer need',
+                'Service': 'Offer your skills and services',
+                'Accommodation': 'List rooms, apartments, or hostels',
+            };
+
+            typeSelectGrid.innerHTML = '';
+            typeChoices.forEach(t => {
+                const val = t.value;
+                const card = document.createElement('div');
+                card.className = 'type-select-card';
+                card.dataset.value = val;
+                card.innerHTML = `
+                    <span class="check-mark"><i class="fa-solid fa-check"></i></span>
+                    <span class="type-icon"><i class="${iconMap[val] || 'fa-regular fa-circle'}"></i></span>
+                    <div>
+                        <div class="type-name">${val}</div>
+                        <div class="type-desc">${descMap[val] || ''}</div>
+                    </div>
+                `;
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.type-select-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedType = this.dataset.value;
+                    formData.listing_type = selectedType;
+                    step1Next.disabled = false;
+                    updatePriceLabel();
+                    updateStep3Header();
+                    formData.category = null;
+                    formData.subcategory = null;
+                });
+                typeSelectGrid.appendChild(card);
+            });
+        }
+
+        function updatePriceLabel() {
+            if (selectedType === 'Accommodation') {
+                priceLabel.innerHTML = 'Rent Price (₦/month) <span class="required-star">*</span>';
+                priceHelp.textContent = 'Enter the monthly rent in Naira (₦).';
+                priceInput.placeholder = '0';
+            } else {
+                priceLabel.innerHTML = 'Price (₦) <span class="required-star">*</span>';
+                priceHelp.textContent = 'Enter the price in Naira (₦). Set to 0 for free items.';
+                priceInput.placeholder = '0';
+            }
+        }
+
+        function updateStep3Header() {
+            const titles = {
+                'Sell': '🏷️ Item Details',
+                'Service': '🛠️ Service Details',
+                'Accommodation': '🏠 Accommodation Details',
+            };
+            const descs = {
+                'Sell': 'Provide details about the item you\'re selling.',
+                'Service': 'Tell buyers more about your service.',
+                'Accommodation': 'Provide details about the accommodation.',
+            };
+            step3Title.textContent = titles[selectedType] || '📋 Additional Details';
+            step3Desc.textContent = descs[selectedType] || 'Provide more information specific to your listing type.';
+        }
+
         function populateCategories(categories, subcategories) {
-            // Build a map of category_id -> list of subcategories
+            allCategories = categories;
+            allSubcategories = subcategories;
+            categoriesMap = {};
+            categories.forEach(cat => { categoriesMap[cat.id] = cat; });
+            subcategoriesMap = {};
+            subcategories.forEach(sub => { subcategoriesMap[sub.id] = sub; });
+        }
+
+        function renderCategoryAccordion(listingType) {
+            const filtered = allCategories.filter(cat => cat.listing_type && cat.listing_type.toLowerCase() === listingType.toLowerCase());
+            if (filtered.length === 0) {
+                categoryAccordion.innerHTML = `<div class="no-subcategories" style="padding:16px;">No categories available for ${listingType}.</div>`;
+                return;
+            }
+
             const subMap = {};
-            subcategories.forEach(sub => {
+            allSubcategories.forEach(sub => {
                 if (!subMap[sub.category_id]) subMap[sub.category_id] = [];
                 subMap[sub.category_id].push(sub);
             });
 
-            // Store categories for later lookup
-            categoriesMap = {};
-            categories.forEach(cat => { categoriesMap[cat.id] = cat; });
-
-            // Build accordion HTML
             let html = '';
-            categories.forEach(cat => {
+            filtered.forEach(cat => {
                 const subs = subMap[cat.id] || [];
                 const hasSubs = subs.length > 0;
                 const subHtml = hasSubs ?
-                    subs.map(s => `
-                        <span class="subcategory-chip" data-id="${s.id}" data-category="${cat.id}">
-                            <span class="chip-label">
-                                <span class="chip-check"><i class="fa-solid fa-check"></i></span>
-                                ${s.name}
+                    subs.map(s => {
+                        const icon = s.icon || 'fa-regular fa-folder';
+                        return `
+                            <span class="subcategory-chip" data-id="${s.id}" data-category="${cat.id}">
+                                <span class="chip-icon"><i class="${icon}"></i></span>
+                                <span class="chip-label">
+                                    ${s.name}
+                                    <span class="chip-check"><i class="fa-solid fa-check"></i></span>
+                                </span>
                             </span>
-                        </span>
-                    `).join('') :
+                        `;
+                    }).join('') :
                     `<div class="no-subcategories">No subcategories</div>`;
 
+                const catIcon = cat.icon || 'fa-regular fa-folder';
                 html += `
                     <div class="category-item" data-category="${cat.id}">
                         <div class="category-header" data-category="${cat.id}">
                             <div class="cat-info">
-                                <span class="cat-icon"><i class="${cat.icon || 'fa-regular fa-folder'}"></i></span>
+                                <span class="cat-icon"><i class="${catIcon}"></i></span>
                                 <span class="cat-name">${cat.name}</span>
                             </div>
                             <button type="button" class="cat-toggle" data-category="${cat.id}">
@@ -1386,19 +1389,13 @@
 
             categoryAccordion.innerHTML = html;
 
-            // --- Add event listeners ---
-
-            // Click on category header: toggle expansion
             document.querySelectorAll('.category-header').forEach(header => {
                 header.addEventListener('click', function(e) {
-                    // Prevent if click on toggle button (handled separately)
                     if (e.target.closest('.cat-toggle')) return;
                     const catId = this.dataset.category;
                     toggleCategory(catId);
                 });
             });
-
-            // Click on toggle button: toggle expansion
             document.querySelectorAll('.cat-toggle').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -1406,30 +1403,21 @@
                     toggleCategory(catId);
                 });
             });
-
-            // Click on subcategory chip: select it
             document.querySelectorAll('.subcategory-chip').forEach(chip => {
                 chip.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const subId = parseInt(this.dataset.id);
                     const catId = parseInt(this.dataset.category);
-                    // Deselect other subchips in the same category
                     const parentGrid = this.closest('.subcategory-grid');
                     parentGrid.querySelectorAll('.subcategory-chip').forEach(c => c.classList.remove('selected'));
                     this.classList.add('selected');
                     formData.category = catId;
                     formData.subcategory = subId;
-                    // Highlight category header
                     document.querySelectorAll('.category-header').forEach(h => h.classList.remove('selected'));
                     const header = document.querySelector(`.category-header[data-category="${catId}"]`);
                     if (header) header.classList.add('selected');
-                    setHelp('categoryHelp', `Selected: ${categoriesMap[catId]?.name} → ${this.textContent.trim()}`, false);
-                    // Close other category accordions? optional – keep open
                 });
             });
-
-            // If no category selected, ensure formData is null
-            // Pre-select first category? Not automatically.
         }
 
         function toggleCategory(catId) {
@@ -1441,37 +1429,6 @@
                     toggleBtn.className = grid.classList.contains('open') ? 'fa-regular fa-minus' : 'fa-regular fa-plus';
                 }
             }
-        }
-
-        // ============================================================
-        // POPULATE OTHER FORM ELEMENTS (unchanged)
-        // ============================================================
-        function populateTypes(types) {
-            typeGrid.innerHTML = '';
-            types.forEach(t => {
-                const chip = document.createElement('div');
-                chip.className = 'type-chip';
-                chip.dataset.value = t.value;
-                chip.innerHTML = `
-                    <span class="type-radio"><i class="fa-solid fa-check"></i></span>
-                    ${t.label}
-                `;
-                chip.addEventListener('click', function() {
-                    document.querySelectorAll('.type-chip').forEach(el => el.classList.remove('selected'));
-                    this.classList.add('selected');
-                    formData.type = this.dataset.value;
-                    if (formData.type === 'freebie') {
-                        priceInput.value = '0';
-                        priceInput.disabled = true;
-                        setHelp('priceHelp', 'Price is set to 0 for free items.', false);
-                    } else {
-                        priceInput.disabled = false;
-                        if (priceInput.value === '0') priceInput.value = '';
-                        setHelp('priceHelp', 'Enter the price in Naira (₦). Set to 0 for free items.', false);
-                    }
-                });
-                typeGrid.appendChild(chip);
-            });
         }
 
         function populateLocations(hotspots) {
@@ -1491,6 +1448,11 @@
                 });
                 locationGrid.appendChild(chip);
             });
+        }
+
+        function updateLocations() {
+            const selected = document.querySelectorAll('.location-chip.selected');
+            formData.locations = Array.from(selected).map(el => parseInt(el.dataset.id));
         }
 
         function populateBadges(badges) {
@@ -1537,17 +1499,6 @@
             });
         }
 
-        // ============================================================
-        // LOCATIONS UPDATE
-        // ============================================================
-        function updateLocations() {
-            const selected = document.querySelectorAll('.location-chip.selected');
-            formData.locations = Array.from(selected).map(el => parseInt(el.dataset.id));
-        }
-
-        // ============================================================
-        // TOTAL POINTS
-        // ============================================================
         function updateTotalPointsDisplay() {
             let total = 1;
             advertTypes.forEach(ad => {
@@ -1561,9 +1512,224 @@
             totalPointsDisplay.style.borderColor = (total > userPoints && total > 0) ? 'var(--red)' : 'var(--border-color)';
         }
 
-        // ============================================================
-        // FILE UPLOAD (unchanged)
-        // ============================================================
+        function renderTypeSpecificFields() {
+            if (!selectedType) return;
+            let html = '';
+
+            if (selectedType === 'Sell' || selectedType === 'Service') {
+                html += `
+                    <div class="form-group">
+                        <label>Category &amp; Subcategory <span class="required-star">*</span></label>
+                        <div class="category-accordion" id="categoryAccordion"></div>
+                        <div class="help-text" id="categoryHelp">Select a category, then optionally choose a subcategory.</div>
+                    </div>
+                `;
+            }
+
+            if (selectedType === 'Sell') {
+                html += `
+                    <div class="form-group">
+                        <label for="sellCondition">Condition <span class="required-star">*</span></label>
+                        <select id="sellCondition" class="form-select">
+                            <option value="">Select condition</option>
+                            <option value="New">New</option>
+                            <option value="Almost New">Almost New</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Bundle">Bundle</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="help-text" id="sellConditionHelp">Select the physical condition of the item.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sellBrand">Brand <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="text" id="sellBrand" class="form-input" placeholder="e.g., Apple, Samsung" />
+                    </div>
+                    <div class="form-group">
+                        <label for="sellModel">Model <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="text" id="sellModel" class="form-input" placeholder="e.g., iPhone 13, Galaxy S21" />
+                    </div>
+                    <div class="form-group">
+                        <label for="sellQuantity">Quantity <span class="required-star">*</span></label>
+                        <input type="number" id="sellQuantity" class="form-input" value="1" min="1" />
+                        <div class="help-text" id="sellQuantityHelp">Number of items available.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sellWarranty">Warranty <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="text" id="sellWarranty" class="form-input" placeholder="e.g., 6 months, 1 year" />
+                    </div>
+                `;
+            } else if (selectedType === 'Service') {
+                html += `
+                    <div class="form-group">
+                        <label for="serviceDeliveryTime">Delivery Time <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="text" id="serviceDeliveryTime" class="form-input" placeholder="e.g., 2 days, 1 week" />
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceDuration">Service Duration <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="text" id="serviceDuration" class="form-input" placeholder="e.g., 1 hour, 3 months" />
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceExperience">Years of Experience <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="number" id="serviceExperience" class="form-input" placeholder="0" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label for="servicePortfolio">Portfolio URL <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="url" id="servicePortfolio" class="form-input" placeholder="https://example.com/portfolio" />
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="serviceOnlineAvailable" />
+                            Available online
+                        </label>
+                        <div class="help-text">Can this service be delivered remotely?</div>
+                    </div>
+                `;
+            } else if (selectedType === 'Accommodation') {
+                html += `
+                    <div class="form-group">
+                        <label for="accPurpose">Purpose <span class="required-star">*</span></label>
+                        <select id="accPurpose" class="form-select">
+                            <option value="Rent Entire Unit">Rent Entire Unit</option>
+                            <option value="Rent a Room">Rent a Room</option>
+                            <option value="Roommate Wanted">Roommate Wanted</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="accPropertyType">Property Type <span class="required-star">*</span></label>
+                        <input type="text" id="accPropertyType" class="form-input" placeholder="e.g., Apartment, Hostel, House" />
+                    </div>
+                    <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div>
+                            <label for="accBedrooms">Bedrooms <span class="required-star">*</span></label>
+                            <input type="number" id="accBedrooms" class="form-input" value="1" min="1" />
+                        </div>
+                        <div>
+                            <label for="accBathrooms">Bathrooms <span class="required-star">*</span></label>
+                            <input type="number" id="accBathrooms" class="form-input" value="1" min="1" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="accFurnished" />
+                            Furnished
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="accRentPrice">Rent Price (₦/month) <span class="required-star">*</span></label>
+                        <input type="text" id="accRentPrice" class="form-input" placeholder="0" />
+                        <div class="help-text">Monthly rent in Naira.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="accAvailableFrom">Available From <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="date" id="accAvailableFrom" class="form-input" />
+                    </div>
+                    <div class="form-group">
+                        <label for="accLeaseDuration">Lease Duration <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="text" id="accLeaseDuration" class="form-input" placeholder="e.g., 6 months, 1 year" />
+                    </div>
+                    <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        <label><input type="checkbox" id="accElectricity" /> Electricity</label>
+                        <label><input type="checkbox" id="accWater" /> Water</label>
+                        <label><input type="checkbox" id="accSecurity" /> Security</label>
+                        <label><input type="checkbox" id="accParking" /> Parking</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="accDistance">Distance to Campus <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="text" id="accDistance" class="form-input" placeholder="e.g., 2km, 5 minutes walk" />
+                    </div>
+                    <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div>
+                            <label for="accPreferredGender">Preferred Gender</label>
+                            <select id="accPreferredGender" class="form-select">
+                                <option value="Any">Any</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="accPreferredStudent">Student Type</label>
+                            <select id="accPreferredStudent" class="form-select">
+                                <option value="Any">Any</option>
+                                <option value="Undergrad">Undergrad</option>
+                                <option value="Graduate">Graduate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="accMaxOccupants">Max Occupants <span class="required-star">*</span></label>
+                        <input type="number" id="accMaxOccupants" class="form-input" value="1" min="1" />
+                    </div>
+                    <div class="form-group">
+                        <label for="accRoommateNotes">Roommate Notes <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <textarea id="accRoommateNotes" class="form-textarea" rows="2" placeholder="Any preferences or notes for potential roommates…"></textarea>
+                    </div>
+                `;
+            }
+
+            typeSpecificFields.innerHTML = html;
+
+            if (selectedType === 'Accommodation') {
+                const accRent = document.getElementById('accRentPrice');
+                if (accRent) {
+                    accRent.addEventListener('input', function() {
+                        let raw = this.value;
+                        let formatted = formatPrice(raw);
+                        let cursorPos = this.selectionStart;
+                        this.value = formatted;
+                        let newPos = cursorPos + (formatted.length - raw.length);
+                        this.setSelectionRange(newPos, newPos);
+                        formData.accommodation.rent_price = parsePrice(this.value);
+                    });
+                    accRent.addEventListener('blur', function() {
+                        if (this.value === '') this.value = '0';
+                        this.value = formatPrice(this.value);
+                        formData.accommodation.rent_price = parsePrice(this.value);
+                    });
+                }
+            }
+
+            if (selectedType === 'Sell' || selectedType === 'Service') {
+                const categoryAccordion = document.getElementById('categoryAccordion');
+                if (categoryAccordion) {
+                    renderCategoryAccordion(selectedType);
+                }
+            }
+        }
+
+        function collectTypeSpecificData() {
+            if (selectedType === 'Sell') {
+                formData.sell.condition = document.getElementById('sellCondition')?.value || '';
+                formData.sell.brand = document.getElementById('sellBrand')?.value.trim() || '';
+                formData.sell.model = document.getElementById('sellModel')?.value.trim() || '';
+                formData.sell.quantity = parseInt(document.getElementById('sellQuantity')?.value) || 1;
+                formData.sell.warranty = document.getElementById('sellWarranty')?.value.trim() || '';
+            } else if (selectedType === 'Service') {
+                formData.service.delivery_time = document.getElementById('serviceDeliveryTime')?.value.trim() || '';
+                formData.service.service_duration = document.getElementById('serviceDuration')?.value.trim() || '';
+                formData.service.experience = parseInt(document.getElementById('serviceExperience')?.value) || null;
+                formData.service.portfolio = document.getElementById('servicePortfolio')?.value.trim() || '';
+                formData.service.online_available = document.getElementById('serviceOnlineAvailable')?.checked || false;
+            } else if (selectedType === 'Accommodation') {
+                formData.accommodation.purpose = document.getElementById('accPurpose')?.value || 'Rent Entire Unit';
+                formData.accommodation.property_type = document.getElementById('accPropertyType')?.value.trim() || '';
+                formData.accommodation.bedrooms = parseInt(document.getElementById('accBedrooms')?.value) || 1;
+                formData.accommodation.bathrooms = parseInt(document.getElementById('accBathrooms')?.value) || 1;
+                formData.accommodation.furnished = document.getElementById('accFurnished')?.checked || false;
+                formData.accommodation.rent_price = parsePrice(document.getElementById('accRentPrice')?.value || '0');
+                formData.accommodation.available_from = document.getElementById('accAvailableFrom')?.value || '';
+                formData.accommodation.lease_duration = document.getElementById('accLeaseDuration')?.value.trim() || '';
+                formData.accommodation.electricity = document.getElementById('accElectricity')?.checked || false;
+                formData.accommodation.water = document.getElementById('accWater')?.checked || false;
+                formData.accommodation.security = document.getElementById('accSecurity')?.checked || false;
+                formData.accommodation.parking = document.getElementById('accParking')?.checked || false;
+                formData.accommodation.distance_to_campus = document.getElementById('accDistance')?.value.trim() || '';
+                formData.accommodation.preferred_gender = document.getElementById('accPreferredGender')?.value || 'Any';
+                formData.accommodation.preferred_student_type = document.getElementById('accPreferredStudent')?.value || 'Any';
+                formData.accommodation.max_occupants = parseInt(document.getElementById('accMaxOccupants')?.value) || 1;
+                formData.accommodation.roommate_notes = document.getElementById('accRoommateNotes')?.value.trim() || '';
+            }
+        }
+
         function initFileUpload() {
             const input = fileInput;
             const zone = fileDropZone;
@@ -1575,7 +1741,6 @@
                     zone.classList.add('dragover');
                 });
             });
-
             ['dragleave', 'drop'].forEach(eventName => {
                 zone.addEventListener(eventName, e => {
                     e.preventDefault();
@@ -1583,7 +1748,6 @@
                     zone.classList.remove('dragover');
                 });
             });
-
             zone.addEventListener('drop', e => {
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
@@ -1591,15 +1755,12 @@
                     handleFileSelection();
                 }
             });
-
             zone.addEventListener('click', e => {
                 if (e.target.closest('.file-remove')) return;
                 if (e.target.closest('.file-preview')) return;
                 input.click();
             });
-
             input.addEventListener('change', handleFileSelection);
-
             zone.addEventListener('click', function(e) {
                 const removeBtn = e.target.closest('.file-remove');
                 if (removeBtn) {
@@ -1612,7 +1773,7 @@
                     formData.imageName = '';
                     const errorEl = zone.querySelector('.drop-error');
                     if (errorEl) errorEl.textContent = '';
-                    setHelp('imageHelp', 'Upload a clear photo of your item (required).', false);
+                    setHelp('imageHelp', 'Upload a clear photo (required).', false);
                 }
             });
         }
@@ -1631,7 +1792,7 @@
             formData.imageName = '';
 
             if (!file) {
-                setHelp('imageHelp', 'Please upload a clear photo of your item (required).', false);
+                setHelp('imageHelp', 'Upload a clear photo (required).', false);
                 return;
             }
 
@@ -1666,7 +1827,6 @@
                     setHelp('imageHelp', 'Image too small. Minimum size: 400x400px.', true);
                     return;
                 }
-
                 if (errorEl) errorEl.textContent = '';
                 zone.classList.remove('error');
                 zone.classList.add('has-file', 'has-image');
@@ -1692,7 +1852,7 @@
                     formData.image = null;
                     formData.imageName = '';
                     if (errorEl) errorEl.textContent = '';
-                    setHelp('imageHelp', 'Upload a clear photo of your item (required).', false);
+                    setHelp('imageHelp', 'Upload a clear photo (required).', false);
                 });
                 URL.revokeObjectURL(img.src);
             };
@@ -1710,9 +1870,13 @@
             if (container) container.innerHTML = '';
         }
 
-        // ============================================================
-        // STEP NAVIGATION
-        // ============================================================
+        function setHelp(id, message, isError) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = message;
+            el.className = 'help-text' + (isError ? ' error' : '');
+        }
+
         function goToStep(step) {
             if (step > currentStep) {
                 if (!validateStep(currentStep)) return;
@@ -1738,13 +1902,19 @@
             document.querySelector('.create-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // ============================================================
-        // VALIDATION
-        // ============================================================
         function validateStep(step) {
             if (step === 1) {
-                let valid = true;
+                if (!selectedType) {
+                    if (typeof showAlert !== 'undefined') {
+                        showAlert.warning('Please select a listing type first.');
+                    }
+                    return false;
+                }
+                return true;
+            }
 
+            if (step === 2) {
+                let valid = true;
                 const title = titleInput.value.trim();
                 if (!title) {
                     setHelp('titleHelp', 'Please enter a listing title.', true);
@@ -1762,17 +1932,9 @@
                     descInput.classList.add('error');
                     valid = false;
                 } else {
-                    setHelp('descHelp', 'Help buyers understand what you\'re offering.', false);
+                    setHelp('descHelp', 'Help others understand what you\'re offering.', false);
                     descInput.classList.remove('error');
                     formData.description = description;
-                }
-
-                // Category validation
-                if (!formData.category) {
-                    setHelp('categoryHelp', 'Please select a category.', true);
-                    valid = false;
-                } else {
-                    setHelp('categoryHelp', `Category selected: ${categoriesMap[formData.category]?.name || ''}`, false);
                 }
 
                 const price = parsePrice(priceInput.value);
@@ -1781,44 +1943,85 @@
                     priceInput.classList.add('error');
                     valid = false;
                 } else {
-                    setHelp('priceHelp', 'Enter the price in Naira (₦). Set to 0 for free items.', false);
+                    setHelp('priceHelp', selectedType === 'Accommodation' ? 'Enter the monthly rent in Naira.' : 'Enter the price in Naira. Set to 0 for free items.', false);
                     priceInput.classList.remove('error');
                     formData.price = price;
+                    if (selectedType === 'Accommodation') {
+                        formData.accommodation.rent_price = price;
+                    }
                 }
 
-                if (!formData.type) {
-                    setHelp('typeHelp', 'Please select a listing type.', true);
+                formData.negotiation = negotiationCheck.checked;
+
+                const selectedLocs = document.querySelectorAll('.location-chip.selected');
+                if (selectedLocs.length === 0) {
+                    setHelp('locationHelp', 'Please select at least one location.', true);
                     valid = false;
                 } else {
-                    setHelp('typeHelp', 'Choose "Freebie" if you\'re giving it away for free.', false);
+                    setHelp('locationHelp', 'Select at least one location where this can be found.', false);
+                }
+
+                if (!formData.image) {
+                    setHelp('imageHelp', 'Please upload an image. This is required.', true);
+                    fileDropZone.classList.add('error');
+                    valid = false;
+                } else {
+                    setHelp('imageHelp', '✅ Image uploaded successfully!', false);
+                    fileDropZone.classList.remove('error');
                 }
 
                 return valid;
             }
 
-            if (step === 2) {
-                const selected = document.querySelectorAll('.location-chip.selected');
-                if (selected.length === 0) {
-                    setHelp('locationHelp', 'Please select at least one location.', true);
-                    return false;
-                } else {
-                    setHelp('locationHelp', 'Select at least one location where the item can be found.', false);
-                    return true;
-                }
-            }
-
             if (step === 3) {
-                if (!formData.image) {
-                    setHelp('imageHelp', 'Please upload an image of your item. This is required.', true);
-                    fileDropZone.classList.add('error');
-                    return false;
+                collectTypeSpecificData();
+
+                if (selectedType === 'Sell' || selectedType === 'Service') {
+                    if (!formData.category) {
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.warning('Please select a category.');
+                        }
+                        return false;
+                    }
                 }
-                setHelp('imageHelp', '✅ Image uploaded successfully!', false);
-                fileDropZone.classList.remove('error');
+
+                if (selectedType === 'Sell') {
+                    const condition = document.getElementById('sellCondition')?.value;
+                    if (!condition) {
+                        setHelp('sellConditionHelp', 'Please select a condition.', true);
+                        document.getElementById('sellCondition')?.classList.add('error');
+                        return false;
+                    } else {
+                        setHelp('sellConditionHelp', 'Select the physical condition of the item.', false);
+                        document.getElementById('sellCondition')?.classList.remove('error');
+                    }
+                }
+
+                if (selectedType === 'Accommodation') {
+                    const propType = document.getElementById('accPropertyType')?.value.trim();
+                    if (!propType) {
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.warning('Please enter the property type.');
+                        }
+                        document.getElementById('accPropertyType')?.classList.add('error');
+                        return false;
+                    }
+                    document.getElementById('accPropertyType')?.classList.remove('error');
+
+                    const rentPrice = parsePrice(document.getElementById('accRentPrice')?.value || '0');
+                    if (rentPrice <= 0) {
+                        if (typeof showAlert !== 'undefined') {
+                            showAlert.warning('Please enter a valid rent price.');
+                        }
+                        document.getElementById('accRentPrice')?.classList.add('error');
+                        return false;
+                    }
+                    document.getElementById('accRentPrice')?.classList.remove('error');
+                }
 
                 if (totalPoints > userPoints) {
                     if (typeof showAlert !== 'undefined') {
-                        showAlert.warning(`You don't have enough points. You need ${totalPoints} points but have ${userPoints}.`);
+                        showAlert.warning(`You don't have enough points. Need ${totalPoints} points, have ${userPoints}.`);
                     }
                     return false;
                 }
@@ -1828,40 +2031,26 @@
             return true;
         }
 
-        function setHelp(id, message, isError) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.textContent = message;
-            el.className = 'help-text' + (isError ? ' error' : '');
-        }
-
-        // ============================================================
-        // RENDER REVIEW
-        // ============================================================
         function renderReview() {
             formData.title = titleInput.value.trim();
             formData.description = descInput.value.trim();
             formData.price = parsePrice(priceInput.value);
+            formData.negotiation = negotiationCheck.checked;
+            collectTypeSpecificData();
 
-            const catObj = categoriesMap[formData.category] || null;
-            const categoryName = catObj ? catObj.name : 'Not selected';
-
-            // Get subcategory name
+            let categoryName = 'Not selected';
             let subName = 'None';
-            if (formData.subcategory) {
-                // Find subcategory name from the DOM or from stored data
-                const chip = document.querySelector(`.subcategory-chip[data-id="${formData.subcategory}"]`);
-                if (chip) subName = chip.textContent.trim();
-                else subName = 'Selected subcategory';
+            if (selectedType === 'Sell' || selectedType === 'Service') {
+                if (formData.category && categoriesMap[formData.category]) {
+                    categoryName = categoriesMap[formData.category].name;
+                }
+                if (formData.subcategory && subcategoriesMap[formData.subcategory]) {
+                    subName = subcategoriesMap[formData.subcategory].name;
+                }
+            } else {
+                categoryName = 'N/A';
+                subName = 'N/A';
             }
-
-            const typeLabels = {
-                'sell': '🛒 Sell',
-                'freebie': '🎁 Freebie',
-                'wanted': '🔍 Wanted',
-                'service': '🛠️ Service',
-            };
-            const typeLabel = typeLabels[formData.type] || formData.type;
 
             const locationNames = Array.from(document.querySelectorAll('.location-chip.selected'))
                 .map(el => el.textContent.trim());
@@ -1872,7 +2061,144 @@
             const selectedAds = advertTypes.filter(ad => formData.ads[ad.value]);
             const adsList = selectedAds.map(ad => `${ad.label} (${ad.points} pts)`);
 
-            const priceDisplay = formData.type === 'freebie' ? '₦0 (Free)' : '₦' + formData.price.toLocaleString();
+            const priceDisplay = formData.price === 0 ? '₦0 (Free)' : '₦' + formData.price.toLocaleString();
+
+            let typeSpecificReview = '';
+            if (selectedType === 'Sell') {
+                const d = formData.sell;
+                typeSpecificReview = `
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Condition</span>
+                        <span class="review-value">${d.condition || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Brand</span>
+                        <span class="review-value">${d.brand || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Model</span>
+                        <span class="review-value">${d.model || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Quantity</span>
+                        <span class="review-value">${d.quantity}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Warranty</span>
+                        <span class="review-value">${d.warranty || '—'}</span>
+                    </div>
+                `;
+            } else if (selectedType === 'Service') {
+                const d = formData.service;
+                typeSpecificReview = `
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Delivery Time</span>
+                        <span class="review-value">${d.delivery_time || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Service Duration</span>
+                        <span class="review-value">${d.service_duration || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Experience</span>
+                        <span class="review-value">${d.experience ? d.experience + ' years' : '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Portfolio</span>
+                        <span class="review-value">${d.portfolio ? `<a href="${d.portfolio}" target="_blank" style="color:var(--green);">View</a>` : '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Online Available</span>
+                        <span class="review-value">${d.online_available ? '✅ Yes' : '❌ No'}</span>
+                    </div>
+                `;
+            } else if (selectedType === 'Accommodation') {
+                const d = formData.accommodation;
+                const amenities = [];
+                if (d.electricity) amenities.push('⚡ Electricity');
+                if (d.water) amenities.push('💧 Water');
+                if (d.security) amenities.push('🛡️ Security');
+                if (d.parking) amenities.push('🅿️ Parking');
+                const amenitiesStr = amenities.length ? amenities.join(', ') : 'None listed';
+
+                typeSpecificReview = `
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Purpose</span>
+                        <span class="review-value">${d.purpose || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Property Type</span>
+                        <span class="review-value">${d.property_type || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Bedrooms / Bathrooms</span>
+                        <span class="review-value">${d.bedrooms} / ${d.bathrooms}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Furnished</span>
+                        <span class="review-value">${d.furnished ? '✅ Yes' : '❌ No'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Rent Price</span>
+                        <span class="review-value">₦${d.rent_price.toLocaleString()}/month</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Available From</span>
+                        <span class="review-value">${d.available_from || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Lease Duration</span>
+                        <span class="review-value">${d.lease_duration || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Amenities</span>
+                        <span class="review-value">${amenitiesStr}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Distance to Campus</span>
+                        <span class="review-value">${d.distance_to_campus || '—'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Preferred Gender</span>
+                        <span class="review-value">${d.preferred_gender || 'Any'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Student Type</span>
+                        <span class="review-value">${d.preferred_student_type || 'Any'}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Max Occupants</span>
+                        <span class="review-value">${d.max_occupants}</span>
+                    </div>
+                    <div class="review-divider"></div>
+                    <div class="review-item">
+                        <span class="review-label">Roommate Notes</span>
+                        <span class="review-value">${d.roommate_notes || '—'}</span>
+                    </div>
+                `;
+            }
 
             let pointsCostHtml = '';
             if (totalPoints > 0) {
@@ -1901,18 +2227,13 @@
 
             reviewContainer.innerHTML = `
                 <div class="review-item">
+                    <span class="review-label">Listing Type</span>
+                    <span class="review-value"><span class="badge-pill selected">${selectedType}</span></span>
+                </div>
+                <div class="review-divider"></div>
+                <div class="review-item">
                     <span class="review-label">Title</span>
                     <span class="review-value">${formData.title || '—'}</span>
-                </div>
-                <div class="review-divider"></div>
-                <div class="review-item">
-                    <span class="review-label">Category</span>
-                    <span class="review-value">${categoryName}</span>
-                </div>
-                <div class="review-divider"></div>
-                <div class="review-item">
-                    <span class="review-label">Subcategory</span>
-                    <span class="review-value">${subName}</span>
                 </div>
                 <div class="review-divider"></div>
                 <div class="review-item">
@@ -1926,9 +2247,21 @@
                 </div>
                 <div class="review-divider"></div>
                 <div class="review-item">
-                    <span class="review-label">Listing Type</span>
-                    <span class="review-value">${typeLabel}</span>
+                    <span class="review-label">Negotiable</span>
+                    <span class="review-value">${formData.negotiation ? '✅ Yes' : '❌ No'}</span>
                 </div>
+                ${selectedType === 'Sell' || selectedType === 'Service' ? `
+                <div class="review-divider"></div>
+                <div class="review-item">
+                    <span class="review-label">Category</span>
+                    <span class="review-value">${categoryName}</span>
+                </div>
+                <div class="review-divider"></div>
+                <div class="review-item">
+                    <span class="review-label">Subcategory</span>
+                    <span class="review-value">${subName}</span>
+                </div>
+                ` : ''}
                 <div class="review-divider"></div>
                 <div class="review-item">
                     <span class="review-label">Locations</span>
@@ -1952,12 +2285,13 @@
                     <span class="review-label">Image</span>
                     <span class="review-value">${imageHtml}</span>
                 </div>
+                ${typeSpecificReview}
             `;
         }
 
-        // ============================================================
-        // SUBMIT
-        // ============================================================
+        // ════════════════════════════════════════════════════════════════
+        // ✅ SUBMIT – FLAT PAYLOAD (category & subcategory as integers)
+        // ════════════════════════════════════════════════════════════════
         async function submitListing() {
             if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
                 goToStep(1);
@@ -1970,32 +2304,83 @@
             submitBtn.querySelector('.btn-text').innerHTML = 'Creating...';
 
             try {
+                collectTypeSpecificData();
+
+                // ─── Build flat payload ──────────────────────────────────
                 const payload = {
+                    listing_type: formData.listing_type,   // 'Sell', 'Service', 'Accommodation'
                     title: formData.title,
-                    category: formData.category,
-                    subcategory: formData.subcategory,  // may be null
                     description: formData.description,
                     price: formData.price,
-                    listing_type: formData.type,
+                    negotiation: formData.negotiation,
                     hotspot_ids: formData.locations,
                     badge: formData.badge || null,
                     is_ads_banner: !!formData.ads.banner,
                     is_hot_sales: !!formData.ads.hot_sale,
                 };
 
+                // ─── Add category + subcategory as integers ────────────
+                if (selectedType === 'Sell' || selectedType === 'Service') {
+                    payload.category = Number(formData.category);   // 🔥 ensure int
+                    payload.subcategory = formData.subcategory ? Number(formData.subcategory) : null; // 🔥 ensure int
+                }
+
+                // ─── Merge type‑specific fields into flat payload ──────
+                if (selectedType === 'Sell') {
+                    Object.assign(payload, {
+                        condition: formData.sell.condition,
+                        brand: formData.sell.brand || null,
+                        model: formData.sell.model || null,
+                        quantity: Number(formData.sell.quantity),
+                        warranty: formData.sell.warranty || null,
+                    });
+                } else if (selectedType === 'Service') {
+                    Object.assign(payload, {
+                        delivery_time: formData.service.delivery_time || null,
+                        service_duration: formData.service.service_duration || null,
+                        experience: formData.service.experience ? Number(formData.service.experience) : null,
+                        portfolio: formData.service.portfolio || null,
+                        online_available: formData.service.online_available,
+                    });
+                } else if (selectedType === 'Accommodation') {
+                    Object.assign(payload, {
+                        purpose: formData.accommodation.purpose,
+                        property_type: formData.accommodation.property_type,
+                        bedrooms: Number(formData.accommodation.bedrooms),
+                        bathrooms: Number(formData.accommodation.bathrooms),
+                        furnished: formData.accommodation.furnished,
+                        rent_price: formData.accommodation.rent_price,
+                        available_from: formData.accommodation.available_from || null,
+                        lease_duration: formData.accommodation.lease_duration || null,
+                        electricity: formData.accommodation.electricity,
+                        water: formData.accommodation.water,
+                        security: formData.accommodation.security,
+                        parking: formData.accommodation.parking,
+                        distance_to_campus: formData.accommodation.distance_to_campus || null,
+                        preferred_gender: formData.accommodation.preferred_gender || 'Any',
+                        preferred_student_type: formData.accommodation.preferred_student_type || 'Any',
+                        max_occupants: Number(formData.accommodation.max_occupants),
+                        roommate_notes: formData.accommodation.roommate_notes || null,
+                    });
+                }
+
+                // ─── Send as FormData ──────────────────────────────────
                 const formDataPayload = new FormData();
                 for (const [key, value] of Object.entries(payload)) {
-                    if (Array.isArray(value)) {
-                        formDataPayload.append(key, JSON.stringify(value));
-                    } else if (value !== null && value !== undefined) {
-                        formDataPayload.append(key, value);
+                    if (value !== null && value !== undefined) {
+                        if (Array.isArray(value)) {
+                            formDataPayload.append(key, JSON.stringify(value));
+                        } else {
+                            // For numbers, convert to string (FormData always sends strings)
+                            formDataPayload.append(key, value);
+                        }
                     }
                 }
                 if (formData.image) {
                     formDataPayload.append('image', formData.image, formData.imageName);
                 }
 
-                console.log('📦 Sending payload:', payload);
+                console.log('📦 Sending flat payload (category/subcategory as ints):', payload);
 
                 const response = await fetchWithAuth(`${CAMPUS_URL}create-listing`, {
                     method: 'POST',
@@ -2008,7 +2393,7 @@
 
                 if (response.ok && result.is_success) {
                     if (typeof showAlert !== 'undefined') {
-                        showAlert.success(result.message || 'Your listing has been created successfully. It will appear in the marketplace once approved.');
+                        showAlert.success(result.message || 'Your listing has been created successfully!');
                     }
                     if (typeof window.refreshPointBalance === 'function') {
                         window.refreshPointBalance();
@@ -2023,9 +2408,6 @@
                         msg += '\n\n' + Object.entries(errors)
                             .map(([field, msgs]) => `${field}: ${msgs.join(', ')}`)
                             .join('\n');
-                    }
-                    if (msg.toLowerCase().includes('points') || msg.toLowerCase().includes('balance')) {
-                        updatePointsBalance();
                     }
                     if (typeof showAlert !== 'undefined') {
                         showAlert.error(msg);
@@ -2047,21 +2429,19 @@
             }
         }
 
-        // ============================================================
-        // RESET FORM
-        // ============================================================
+        // ─── RESET FORM ──────────────────────────────────────────────
         function resetForm() {
             titleInput.value = '';
             descInput.value = '';
             priceInput.value = '0';
+            negotiationCheck.checked = false;
             formData.category = null;
             formData.subcategory = null;
             document.querySelectorAll('.category-header').forEach(h => h.classList.remove('selected'));
             document.querySelectorAll('.subcategory-chip').forEach(c => c.classList.remove('selected'));
-            document.querySelectorAll('.type-chip, .badge-chip, .location-chip, .ads-check').forEach(el => {
+            document.querySelectorAll('.badge-chip, .location-chip, .ads-check, .type-select-card').forEach(el => {
                 el.classList.remove('selected', 'checked');
             });
-            // Close all open subcategory grids
             document.querySelectorAll('.subcategory-grid.open').forEach(g => g.classList.remove('open'));
             document.querySelectorAll('.cat-toggle i').forEach(i => i.className = 'fa-regular fa-plus');
             formData.locations = [];
@@ -2069,41 +2449,36 @@
             formData.ads = {};
             formData.image = null;
             formData.imageName = '';
+            selectedType = null;
+            step1Next.disabled = true;
             clearFilePreview();
             fileDropZone.classList.remove('has-file', 'has-image', 'error');
-            setHelp('imageHelp', 'Upload a clear photo of your item (required).', false);
+            setHelp('imageHelp', 'Upload a clear photo (required).', false);
             setHelp('categoryHelp', 'Select a category, then optionally choose a subcategory.', false);
             updateTotalPointsDisplay();
+            typeSpecificFields.innerHTML = '';
             goToStep(1);
-            showToast('Form has been reset.', 'success');
+            if (typeof showAlert !== 'undefined') {
+                showAlert.success('Form has been reset.');
+            }
         }
 
-        // ============================================================
-        // EVENT LISTENERS
-        // ============================================================
+        // ─── EVENT LISTENERS ──────────────────────────────────────────
         step1Next.addEventListener('click', function() {
             if (validateStep(1)) goToStep(2);
         });
-
-        step2Prev.addEventListener('click', function() {
-            goToStep(1);
-        });
-
+        step2Prev.addEventListener('click', function() { goToStep(1); });
         step2Next.addEventListener('click', function() {
-            if (validateStep(2)) goToStep(3);
+            if (validateStep(2)) {
+                renderTypeSpecificFields();
+                goToStep(3);
+            }
         });
-
-        step3Prev.addEventListener('click', function() {
-            goToStep(2);
-        });
-
+        step3Prev.addEventListener('click', function() { goToStep(2); });
         step3Next.addEventListener('click', function() {
             if (validateStep(3)) goToStep(4);
         });
-
-        step4Prev.addEventListener('click', function() {
-            goToStep(3);
-        });
+        step4Prev.addEventListener('click', function() { goToStep(3); });
 
         submitBtn.addEventListener('click', function() {
             if (totalPoints > userPoints) {
@@ -2116,7 +2491,7 @@
                 const modal = new Modal({
                     title: 'Create Listing?',
                     body: `
-                        <p>You are about to create a listing for <strong>${formData.title}</strong>.</p>
+                        <p>You are about to create a <strong>${selectedType}</strong> listing for <strong>${formData.title}</strong>.</p>
                         <p style="color:var(--text-muted); font-size:13px;">
                             ${totalPoints > 0 ? `This will deduct <strong>${totalPoints}</strong> points (1 base + ${totalPoints - 1} ad points) from your balance.` : 'No points will be deducted.'}
                         </p>
@@ -2131,36 +2506,31 @@
                 });
                 modal.open();
             } else {
-                if (confirm(`Create listing for "${formData.title}"?`)) {
+                if (confirm(`Create ${selectedType} listing for "${formData.title}"?`)) {
                     submitListing();
                 }
             }
         });
 
-        // Enter key support
-        document.querySelectorAll('#step1 input, #step1 select, #step1 textarea').forEach(el => {
+        document.querySelectorAll('#step2 input, #step2 select, #step2 textarea').forEach(el => {
             el.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
                     e.preventDefault();
-                    step1Next.click();
+                    step2Next.click();
                 }
             });
         });
 
-        // ============================================================
-        // INIT
-        // ============================================================
+        // ─── INIT ──────────────────────────────────────────────────────
         async function init() {
             updatePointsBalance();
 
             const lookup = await fetchLookup();
             if (!lookup) return;
 
-            // Populate categories with subcategories
             if (lookup.categories && lookup.subcategories) {
                 populateCategories(lookup.categories, lookup.subcategories);
             }
-
             if (lookup.type_choices) populateTypes(lookup.type_choices);
             if (lookup.hotspots) populateLocations(lookup.hotspots);
             if (lookup.badge_choices) populateBadges(lookup.badge_choices);
@@ -2168,7 +2538,7 @@
 
             initFileUpload();
             updateTotalPointsDisplay();
-            console.log('📟 Create Listing page initialized');
+            console.log('📟 Create Listing page initialized (flat payload)');
         }
 
         if (document.readyState === 'loading') {

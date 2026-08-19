@@ -15,9 +15,9 @@
     <!-- Page-Specific Styles -->
     <style>
         /* ============================================================
-           ENHANCED TABS
+           EXPLORE TABS (matching dashboard style)
            ============================================================ */
-        .section-tabs {
+        .explore-tabs {
             display: flex;
             gap: 6px;
             margin-bottom: 24px;
@@ -32,11 +32,11 @@
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
         }
-        .section-tabs::-webkit-scrollbar {
+        .explore-tabs::-webkit-scrollbar {
             display: none;
         }
-        .section-tabs .tab-btn {
-            flex: 0 0 auto;
+        .explore-tabs .tab-btn {
+            flex: 1; /* ─── FIX: Full width on laptop ─── */
             padding: 10px 16px;
             border: none;
             background: transparent;
@@ -46,31 +46,30 @@
             cursor: pointer;
             border-radius: 12px;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             white-space: nowrap;
         }
-        .section-tabs .tab-btn i {
+        .explore-tabs .tab-btn i {
             font-size: 15px;
             transition: transform 0.3s ease;
         }
-        .section-tabs .tab-btn:hover {
+        .explore-tabs .tab-btn:hover {
             color: var(--text-primary);
             background: rgba(255, 255, 255, 0.5);
         }
-        .section-tabs .tab-btn.active {
+        .explore-tabs .tab-btn.active {
             background: var(--bg-card);
             color: var(--green);
             box-shadow: 0 4px 16px rgba(13, 138, 62, 0.15);
             transform: scale(1.02);
         }
-        .section-tabs .tab-btn.active i {
+        .explore-tabs .tab-btn.active i {
             transform: scale(1.1);
         }
-        .section-tabs .tab-btn .tab-badge {
+        .explore-tabs .tab-btn .tab-badge {
             background: var(--green);
             color: #fff;
             font-size: 9px;
@@ -79,44 +78,45 @@
             border-radius: 20px;
             margin-left: 4px;
         }
-        .section-tabs.hidden {
+        .explore-tabs.hidden {
             display: none;
         }
 
-        .dark-mode .section-tabs {
+        .dark-mode .explore-tabs {
             background: var(--bg-input);
             border-color: var(--border-color);
         }
-        .dark-mode .section-tabs .tab-btn:hover {
+        .dark-mode .explore-tabs .tab-btn:hover {
             background: rgba(255, 255, 255, 0.05);
         }
-        .dark-mode .section-tabs .tab-btn.active {
+        .dark-mode .explore-tabs .tab-btn.active {
             background: var(--bg-card);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
 
         @media (max-width: 560px) {
-            .section-tabs {
+            .explore-tabs {
                 gap: 4px;
                 padding: 3px;
                 border-radius: 12px;
             }
-            .section-tabs .tab-btn {
+            .explore-tabs .tab-btn {
                 font-size: 11px;
                 padding: 8px 12px;
                 gap: 5px;
+                flex: 0 0 auto; /* ─── Reset to auto on mobile ─── */
             }
-            .section-tabs .tab-btn i {
+            .explore-tabs .tab-btn i {
                 font-size: 13px;
             }
-            .section-tabs .tab-btn .tab-badge {
+            .explore-tabs .tab-btn .tab-badge {
                 font-size: 8px;
                 padding: 0 6px;
             }
         }
 
         /* ============================================================
-           SEARCH BAR WITH TOOLTIP
+           SEARCH BAR WITH TOOLTIP (unchanged)
            ============================================================ */
         .search-wrap {
             position: relative;
@@ -157,7 +157,7 @@
         }
 
         /* ============================================================
-           FILTER BAR
+           FILTER BAR (unchanged)
            ============================================================ */
         .filter-bar {
             display: none;
@@ -245,7 +245,7 @@
         }
 
         /* ============================================================
-           SEARCH HEADING
+           SEARCH HEADING (unchanged)
            ============================================================ */
         .search-heading {
             display: none;
@@ -300,7 +300,7 @@
         }
 
         /* ============================================================
-           PRICE RANGE SLIDER – SINGLE MAX SLIDER
+           PRICE RANGE SLIDER (unchanged)
            ============================================================ */
         .price-slider-wrap {
             padding: 8px 4px 4px;
@@ -413,7 +413,7 @@
         }
 
         /* ============================================================
-           PRODUCT GRID & CARD ENHANCEMENTS
+           PRODUCT GRID & CARD ENHANCEMENTS (unchanged)
            ============================================================ */
         .product-grid {
             transition: opacity 0.3s ease;
@@ -671,7 +671,7 @@
         }
 
         /* ============================================================
-           PAGINATION
+           PAGINATION (unchanged)
            ============================================================ */
         .pagination-controls {
             display: flex;
@@ -716,7 +716,7 @@
         }
 
         /* ============================================================
-           EMPTY & LOADING STATES – CENTERED
+           EMPTY & LOADING STATES (unchanged)
            ============================================================ */
         .empty-state {
             text-align: center;
@@ -767,7 +767,7 @@
         }
 
         /* ============================================================
-           FILTER SIDEBAR OVERRIDES
+           FILTER SIDEBAR OVERRIDES (unchanged)
            ============================================================ */
         .filter-group .price-slider-wrap {
             padding: 4px 0;
@@ -897,8 +897,8 @@
         <!-- ===== MAIN ===== -->
         <main class="main-content" style="padding-top: 12px;">
 
-            <!-- ===== ENHANCED TABS (dynamic from listing types) ===== -->
-            <div class="section-tabs" id="sectionTabs">
+            <!-- ===== EXPLORE TABS (new style) ===== -->
+            <div class="explore-tabs" id="sectionTabs">
                 <!-- Tabs generated by JavaScript -->
             </div>
 
@@ -1369,7 +1369,7 @@
                     const categoryIcon = item.category.icon || 'fa fa-tag';
                     const isHot = item.is_hot_sales === true;
 
-                    const priceDisplay = item.price === 0 ? 'Free' : '₦' + item.price.toLocaleString();
+                    const priceDisplay = item.price === 0 ? 'Free' : item.price;
                     const isFree = item.price === 0;
 
                     const hasLiked = item.has_liked || false;

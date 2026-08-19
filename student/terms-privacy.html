@@ -251,7 +251,7 @@
 
                     <!-- ===== TAB: TERMS & CONDITIONS ===== -->
                     <div class="legal-content active" id="tabTerms">
-
+                        <!-- (content unchanged – your existing Terms content) -->
                         <h2>1. Acceptance of Terms</h2>
                         <p>By accessing or using CampusConnect Demo University, you agree to these Terms of Service and our Privacy Policy. If you do not agree, you should not create an account, post listings, contact users, or use the platform.</p>
                         <div class="callout">
@@ -330,7 +330,7 @@
 
                     <!-- ===== TAB: PRIVACY POLICY ===== -->
                     <div class="legal-content" id="tabPrivacy">
-
+                        <!-- (content unchanged – your existing Privacy content) -->
                         <h2>1. Overview</h2>
                         <p>CampusConnect Demo University is a student-to-student marketplace for verified Demo University students. We use personal information to provide marketplace features, verify eligibility, reduce fraud, improve safety, and communicate important account updates.</p>
                         <div class="callout">
@@ -443,6 +443,18 @@
                     });
                 });
             });
+
+            // ─── Handle URL parameter for tab selection ──────────────────
+            function activateTabFromUrl() {
+                const params = new URLSearchParams(window.location.search);
+                const tab = params.get('tab');
+                if (tab === 'terms' || tab === 'privacy') {
+                    const btn = document.querySelector(`.legal-tabs .tab-btn[data-tab="${tab}"]`);
+                    if (btn) btn.click();
+                }
+            }
+            // Call after tabs are defined
+            activateTabFromUrl();
 
             // ─── Keyboard shortcut: 1 for T&C, 2 for Privacy ──────────
             document.addEventListener('keydown', function(e) {

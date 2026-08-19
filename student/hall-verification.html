@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="/assets/css/studentStyle.css" />
     <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
 
-    <!-- Page-Specific Styles -->
     <style>
+        /* ─── All existing styles ──────────────────────────────────── */
         .hall-wrapper {
             max-width: 600px;
             margin: 0 auto;
@@ -177,6 +177,7 @@
             margin-left: 2px;
         }
 
+        /* ─── Override for .form-input inside hall card ────────────── */
         .hall-card .form-input {
             width: 100%;
             padding: 12px 16px;
@@ -204,6 +205,7 @@
             background: var(--bg-input);
             border-color: var(--border-color);
         }
+
         .hall-card .help-text {
             font-size: 12px;
             color: var(--text-muted);
@@ -316,7 +318,6 @@
                 padding: 6px 10px;
             }
         }
-
     </style>
 </head>
 <body>
@@ -375,11 +376,12 @@
                         </div>
 
                         <!-- Form (always visible; read‑only when approved) -->
-                        <form id="hallForm" autocomplete="off">
+                        <form id="hallForm" autocomplete="off" novalidate>
 
                             <!-- Hall Name -->
                             <div class="form-group">
                                 <label for="hallName">Hall of Residence <span class="required-star">*</span></label>
+                                <!-- ✅ Added class="form-input" and required -->
                                 <input type="text" id="hallName" class="form-input" placeholder="e.g., John Wood Hall, Queen Elizabeth II Hall" required />
                                 <div class="help-text" id="hallNameHelp"></div>
                             </div>
@@ -387,6 +389,7 @@
                             <!-- Room Number -->
                             <div class="form-group">
                                 <label for="roomNumber">Room / Flat Number <span class="required-star">*</span></label>
+                                <!-- ✅ Added class="form-input" and required -->
                                 <input type="text" id="roomNumber" class="form-input" placeholder="e.g., A-204, 12B" required />
                                 <div class="help-text" id="roomNumberHelp"></div>
                             </div>
@@ -419,6 +422,9 @@
     <script src="/assets/js/studentGlobal.js"></script>
     <script src="/assets/js/modal.js"></script>
     <script src="/assets/js/showAlert.js"></script>
+
+    <!-- ✅ Load the form helper -->
+    <script src="/assets/js/form-helpers.js"></script>
 
     <script>
         (function() {
@@ -574,43 +580,22 @@
                 }
             }
 
-            // ─── Validation ────────────────────────────────────────────
+            // ─── Validation using CampusForms ──────────────────────────
 
             function validateForm() {
-                let isValid = true;
+                // Reset any previous error states on the form
+                CampusForms.clearValidation(hallForm);
 
-                const hallName = hallNameInput.value.trim();
-                if (!hallName) {
-                    setFieldHelp(hallNameHelp, 'Please enter your hall of residence.');
-                    isValid = false;
-                } else {
-                    clearFieldHelp(hallNameHelp);
-                }
+                // Run CampusForms validation (required fields already have "required")
+                const result = CampusForms.validateForm(hallForm, { clearOthers: true });
 
-                const roomNumber = roomNumberInput.value.trim();
-                if (!roomNumber) {
-                    setFieldHelp(roomNumberHelp, 'Please enter your room or flat number.');
-                    isValid = false;
-                } else {
-                    clearFieldHelp(roomNumberHelp);
-                }
+                // Also ensure both fields are not empty (CampusForms handles required)
+                // But if we want to also check for just whitespace, we can add custom logic:
+                // The helper already trims and checks required, so we're fine.
 
-                submitBtn.disabled = !isValid;
-                return isValid;
-            }
-
-            function setFieldHelp(el, message) {
-                el.textContent = message;
-                el.className = 'help-text error';
-                const input = el.closest('.form-group').querySelector('.form-input');
-                if (input) input.classList.add('error');
-            }
-
-            function clearFieldHelp(el) {
-                el.textContent = '';
-                el.className = 'help-text';
-                const input = el.closest('.form-group').querySelector('.form-input');
-                if (input) input.classList.remove('error');
+                // Disable submit if invalid
+                submitBtn.disabled = !result.isValid;
+                return result.isValid;
             }
 
             // ─── Submit handler ────────────────────────────────────────
@@ -687,10 +672,11 @@
                 // Event listeners
                 hallForm.addEventListener('submit', handleSubmit);
                 cancelBtn.addEventListener('click', handleCancel);
+                // Real-time validation on input
                 hallNameInput.addEventListener('input', validateForm);
                 roomNumberInput.addEventListener('input', validateForm);
 
-                console.log('📟 Hall verification page initialized.');
+                console.log('📟 Hall verification page initialized with CampusForms.');
             }
 
             // Start when ready

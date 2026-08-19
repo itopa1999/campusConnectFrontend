@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Login</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles (student version) -->
+    <link rel="stylesheet" href="/assets/css/studentStyle.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg" />
+
+    <style>
+        /* ─── All existing login styles ────────────────────────────── */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-app);
+            padding: 20px;
+            transition: background var(--transition);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 40px 32px 36px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+        }
+
+        .login-card .brand {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .login-card .brand .brand-icon {
+            font-size: 40px;
+            color: var(--green);
+            display: block;
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+
+        .login-card .brand h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+            letter-spacing: -0.5px;
+            transition: color var(--transition);
+        }
+
+        .login-card .brand h1 span {
+            color: var(--green);
+            transition: color var(--transition);
+        }
+
+        .login-card .brand p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 4px 0 0;
+            transition: color var(--transition);
+        }
+
+        .login-card .form-group {
+            margin-bottom: 18px;
+        }
+
+        .login-card .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+
+        .login-card .form-group .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            transition: all 0.25s ease;
+        }
+
+        .login-card .form-group .input-wrap:focus-within {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(13, 138, 62, 0.10);
+            background: var(--bg-card);
+        }
+
+        .login-card .form-group .input-wrap.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.10);
+        }
+
+        .login-card .form-group .input-wrap .input-icon {
+            padding: 0 0 0 14px;
+            color: var(--text-muted);
+            font-size: 16px;
+            transition: color var(--transition);
+        }
+
+        .login-card .form-group .input-wrap:focus-within .input-icon {
+            color: var(--green);
+        }
+
+        .login-card .form-group .input-wrap input {
+            width: 100%;
+            padding: 12px 14px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: color var(--transition);
+        }
+
+        /* ─── ✅ FIX: Override global .form-input styles ──────────── */
+        .login-card .form-group .input-wrap input.form-input {
+            border: none !important;
+            background: transparent !important;
+            padding: 12px 14px !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+        }
+
+        .login-card .form-group .input-wrap input.form-input.error,
+        .login-card .form-group .input-wrap input.form-input.success {
+            /* Remove extra border/shadow from global styles */
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        /* ─── Keep the wrapper's error styling ────────────────────── */
+        .login-card .form-group .input-wrap input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+            transition: color var(--transition);
+        }
+
+        .login-card .form-group .input-wrap .toggle-password {
+            padding: 0 14px 0 0;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+
+        .login-card .form-group .input-wrap .toggle-password:hover {
+            color: var(--text-primary);
+        }
+
+        .login-card .form-group .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            transition: color var(--transition);
+        }
+
+        .login-card .form-group .help-text.error {
+            color: var(--red);
+        }
+
+        /* ─── Rest of the styles (unchanged) ──────────────────────── */
+
+        .login-card .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+        }
+
+        .login-card .form-options .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: color var(--transition);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .login-card .form-options .remember-me input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .login-card .form-options .remember-me .checkmark {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+        }
+
+        .login-card .form-options .remember-me .checkmark i {
+            font-size: 11px;
+            color: #fff;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.25s ease;
+        }
+
+        .login-card .form-options .remember-me input:checked+.checkmark {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .login-card .form-options .remember-me input:checked+.checkmark i {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .login-card .form-options .forgot-link {
+            font-size: 13px;
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .login-card .form-options .forgot-link:hover {
+            opacity: 0.8;
+        }
+
+        .login-card .btn-login {
+            width: 100%;
+            padding: 13px 0;
+            border-radius: 30px;
+            border: none;
+            background: var(--green);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: inherit;
+        }
+
+        .login-card .btn-login:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+
+        .login-card .btn-login:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-card .btn-login .spinner {
+            display: none;
+        }
+
+        .login-card .btn-login.loading .spinner {
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .login-card .btn-login.loading .btn-text {
+            display: none;
+        }
+
+        .login-card .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 22px 0 18px;
+            color: var(--text-muted);
+            font-size: 12px;
+            transition: color var(--transition);
+        }
+
+        .login-card .divider::before,
+        .login-card .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+            transition: background var(--transition);
+        }
+
+        .login-card .signup-text {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+
+        .login-card .signup-text a {
+            color: var(--green);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .login-card .signup-text a:hover {
+            opacity: 0.8;
+        }
+
+        .login-card .demo-note-inline {
+            text-align: center;
+            margin-top: 16px;
+            padding: 10px 14px;
+            background: var(--green-bg);
+            border-radius: 10px;
+            border: 1px solid rgba(13, 138, 62, 0.12);
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+
+        .login-card .demo-note-inline strong {
+            color: var(--green);
+            transition: color var(--transition);
+        }
+
+        .login-card .alert {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            border: 1px solid transparent;
+        }
+
+        .login-card .alert.visible {
+            display: block;
+        }
+
+        .login-card .alert.error {
+            background: rgba(231, 76, 60, 0.08);
+            border-color: rgba(231, 76, 60, 0.25);
+            color: var(--red);
+        }
+
+        .login-card .alert.success {
+            background: rgba(13, 138, 62, 0.08);
+            border-color: rgba(13, 138, 62, 0.25);
+            color: var(--green);
+        }
+
+        .dark-mode .login-card .alert.error {
+            background: rgba(231, 76, 60, 0.12);
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+
+        .dark-mode .login-card .alert.success {
+            background: rgba(13, 138, 62, 0.12);
+            border-color: rgba(13, 138, 62, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 28px 20px 24px;
+            }
+            .login-card .brand h1 {
+                font-size: 22px;
+            }
+            .login-card .brand .brand-icon {
+                font-size: 32px;
+            }
+            .login-card .form-options {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 6px 10px;
+            }
+            .login-card .form-options .remember-me {
+                font-size: 12px;
+                gap: 8px;
+                flex-shrink: 1;
+                min-width: 0;
+            }
+            .login-card .form-options .forgot-link {
+                font-size: 12px;
+                flex-shrink: 0;
+                text-align: right;
+            }
+            .login-card .btn-login {
+                font-size: 15px;
+                padding: 12px 0;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-card .form-options {
+                gap: 4px 8px;
+            }
+            .login-card .form-options .remember-me {
+                font-size: 11px;
+                gap: 6px;
+            }
+            .login-card .form-options .forgot-link {
+                font-size: 11px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .login-container {
+                max-width: 440px;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-page">
+        <div class="login-container">
+            <div class="login-card">
+
+                <div class="brand">
+                    <span class="brand-icon"><i class="fa-solid fas fa-graduation-cap"></i></span>
+                    <h1>Campus<span>Hub</span></h1>
+                    <p>Welcome back — sign in to continue</p>
+                </div>
+
+                <div class="alert" id="loginAlert"></div>
+
+                <form id="loginForm" autocomplete="off" novalidate>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-wrap" id="emailWrap">
+                            <span class="input-icon"><i class="fa-regular fas fa-envelope"></i></span>
+                            <!-- ✅ Added class="form-input" -->
+                            <input type="email" id="email" class="form-input" placeholder="you@uniben.edu" required autocomplete="email" />
+                        </div>
+                        <div class="help-text" id="emailHelp"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrap" id="passwordWrap">
+                            <span class="input-icon"><i class="fa-regular fas fa-lock"></i></span>
+                            <!-- ✅ Added class="form-input" and minlength="6" -->
+                            <input type="password" id="password" class="form-input" placeholder="Enter your password" required minlength="6" autocomplete="current-password" />
+                            <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
+                                <i class="fa-regular fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="help-text" id="passwordHelp"></div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe" />
+                            <span class="checkmark"><i class="fa-solid fas fa-check"></i></span>
+                            Remember me
+                        </label>
+                        <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="loginBtn">
+                        <span class="spinner"><i class="fa-solid fas fa-spinner fas fa-spin"></i></span>
+                        <span class="btn-text"><i class="fa-regular fas fa-arrow-right-to-bracket"></i> Sign In</span>
+                    </button>
+
+                </form>
+
+                <div class="divider">or</div>
+
+                <div class="signup-text">
+                    Don't have an account? <a href="signup.html">Sign up now</a>
+                </div>
+
+                <div class="demo-note-inline">
+                    <i class="fa-regular fas fa-laptop"></i>
+                    <strong>Demo:</strong> Use your registered email and password.
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="/assets/js/studentGlobal.js"></script>
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/showAlert.js"></script>
+    <script src="/assets/js/form-helpers.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const rememberMe = document.getElementById('rememberMe');
+            const loginBtn = document.getElementById('loginBtn');
+            const togglePassword = document.getElementById('togglePassword');
+            const alertEl = document.getElementById('loginAlert');
+
+            // ─── Toggle Password ─────────────────────────────────────
+            togglePassword.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                icon.className = isPassword ? 'fa-regular fas fa-eye-slash' : 'fa-regular fas fa-eye';
+            });
+
+            // ─── Alert helpers ──────────────────────────────────────
+            function showAlert(message, type = 'error') {
+                alertEl.textContent = message;
+                alertEl.className = 'alert visible ' + type;
+            }
+            function hideAlert() {
+                alertEl.className = 'alert';
+                alertEl.textContent = '';
+            }
+
+            // ─── Button loading state ──────────────────────────────
+            function setButtonLoading(btn, loading, originalText) {
+                if (loading) {
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                    btn.querySelector('.btn-text').textContent = originalText || 'Signing in...';
+                } else {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                    btn.querySelector('.btn-text').innerHTML = '<i class="fa-regular fas fa-arrow-right-to-bracket"></i> Sign In';
+                }
+            }
+
+            // ─── Real‑time validation using CampusForms ────────────
+            function validateAndUpdateButton() {
+                const result = CampusForms.validateForm(form);
+                loginBtn.disabled = !result.isValid;
+                return result.isValid;
+            }
+
+            emailInput.addEventListener('input', validateAndUpdateButton);
+            passwordInput.addEventListener('input', validateAndUpdateButton);
+
+            // ─── Cookie helpers ──────────────────────────────────────
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+
+            function deleteCookie(name) {
+                document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            }
+
+            // ─── Submit ──────────────────────────────────────────────
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                hideAlert();
+
+                // Validate using CampusForms
+                const result = CampusForms.validateForm(form);
+                if (!result.isValid) {
+                    loginBtn.disabled = true;
+                    return;
+                }
+
+                const originalText = 'Sign In';
+                setButtonLoading(loginBtn, true, originalText);
+
+                const X_KEY_ID = 1;
+
+                const payload = {
+                    email: emailInput.value.trim(),
+                    password: passwordInput.value,
+                    platform: 'web'
+                };
+
+                try {
+                    const response = await fetch(`${AUTH_URL}login-user`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-Key-Id': X_KEY_ID,
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify(payload),
+                    });
+
+                    const resultData = await response.json();
+
+                    if (response.ok && resultData.is_success === true) {
+                        // ─── 2FA check ──────────────────────────────────
+                        if (resultData.data && resultData.data.requires_2fa === true) {
+                            sessionStorage.setItem('2fa_data', JSON.stringify({
+                                user_id: resultData.data.user_id,
+                                active_method: resultData.data.active_method,
+                                platform: resultData.data.platform
+                            }));
+                            window.location.href = '2fa-verify.html';
+                            return;
+                        }
+
+                        // ─── ✅ SUCCESS ──────────────────────────────
+                        const user = resultData.data.user;
+                        const remember = rememberMe.checked;
+
+                        const storage = remember ? localStorage : sessionStorage;
+                        storage.setItem('user', JSON.stringify({
+                            user_id: user.user_id,
+                            email: user.email,
+                            profile_pic: user.profile_pic,
+                            point_bal: user.point_bal,
+                            trusting_score: user.trusting_score,
+                            is_student_id_verified: user.is_student_id_verified,
+                            is_hall_verified: user.is_hall_verified,
+                            total_favourites: user.total_favourites,
+                            has_unread_notifications: user.has_unread_notifications
+                        }));
+                        sessionStorage.setItem('rememberMe', remember ? 'true' : 'false');
+
+                        if (typeof window.setUserData === 'function') {
+                            window.setUserData(user, remember);
+                        }
+                        if (typeof window.updateHeaderUser === 'function') {
+                            window.updateHeaderUser();
+                        }
+
+                        showAlert(resultData.message || 'Login successful! Redirecting...', 'success');
+
+                        form.reset();
+                        rememberMe.checked = false;
+                        // Clear validation states
+                        CampusForms.clearValidation(form);
+
+                        setTimeout(() => {
+                            const redirectCookie = getCookie('redirect_after_login');
+                            if (!redirectCookie) {
+                                window.location.href = 'dashboard.html';
+                                return;
+                            }
+                            const redirectPath = decodeURIComponent(redirectCookie);
+                            deleteCookie('redirect_after_login');
+                            window.location.href = redirectPath;
+                        }, 1000);
+
+                    } else {
+                        const errorMsg = resultData.message || 'Invalid email or password.';
+                        showAlert(errorMsg, 'error');
+                        form.style.animation = 'shake 0.4s ease';
+                        setTimeout(() => {
+                            form.style.animation = '';
+                        }, 400);
+                    }
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showAlert('Network error. Could not connect to server.', 'error');
+                } finally {
+                    setButtonLoading(loginBtn, false, originalText);
+                }
+            });
+
+            // ─── Init ──────────────────────────────────────────────────
+            if (window.isAuthenticated && window.isAuthenticated()) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            setTimeout(() => emailInput.focus(), 300);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('email');
+            if (emailParam) {
+                emailInput.value = emailParam;
+                validateAndUpdateButton();
+            }
+
+            const remembered = sessionStorage.getItem('rememberMe') === 'true';
+            if (remembered) {
+                rememberMe.checked = true;
+            }
+
+            console.log('🔐 Login page initialized with CampusForms.');
+            validateAndUpdateButton();
+
+            window.__login = {
+                form,
+                validateForm: validateAndUpdateButton,
+                payload: () => ({
+                    email: emailInput.value.trim(),
+                    password: passwordInput.value,
+                    platform: 'web',
+                })
+            };
+
+        })();
+    </script>
+
+</body>
+</html>
