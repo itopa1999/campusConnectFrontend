@@ -242,7 +242,7 @@
         overlay.className = 'spinner-overlay';
         overlay.innerHTML = `
             <div class="spinner-box">
-                <i class="fa-solid fa-spinner spinner-icon"></i>
+                <i class="fa-solid fas fa-spinner spinner-icon"></i>
                 <div class="spinner-text">Loading…</div>
             </div>
         `;
@@ -677,6 +677,7 @@
                 { icon: 'fas fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },
                 { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
                 { icon: 'fas fa-circle-info', label: 'About us', id: 'about-us' },
+                { icon: 'fas fa-circle-info', label: 'How to use', id: 'guide' },
                 { icon: 'fas fa-file-contract', label: 'Terms & Conditions', id: 'term-condition' },
                 { icon: 'fas fa-key', label: 'Change Password', id: 'change-password' },
                 { icon: 'fas fa-right-from-bracket', label: 'Logout', id: 'logout' },
@@ -685,6 +686,7 @@
             menuItems = [
                 { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
                 { icon: 'fas fa-circle-info', label: 'About us', id: 'about-us' },
+                { icon: 'fas fa-circle-info', label: 'How to use', id: 'guide' },
                 { icon: 'fas fa-file-contract', label: 'Terms & Conditions', id: 'term-condition' },
                 { icon: 'fas fa-right-to-bracket', label: 'Sign in', id: 'sign-in' },
                 { icon: 'fas fa-user-plus', label: 'Sign up', id: 'sign-up' },
@@ -954,6 +956,7 @@
             'about-us': 'about-us.html',
             'loan': 'student-loan.html',
             'term-condition': 'terms-privacy.html',
+            'guide': 'how-to-use.html',
             'sign-in': 'login.html',
             'sign-up': 'signup.html',
             'change-password': 'change-password.html',
@@ -1007,16 +1010,16 @@
         header.className = 'app-header';
         header.innerHTML = `
             <div class="logo" title="Logo" id="logoContainer">
-                <i class="fa-solid fa-graduation-cap"></i>
+                <i class="fa-solid fas fa-graduation-cap"></i>
                 <span>CampusHub <small>NG</small></span>
             </div>
             <div class="header-actions">
                 <button class="theme-toggle" title="Switch mode" id="themeToggle" aria-label="Toggle dark mode">
-                    <i class="fa-regular fa-sun"></i>
-                    <i class="fa-regular fa-moon"></i>
+                    <i class="fa-regular fas fa-sun"></i>
+                    <i class="fa-regular fas fa-moon"></i>
                 </button>
-                ${isAuth ? `<i class="fa-regular fa-bell ${hasUnread ? 'badge-dot' : ''}" title="Notification" id="notificationBell"></i>` : ''}
-                <i class="fa-regular fa-user-circle" title="Side bar" id="profileIcon"></i>
+                ${isAuth ? `<i class="fa-regular fas fa-bell ${hasUnread ? 'badge-dot' : ''}" title="Notification" id="notificationBell"></i>` : ''}
+                <i class="fa-regular fas fa-user-circle" title="Side bar" id="profileIcon"></i>
             </div>
         `;
 
@@ -1180,7 +1183,7 @@
         const btn = document.createElement('button');
         btn.className = 'scroll-top-btn';
         btn.setAttribute('aria-label', 'Scroll to top');
-        btn.innerHTML = '<i class="fa-solid fa-arrow-up" title="Scroll to top"></i>';
+        btn.innerHTML = '<i class="fa-solid fas fa-arrow-up" title="Scroll to top"></i>';
         btn.style.cssText = `
             position: fixed;
             bottom: 90px;
@@ -1547,24 +1550,24 @@
         nav.className = 'bottom-nav';
         nav.innerHTML = `
             <div class="nav-item ${activePage === 'dashboard' ? 'active' : ''}" data-page="dashboard">
-                <i class="fa-solid fa-house"></i>
+                <i class="fa-solid fas fa-house"></i>
                 <span>Home</span>
             </div>
             <div class="nav-item ${activePage === 'explore' ? 'active' : ''}" data-page="explore">
-                <i class="fa-solid fa-compass"></i>
+                <i class="fa-solid fas fa-compass"></i>
                 <span>Explore</span>
             </div>
             <div class="nav-item sell-btn">
-                <i class="fa-solid fa-plus"></i>
+                <i class="fa-solid fas fa-plus"></i>
                 <span>Sell</span>
             </div>
             <div class="nav-item ${activePage === 'favourites' ? 'active' : ''}" data-page="favourites">
-                <i class="fa-regular fa-heart"></i>
+                <i class="fa-regular fas fa-heart"></i>
                 <span>Favourites</span>
                 <span class="nav-badge" id="favouriteCount">0</span>
             </div>
             <div class="nav-item ${activePage === 'lost-item' ? 'active' : ''}" data-page="lost-item">
-                <i class="fa-regular fa-circle-question"></i>
+                <i class="fa-regular fas fa-circle-question"></i>
                 <span>Lost Item</span>
             </div>
         `;
@@ -1675,7 +1678,7 @@
         toast.className = 'toast';
         toast.id = 'globalToast';
         toast.innerHTML = `
-            <span class="toast-icon success"><i class="fa-regular fa-circle-check"></i></span>
+            <span class="toast-icon success"><i class="fa-regular fas fa-circle-check"></i></span>
             <span class="toast-message">Action completed</span>
         `;
         document.body.appendChild(toast);
@@ -1697,16 +1700,16 @@
         toastIcon.className = 'toast-icon';
         if (type === 'success') {
             toastIcon.classList.add('success');
-            toastIcon.innerHTML = '<i class="fa-regular fa-circle-check"></i>';
+            toastIcon.innerHTML = '<i class="fa-regular fas fa-circle-check"></i>';
         } else if (type === 'warning') {
             toastIcon.classList.add('warning');
-            toastIcon.innerHTML = '<i class="fa-regular fa-triangle-exclamation"></i>';
+            toastIcon.innerHTML = '<i class="fa-regular fas fa-triangle-exclamation"></i>';
         } else if (type === 'danger') {
             toastIcon.classList.add('danger');
-            toastIcon.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
+            toastIcon.innerHTML = '<i class="fa-regular fas fa-circle-xmark"></i>';
         } else {
             toastIcon.classList.add('success');
-            toastIcon.innerHTML = '<i class="fa-regular fa-circle-check"></i>';
+            toastIcon.innerHTML = '<i class="fa-regular fas fa-circle-check"></i>';
         }
 
         // Show toast
