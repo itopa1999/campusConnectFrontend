@@ -2,50 +2,3600 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
     <title>CampusHub – How to Use</title>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
 
     <!-- Global Styles -->
     <link rel="stylesheet" href="/assets/css/student/style.css" />
-    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+
+    <link
+        rel="icon"
+        type="image/jpeg"
+        href="../assets/img/icon.jpg"
+    />
 
     <style>
+        /* ============================================================
+           HOW TO USE PAGE
+           ============================================================ */
 
+        :root {
+            --guide-green: var(--green, #0f6b4f);
+            --guide-green-dark: #084b38;
+            --guide-green-soft: var(--green-bg, #e9f6f0);
+
+            --guide-bg: var(--bg-app, #f6f9f7);
+            --guide-card: var(--bg-card, #ffffff);
+            --guide-text: var(--text-primary, #17211f);
+            --guide-muted: var(--text-muted, #6b7c77);
+            --guide-border: var(--border-color, #e2e9e6);
+
+            --guide-radius: 16px;
+            --guide-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            --guide-transition: 0.2s ease;
+        }
+
+        /* ============================================================
+           PAGE
+           ============================================================ */
+
+        .guide-page {
+            min-height: 100vh;
+            background: var(--guide-bg);
+            color: var(--guide-text);
+        }
+
+        .guide-container {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 18px 0 60px;
+        }
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+
+        .guide-hero {
+            position: relative;
+            overflow: hidden;
+
+            padding: 44px 42px;
+            margin-bottom: 24px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 24px;
+
+            background:
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(15, 107, 79, 0.12),
+                    transparent 35%
+                ),
+                var(--guide-card);
+
+            box-shadow: var(--guide-shadow);
+        }
+
+        .guide-hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+
+            right: -80px;
+            bottom: -100px;
+
+            background: rgba(15, 107, 79, 0.05);
+            pointer-events: none;
+        }
+
+        .guide-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 7px 13px;
+
+            border-radius: 999px;
+            border: 1px solid rgba(15, 107, 79, 0.12);
+
+            background: var(--guide-green-soft);
+            color: var(--guide-green);
+
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+
+            margin-bottom: 14px;
+        }
+
+        .guide-hero h1 {
+            margin: 0 0 12px;
+
+            max-width: 760px;
+
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            font-weight: 850;
+        }
+
+        .guide-hero h1 span {
+            color: var(--guide-green);
+        }
+
+        .guide-hero p {
+            max-width: 720px;
+
+            margin: 0;
+
+            color: var(--guide-muted);
+
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        /* ============================================================
+           SEARCH
+           ============================================================ */
+
+        .guide-search {
+            position: relative;
+
+            max-width: 620px;
+            margin-top: 26px;
+        }
+
+        .guide-search i {
+            position: absolute;
+
+            left: 17px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: var(--guide-muted);
+        }
+
+        .guide-search input {
+            width: 100%;
+
+            height: 50px;
+
+            padding: 0 18px 0 46px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 13px;
+
+            outline: none;
+
+            background: var(--guide-card);
+            color: var(--guide-text);
+
+            font-family: inherit;
+            font-size: 14px;
+
+            transition:
+                border-color var(--guide-transition),
+                box-shadow var(--guide-transition);
+        }
+
+        .guide-search input:focus {
+            border-color: var(--guide-green);
+
+            box-shadow:
+                0 0 0 3px rgba(15, 107, 79, 0.10);
+        }
+
+        /* ============================================================
+           LAYOUT
+           ============================================================ */
+
+        .guide-layout {
+            display: grid;
+            grid-template-columns: 250px minmax(0, 1fr);
+
+            gap: 24px;
+
+            align-items: start;
+        }
+
+        /* ============================================================
+           SIDE MENU
+           ============================================================ */
+
+        .guide-sidebar {
+            position: sticky;
+            top: 18px;
+
+            max-height: calc(100vh - 36px);
+
+            overflow-y: auto;
+
+            padding: 12px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: var(--guide-radius);
+
+            background: var(--guide-card);
+            box-shadow: var(--guide-shadow);
+        }
+
+        .guide-sidebar-title {
+            padding: 10px 12px 8px;
+
+            color: var(--guide-muted);
+
+            font-size: 10px;
+            font-weight: 850;
+
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .guide-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .guide-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            width: 100%;
+
+            padding: 10px 11px;
+
+            border: 0;
+            border-radius: 10px;
+
+            background: transparent;
+
+            color: var(--guide-muted);
+
+            text-align: left;
+
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 650;
+
+            cursor: pointer;
+
+            transition:
+                background var(--guide-transition),
+                color var(--guide-transition);
+        }
+
+        .guide-nav-item i {
+            width: 18px;
+
+            text-align: center;
+
+            font-size: 13px;
+        }
+
+        .guide-nav-item:hover {
+            background: var(--guide-green-soft);
+            color: var(--guide-green);
+        }
+
+        .guide-nav-item.active {
+            background: var(--guide-green-soft);
+            color: var(--guide-green);
+            font-weight: 800;
+        }
+
+        /* ============================================================
+           MOBILE MENU BUTTON
+           ============================================================ */
+
+        .guide-mobile-menu {
+            display: none;
+
+            width: 100%;
+
+            margin-bottom: 14px;
+
+            padding: 13px 16px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 12px;
+
+            background: var(--guide-card);
+            color: var(--guide-text);
+
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 750;
+
+            cursor: pointer;
+
+            text-align: left;
+        }
+
+        .guide-mobile-menu-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* ============================================================
+           CONTENT
+           ============================================================ */
+
+        .guide-content {
+            min-width: 0;
+        }
+
+        .guide-section {
+            scroll-margin-top: 24px;
+
+            margin-bottom: 24px;
+
+            padding: 30px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: var(--guide-radius);
+
+            background: var(--guide-card);
+
+            box-shadow: var(--guide-shadow);
+        }
+
+        .guide-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .guide-section-header {
+            margin-bottom: 22px;
+        }
+
+        .guide-section-kicker {
+            margin-bottom: 7px;
+
+            color: var(--guide-green);
+
+            font-size: 10px;
+            font-weight: 850;
+
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .guide-section h2 {
+            margin: 0 0 8px;
+
+            font-size: clamp(23px, 3vw, 32px);
+            line-height: 1.15;
+
+            letter-spacing: -0.025em;
+        }
+
+        .guide-section-header p {
+            margin: 0;
+
+            max-width: 720px;
+
+            color: var(--guide-muted);
+
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .guide-section h3 {
+            margin: 24px 0 8px;
+
+            font-size: 17px;
+            line-height: 1.3;
+        }
+
+        .guide-section p {
+            color: var(--guide-muted);
+
+            font-size: 14px;
+            line-height: 1.75;
+        }
+
+        /* ============================================================
+           INTRO CARDS
+           ============================================================ */
+
+        .guide-feature-grid {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 12px;
+
+            margin-top: 22px;
+        }
+
+        .guide-feature {
+            padding: 18px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 14px;
+
+            background: var(--guide-bg);
+
+            transition:
+                transform var(--guide-transition),
+                border-color var(--guide-transition);
+        }
+
+        .guide-feature:hover {
+            transform: translateY(-2px);
+            border-color: var(--guide-green);
+        }
+
+        .guide-feature-icon {
+            width: 40px;
+            height: 40px;
+
+            display: grid;
+            place-items: center;
+
+            margin-bottom: 12px;
+
+            border-radius: 11px;
+
+            background: var(--guide-green-soft);
+            color: var(--guide-green);
+        }
+
+        .guide-feature h3 {
+            margin: 0 0 5px;
+
+            font-size: 14px;
+        }
+
+        .guide-feature p {
+            margin: 0;
+
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        /* ============================================================
+           STEPS
+           ============================================================ */
+
+        .guide-steps {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 14px;
+
+            margin-top: 20px;
+        }
+
+        .guide-step {
+            padding: 20px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 14px;
+
+            background: var(--guide-bg);
+        }
+
+        .guide-step-number {
+            width: 34px;
+            height: 34px;
+
+            display: grid;
+            place-items: center;
+
+            margin-bottom: 14px;
+
+            border-radius: 50%;
+
+            background: var(--guide-green);
+            color: #fff;
+
+            font-size: 12px;
+            font-weight: 850;
+        }
+
+        .guide-step h3 {
+            margin: 0 0 6px;
+
+            font-size: 15px;
+        }
+
+        .guide-step p {
+            margin: 0;
+
+            font-size: 12px;
+            line-height: 1.65;
+        }
+
+        /* ============================================================
+           CHECKLIST
+           ============================================================ */
+
+        .guide-checklist {
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 10px;
+
+            margin-top: 18px;
+        }
+
+        .guide-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+
+            padding: 12px 14px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 11px;
+
+            background: var(--guide-bg);
+        }
+
+        .guide-check i {
+            margin-top: 2px;
+
+            color: var(--guide-green);
+
+            font-size: 13px;
+        }
+
+        .guide-check span {
+            color: var(--guide-muted);
+
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        /* ============================================================
+           CALLOUT
+           ============================================================ */
+
+        .guide-callout {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+
+            margin: 20px 0;
+
+            padding: 16px;
+
+            border: 1px solid rgba(15, 107, 79, 0.15);
+            border-radius: 13px;
+
+            background: var(--guide-green-soft);
+        }
+
+        .guide-callout-icon {
+            flex-shrink: 0;
+
+            width: 34px;
+            height: 34px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 9px;
+
+            background: var(--guide-green);
+            color: #fff;
+        }
+
+        .guide-callout strong {
+            display: block;
+
+            margin-bottom: 3px;
+
+            color: var(--guide-text);
+
+            font-size: 13px;
+        }
+
+        .guide-callout span {
+            color: var(--guide-muted);
+
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* ============================================================
+           WARNING
+           ============================================================ */
+
+        .guide-warning {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+
+            margin: 20px 0;
+
+            padding: 15px;
+
+            border: 1px solid rgba(230, 126, 34, 0.18);
+            border-radius: 13px;
+
+            background: rgba(230, 126, 34, 0.07);
+        }
+
+        .guide-warning i {
+            color: #e67e22;
+
+            margin-top: 2px;
+        }
+
+        .guide-warning div {
+            color: var(--guide-muted);
+
+            font-size: 12px;
+            line-height: 1.65;
+        }
+
+        .guide-warning strong {
+            color: var(--guide-text);
+        }
+
+        /* ============================================================
+           BADGES
+           ============================================================ */
+
+        .guide-badges {
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 12px;
+
+            margin-top: 20px;
+        }
+
+        .guide-badge {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            padding: 15px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 13px;
+
+            background: var(--guide-bg);
+        }
+
+        .guide-badge-icon {
+            width: 40px;
+            height: 40px;
+
+            flex-shrink: 0;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 11px;
+
+            background: var(--guide-green-soft);
+            color: var(--guide-green);
+        }
+
+        .guide-badge strong {
+            display: block;
+
+            margin-bottom: 3px;
+
+            font-size: 13px;
+        }
+
+        .guide-badge span {
+            color: var(--guide-muted);
+
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* ============================================================
+           LOAN SECTION
+           ============================================================ */
+
+        .guide-loan {
+            overflow: hidden;
+
+            border: 1px solid rgba(15, 107, 79, 0.18);
+            border-radius: 18px;
+
+            background:
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(15, 107, 79, 0.10),
+                    transparent 35%
+                ),
+                var(--guide-card);
+        }
+
+        .guide-loan-hero {
+            padding: 24px;
+
+            border-bottom: 1px solid var(--guide-border);
+        }
+
+        .guide-coming-soon {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            margin-bottom: 10px;
+
+            padding: 6px 11px;
+
+            border-radius: 999px;
+
+            background: rgba(230, 126, 34, 0.10);
+            color: #e67e22;
+
+            font-size: 10px;
+            font-weight: 850;
+
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .guide-loan-hero h3 {
+            margin: 0 0 8px;
+
+            font-size: 24px;
+        }
+
+        .guide-loan-hero p {
+            margin: 0;
+
+            max-width: 680px;
+        }
+
+        .guide-loan-products {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 12px;
+
+            padding: 20px;
+        }
+
+        .guide-loan-product {
+            padding: 18px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 14px;
+
+            background: var(--guide-bg);
+        }
+
+        .guide-loan-product-icon {
+            width: 40px;
+            height: 40px;
+
+            display: grid;
+            place-items: center;
+
+            margin-bottom: 12px;
+
+            border-radius: 10px;
+
+            background: var(--guide-green-soft);
+            color: var(--guide-green);
+        }
+
+        .guide-loan-product h4 {
+            margin: 0 0 5px;
+
+            font-size: 14px;
+        }
+
+        .guide-loan-product p {
+            margin: 0 0 13px;
+
+            font-size: 11px;
+            line-height: 1.55;
+        }
+
+        .guide-loan-meta {
+            display: flex;
+            justify-content: space-between;
+
+            padding-top: 11px;
+
+            border-top: 1px solid var(--guide-border);
+        }
+
+        .guide-loan-meta div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            text-align: center;
+        }
+
+        .guide-loan-meta strong {
+            font-size: 11px;
+        }
+
+        .guide-loan-meta span {
+            color: var(--guide-muted);
+
+            font-size: 9px;
+        }
+
+        /* ============================================================
+           TABLE
+           ============================================================ */
+
+        .guide-table-wrap {
+            overflow-x: auto;
+
+            margin-top: 20px;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 13px;
+        }
+
+        .guide-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 600px;
+        }
+
+        .guide-table th,
+        .guide-table td {
+            padding: 13px 15px;
+
+            border-bottom: 1px solid var(--guide-border);
+
+            text-align: left;
+        }
+
+        .guide-table th {
+            background: var(--guide-bg);
+
+            color: var(--guide-text);
+
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .guide-table td {
+            color: var(--guide-muted);
+
+            font-size: 12px;
+        }
+
+        .guide-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        /* ============================================================
+           FAQ
+           ============================================================ */
+
+        .guide-faq {
+            display: flex;
+            flex-direction: column;
+
+            gap: 8px;
+
+            margin-top: 18px;
+        }
+
+        .guide-faq-item {
+            overflow: hidden;
+
+            border: 1px solid var(--guide-border);
+            border-radius: 12px;
+
+            background: var(--guide-card);
+        }
+
+        .guide-faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            width: 100%;
+
+            padding: 16px;
+
+            border: 0;
+
+            background: transparent;
+            color: var(--guide-text);
+
+            font-family: inherit;
+
+            font-size: 13px;
+            font-weight: 750;
+
+            text-align: left;
+
+            cursor: pointer;
+        }
+
+        .guide-faq-question i {
+            color: var(--guide-muted);
+
+            transition: transform var(--guide-transition);
+        }
+
+        .guide-faq-answer {
+            display: none;
+
+            padding: 0 16px 16px;
+
+            color: var(--guide-muted);
+
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .guide-faq-item.open .guide-faq-answer {
+            display: block;
+        }
+
+        .guide-faq-item.open .guide-faq-question i {
+            transform: rotate(180deg);
+        }
+
+        /* ============================================================
+           FOOTER CTA
+           ============================================================ */
+
+        .guide-final-cta {
+            padding: 28px;
+
+            border-radius: 18px;
+
+            background: var(--guide-green);
+            color: #fff;
+
+            text-align: center;
+        }
+
+        .guide-final-cta h2 {
+            margin: 0 0 8px;
+
+            font-size: 25px;
+        }
+
+        .guide-final-cta p {
+            max-width: 600px;
+
+            margin: 0 auto;
+
+            color: rgba(255,255,255,0.82);
+
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        /* ============================================================
+           DARK MODE
+           ============================================================ */
+
+        .dark-mode .guide-page {
+            --guide-bg: var(--bg-app, #0f1211);
+            --guide-card: var(--bg-card, #1a1f1d);
+            --guide-text: var(--text-primary, #e8edeb);
+            --guide-muted: var(--text-muted, #8a9a94);
+            --guide-border: var(--border-color, #2a322f);
+            --guide-green-soft: rgba(15, 107, 79, 0.18);
+        }
+
+        .dark-mode .guide-hero {
+            background:
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(15, 107, 79, 0.18),
+                    transparent 35%
+                ),
+                var(--guide-card);
+        }
+
+        .dark-mode .guide-search input {
+            background: var(--guide-card);
+        }
+
+        .dark-mode .guide-warning {
+            background: rgba(230, 126, 34, 0.10);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+
+        @media (max-width: 900px) {
+
+            .guide-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .guide-sidebar {
+                display: none;
+
+                position: static;
+
+                max-height: none;
+            }
+
+            .guide-sidebar.mobile-open {
+                display: block;
+            }
+
+            .guide-mobile-menu {
+                display: block;
+            }
+
+            .guide-feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .guide-loan-products {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+
+            .guide-container {
+                width: min(100% - 20px, 1180px);
+
+                padding-top: 10px;
+            }
+
+            .guide-hero {
+                padding: 28px 22px;
+                border-radius: 18px;
+            }
+
+            .guide-hero h1 {
+                font-size: 31px;
+            }
+
+            .guide-hero p {
+                font-size: 14px;
+            }
+
+            .guide-section {
+                padding: 22px 18px;
+                border-radius: 15px;
+            }
+
+            .guide-feature-grid,
+            .guide-steps,
+            .guide-checklist,
+            .guide-badges {
+                grid-template-columns: 1fr;
+            }
+
+            .guide-section h2 {
+                font-size: 24px;
+            }
+
+            .guide-loan-products {
+                padding: 14px;
+            }
+        }
     </style>
-
 </head>
+
 <body>
 
-    <div class="app-container">
+<div class="guide-page">
 
-        <!-- ===== LOCATION ===== -->
+    <div class="app-container" style="background: transparent;">
+
+        <!-- ========================================================
+             LOCATION
+             ======================================================== -->
+
         <div class="location-bar">
             <i class="fas fa-location-dot"></i>
+
             <div class="loc-text">
                 University of Benin <span>• Ugbowo</span>
             </div>
         </div>
 
-        <!-- ===== MAIN ===== -->
-        <main class="main-content" style="padding-top: 12px;">
+
+        <!-- ========================================================
+             MAIN
+             ======================================================== -->
+
+        <main class="main-content" style="padding-top: 8px;">
+
+            <div class="guide-container">
+
+                <!-- ==================================================
+                     HERO
+                     ================================================== -->
+
+                <section class="guide-hero">
+
+                    <div class="guide-eyebrow">
+                        <i class="fas fa-book-open"></i>
+                        CampusHub Guide
+                    </div>
+
+                    <h1>
+                        Learn how to use
+                        <span>CampusHub</span>
+                    </h1>
+
+                    <p>
+                        New to CampusHub? This guide will walk you through
+                        everything you need to know — from creating your
+                        account and buying or selling items to finding
+                        accommodation, reporting lost items, securing your
+                        account and using upcoming features.
+                    </p>
+
+                    <div class="guide-search">
+
+                        <i class="fas fa-search"></i>
+
+                        <input
+                            type="search"
+                            id="guideSearch"
+                            placeholder="Search this guide..."
+                            autocomplete="off"
+                        />
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==================================================
+                     MOBILE MENU
+                     ================================================== -->
+
+                <button
+                    type="button"
+                    class="guide-mobile-menu"
+                    id="mobileGuideMenu"
+                >
+                    <div class="guide-mobile-menu-content">
+
+                        <span>
+                            <i class="fas fa-list"></i>
+                            <span id="mobileMenuLabel">
+                                Guide Menu
+                            </span>
+                        </span>
+
+                        <i class="fas fa-chevron-down"></i>
+
+                    </div>
+                </button>
+
+
+                <!-- ==================================================
+                     LAYOUT
+                     ================================================== -->
+
+                <div class="guide-layout">
+
+
+                    <!-- ==================================================
+                         SIDEBAR
+                         ================================================== -->
+
+                    <aside class="guide-sidebar" id="guideSidebar">
+
+                        <div class="guide-sidebar-title">
+                            On this page
+                        </div>
+
+                        <nav class="guide-nav">
+
+                            <button
+                                class="guide-nav-item active"
+                                data-target="welcome"
+                            >
+                                <i class="fas fa-house"></i>
+                                Getting Started
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="account"
+                            >
+                                <i class="fas fa-user-plus"></i>
+                                Your Account
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="browse"
+                            >
+                                <i class="fas fa-magnifying-glass"></i>
+                                Finding Listings
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="sell"
+                            >
+                                <i class="fas fa-store"></i>
+                                Sell
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="service"
+                            >
+                                <i class="fas fa-screwdriver-wrench"></i>
+                                Services
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="accommodation"
+                            >
+                                <i class="fas fa-house"></i>
+                                Accommodation
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="lost-found"
+                            >
+                                <i class="fas fa-magnifying-glass-location"></i>
+                                Lost & Found
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="favourites"
+                            >
+                                <i class="fas fa-heart"></i>
+                                Favourites
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="notifications"
+                            >
+                                <i class="fas fa-bell"></i>
+                                Notifications
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="verification"
+                            >
+                                <i class="fas fa-id-card"></i>
+                                Verification & Badges
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="security"
+                            >
+                                <i class="fas fa-shield-halved"></i>
+                                Account Security
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="points"
+                            >
+                                <i class="fas fa-coins"></i>
+                                Points
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="student-loan"
+                            >
+                                <i class="fas fa-hand-holding-dollar"></i>
+                                Student Loan
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="safety"
+                            >
+                                <i class="fas fa-user-shield"></i>
+                                Staying Safe
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="feedback"
+                            >
+                                <i class="fas fa-lightbulb"></i>
+                                Help Us Improve
+                            </button>
+
+                            <button
+                                class="guide-nav-item"
+                                data-target="faq"
+                            >
+                                <i class="fas fa-circle-question"></i>
+                                FAQ
+                            </button>
+
+                        </nav>
+
+                    </aside>
+
+
+                    <!-- ==================================================
+                         CONTENT
+                         ================================================== -->
+
+                    <div class="guide-content">
+
+
+                        <!-- ==================================================
+                             WELCOME
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="welcome"
+                            data-title="Getting Started"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Start here
+                                </div>
+
+                                <h2>
+                                    Welcome to CampusHub
+                                </h2>
+
+                                <p>
+                                    CampusHub is a student-focused platform
+                                    designed to make campus life easier.
+                                    You can discover things other students
+                                    are offering, sell your own items,
+                                    offer services, find accommodation,
+                                    recover lost items and much more.
+                                </p>
+
+                            </div>
+
+
+                            <div class="guide-feature-grid">
+
+                                <div class="guide-feature">
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+
+                                    <h3>
+                                        Buy & Sell
+                                    </h3>
+
+                                    <p>
+                                        Find products from students or
+                                        create your own listings.
+                                    </p>
+                                </div>
+
+
+                                <div class="guide-feature">
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-screwdriver-wrench"></i>
+                                    </div>
+
+                                    <h3>
+                                        Services
+                                    </h3>
+
+                                    <p>
+                                        Discover or offer useful services
+                                        to other students.
+                                    </p>
+                                </div>
+
+
+                                <div class="guide-feature">
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-house"></i>
+                                    </div>
+
+                                    <h3>
+                                        Accommodation
+                                    </h3>
+
+                                    <p>
+                                        Discover accommodation opportunities
+                                        around your campus.
+                                    </p>
+                                </div>
+
+
+                                <div class="guide-feature">
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+
+                                    <h3>
+                                        Favourites
+                                    </h3>
+
+                                    <p>
+                                        Save listings you want to return to
+                                        later.
+                                    </p>
+                                </div>
+
+
+                                <div class="guide-feature">
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-magnifying-glass-location"></i>
+                                    </div>
+
+                                    <h3>
+                                        Lost & Found
+                                    </h3>
+
+                                    <p>
+                                        Report lost or found items and help
+                                        reconnect students with their property.
+                                    </p>
+                                </div>
+
+
+                                <div class="guide-feature">
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+
+                                    <h3>
+                                        Notifications
+                                    </h3>
+
+                                    <p>
+                                        Stay informed about important activity
+                                        on your account.
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                            <h3>
+                                Your first steps
+                            </h3>
+
+
+                            <div class="guide-steps">
+
+                                <div class="guide-step">
+
+                                    <div class="guide-step-number">
+                                        1
+                                    </div>
+
+                                    <h3>
+                                        Create an account
+                                    </h3>
+
+                                    <p>
+                                        Sign up and complete the required
+                                        account information.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="guide-step">
+
+                                    <div class="guide-step-number">
+                                        2
+                                    </div>
+
+                                    <h3>
+                                        Complete your profile
+                                    </h3>
+
+                                    <p>
+                                        Add your profile information and
+                                        verify your student identity where
+                                        required.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="guide-step">
+
+                                    <div class="guide-step-number">
+                                        3
+                                    </div>
+
+                                    <h3>
+                                        Start exploring
+                                    </h3>
+
+                                    <p>
+                                        Browse listings, save favourites,
+                                        create listings and connect with
+                                        other students.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             ACCOUNT
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="account"
+                            data-title="Your Account"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Account
+                                </div>
+
+                                <h2>
+                                    Create and manage your account
+                                </h2>
+
+                                <p>
+                                    Your account is the centre of your
+                                    CampusHub experience.
+                                </p>
+
+                            </div>
+
+
+                            <h3>
+                                Creating an account
+                            </h3>
+
+                            <p>
+                                Select <strong>Sign Up</strong> and provide
+                                the information requested during registration.
+                                Once your account has been created, sign in
+                                using your credentials.
+                            </p>
+
+
+                            <h3>
+                                Complete your profile
+                            </h3>
+
+                            <p>
+                                After registration, complete your profile
+                                information. You can update your profile
+                                picture and other available student
+                                information from your account.
+                            </p>
+
+
+                            <div class="guide-checklist">
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Keep your profile information accurate.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Upload your Student ID when required.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Complete available verification steps.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Protect your password and 2FA codes.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             BROWSE
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="browse"
+                            data-title="Finding Listings"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Discover
+                                </div>
+
+                                <h2>
+                                    Finding something you need
+                                </h2>
+
+                                <p>
+                                    CampusHub lets you discover products,
+                                    services and accommodation posted by
+                                    students.
+                                </p>
+
+                            </div>
+
+
+                            <p>
+                                Start from the marketplace and browse the
+                                available listings. You can search for
+                                something specific and use available filters
+                                to narrow your results.
+                            </p>
+
+
+                            <h3>
+                                Before contacting a seller
+                            </h3>
+
+                            <div class="guide-checklist">
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Read the listing description carefully.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Check the available photos.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Review the seller's profile.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Check available verification badges.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             SELL
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="sell"
+                            data-title="Sell"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Marketplace
+                                </div>
+
+                                <h2>
+                                    Sell something to another student
+                                </h2>
+
+                                <p>
+                                    Have something you no longer need?
+                                    Create a listing and make it available
+                                    to other students.
+                                </p>
+
+                            </div>
+
+
+                            <div class="guide-steps">
+
+                                <div class="guide-step">
+                                    <div class="guide-step-number">1</div>
+                                    <h3>Create a listing</h3>
+                                    <p>
+                                        Choose the Sell option and provide
+                                        the required information.
+                                    </p>
+                                </div>
+
+                                <div class="guide-step">
+                                    <div class="guide-step-number">2</div>
+                                    <h3>Add details</h3>
+                                    <p>
+                                        Add a clear title, description,
+                                        price and good-quality photos.
+                                    </p>
+                                </div>
+
+                                <div class="guide-step">
+                                    <div class="guide-step-number">3</div>
+                                    <h3>Publish</h3>
+                                    <p>
+                                        Review your information and publish
+                                        the listing.
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                            <div class="guide-callout">
+
+                                <div class="guide-callout-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Make your listing easy to trust
+                                    </strong>
+
+                                    <span>
+                                        Use clear photos, accurate descriptions
+                                        and realistic information. Good listings
+                                        make it easier for interested students
+                                        to understand exactly what you're offering.
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <h3>
+                                When your item is sold
+                            </h3>
+
+                            <p>
+                                Update the listing and mark the item as
+                                <strong>Sold</strong> so other students know
+                                that it is no longer available.
+                            </p>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             SERVICE
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="service"
+                            data-title="Services"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Services
+                                </div>
+
+                                <h2>
+                                    Offer a service
+                                </h2>
+
+                                <p>
+                                    CampusHub can also help students discover
+                                    useful services offered by other students.
+                                </p>
+
+                            </div>
+
+
+                            <p>
+                                You can create a Service listing for things
+                                such as programming, graphic design,
+                                photography, tutoring, repairs, printing,
+                                hairdressing and other student-oriented
+                                services.
+                            </p>
+
+
+                            <div class="guide-checklist">
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Clearly describe the service.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Explain what the customer receives.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Provide pricing information where applicable.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>
+                                        Add examples or photos when useful.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             ACCOMMODATION
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="accommodation"
+                            data-title="Accommodation"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Housing
+                                </div>
+
+                                <h2>
+                                    Find accommodation
+                                </h2>
+
+                                <p>
+                                    Looking for a place to stay? Browse
+                                    accommodation listings posted for students.
+                                </p>
+
+                            </div>
+
+
+                            <p>
+                                Review the available accommodation information,
+                                including location, description, price and
+                                facilities where provided.
+                            </p>
+
+
+                            <div class="guide-warning">
+
+                                <i class="fas fa-triangle-exclamation"></i>
+
+                                <div>
+                                    <strong>
+                                        Be careful before making payments.
+                                    </strong>
+
+                                    Always verify the accommodation and the
+                                    person offering it. Do not send money
+                                    simply because a listing looks convincing.
+                                </div>
+
+                            </div>
+
+
+                            <h3>
+                                If you have accommodation to offer
+                            </h3>
+
+                            <p>
+                                You can create an Accommodation listing and
+                                provide accurate information about the property,
+                                location, price, facilities and availability.
+                            </p>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             LOST AND FOUND
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="lost-found"
+                            data-title="Lost & Found"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Lost & Found
+                                </div>
+
+                                <h2>
+                                    Lost something? Found something?
+                                </h2>
+
+                                <p>
+                                    CampusHub allows students to report found
+                                    items and helps students claim items they
+                                    believe belong to them.
+                                </p>
+
+                            </div>
+
+
+                            <h3>
+                                If you found an item
+                            </h3>
+
+                            <p>
+                                Create a Lost & Found record and provide
+                                information such as the item name, description,
+                                location, date found, contact details and
+                                an optional image.
+                            </p>
+
+
+                            <h3>
+                                If you lost an item
+                            </h3>
+
+                            <p>
+                                Browse reported found items. If you find an
+                                item that appears to be yours, start the
+                                claim process.
+                            </p>
+
+
+                            <div class="guide-callout">
+
+                                <div class="guide-callout-icon">
+                                    <i class="fas fa-shield-halved"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Verification protects the owner
+                                    </strong>
+
+                                    <span>
+                                        Claiming an item may require you to
+                                        answer verification questions about
+                                        the item. This helps prevent someone
+                                        else from falsely claiming your property.
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="guide-warning">
+
+                                <i class="fas fa-lock"></i>
+
+                                <div>
+                                    <strong>
+                                        Keep some identifying details private.
+                                    </strong>
+
+                                    If an item has unique characteristics,
+                                    avoid publicly revealing every detail.
+                                    Some information can be useful when
+                                    verifying the rightful owner.
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             FAVOURITES
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="favourites"
+                            data-title="Favourites"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Save for later
+                                </div>
+
+                                <h2>
+                                    Favourites
+                                </h2>
+
+                                <p>
+                                    Found something interesting but you're
+                                    not ready to act yet? Save it to your
+                                    Favourites.
+                                </p>
+
+                            </div>
+
+
+                            <p>
+                                Favourites make it easier to return to listings
+                                you are interested in without having to search
+                                for them again.
+                            </p>
+
+
+                            <div class="guide-feature-grid">
+
+                                <div class="guide-feature">
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+
+                                    <h3>
+                                        Save
+                                    </h3>
+
+                                    <p>
+                                        Add interesting listings to your
+                                        favourites.
+                                    </p>
+                                </div>
+
+
+                                <div class="guide-feature">
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-scale-balanced"></i>
+                                    </div>
+
+                                    <h3>
+                                        Compare
+                                    </h3>
+
+                                    <p>
+                                        Keep multiple listings available
+                                        while deciding.
+                                    </p>
+                                </div>
+
+
+                                <div class="guide-feature">
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-clock-rotate-left"></i>
+                                    </div>
+
+                                    <h3>
+                                        Return later
+                                    </h3>
+
+                                    <p>
+                                        Quickly return to listings you
+                                        previously liked.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             NOTIFICATIONS
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="notifications"
+                            data-title="Notifications"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Stay informed
+                                </div>
+
+                                <h2>
+                                    Notifications
+                                </h2>
+
+                                <p>
+                                    Notifications help you keep track of
+                                    important activity and updates on
+                                    CampusHub.
+                                </p>
+
+                            </div>
+
+
+                            <p>
+                                Check your notifications regularly so you
+                                don't miss important updates related to
+                                your account or activity on the platform.
+                            </p>
+
+
+                            <div class="guide-checklist">
+
+                                <div class="guide-check">
+                                    <i class="fas fa-bell"></i>
+                                    <span>
+                                        Check your notification indicator.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-envelope-open"></i>
+                                    <span>
+                                        Open notifications to see new updates.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-clock"></i>
+                                    <span>
+                                        Review important notifications promptly.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             VERIFICATION
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="verification"
+                            data-title="Verification & Badges"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Trust
+                                </div>
+
+                                <h2>
+                                    Verification & badges
+                                </h2>
+
+                                <p>
+                                    Verification helps students understand
+                                    which parts of another user's identity
+                                    or activity have been verified.
+                                </p>
+
+                            </div>
+
+
+                            <div class="guide-badges">
+
+                                <div class="guide-badge">
+
+                                    <div class="guide-badge-icon">
+                                        <i class="fas fa-id-card"></i>
+                                    </div>
+
+                                    <div>
+                                        <strong>
+                                            ID Verified
+                                        </strong>
+
+                                        <span>
+                                            Student ID verification has been
+                                            completed.
+                                        </span>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="guide-badge">
+
+                                    <div class="guide-badge-icon">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+
+                                    <div>
+                                        <strong>
+                                            Hall Verified
+                                        </strong>
+
+                                        <span>
+                                            The student's hall information
+                                            has been verified.
+                                        </span>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="guide-badge">
+
+                                    <div class="guide-badge-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+
+                                    <div>
+                                        <strong>
+                                            Top Seller
+                                        </strong>
+
+                                        <span>
+                                            Recognition based on selling
+                                            activity.
+                                        </span>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="guide-badge">
+
+                                    <div class="guide-badge-icon">
+                                        <i class="fas fa-shield-halved"></i>
+                                    </div>
+
+                                    <div>
+                                        <strong>
+                                            Verified
+                                        </strong>
+
+                                        <span>
+                                            Indicates an applicable account
+                                            verification status.
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <h3>
+                                Why verification matters
+                            </h3>
+
+                            <p>
+                                Verification provides useful trust signals
+                                when you interact with another student.
+                                However, badges should be treated as one
+                                part of your overall judgment.
+                            </p>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             SECURITY
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="security"
+                            data-title="Account Security"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Security
+                                </div>
+
+                                <h2>
+                                    Protect your account
+                                </h2>
+
+                                <p>
+                                    CampusHub currently supports additional
+                                    account security through Email and TOTP
+                                    Two-Factor Authentication.
+                                </p>
+
+                            </div>
+
+
+                            <h3>
+                                Two-Factor Authentication
+                            </h3>
+
+                            <p>
+                                2FA adds another layer of protection to your
+                                account. In addition to your password, you
+                                will need a second verification code when
+                                required.
+                            </p>
+
+
+                            <div class="guide-feature-grid">
+
+                                <div class="guide-feature">
+
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+
+                                    <h3>
+                                        Email 2FA
+                                    </h3>
+
+                                    <p>
+                                        Receive your verification code through
+                                        your registered email address.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="guide-feature">
+
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-key"></i>
+                                    </div>
+
+                                    <h3>
+                                        TOTP 2FA
+                                    </h3>
+
+                                    <p>
+                                        Use an authenticator application to
+                                        generate verification codes.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="guide-steps">
+
+                                <div class="guide-step">
+                                    <div class="guide-step-number">1</div>
+                                    <h3>
+                                        Open your profile
+                                    </h3>
+                                    <p>
+                                        Open the account/profile menu.
+                                    </p>
+                                </div>
+
+                                <div class="guide-step">
+                                    <div class="guide-step-number">2</div>
+                                    <h3>
+                                        Select Add 2FA
+                                    </h3>
+                                    <p>
+                                        Choose the available authentication
+                                        method.
+                                    </p>
+                                </div>
+
+                                <div class="guide-step">
+                                    <div class="guide-step-number">3</div>
+                                    <h3>
+                                        Complete setup
+                                    </h3>
+                                    <p>
+                                        Verify the method and use it when
+                                        CampusHub requests additional
+                                        authentication.
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                            <div class="guide-warning">
+
+                                <i class="fas fa-lock"></i>
+
+                                <div>
+                                    <strong>
+                                        Never share your verification code.
+                                    </strong>
+
+                                    CampusHub support will never need your
+                                    password or one-time authentication code.
+                                </div>
+
+                            </div>
+
+
+                            <h3>
+                                Changing your password
+                            </h3>
+
+                            <p>
+                                Use <strong>Change Password</strong> from your
+                                account menu whenever you need to update your
+                                password.
+                            </p>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             POINTS
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="points"
+                            data-title="Points"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    CampusHub Points
+                                </div>
+
+                                <h2>
+                                    Points
+                                </h2>
+
+                                <p>
+                                    Some CampusHub features may require
+                                    points.
+                                </p>
+
+                            </div>
+
+
+                            <p>
+                                You can view your available points from your
+                                account. If additional points are required,
+                                use the <strong>Buy Points</strong> option
+                                where available.
+                            </p>
+
+
+                            <div class="guide-callout">
+
+                                <div class="guide-callout-icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Always check the requirement first
+                                    </strong>
+
+                                    <span>
+                                        CampusHub will indicate when a feature
+                                        requires points before you proceed.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             STUDENT LOAN
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="student-loan"
+                            data-title="Student Loan"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Coming soon
+                                </div>
+
+                                <h2>
+                                    Student Loan
+                                </h2>
+
+                                <p>
+                                    CampusHub is working on a student-focused
+                                    lending experience designed around the
+                                    financial needs of students.
+                                </p>
+
+                            </div>
+
+
+                            <div class="guide-loan">
+
+                                <div class="guide-loan-hero">
+
+                                    <div class="guide-coming-soon">
+                                        <i class="fas fa-clock"></i>
+                                        Coming Soon
+                                    </div>
+
+                                    <h3>
+                                        Financial support for campus life
+                                    </h3>
+
+                                    <p>
+                                        The Student Loan feature is currently
+                                        in development. When available,
+                                        eligible verified students will be
+                                        able to explore loan options directly
+                                        through their CampusHub account.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="guide-loan-products">
+
+                                    <div class="guide-loan-product">
+
+                                        <div class="guide-loan-product-icon">
+                                            <i class="fas fa-bolt"></i>
+                                        </div>
+
+                                        <h4>
+                                            Quick Access
+                                        </h4>
+
+                                        <p>
+                                            Planned for smaller unexpected
+                                            expenses with a shorter repayment
+                                            period.
+                                        </p>
+
+                                        <div class="guide-loan-meta">
+
+                                            <div>
+                                                <strong>₦5k–₦20k</strong>
+                                                <span>Amount</span>
+                                            </div>
+
+                                            <div>
+                                                <strong>30 days</strong>
+                                                <span>Term</span>
+                                            </div>
+
+                                            <div>
+                                                <strong>0%</strong>
+                                                <span>Interest</span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="guide-loan-product">
+
+                                        <div class="guide-loan-product-icon">
+                                            <i class="fas fa-book-open"></i>
+                                        </div>
+
+                                        <h4>
+                                            Semester Support
+                                        </h4>
+
+                                        <p>
+                                            Planned for expenses such as
+                                            tuition, books or accommodation.
+                                        </p>
+
+                                        <div class="guide-loan-meta">
+
+                                            <div>
+                                                <strong>₦20k–₦100k</strong>
+                                                <span>Amount</span>
+                                            </div>
+
+                                            <div>
+                                                <strong>3–6 months</strong>
+                                                <span>Term</span>
+                                            </div>
+
+                                            <div>
+                                                <strong>5%</strong>
+                                                <span>Interest</span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="guide-loan-product">
+
+                                        <div class="guide-loan-product-icon">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+
+                                        <h4>
+                                            Graduate Bridge
+                                        </h4>
+
+                                        <p>
+                                            Planned transition support for
+                                            final-year students entering the
+                                            job market.
+                                        </p>
+
+                                        <div class="guide-loan-meta">
+
+                                            <div>
+                                                <strong>₦50k–₦200k</strong>
+                                                <span>Amount</span>
+                                            </div>
+
+                                            <div>
+                                                <strong>6–12 months</strong>
+                                                <span>Term</span>
+                                            </div>
+
+                                            <div>
+                                                <strong>7%</strong>
+                                                <span>Interest</span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <h3>
+                                How the planned process will work
+                            </h3>
+
+                            <div class="guide-steps">
+
+                                <div class="guide-step">
+
+                                    <div class="guide-step-number">
+                                        1
+                                    </div>
+
+                                    <h3>
+                                        Check eligibility
+                                    </h3>
+
+                                    <p>
+                                        Your student status and account
+                                        information will be checked to
+                                        determine which options you qualify for.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="guide-step">
+
+                                    <div class="guide-step-number">
+                                        2
+                                    </div>
+
+                                    <h3>
+                                        Review the terms
+                                    </h3>
+
+                                    <p>
+                                        Review the applicable amount,
+                                        interest rate and repayment schedule
+                                        before accepting.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="guide-step">
+
+                                    <div class="guide-step-number">
+                                        3
+                                    </div>
+
+                                    <h3>
+                                        Receive funds
+                                    </h3>
+
+                                    <p>
+                                        The planned process includes sending
+                                        approved funds to your verified bank
+                                        account.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="guide-callout">
+
+                                <div class="guide-callout-icon">
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Student verification will matter
+                                    </strong>
+
+                                    <span>
+                                        The planned loan service requires a
+                                        verified student account and active
+                                        Student ID verification.
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="guide-warning">
+
+                                <i class="fas fa-triangle-exclamation"></i>
+
+                                <div>
+                                    <strong>
+                                        Important: Student Loan is not live yet.
+                                    </strong>
+
+                                    The loan products, amounts, rates and
+                                    timelines shown above are planned offerings
+                                    and may change before the feature launches.
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             SAFETY
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="safety"
+                            data-title="Staying Safe"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Safety
+                                </div>
+
+                                <h2>
+                                    Stay safe on CampusHub
+                                </h2>
+
+                                <p>
+                                    CampusHub connects students, but you should
+                                    always use good judgment when interacting
+                                    with other users.
+                                </p>
+
+                            </div>
+
+
+                            <h3>
+                                Protect your account
+                            </h3>
+
+                            <div class="guide-checklist">
+
+                                <div class="guide-check">
+                                    <i class="fas fa-lock"></i>
+                                    <span>
+                                        Never share your password.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-key"></i>
+                                    <span>
+                                        Never share your 2FA code.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>
+                                        Be careful with suspicious links.
+                                    </span>
+                                </div>
+
+                                <div class="guide-check">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span>
+                                        Report suspicious activity.
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <h3>
+                                When buying or selling
+                            </h3>
+
+                            <p>
+                                Review the listing carefully, ask questions
+                                when necessary and verify important information
+                                before completing a transaction.
+                            </p>
+
+
+                            <h3>
+                                When meeting another student
+                            </h3>
+
+                            <p>
+                                If you need to meet someone you don't know,
+                                choose an appropriate public location where
+                                possible and let someone you trust know where
+                                you're going when appropriate.
+                            </p>
+
+
+                            <h3>
+                                Report abuse
+                            </h3>
+
+                            <p>
+                                If you encounter suspicious, abusive or
+                                inappropriate behaviour, use
+                                <strong>Report Issue / Abuse</strong>.
+                            </p>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             FEEDBACK
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="feedback"
+                            data-title="Help Us Improve"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Your feedback matters
+                                </div>
+
+                                <h2>
+                                    Help us improve CampusHub
+                                </h2>
+
+                                <p>
+                                    CampusHub is built for students, and your
+                                    feedback helps us make it better.
+                                </p>
+
+                            </div>
+
+
+                            <div class="guide-feature-grid">
+
+                                <div class="guide-feature">
+
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-bug"></i>
+                                    </div>
+
+                                    <h3>
+                                        Found a bug?
+                                    </h3>
+
+                                    <p>
+                                        Let us know when something doesn't
+                                        work as expected.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="guide-feature">
+
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+
+                                    <h3>
+                                        Have an idea?
+                                    </h3>
+
+                                    <p>
+                                        Tell us about a feature you would
+                                        like to see.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="guide-feature">
+
+                                    <div class="guide-feature-icon">
+                                        <i class="fas fa-face-smile"></i>
+                                    </div>
+
+                                    <h3>
+                                        Have feedback?
+                                    </h3>
+
+                                    <p>
+                                        Tell us what we can do better.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="guide-callout">
+
+                                <div class="guide-callout-icon">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Use "Help us Improve"
+                                    </strong>
+
+                                    <span>
+                                        You can access the feedback option
+                                        from your account/menu to send us
+                                        suggestions and report user experience
+                                        problems.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             FAQ
+                             ================================================== -->
+
+                        <section
+                            class="guide-section guide-searchable"
+                            id="faq"
+                            data-title="FAQ"
+                        >
+
+                            <div class="guide-section-header">
+
+                                <div class="guide-section-kicker">
+                                    Frequently asked questions
+                                </div>
+
+                                <h2>
+                                    Quick answers
+                                </h2>
+
+                                <p>
+                                    Some common questions new CampusHub users
+                                    may have.
+                                </p>
+
+                            </div>
+
+
+                            <div class="guide-faq">
+
+
+                                <div class="guide-faq-item">
+
+                                    <button
+                                        type="button"
+                                        class="guide-faq-question"
+                                    >
+                                        <span>
+                                            Do I need an account to use CampusHub?
+                                        </span>
+
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+
+                                    <div class="guide-faq-answer">
+                                        Some parts of CampusHub may be available
+                                        without signing in, but an account is
+                                        required for features that involve
+                                        your identity, listings and account
+                                        activity.
+                                    </div>
+
+                                </div>
+
+
+                                <div class="guide-faq-item">
+
+                                    <button
+                                        type="button"
+                                        class="guide-faq-question"
+                                    >
+                                        <span>
+                                            How do I sell something?
+                                        </span>
+
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+
+                                    <div class="guide-faq-answer">
+                                        Sign in, choose the Sell option,
+                                        provide your item information,
+                                        upload appropriate photos, review
+                                        your listing and publish it.
+                                    </div>
+
+                                </div>
+
+
+                                <div class="guide-faq-item">
+
+                                    <button
+                                        type="button"
+                                        class="guide-faq-question"
+                                    >
+                                        <span>
+                                            Can I report a found item?
+                                        </span>
+
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+
+                                    <div class="guide-faq-answer">
+                                        Yes. Use the Lost & Found feature to
+                                        provide information about an item
+                                        you found. Students can then use the
+                                        claim process if they believe the
+                                        item belongs to them.
+                                    </div>
+
+                                </div>
+
+
+                                <div class="guide-faq-item">
+
+                                    <button
+                                        type="button"
+                                        class="guide-faq-question"
+                                    >
+                                        <span>
+                                            Can I save a listing for later?
+                                        </span>
+
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+
+                                    <div class="guide-faq-answer">
+                                        Yes. Use the Favourite feature to save
+                                        listings you want to easily find again.
+                                    </div>
+
+                                </div>
+
+
+                                <div class="guide-faq-item">
+
+                                    <button
+                                        type="button"
+                                        class="guide-faq-question"
+                                    >
+                                        <span>
+                                            Which 2FA methods are available?
+                                        </span>
+
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+
+                                    <div class="guide-faq-answer">
+                                        CampusHub currently supports Email
+                                        and TOTP Two-Factor Authentication.
+                                    </div>
+
+                                </div>
+
+
+                                <div class="guide-faq-item">
+
+                                    <button
+                                        type="button"
+                                        class="guide-faq-question"
+                                    >
+                                        <span>
+                                            Is Student Loan available now?
+                                        </span>
+
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+
+                                    <div class="guide-faq-answer">
+                                        No. Student Loan is currently marked
+                                        as Coming Soon. The planned service
+                                        includes several student-focused loan
+                                        products, but the feature is still
+                                        under development.
+                                    </div>
+
+                                </div>
+
+
+                                <div class="guide-faq-item">
+
+                                    <button
+                                        type="button"
+                                        class="guide-faq-question"
+                                    >
+                                        <span>
+                                            How can I report abuse?
+                                        </span>
+
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+
+                                    <div class="guide-faq-answer">
+                                        Use the Report Issue / Abuse option
+                                        from the available account/menu
+                                        options to report suspicious or
+                                        inappropriate activity.
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ==================================================
+                             FINAL CTA
+                             ================================================== -->
+
+                        <section class="guide-final-cta">
+
+                            <h2>
+                                You're ready to explore CampusHub.
+                            </h2>
+
+                            <p>
+                                Start by completing your profile, explore
+                                available listings and discover what other
+                                students are offering around you.
+                            </p>
+
+                        </section>
+
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </main>
 
-        <!-- ===== DEMO NOTE ===== -->
+
+        <!-- ========================================================
+             DEMO NOTE
+             ======================================================== -->
+
         <div class="demo-note">
             <span>CampusHub</span> • How to Use
         </div>
 
     </div>
 
-    <script src="/assets/js/student/global.js"></script>
-    <script src="/assets/js/student/modal.js"></script>
-    <script src="/assets/js/student/showAlert.js"></script>
+</div>
 
+
+<!-- ================================================================
+     GLOBAL SCRIPTS
+     ================================================================ -->
+
+<script src="/assets/js/student/global.js"></script>
+<script src="/assets/js/student/modal.js"></script>
+<script src="/assets/js/student/showAlert.js"></script>
+
+
+<script>
+(function () {
+
+    'use strict';
+
+
+    /* ================================================================
+       ELEMENTS
+       ================================================================ */
+
+    const sidebar = document.getElementById('guideSidebar');
+    const mobileMenu = document.getElementById('mobileGuideMenu');
+    const mobileMenuLabel = document.getElementById('mobileMenuLabel');
+
+    const navItems = document.querySelectorAll('.guide-nav-item');
+
+    const sections = document.querySelectorAll(
+        '.guide-section[id]'
+    );
+
+    const searchInput = document.getElementById('guideSearch');
+
+    const faqItems = document.querySelectorAll(
+        '.guide-faq-item'
+    );
+
+
+    /* ================================================================
+       NAVIGATION
+       ================================================================ */
+
+    function setActiveNavigation(id) {
+
+        navItems.forEach(item => {
+
+            const target = item.dataset.target;
+
+            item.classList.toggle(
+                'active',
+                target === id
+            );
+
+        });
+
+
+        const activeItem = document.querySelector(
+            `.guide-nav-item[data-target="${id}"]`
+        );
+
+        if (activeItem && mobileMenuLabel) {
+
+            mobileMenuLabel.textContent =
+                activeItem.textContent.trim();
+
+        }
+
+    }
+
+
+    navItems.forEach(item => {
+
+        item.addEventListener('click', function () {
+
+            const targetId = this.dataset.target;
+
+            const target = document.getElementById(
+                targetId
+            );
+
+            if (!target) {
+                return;
+            }
+
+            setActiveNavigation(targetId);
+
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+
+
+            /* Close mobile menu */
+
+            if (
+                window.innerWidth <= 900 &&
+                sidebar
+            ) {
+                sidebar.classList.remove(
+                    'mobile-open'
+                );
+            }
+
+        });
+
+    });
+
+
+    /* ================================================================
+       MOBILE MENU
+       ================================================================ */
+
+    if (mobileMenu) {
+
+        mobileMenu.addEventListener(
+            'click',
+            function () {
+
+                if (!sidebar) {
+                    return;
+                }
+
+                sidebar.classList.toggle(
+                    'mobile-open'
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ================================================================
+       ACTIVE SECTION ON SCROLL
+       ================================================================ */
+
+    const observer = new IntersectionObserver(
+        function (entries) {
+
+            const visibleSections = entries
+                .filter(entry => entry.isIntersecting)
+                .sort(
+                    (a, b) =>
+                        b.intersectionRatio -
+                        a.intersectionRatio
+                );
+
+            if (!visibleSections.length) {
+                return;
+            }
+
+            setActiveNavigation(
+                visibleSections[0].target.id
+            );
+
+        },
+        {
+            root: null,
+
+            rootMargin:
+                '-15% 0px -70% 0px',
+
+            threshold: [
+                0,
+                0.1,
+                0.25,
+                0.5
+            ]
+        }
+    );
+
+
+    sections.forEach(section => {
+
+        observer.observe(section);
+
+    });
+
+
+    /* ================================================================
+       SEARCH
+       ================================================================ */
+
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            'input',
+            function () {
+
+                const query =
+                    this.value
+                        .trim()
+                        .toLowerCase();
+
+                navItems.forEach(item => {
+
+                    item.style.display = '';
+
+                });
+
+
+                sections.forEach(section => {
+
+                    section.style.display = '';
+
+                });
+
+
+                if (!query) {
+                    return;
+                }
+
+
+                let firstMatch = null;
+
+
+                sections.forEach(section => {
+
+                    const text =
+                        section.textContent
+                            .toLowerCase();
+
+                    const title =
+                        (
+                            section.dataset.title ||
+                            ''
+                        ).toLowerCase();
+
+                    const matches =
+                        text.includes(query) ||
+                        title.includes(query);
+
+                    section.style.display =
+                        matches ? '' : 'none';
+
+
+                    if (
+                        matches &&
+                        !firstMatch
+                    ) {
+                        firstMatch = section;
+                    }
+
+                });
+
+
+                navItems.forEach(item => {
+
+                    const target =
+                        document.getElementById(
+                            item.dataset.target
+                        );
+
+                    if (!target) {
+                        return;
+                    }
+
+                    item.style.display =
+                        target.style.display === 'none'
+                            ? 'none'
+                            : '';
+
+                });
+
+
+                if (firstMatch) {
+
+                    setActiveNavigation(
+                        firstMatch.id
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ================================================================
+       FAQ
+       ================================================================ */
+
+    faqItems.forEach(item => {
+
+        const question =
+            item.querySelector(
+                '.guide-faq-question'
+            );
+
+        if (!question) {
+            return;
+        }
+
+
+        question.addEventListener(
+            'click',
+            function () {
+
+                const isOpen =
+                    item.classList.contains(
+                        'open'
+                    );
+
+
+                /* Close other FAQ items */
+
+                faqItems.forEach(other => {
+
+                    if (other !== item) {
+
+                        other.classList.remove(
+                            'open'
+                        );
+
+                    }
+
+                });
+
+
+                item.classList.toggle(
+                    'open',
+                    !isOpen
+                );
+
+            }
+        );
+
+    });
+
+
+    /* ================================================================
+       INITIAL STATE
+       ================================================================ */
+
+    setActiveNavigation('welcome');
+
+
+    console.log(
+        '📚 CampusHub — How to Use page initialized.'
+    );
+
+})();
+</script>
 
 </body>
 </html>
-    

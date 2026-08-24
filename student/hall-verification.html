@@ -342,7 +342,7 @@
                     <div class="card-title">
                         <i class="fas fa-building"></i> Hall Verification
                     </div>
-                    <div class="card-subtitle">Verify your hall of residence to unlock campus-specific features and build trust.</div>
+                    <div class="card-subtitle">Verify your hall of residence and build trust.</div>
 
                     <!-- Loading state -->
                     <div id="hallLoadingState" class="hall-loading">
@@ -674,7 +674,8 @@
                 hallNameInput.addEventListener('input', validateForm);
                 roomNumberInput.addEventListener('input', validateForm);
 
-                console.log('📟 Hall verification page initialized with CampusForms.');
+                console.log('📟 Hall verification page initialized.');
+                showToast("loaded Hall Verification page", "success");
             }
 
             // Start when ready

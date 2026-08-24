@@ -1,5 +1,5 @@
 // ============================================================
-// studentGlobal.js – Shared functionality for all pages
+// global.js – Shared functionality for all pages
 // Includes: header, dark mode, filter sidebar, bottom nav,
 // scroll to top, desktop overlay, profile sidebar, auth, form guard
 // UPDATED: Unauthenticated user handling
@@ -11,12 +11,12 @@
     // ============================================================
     // API ENDPOINTS
     // ============================================================
-    const AUTH_URL = 'http://127.0.0.1:8000/v1/user/api/auth/';
-    const CAMPUS_URL = 'http://127.0.0.1:8000/v1/campus/api/campus/';
-    const NOTIFICATIONS_URL = 'http://127.0.0.1:8000/v1/user/api/notifications/';
-    const LOGOUT_URL = 'http://127.0.0.1:8000/v1/user/api/auth/logout-user';
-    const REFRESH_POINTS_URL = 'http://127.0.0.1:8000/v1/user/api/';
-    const USER_URL = 'http://127.0.0.1:8000/v1/user/api/';
+    const AUTH_URL = 'http://localhost/v1/user/api/auth/';
+    const CAMPUS_URL = 'http://localhost/v1/campus/api/campus/';
+    const NOTIFICATIONS_URL = 'http://localhost/v1/user/api/notifications/';
+    const LOGOUT_URL = 'http://localhost/v1/user/api/auth/logout-user';
+    const REFRESH_POINTS_URL = 'http://localhost/v1/user/api/';
+    const USER_URL = 'http://localhost/v1/user/api/';
     const X_KEY_ID = '1';
     const PLATFORM = 'web';
 
@@ -674,6 +674,7 @@
                 { icon: 'fas fa-eye', label: 'Change Visibility', id: 'change-visibility' },
                 { icon: 'fas fa-shield-halved', label: 'Add 2FA', id: 'add-2fa' },
                 { icon: 'fas fa-hand-holding-dollar', label: 'Student Loan', id: 'loan' },
+                { icon: 'fas fa-shield-halved', label: 'Voting Poll', id: 'vote' },
                 { icon: 'fas fa-flag', label: 'Report Issue / Abuse', id: 'report-issue' },
                 { icon: 'fas fa-lightbulb', label: 'Help us Improve', id: 'help-improve' },
                 { icon: 'fas fa-circle-info', label: 'About us', id: 'about-us' },
@@ -951,6 +952,7 @@
             'change-visibility': 'visibility.html',
             'hall-verified': 'hall-verification.html',
             'add-2fa': '2fa.html',
+            'vote': 'vote.html',
             'report-issue': 'report.html',
             'help-improve': 'help-improve.html',
             'about-us': 'about-us.html',

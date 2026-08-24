@@ -1,0 +1,2521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CampusHub – Listing Details</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="/assets/css/student/style.css" />
+    <link rel="icon" type="image/jpeg" href="../assets/img/icon.jpg">
+
+    <!-- Page-Specific Styles -->
+    <style>
+        /* ============================================================
+           LISTING DETAILS – PAGE-SPECIFIC STYLES
+           (Uses style.css variables & base)
+           ============================================================ */
+
+        /* ─── Image Gallery ─── */
+        .gallery-container {
+            position: relative;
+            margin: -8px -12px 16px -12px;
+            background: var(--bg-card);
+            overflow: hidden;
+            border-radius: 0 0 var(--radius-card) var(--radius-card);
+            transition: background var(--transition);
+            box-shadow: var(--shadow-card);
+        }
+
+        .gallery-main {
+            position: relative;
+            width: 100%;
+            padding-top: 75%;
+            background: var(--bg-img-placeholder);
+            overflow: hidden;
+            transition: background var(--transition);
+        }
+
+        .gallery-main img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .gallery-actions .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gallery-actions .action-btn:active {
+            transform: scale(0.9);
+        }
+
+        .gallery-actions .action-btn.favourite.active {
+            background: rgba(231, 76, 60, 0.85);
+            color: #fff;
+        }
+
+        .gallery-actions .action-btn.favourite.active i {
+            animation: heartPop 0.3s ease;
+        }
+
+        @keyframes heartPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* ─── Badges Row ─── */
+        .badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 10px 4px 6px;
+        }
+
+        .badges-row .badge {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-status {
+            background: var(--green-bg);
+            color: var(--green);
+            border-color: var(--green);
+        }
+        .badge-status.pending {
+            background: #fef3e8;
+            color: #e67e22;
+            border-color: #e67e22;
+        }
+        .badge-status.sold {
+            background: #e8f0fe;
+            color: #2980b9;
+            border-color: #2980b9;
+        }
+        .badge-status.expired {
+            background: #fde8e8;
+            color: var(--red);
+            border-color: var(--red);
+        }
+        .badge-status.rejected {
+            background: #dc3545;
+            color: #fff;
+            border-color: #dc3545;
+        }
+        .badge-status.hidden {
+            background: var(--bg-input);
+            color: var(--text-muted2);
+            border-color: var(--border-color);
+        }
+
+        .badge-hot {
+            background: rgba(231, 76, 60, 0.12);
+            color: var(--red);
+            border-color: var(--red);
+        }
+
+        .badge-ads {
+            background: rgba(241, 196, 15, 0.15);
+            color: #b7950b;
+            border-color: #b7950b;
+        }
+
+        .dark-mode .badge-status {
+            background: #1a3a2a;
+            color: #2ecc71;
+            border-color: #2ecc71;
+        }
+        .dark-mode .badge-status.pending {
+            background: #3a2a1a;
+            color: #f39c12;
+            border-color: #f39c12;
+        }
+        .dark-mode .badge-status.sold {
+            background: #1a2a3a;
+            color: #3498db;
+            border-color: #3498db;
+        }
+        .dark-mode .badge-status.expired {
+            background: #3a1a1a;
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+        .dark-mode .badge-status.hidden {
+            background: #2a2a2a;
+            color: #999;
+            border-color: #555;
+        }
+        .dark-mode .badge-hot {
+            background: #3a1a1a;
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+        .dark-mode .badge-ads {
+            background: #3a2a0a;
+            color: #f1c40f;
+            border-color: #f1c40f;
+        }
+
+        /* ─── LAYOUT WRAPPER (for laptop: image + seller side-by-side) ─── */
+        .detail-top-row {
+            display: block;
+        }
+
+        @media (min-width: 1024px) {
+            .detail-top-row {
+                display: flex;
+                gap: 24px;
+                align-items: stretch;
+            }
+
+            .detail-top-row .gallery-container {
+                flex: 1 1 55%;
+                margin: 0;
+                border-radius: var(--radius-card);
+                max-height: 480px;
+            }
+
+            .detail-top-row .gallery-main {
+                padding-top: 66%;
+                max-height: 480px;
+            }
+
+            .detail-top-row .seller-card-wrapper {
+                flex: 0 0 40%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .detail-top-row .seller-card-wrapper .seller-card {
+                flex: 1;
+                margin-bottom: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            .badges-row {
+                padding: 12px 0 6px;
+            }
+        }
+
+        /* ─── Content Container ─── */
+        .detail-content {
+            padding: 0 4px 80px;
+        }
+
+        /* ─── Header ─── */
+        .detail-header {
+            margin-bottom: 20px;
+            padding: 0 2px;
+        }
+
+        .detail-header .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .detail-header .title-row h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.25;
+            margin: 0;
+            flex: 1;
+            transition: color var(--transition);
+            letter-spacing: -0.3px;
+        }
+
+        .detail-header .title-row .price-tag {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--green);
+            white-space: nowrap;
+            padding: 2px 0;
+            transition: color var(--transition);
+            background: var(--green-bg);
+            padding: 4px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--green);
+            line-height: 1.4;
+        }
+
+        .detail-header .title-row .price-tag .free-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--green);
+            background: transparent;
+            padding: 0;
+        }
+
+        .detail-header .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+            padding: 4px 0 2px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            margin-top: 2px;
+        }
+
+        .detail-header .meta-row span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 0;
+        }
+
+        .detail-header .meta-row span i {
+            font-size: 13px;
+            color: var(--green);
+            width: 16px;
+            text-align: center;
+        }
+
+        .detail-header .meta-row .category-tag {
+            background: var(--bg-input);
+            padding: 3px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+            font-size: 12px;
+        }
+
+        .detail-header .meta-row .subcategory-tag {
+            background: var(--bg-input);
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .detail-header .meta-row .negotiation-badge {
+            color: var(--green) !important;
+            border-color: var(--green) !important;
+            background: var(--green-bg) !important;
+        }
+
+        .detail-header .header-divider {
+            height: 2px;
+            background: linear-gradient(90deg, var(--green), transparent);
+            margin-top: 12px;
+            border-radius: 2px;
+            opacity: 0.3;
+        }
+
+        /* ─── Seller Card ─── */
+        .seller-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 18px 18px 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            margin-bottom: 16px;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .seller-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--green), var(--gold), var(--green));
+            opacity: 0.6;
+        }
+
+        .seller-card:hover {
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .seller-card .seller-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            padding: 2px 0 8px;
+        }
+
+        .seller-card .seller-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--green-bg);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            flex-shrink: 0;
+            border: 2.5px solid var(--green);
+            transition: all var(--transition);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .seller-card .seller-avatar .online-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            background: #2ecc71;
+            border-radius: 50%;
+            border: 2px solid var(--bg-card);
+        }
+
+        .seller-card .seller-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .seller-card .seller-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .seller-card .seller-info .seller-name-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .seller-card .seller-info .seller-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+
+        .seller-card .seller-info .seller-name .verified-badge {
+            font-size: 14px;
+            color: var(--green);
+            margin-left: 2px;
+        }
+
+        .seller-card .seller-info .seller-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 14px;
+            margin-top: 4px;
+        }
+
+        .seller-card .seller-info .seller-meta-row .stars {
+            color: var(--star);
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        .seller-card .seller-info .seller-meta-row .stars .empty {
+            color: var(--text-muted2);
+            opacity: 0.3;
+        }
+
+        .seller-card .seller-info .seller-meta-row .review-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .seller-card .seller-info .seller-meta-row .trust-badge {
+            background: var(--green-bg);
+            color: var(--green);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 10px;
+            border: 1px solid var(--green);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dark-mode .seller-card .seller-info .seller-meta-row .trust-badge {
+            background: #1a3a2a;
+            color: #2ecc71;
+            border-color: #2ecc71;
+        }
+
+        .seller-card .seller-info .seller-dept {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .seller-card .seller-info .seller-dept i {
+            color: var(--green);
+            font-size: 11px;
+        }
+
+        .seller-card .seller-badges {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .seller-card .seller-badges .badge-item {
+            font-size: 10px;
+            padding: 3px 12px;
+            border-radius: 30px;
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .seller-card .seller-badges .badge-item i {
+            color: var(--green);
+            font-size: 10px;
+        }
+
+        .seller-card .seller-badges .badge-item.verified {
+            background: var(--green-bg);
+            color: var(--green);
+            border-color: var(--green);
+        }
+
+        .seller-card .seller-badges .badge-item.verified i {
+            color: var(--green);
+        }
+
+        .seller-card .visibility-notice {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--bg-input);
+            padding: 4px 14px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 6px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .seller-card .visibility-notice i {
+            color: #e67e22;
+            margin-right: 4px;
+        }
+
+        .seller-card .seller-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--border-color);
+            padding-top: 14px;
+        }
+
+        .seller-card .seller-actions .btn {
+            flex: 1;
+            min-width: 70px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .seller-card .seller-actions .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(13, 138, 62, 0.25);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 24px rgba(13, 138, 62, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .btn-danger-outline {
+            background: transparent;
+            color: var(--red);
+            border: 2px solid #fde8e8;
+        }
+
+        .btn-danger-outline:hover {
+            background: #fde8e8;
+            border-color: var(--red);
+        }
+
+        .dark-mode .btn-outline {
+            border-color: var(--border-color);
+        }
+        .dark-mode .btn-danger-outline {
+            border-color: #3a1a1a;
+        }
+        .dark-mode .btn-danger-outline:hover {
+            background: #3a1a1a;
+        }
+
+        /* ─── Manage Icon for Owner ─── */
+        .manage-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-input);
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: auto;
+        }
+
+        .manage-icon:hover {
+            border-color: var(--green);
+            color: var(--green);
+            background: var(--green-bg);
+        }
+
+        .manage-icon i {
+            color: var(--green);
+            font-size: 12px;
+        }
+
+        /* ─── Section Titles ─── */
+        .detail-section {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            margin-bottom: 16px;
+            transition: all var(--transition);
+        }
+
+        .detail-section:hover {
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .detail-section .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition);
+            position: relative;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .detail-section .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--green);
+            border-radius: 2px;
+        }
+
+        .detail-section .section-title i {
+            color: var(--green);
+            font-size: 18px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--green-bg);
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+
+        .detail-section .section-title .title-badge {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--bg-input);
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .detail-section .section-title .title-badge i {
+            background: transparent;
+            width: auto;
+            height: auto;
+            font-size: 11px;
+            color: var(--green);
+            margin-right: 4px;
+        }
+
+        .detail-section .section-body {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            transition: color var(--transition);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* ─── Details Grid ─── */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 16px;
+        }
+
+        .details-grid .detail-item {
+            display: flex;
+            flex-direction: column;
+            padding: 8px 0 6px;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color var(--transition);
+        }
+
+        .details-grid .detail-item:last-child,
+        .details-grid .detail-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .details-grid .detail-item .label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color var(--transition);
+        }
+
+        .details-grid .detail-item .value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+
+        .details-grid .detail-item .value i {
+            color: var(--green);
+            margin-right: 4px;
+        }
+
+        .details-grid .detail-item .value .tag {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .details-grid .detail-item .value .tag.yes {
+            background: var(--green-bg);
+            color: var(--green);
+            border-color: var(--green);
+        }
+
+        .details-grid .detail-item .value .tag.no {
+            background: #fde8e8;
+            color: var(--red);
+            border-color: #fde8e8;
+        }
+
+        .dark-mode .details-grid .detail-item .value .tag.yes {
+            background: #1a3a2a;
+            border-color: #1a3a2a;
+        }
+        .dark-mode .details-grid .detail-item .value .tag.no {
+            background: #3a1a1a;
+            border-color: #3a1a1a;
+        }
+
+        /* ─── Reviews ─── */
+        .review-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color var(--transition);
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .review-item .review-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+        }
+
+        .review-item .review-head .reviewer {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .review-item .review-head .reviewer .date {
+            font-weight: 400;
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+        }
+
+        .review-item .review-head .stars {
+            color: var(--star);
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .review-item .review-head .stars .empty {
+            color: var(--text-muted2);
+            opacity: 0.3;
+        }
+
+        .review-item .review-comment {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            line-height: 1.5;
+            transition: color var(--transition);
+            padding-left: 4px;
+        }
+
+        .review-item .review-comment .quote {
+            font-style: italic;
+            opacity: 0.7;
+        }
+
+        .view-all-reviews {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            margin-top: 10px;
+            color: var(--green);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            transition: all var(--transition);
+            background: var(--bg-card);
+        }
+
+        .view-all-reviews:hover {
+            background: var(--green-bg);
+            border-color: var(--green);
+        }
+
+        /* ─── Similar Listings ─── */
+        .similar-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 4px 0 8px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .similar-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .similar-card {
+            flex: 0 0 130px;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-card);
+        }
+
+        .similar-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card-hover);
+            border-color: var(--green);
+        }
+
+        .similar-card .sim-img {
+            width: 100%;
+            height: 85px;
+            background: var(--bg-input);
+            overflow: hidden;
+        }
+
+        .similar-card .sim-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .similar-card .sim-info {
+            padding: 8px 10px 10px;
+        }
+
+        .similar-card .sim-info .sim-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color var(--transition);
+        }
+
+        .similar-card .sim-info .sim-price {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--green);
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+
+        .similar-card .sim-info .sim-meta {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            transition: color var(--transition);
+        }
+
+        /* ─── LOCATION LIST (Restyled) ─── */
+        .location-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 4px 0;
+        }
+
+        .location-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            transition: all var(--transition);
+        }
+
+        .location-item:hover {
+            border-color: var(--green);
+            background: var(--green-bg);
+            transform: translateX(3px);
+        }
+
+        .location-item .loc-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--green-bg);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        .location-item:hover .loc-icon {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .location-item .loc-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .location-item .loc-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition);
+        }
+
+        .location-item .loc-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 1px;
+            transition: color var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .location-item .loc-desc i {
+            color: var(--green);
+            font-size: 10px;
+        }
+
+        .location-item .loc-status {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--green);
+            background: var(--green-bg);
+            padding: 2px 12px;
+            border-radius: 30px;
+            border: 1px solid var(--green);
+            flex-shrink: 0;
+        }
+
+        .dark-mode .location-item {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+        .dark-mode .location-item:hover {
+            background: #1a3a2a;
+            border-color: var(--green);
+        }
+        .dark-mode .location-item .loc-icon {
+            background: #1a3a2a;
+            color: #2ecc71;
+        }
+        .dark-mode .location-item:hover .loc-icon {
+            background: var(--green);
+            color: #fff;
+        }
+        .dark-mode .location-item .loc-status {
+            background: #1a3a2a;
+            color: #2ecc71;
+            border-color: #2ecc71;
+        }
+
+        /* ─── Coming Soon Overlay ─── */
+        .coming-soon-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .coming-soon-overlay.active {
+            display: flex;
+        }
+
+        .coming-soon-modal {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 32px 28px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            animation: popIn 0.3s ease;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .coming-soon-modal .cs-icon {
+            font-size: 48px;
+            color: var(--green);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .coming-soon-modal h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color var(--transition);
+        }
+
+        .coming-soon-modal p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+            transition: color var(--transition);
+        }
+
+        .coming-soon-modal .cs-btn {
+            background: var(--green);
+            color: #fff;
+            border: none;
+            padding: 10px 32px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .coming-soon-modal .cs-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* ─── Report Modal ─── */
+        .report-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .report-overlay.active {
+            display: flex;
+        }
+
+        .report-modal {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 28px 24px;
+            max-width: 400px;
+            width: 100%;
+            animation: popIn 0.3s ease;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .report-modal .report-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            transition: color var(--transition);
+        }
+
+        .report-modal .report-title i {
+            color: var(--red);
+        }
+
+        .report-modal .report-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .report-modal .report-options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: var(--bg-input);
+        }
+
+        .report-modal .report-options label:active {
+            transform: scale(0.98);
+        }
+
+        .report-modal .report-options label input[type="radio"] {
+            accent-color: var(--red);
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .report-modal .report-options label:has(input:checked) {
+            border-color: var(--red);
+            background: #fde8e8;
+        }
+
+        .dark-mode .report-modal .report-options label:has(input:checked) {
+            background: #3a1a1a;
+        }
+
+        .report-modal .report-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 13px;
+            resize: vertical;
+            min-height: 80px;
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+
+        .report-modal .report-textarea:focus {
+            outline: none;
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        .report-modal .report-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .report-modal .report-actions .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .report-modal .report-actions .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-report {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .btn-report:hover {
+            opacity: 0.85;
+        }
+
+        .btn-cancel {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-cancel:hover {
+            border-color: var(--text-muted);
+        }
+
+        /* ─── Loading State ─── */
+        .detail-loading {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .detail-loading .loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .detail-loading p {
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color var(--transition);
+        }
+
+        /* ─── Type Selector for Demo ─── */
+        .demo-type-selector {
+            display: flex;
+            gap: 6px;
+            padding: 8px 4px 12px;
+            flex-wrap: wrap;
+        }
+
+        .demo-type-selector .type-btn {
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .demo-type-selector .type-btn.active {
+            border-color: var(--green);
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        .demo-type-selector .type-btn:active {
+            transform: scale(0.96);
+        }
+
+        .dark-mode .demo-type-selector .type-btn {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+            color: var(--text-secondary);
+        }
+        .dark-mode .demo-type-selector .type-btn.active {
+            background: #1a3a2a;
+            border-color: var(--green);
+            color: #2ecc71;
+        }
+
+        /* ─── Responsive ─── */
+        @media (min-width: 768px) {
+            .gallery-container {
+                margin: -8px -40px 20px -40px;
+                border-radius: 0;
+            }
+            .gallery-main {
+                padding-top: 50%;
+                max-height: 480px;
+            }
+            .detail-header .title-row h1 {
+                font-size: 28px;
+            }
+            .detail-header .title-row .price-tag {
+                font-size: 28px;
+                padding: 6px 24px;
+            }
+            .details-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .similar-card {
+                flex: 0 0 170px;
+            }
+            .similar-card .sim-img {
+                height: 110px;
+            }
+            .seller-card .seller-actions .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            .report-modal {
+                padding: 32px;
+                max-width: 440px;
+            }
+            .location-item {
+                padding: 12px 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-container {
+                margin: -8px -12px 14px -12px;
+            }
+            .gallery-main {
+                padding-top: 80%;
+            }
+            .gallery-actions .action-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+            }
+            .badges-row {
+                padding: 6px 2px 8px;
+                gap: 4px;
+            }
+            .badges-row .badge {
+                font-size: 9px;
+                padding: 3px 10px;
+            }
+            .detail-header .title-row h1 {
+                font-size: 18px;
+            }
+            .detail-header .title-row .price-tag {
+                font-size: 17px;
+                padding: 3px 12px;
+            }
+            .detail-header .meta-row {
+                font-size: 12px;
+                gap: 4px 10px;
+                padding-top: 8px;
+            }
+            .detail-header .meta-row span i {
+                font-size: 12px;
+                width: 14px;
+            }
+            .detail-section {
+                padding: 14px 14px;
+            }
+            .detail-section .section-title {
+                font-size: 14px;
+                gap: 8px;
+                padding-bottom: 8px;
+            }
+            .detail-section .section-title i {
+                font-size: 15px;
+                width: 24px;
+                height: 24px;
+            }
+            .details-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 2px 12px;
+            }
+            .details-grid .detail-item {
+                padding: 5px 0;
+            }
+            .details-grid .detail-item .value {
+                font-size: 13px;
+            }
+            .seller-card {
+                padding: 14px 14px 12px;
+            }
+            .seller-card .seller-avatar {
+                width: 46px;
+                height: 46px;
+                font-size: 20px;
+            }
+            .seller-card .seller-avatar .online-dot {
+                width: 12px;
+                height: 12px;
+            }
+            .seller-card .seller-info .seller-name {
+                font-size: 15px;
+            }
+            .seller-card .seller-info .seller-meta-row .stars {
+                font-size: 13px;
+            }
+            .seller-card .seller-actions .btn {
+                font-size: 12px;
+                padding: 8px 10px;
+                min-width: 60px;
+            }
+            .similar-card {
+                flex: 0 0 110px;
+            }
+            .similar-card .sim-img {
+                height: 70px;
+            }
+            .similar-card .sim-info .sim-title {
+                font-size: 11px;
+            }
+            .similar-card .sim-info .sim-price {
+                font-size: 12px;
+            }
+            .report-modal {
+                padding: 20px 16px;
+            }
+            .report-modal .report-title {
+                font-size: 16px;
+            }
+            .location-item {
+                padding: 8px 12px;
+                gap: 10px;
+            }
+            .location-item .loc-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            .location-item .loc-name {
+                font-size: 13px;
+            }
+            .location-item .loc-desc {
+                font-size: 11px;
+            }
+            .location-item .loc-status {
+                font-size: 10px;
+                padding: 1px 10px;
+            }
+        }
+
+        /* Desktop: image + seller row */
+        @media (min-width: 1024px) {
+            .detail-top-row {
+                display: flex;
+                gap: 24px;
+                align-items: stretch;
+                margin-bottom: 16px;
+            }
+
+            .detail-top-row .gallery-container {
+                flex: 1 1 55%;
+                margin: 0;
+                border-radius: var(--radius-card);
+                max-height: 480px;
+            }
+
+            .detail-top-row .gallery-main {
+                padding-top: 66%;
+                max-height: 480px;
+            }
+
+            .detail-top-row .seller-card-wrapper {
+                flex: 0 0 40%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .detail-top-row .seller-card-wrapper .seller-card {
+                flex: 1;
+                margin-bottom: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            .badges-row {
+                padding: 12px 0 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== APP CONTAINER ===== -->
+    <div class="app-container">
+
+        <!-- ===== LOCATION BAR ===== -->
+        <div class="location-bar">
+            <i class="fa-solid fas fa-location-dot"></i>
+            <div class="loc-text">
+                University of Benin <span>• Ugbowo</span>
+            </div>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main-content" style="padding-top: 12px;">
+
+            <!-- ===== DEMO TYPE SELECTOR ===== -->
+            <div class="demo-type-selector">
+                <button class="type-btn active" data-type="sell" onclick="loadDemoData('sell')">
+                    <i class="fa-regular fa-tag"></i> Sell
+                </button>
+                <button class="type-btn" data-type="service" onclick="loadDemoData('service')">
+                    <i class="fa-regular fa-briefcase"></i> Service
+                </button>
+                <button class="type-btn" data-type="accommodation" onclick="loadDemoData('accommodation')">
+                    <i class="fa-regular fa-building"></i> Accommodation
+                </button>
+                <button class="type-btn" data-type="owner" onclick="loadDemoData('owner')">
+                    <i class="fa-regular fa-user"></i> Owner
+                </button>
+            </div>
+
+            <!-- ===== LOADING ===== -->
+            <div id="detailLoading" class="detail-loading">
+                <div class="loader"></div>
+                <p>Loading listing details...</p>
+            </div>
+
+            <!-- ===== CONTENT ===== -->
+            <div id="detailContent" style="display:none;">
+
+                <!-- ===== TOP ROW: GALLERY + SELLER (laptop side-by-side) ===== -->
+                <div class="detail-top-row">
+
+                    <!-- Gallery -->
+                    <div class="gallery-container">
+                        <div class="gallery-main">
+                            <img id="mainImage" src="" alt="Listing image" />
+                            <div class="gallery-actions">
+                                <button class="action-btn favourite" id="favouriteBtn" onclick="toggleFavourite()">
+                                    <i class="fa-regular fa-heart"></i>
+                                </button>
+                                <button class="action-btn share" onclick="shareListing()">
+                                    <i class="fa-regular fa-share-from-square"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seller Card Wrapper -->
+                    <div class="seller-card-wrapper">
+                        <div class="seller-card" id="sellerCard"></div>
+                    </div>
+
+                </div><!-- /detail-top-row -->
+
+                <!-- ===== BADGES ROW ===== -->
+                <div class="badges-row" id="badgesRow"></div>
+
+                <!-- ===== DETAIL CONTENT ===== -->
+                <div class="detail-content">
+
+                    <!-- ===== HEADER ===== -->
+                    <div class="detail-header">
+                        <div class="title-row">
+                            <h1 id="listingTitle">Loading...</h1>
+                            <span class="price-tag" id="listingPrice">-</span>
+                        </div>
+                        <div class="meta-row" id="listingMeta"></div>
+                        <div class="header-divider"></div>
+                    </div>
+
+                    <!-- ===== DESCRIPTION ===== -->
+                    <div class="detail-section">
+                        <div class="section-title">
+                            <i class="fa-regular fa-align-left"></i> Description
+                            <span class="title-badge"><i class="fa-regular fa-info-circle"></i> Full details</span>
+                        </div>
+                        <div class="section-body" id="listingDescription">Loading...</div>
+                    </div>
+
+                    <!-- ===== DETAILS ===== -->
+                    <div class="detail-section">
+                        <div class="section-title" id="detailsTitle">
+                            <i class="fa-regular fa-list-check"></i> Details
+                            <span class="title-badge"><i class="fa-regular fa-tag"></i> Specifications</span>
+                        </div>
+                        <div class="details-grid" id="detailsGrid"></div>
+                    </div>
+
+                    <!-- ===== LOCATIONS ===== -->
+                    <div class="detail-section" id="hotspotsSection" style="display:none;">
+                        <div class="section-title">
+                            <i class="fa-regular fa-location-dot"></i> Locations
+                            <span class="title-badge"><i class="fa-regular fa-map-pin"></i> Available at</span>
+                        </div>
+                        <div class="location-list" id="hotspotsList"></div>
+                    </div>
+
+                    <!-- ===== REVIEWS ===== -->
+                    <div class="detail-section">
+                        <div class="section-title">
+                            <i class="fa-regular fa-star"></i> Reviews
+                            <span class="title-badge" id="reviewSummary">0 reviews</span>
+                        </div>
+                        <div id="reviewsList"></div>
+                        <div class="view-all-reviews" id="viewAllReviews" style="display:none;">
+                            View all reviews <i class="fa-regular fa-arrow-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- ===== SIMILAR LISTINGS ===== -->
+                    <div class="detail-section" id="similarSection" style="display:none;">
+                        <div class="section-title">
+                            <i class="fa-regular fa-layer-group"></i> Similar Listings
+                            <span class="title-badge"><i class="fa-regular fa-compass"></i> Explore more</span>
+                        </div>
+                        <div class="similar-scroll" id="similarScroll"></div>
+                    </div>
+
+                </div><!-- /.detail-content -->
+            </div><!-- /#detailContent -->
+        </main>
+
+        <!-- ===== COMING SOON OVERLAY ===== -->
+        <div class="coming-soon-overlay" id="comingSoonOverlay">
+            <div class="coming-soon-modal">
+                <span class="cs-icon"><i class="fa-regular fas fa-rocket"></i></span>
+                <h3>Coming Soon! 🚀</h3>
+                <p>We're working hard to bring you this feature. Stay tuned for updates!</p>
+                <button class="cs-btn" onclick="closeComingSoon()">Got it</button>
+            </div>
+        </div>
+
+        <!-- ===== REPORT OVERLAY ===== -->
+        <div class="report-overlay" id="reportOverlay">
+            <div class="report-modal">
+                <div class="report-title">
+                    <i class="fa-regular fa-flag"></i> Report
+                    <span style="font-size:13px;font-weight:400;color:var(--text-muted);margin-left:auto;" id="reportTarget">Listing</span>
+                </div>
+                <div class="report-options">
+                    <label>
+                        <input type="radio" name="reportReason" value="spam" />
+                        Spam or Misleading
+                    </label>
+                    <label>
+                        <input type="radio" name="reportReason" value="fraud" />
+                        Fraud or Scam
+                    </label>
+                    <label>
+                        <input type="radio" name="reportReason" value="inappropriate" />
+                        Inappropriate Content
+                    </label>
+                    <label>
+                        <input type="radio" name="reportReason" value="duplicate" />
+                        Duplicate Listing
+                    </label>
+                    <label>
+                        <input type="radio" name="reportReason" value="other" />
+                        Other
+                    </label>
+                </div>
+                <textarea class="report-textarea" id="reportComment" placeholder="Describe the issue (optional)"></textarea>
+                <div class="report-actions">
+                    <button class="btn btn-cancel" onclick="closeReport()">Cancel</button>
+                    <button class="btn btn-report" onclick="submitReport()">Submit Report</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== DEMO NOTE ===== -->
+        <div class="demo-note">
+            <span>CampusHub</span> • Listing Details <span style="color:var(--text-muted2);font-weight:400;">(Demo Data)</span>
+        </div>
+
+    </div><!-- /.app-container -->
+
+    <!-- ===== GLOBAL SCRIPTS ===== -->
+    <script src="/assets/js/student/global.js"></script>
+    <script src="/assets/js/student/modal.js"></script>
+    <script src="/assets/js/student/showAlert.js"></script>
+
+    <!-- ===== PAGE-SPECIFIC SCRIPT ===== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // DEMO DATA – Matches backend response (with subcategory)
+            // ============================================================
+            const DEMO_DATA = {
+                sell: {
+                    id: 101,
+                    listing_type: 'sell',
+                    title: 'iPhone 15 Pro Max - 256GB - Deep Purple',
+                    description: 'Selling my iPhone 15 Pro Max in pristine condition. Used for only 3 months with a case and screen protector from day one. Battery health at 98%. Comes with original box, charger, and cable. No scratches or dents whatsoever. Reason for selling: Upgraded to a newer model.',
+                    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&h=400&fit=crop',
+                    hotspots: [
+                        { name: 'Ugbowo Campus', description: 'Main campus location, easy pickup' },
+                        { name: 'Ekiosa', description: 'Near the market square' },
+                        { name: 'New Benin', description: 'Available for delivery' }
+                    ],
+                    is_hot_sale: true,
+                    is_ads_banner: false,
+                    is_favourite: false,
+                    created_at: '2 days ago',
+                    expires_at: '2026-10-15T00:00:00Z',
+                    auto_reactivate: false,
+                    seller: {
+                        id: 1,
+                        name: 'Michael Adebayo',
+                        profile_picture: null,
+                        phone: '08012345678',
+                        department: 'Computer Science',
+                        level: '400',
+                        matric_no: 'CSC/2021/001',
+                        member_since: 2021,
+                        average_rating: 4.8,
+                        total_reviews: 24,
+                        email_verified: true,
+                        hall_verified: true,
+                        student_id_verified: true,
+                        badges: ['Top Seller', 'Trusted'],
+                        visibility: true,
+                        is_owner: false,
+                        trust_score: 96,
+                    },
+                    details: {
+                        price: 1250000,
+                        negotiation: true,
+                        condition: 'Excellent',
+                        brand: 'Apple',
+                        model: 'iPhone 15 Pro Max',
+                        quantity: 1,
+                        warranty: '3 months remaining',
+                        category: { id: 10, name: 'Phones & Tablets', icon: 'fa-mobile-screen' },
+                        subcategory: { id: 101, name: 'Smartphones', icon: 'fa-mobile' },
+                    },
+                    reviews: [
+                        { from: 'Chioma Nwosu', rating: 5, comment: 'Great seller! Phone was exactly as described.', date: '1 week ago' },
+                        { from: 'David Okafor', rating: 4, comment: 'Good communication and fair price.', date: '2 weeks ago' },
+                        { from: 'Sarah Johnson', rating: 5, comment: 'Highly recommend! Very smooth transaction.', date: '3 weeks ago' },
+                    ],
+                    review_count: 24,
+                    avg_rating: 4.8,
+                    negotiation: true,
+                },
+                service: {
+                    id: 102,
+                    listing_type: 'service',
+                    title: 'Professional Web Development & UI/UX Design Services',
+                    description: 'I offer professional web development and UI/UX design services for students and small businesses. With 3+ years of experience, I specialize in building responsive websites, custom web applications, and mobile-first designs. I work with HTML, CSS, JavaScript, React, and Python Django.',
+                    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=400&fit=crop',
+                    hotspots: [
+                        { name: 'Online', description: 'Remote services available worldwide' },
+                        { name: 'Ugbowo Campus', description: 'In-person consultations available' }
+                    ],
+                    is_hot_sale: false,
+                    is_ads_banner: true,
+                    is_favourite: false,
+                    created_at: '5 days ago',
+                    expires_at: '2026-11-01T00:00:00Z',
+                    auto_reactivate: true,
+                    seller: {
+                        id: 2,
+                        name: 'Grace Olamide',
+                        profile_picture: null,
+                        phone: '08098765432',
+                        department: 'Computer Engineering',
+                        level: '500',
+                        matric_no: 'COE/2020/002',
+                        member_since: 2020,
+                        average_rating: 4.9,
+                        total_reviews: 42,
+                        email_verified: true,
+                        hall_verified: true,
+                        student_id_verified: true,
+                        badges: ['Top Rated', 'Fast Responder'],
+                        visibility: true,
+                        is_owner: false,
+                        trust_score: 98,
+                    },
+                    details: {
+                        price: 75000,
+                        negotiation: true,
+                        delivery_time: '3-5 days',
+                        service_duration: '1-2 weeks',
+                        experience: '3+ years',
+                        online_available: true,
+                        portfolio: 'Portfolio available on request',
+                        category: { id: 20, name: 'Technology', icon: 'fa-laptop-code' },
+                        subcategory: { id: 201, name: 'Web Development', icon: 'fa-globe' },
+                    },
+                    reviews: [
+                        { from: 'Emeka Obi', rating: 5, comment: 'Amazing work! She built my portfolio website and it looks incredible.', date: '3 days ago' },
+                        { from: 'Folake Adeyemi', rating: 5, comment: 'Very professional and delivered before the deadline. Highly recommend!', date: '1 week ago' },
+                    ],
+                    review_count: 42,
+                    avg_rating: 4.9,
+                    negotiation: true,
+                },
+                accommodation: {
+                    id: 103,
+                    listing_type: 'accommodation',
+                    title: 'Spacious 2-Bedroom Flat - Ugbowo Campus - All Utilities Included',
+                    description: 'Modern 2-bedroom flat available for rent near Ugbowo campus. The apartment is fully furnished with a comfortable living room, well-equipped kitchen, and 2 spacious bedrooms. Utilities (electricity, water, and security) are included in the rent. Located in a quiet and safe neighborhood, just 5 minutes walk from the campus gate. Perfect for students looking for a comfortable living space.',
+                    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop',
+                    hotspots: [
+                        { name: 'Ugbowo Campus', description: '5 minutes walk to campus gate' },
+                        { name: 'Okafor Street', description: 'Quiet residential area' },
+                        { name: 'Ekiosa', description: 'Near shopping center' }
+                    ],
+                    is_hot_sale: false,
+                    is_ads_banner: false,
+                    is_favourite: true,
+                    created_at: '1 week ago',
+                    expires_at: '2026-12-01T00:00:00Z',
+                    auto_reactivate: false,
+                    seller: {
+                        id: 3,
+                        name: 'Oluwaseun Adeyinka',
+                        profile_picture: null,
+                        phone: '08055555555',
+                        department: 'Architecture',
+                        level: '400',
+                        matric_no: 'ARC/2021/003',
+                        member_since: 2021,
+                        average_rating: 4.7,
+                        total_reviews: 18,
+                        email_verified: true,
+                        hall_verified: true,
+                        student_id_verified: true,
+                        badges: ['Verified Landlord', 'Responsive'],
+                        visibility: true,
+                        is_owner: false,
+                        trust_score: 94,
+                    },
+                    details: {
+                        purpose: 'Rent',
+                        property_type: 'Flat',
+                        bedrooms: 2,
+                        bathrooms: 2,
+                        furnished: true,
+                        rent_price: 350000,
+                        available_from: '2026-09-01',
+                        lease_duration: '6-12 months',
+                        electricity: 'Included',
+                        water: 'Included',
+                        security: '24/7 Security',
+                        parking: 'Available',
+                        distance_to_campus: '5 minutes walk',
+                        preferred_gender: 'Any',
+                        preferred_student_type: 'Any',
+                        max_occupants: 4,
+                        roommate_notes: 'No smoking allowed inside the apartment.',
+                        category: { id: 30, name: 'Accommodation', icon: 'fa-building' },
+                        subcategory: { id: 301, name: 'Flats', icon: 'fa-door-open' },
+                    },
+                    reviews: [
+                        { from: 'Tunde Bello', rating: 5, comment: 'Great place! The landlord is very responsive and the apartment is well maintained.', date: '1 month ago' },
+                        { from: 'Ngozi Eze', rating: 4, comment: 'Nice apartment, good location. Would recommend.', date: '2 months ago' },
+                    ],
+                    review_count: 18,
+                    avg_rating: 4.7,
+                    negotiation: false,
+                },
+                owner: {
+                    id: 104,
+                    listing_type: 'sell',
+                    title: 'Your Listing - iPhone 15 Pro Max',
+                    description: 'This is how your own listing appears. You have full control to edit or delete it.',
+                    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&h=400&fit=crop',
+                    hotspots: [
+                        { name: 'Ugbowo Campus', description: 'Main campus location' }
+                    ],
+                    is_hot_sale: true,
+                    is_ads_banner: false,
+                    is_favourite: false,
+                    created_at: '2 days ago',
+                    expires_at: '2026-10-20T00:00:00Z',
+                    auto_reactivate: false,
+                    seller: {
+                        id: 1,
+                        name: 'You (John Doe)',
+                        profile_picture: null,
+                        phone: '08012345678',
+                        department: 'Computer Science',
+                        level: '400',
+                        matric_no: 'CSC/2021/001',
+                        member_since: 2021,
+                        average_rating: 4.8,
+                        total_reviews: 24,
+                        email_verified: true,
+                        hall_verified: true,
+                        student_id_verified: true,
+                        badges: ['Top Seller', 'Trusted'],
+                        visibility: true,
+                        is_owner: true,
+                        trust_score: 96,
+                    },
+                    details: {
+                        price: 1250000,
+                        negotiation: true,
+                        condition: 'Excellent',
+                        brand: 'Apple',
+                        model: 'iPhone 15 Pro Max',
+                        quantity: 1,
+                        warranty: '3 months remaining',
+                        category: { id: 10, name: 'Phones & Tablets', icon: 'fa-mobile-screen' },
+                        subcategory: { id: 101, name: 'Smartphones', icon: 'fa-mobile' },
+                    },
+                    reviews: [
+                        { from: 'Chioma Nwosu', rating: 5, comment: 'Great seller! Phone was exactly as described.', date: '1 week ago' },
+                    ],
+                    review_count: 24,
+                    avg_rating: 4.8,
+                    negotiation: true,
+                }
+            };
+
+            // ─── Similar listings per type ──────────────────────────────────
+            const SIMILAR_LISTINGS = {
+                sell: [
+                    { id: 201, title: 'iPhone 15 Pro - 128GB', price: 950000, image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=200&h=150&fit=crop', category: 'Phones' },
+                    { id: 202, title: 'Samsung Galaxy S24 Ultra', price: 1150000, image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=150&fit=crop', category: 'Phones' },
+                    { id: 203, title: 'MacBook Air M2', price: 850000, image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=150&fit=crop', category: 'Laptops' },
+                ],
+                service: [
+                    { id: 301, title: 'Mobile App Development', price: 150000, image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=200&h=150&fit=crop', category: 'Technology' },
+                    { id: 302, title: 'Graphic Design Services', price: 40000, image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=200&h=150&fit=crop', category: 'Design' },
+                    { id: 303, title: 'Data Science Tutoring', price: 50000, image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200&h=150&fit=crop', category: 'Education' },
+                ],
+                accommodation: [
+                    { id: 401, title: '3-Bedroom House - Off Campus', price: 450000, image: 'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=200&h=150&fit=crop', category: 'Accommodation' },
+                    { id: 402, title: 'Studio Apartment - Ugbowo', price: 180000, image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=200&h=150&fit=crop', category: 'Accommodation' },
+                    { id: 403, title: '1-Bedroom Self Contained', price: 220000, image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=200&h=150&fit=crop', category: 'Accommodation' },
+                ],
+                owner: [
+                    { id: 201, title: 'iPhone 15 Pro - 128GB', price: 950000, image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=200&h=150&fit=crop', category: 'Phones' },
+                    { id: 202, title: 'Samsung Galaxy S24 Ultra', price: 1150000, image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=150&fit=crop', category: 'Phones' },
+                ]
+            };
+
+            // ============================================================
+            // STATE
+            // ============================================================
+            let currentData = null;
+            let isFavourite = false;
+            let currentType = 'sell';
+
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+            const loadingEl = document.getElementById('detailLoading');
+            const contentEl = document.getElementById('detailContent');
+
+            const mainImage = document.getElementById('mainImage');
+            const badgesRow = document.getElementById('badgesRow');
+            const favouriteBtn = document.getElementById('favouriteBtn');
+
+            const listingTitle = document.getElementById('listingTitle');
+            const listingPrice = document.getElementById('listingPrice');
+            const listingMeta = document.getElementById('listingMeta');
+            const listingDescription = document.getElementById('listingDescription');
+            const detailsGrid = document.getElementById('detailsGrid');
+            const detailsTitle = document.getElementById('detailsTitle');
+            const hotspotsSection = document.getElementById('hotspotsSection');
+            const hotspotsList = document.getElementById('hotspotsList');
+            const sellerCard = document.getElementById('sellerCard');
+            const reviewsList = document.getElementById('reviewsList');
+            const reviewSummary = document.getElementById('reviewSummary');
+            const viewAllReviews = document.getElementById('viewAllReviews');
+            const similarSection = document.getElementById('similarSection');
+            const similarScroll = document.getElementById('similarScroll');
+
+            // ============================================================
+            // HELPERS – using global showToast
+            // ============================================================
+            // showToast is globally defined.
+
+            // ============================================================
+            // COMING SOON
+            // ============================================================
+            function showComingSoon() {
+                document.getElementById('comingSoonOverlay').classList.add('active');
+            }
+            window.showComingSoon = showComingSoon;
+
+            function closeComingSoon() {
+                document.getElementById('comingSoonOverlay').classList.remove('active');
+            }
+            window.closeComingSoon = closeComingSoon;
+
+            // ============================================================
+            // REPORT
+            // ============================================================
+            let reportType = 'listing';
+            let reportTargetId = null;
+
+            function openReport(type, id) {
+                reportType = type;
+                reportTargetId = id;
+                document.getElementById('reportTarget').textContent = type.charAt(0).toUpperCase() + type.slice(1);
+                document.getElementById('reportOverlay').classList.add('active');
+                document.getElementById('reportComment').value = '';
+                document.querySelectorAll('input[name="reportReason"]').forEach(r => r.checked = false);
+            }
+            window.openReport = openReport;
+
+            function closeReport() {
+                document.getElementById('reportOverlay').classList.remove('active');
+            }
+            window.closeReport = closeReport;
+
+            function submitReport() {
+                const selected = document.querySelector('input[name="reportReason"]:checked');
+                if (!selected) {
+                    showToast('Please select a reason', 'danger');
+                    return;
+                }
+                showToast('Report submitted successfully! We\'ll review it shortly.', 'success');
+                closeReport();
+            }
+            window.submitReport = submitReport;
+
+            // ============================================================
+            // FAVOURITE
+            // ============================================================
+            function toggleFavourite() {
+                isFavourite = !isFavourite;
+                const icon = favouriteBtn.querySelector('i');
+                if (isFavourite) {
+                    icon.className = 'fa-solid fa-heart';
+                    favouriteBtn.classList.add('active');
+                    showToast('Added to favourites ❤️', 'success');
+                } else {
+                    icon.className = 'fa-regular fa-heart';
+                    favouriteBtn.classList.remove('active');
+                    showToast('Removed from favourites', 'info');
+                }
+            }
+            window.toggleFavourite = toggleFavourite;
+
+            // ============================================================
+            // SHARE
+            // ============================================================
+            function shareListing() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: currentData?.title || 'CampusHub Listing',
+                        url: window.location.href,
+                    }).catch(() => {});
+                } else {
+                    navigator.clipboard?.writeText(window.location.href).then(() => {
+                        showToast('Link copied to clipboard! 📋', 'success');
+                    }).catch(() => {
+                        showToast('Share feature coming soon!', 'info');
+                    });
+                }
+            }
+            window.shareListing = shareListing;
+
+            // ============================================================
+            // CONTACT SELLER
+            // ============================================================
+            function contactSeller() {
+                showComingSoon();
+            }
+            window.contactSeller = contactSeller;
+
+            // ============================================================
+            // VIEW PROFILE
+            // ============================================================
+            function viewProfile(sellerId) {
+                showToast('Viewing profile of user ' + sellerId, 'info');
+                // In production: window.location.href = 'profile.html?id=' + sellerId;
+            }
+            window.viewProfile = viewProfile;
+
+            // ============================================================
+            // RENDER FUNCTIONS
+            // ============================================================
+
+            function renderGallery(data) {
+                mainImage.src = data.image || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'200\' y=\'160\' font-family=\'Arial\' font-size=\'24\' fill=\'%23999\' text-anchor=\'middle\'%3ENo Image%3C/text%3E%3C/svg%3E';
+
+                if (data.is_favourite) {
+                    isFavourite = true;
+                    favouriteBtn.querySelector('i').className = 'fa-solid fa-heart';
+                    favouriteBtn.classList.add('active');
+                } else {
+                    isFavourite = false;
+                    favouriteBtn.querySelector('i').className = 'fa-regular fa-heart';
+                    favouriteBtn.classList.remove('active');
+                }
+            }
+
+            function renderBadges(data) {
+                let badgesHTML = '';
+                const status = data.status || 'Active';
+                const statusClass = status.toLowerCase();
+                badgesHTML += `<span class="badge badge-status ${statusClass}"><i class="fa-regular fa-circle"></i> ${status}</span>`;
+                if (data.is_hot_sale) {
+                    badgesHTML += `<span class="badge badge-hot"><i class="fa-regular fa-fire"></i> Hot Sale</span>`;
+                }
+                if (data.is_ads_banner) {
+                    badgesHTML += `<span class="badge badge-ads"><i class="fa-regular fa-bullhorn"></i> Featured</span>`;
+                }
+                badgesRow.innerHTML = badgesHTML;
+            }
+
+            function renderHeader(data) {
+                listingTitle.textContent = data.title || 'Untitled';
+                const details = data.details || {};
+                const price = details.price || details.rent_price || 0;
+                if (price === 0) {
+                    listingPrice.innerHTML = `<span class="free-label">Free</span>`;
+                } else {
+                    listingPrice.textContent = '₦' + Number(price).toLocaleString();
+                }
+
+                const typeMap = { 'sell': 'For Sale', 'service': 'Service', 'accommodation': 'Accommodation' };
+                const typeLabel = typeMap[data.listing_type?.toLowerCase()] || data.listing_type || 'Listing';
+                const categoryName = details.category?.name || 'Uncategorized';
+                const categoryIcon = details.category?.icon || 'fa-tag';
+                const subcategoryName = details.subcategory?.name || '';
+                const subcategoryIcon = details.subcategory?.icon || '';
+
+                const hotspotNames = data.hotspots && data.hotspots.length ?
+                    data.hotspots.map(h => h.name).join(' • ') :
+                    'Campus';
+
+                let metaHTML = `
+                    <span><i class="fa-regular fa-clock"></i> ${data.created_at || 'Recently'}</span>
+                    <span><i class="fa-regular fa-location-dot"></i> ${hotspotNames}</span>
+                    <span class="category-tag"><i class="${categoryIcon}"></i> ${categoryName}</span>
+                `;
+
+                // Show subcategory if exists
+                if (subcategoryName) {
+                    metaHTML += `<span class="subcategory-tag"><i class="${subcategoryIcon || 'fa-tag'}"></i> ${subcategoryName}</span>`;
+                }
+
+                metaHTML += `<span><i class="fa-regular fa-tag"></i> ${typeLabel}</span>`;
+
+                if (data.negotiation || details.negotiation) {
+                    metaHTML += `<span class="category-tag negotiation-badge"><i class="fa-regular fa-handshake"></i> Negotiable</span>`;
+                }
+                listingMeta.innerHTML = metaHTML;
+            }
+
+            function renderSeller(data) {
+                const seller = data.seller || {};
+                const isOwner = seller.is_owner || false;
+
+                const avatarInitial = seller.name ? seller.name.charAt(0).toUpperCase() : 'U';
+                const avatarHTML = seller.profile_picture ?
+                    `<img src="${seller.profile_picture}" alt="${seller.name}" />` :
+                    avatarInitial;
+                const onlineDot = seller.is_online !== false ? `<span class="online-dot"></span>` : '';
+
+                const stars = Array.from({ length: 5 }, (_, i) =>
+                    i < Math.round(seller.average_rating || 0) ?
+                    '<i class="fa-solid fa-star"></i>' :
+                    '<i class="fa-regular fa-star empty"></i>'
+                ).join('');
+
+                const verifiedBadges = [];
+                if (seller.email_verified) verifiedBadges.push('Email Verified');
+                if (seller.hall_verified) verifiedBadges.push('Hall Verified');
+                if (seller.student_id_verified) verifiedBadges.push('Student ID');
+
+                const badgesHTML = seller.badges && seller.badges.length ?
+                    seller.badges.map(b => `<span class="badge-item"><i class="fa-regular fa-award"></i> ${b}</span>`).join('') :
+                    '';
+                const verifiedHTML = verifiedBadges.map(b =>
+                    `<span class="badge-item verified"><i class="fa-regular fa-circle-check"></i> ${b}</span>`
+                ).join('');
+
+                const manageHTML = isOwner ?
+                    `<span class="manage-icon" onclick="showComingSoon()"><i class="fa-regular fa-sliders"></i> Manage</span>` :
+                    '';
+
+                let actionsHTML = '';
+                if (isOwner) {
+                    actionsHTML = `
+                        <button class="btn btn-outline" onclick="showComingSoon()"><i class="fa-regular fa-pen"></i> Edit</button>
+                        <button class="btn btn-danger-outline" onclick="showComingSoon()"><i class="fa-regular fa-trash"></i> Delete</button>
+                    `;
+                } else {
+                    actionsHTML = `
+                        <button class="btn btn-primary" onclick="contactSeller()"><i class="fa-regular fa-comment"></i> Contact</button>
+                        <button class="btn btn-outline" onclick="viewProfile('${seller.id}')"><i class="fa-regular fa-user"></i> Profile</button>
+                        <button class="btn btn-outline" onclick="openReport('user', '${seller.id}')"><i class="fa-regular fa-flag"></i> Report</button>
+                    `;
+                }
+
+                sellerCard.innerHTML = `
+                    <div class="seller-top">
+                        <div class="seller-avatar" onclick="viewProfile('${seller.id}')">
+                            ${avatarHTML}
+                            ${onlineDot}
+                        </div>
+                        <div class="seller-info">
+                            <div class="seller-name-row">
+                                <span class="seller-name" onclick="viewProfile('${seller.id}')">
+                                    ${seller.name || 'Anonymous User'}
+                                    ${seller.email_verified ? '<i class="fa-regular fa-circle-check verified-badge" title="Email Verified"></i>' : ''}
+                                </span>
+                                ${manageHTML}
+                            </div>
+                            <div class="seller-meta-row">
+                                <span class="stars">${stars}</span>
+                                <span class="review-count">(${seller.total_reviews || 0} reviews)</span>
+                                ${seller.trust_score > 0 ? `<span class="trust-badge"><i class="fa-regular fa-shield-check"></i> ${seller.trust_score}% Trust</span>` : ''}
+                            </div>
+                            ${seller.department ? `<div class="seller-dept"><i class="fa-regular fa-graduation-cap"></i> ${seller.department} ${seller.level ? '• Level ' + seller.level : ''} ${seller.matric_no ? '• ' + seller.matric_no : ''}</div>` : ''}
+                            <div class="seller-badges">${verifiedHTML}${badgesHTML}</div>
+                            ${!seller.visibility ? `<span class="visibility-notice"><i class="fa-regular fa-eye-slash"></i> Seller has chosen to remain anonymous</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="seller-actions">${actionsHTML}</div>
+                `;
+            }
+
+            function renderDescription(data) {
+                listingDescription.textContent = data.description || 'No description provided.';
+            }
+
+            function renderDetails(data) {
+                const type = data.listing_type?.toLowerCase() || 'sell';
+                const details = data.details || {};
+                const titles = {
+                    'sell': 'Product Details',
+                    'service': 'Service Details',
+                    'accommodation': 'Accommodation Details'
+                };
+                detailsTitle.innerHTML =
+                    `<i class="fa-regular fa-list-check"></i> ${titles[type] || 'Details'} <span class="title-badge"><i class="fa-regular fa-tag"></i> Specifications</span>`;
+
+                let fields = [];
+                if (type === 'sell') {
+                    fields = [
+                        { label: 'Price', value: details.price ? '₦' + Number(details.price).toLocaleString() : 'Free' },
+                        { label: 'Condition', value: details.condition || 'Not specified' },
+                        { label: 'Negotiable', value: details.negotiation ?
+                                '<span class="tag yes">Yes</span>' : '<span class="tag no">No</span>' },
+                        { label: 'Brand', value: details.brand || 'Not specified' },
+                        { label: 'Model', value: details.model || 'Not specified' },
+                        { label: 'Quantity', value: details.quantity || 1 },
+                        { label: 'Warranty', value: details.warranty || 'None' },
+                    ];
+                } else if (type === 'service') {
+                    fields = [
+                        { label: 'Price', value: details.price ? '₦' + Number(details.price).toLocaleString() : 'Free' },
+                        { label: 'Negotiable', value: details.negotiation ?
+                                '<span class="tag yes">Yes</span>' : '<span class="tag no">No</span>' },
+                        { label: 'Delivery Time', value: details.delivery_time || 'Not specified' },
+                        { label: 'Service Duration', value: details.service_duration || 'Not specified' },
+                        { label: 'Experience', value: details.experience || 'Not specified' },
+                        { label: 'Online Available', value: details.online_available ?
+                                '<span class="tag yes">Yes</span>' : '<span class="tag no">No</span>' },
+                        { label: 'Portfolio', value: details.portfolio || 'Not specified' },
+                    ];
+                } else if (type === 'accommodation') {
+                    fields = [
+                        { label: 'Purpose', value: details.purpose || 'Not specified' },
+                        { label: 'Property Type', value: details.property_type || 'Not specified' },
+                        { label: 'Rent Price', value: details.rent_price ? '₦' + Number(details.rent_price).toLocaleString() :
+                                'Free' },
+                        { label: 'Bedrooms', value: details.bedrooms || 0 },
+                        { label: 'Bathrooms', value: details.bathrooms || 0 },
+                        { label: 'Furnished', value: details.furnished ?
+                                '<span class="tag yes">Yes</span>' : '<span class="tag no">No</span>' },
+                        { label: 'Available From', value: details.available_from || 'Not specified' },
+                        { label: 'Lease Duration', value: details.lease_duration || 'Not specified' },
+                        { label: 'Electricity', value: details.electricity || 'Not specified' },
+                        { label: 'Water', value: details.water || 'Not specified' },
+                        { label: 'Security', value: details.security || 'Not specified' },
+                        { label: 'Parking', value: details.parking || 'Not specified' },
+                        { label: 'Distance to Campus', value: details.distance_to_campus || 'Not specified' },
+                        { label: 'Preferred Gender', value: details.preferred_gender || 'Any' },
+                        { label: 'Max Occupants', value: details.max_occupants || 'Not specified' },
+                    ];
+                }
+                fields = fields.filter(f => f.value !== null && f.value !== undefined && f.value !== '');
+                if (fields.length === 0) {
+                    detailsGrid.innerHTML =
+                        `<div style="grid-column:1/-1;text-align:center;padding:12px 0;color:var(--text-muted);font-size:13px;">No additional details available.</div>`;
+                    return;
+                }
+                detailsGrid.innerHTML = fields.map(f => `
+                    <div class="detail-item">
+                        <span class="label">${f.label}</span>
+                        <span class="value">${f.value}</span>
+                    </div>
+                `).join('');
+            }
+
+            function renderHotspots(data) {
+                const hotspots = data.hotspots || [];
+                if (!hotspots.length) {
+                    hotspotsSection.style.display = 'none';
+                    return;
+                }
+                hotspotsSection.style.display = 'block';
+                hotspotsList.innerHTML = hotspots.map(loc => `
+                    <div class="location-item">
+                        <div class="loc-icon"><i class="fa-regular fa-location-dot"></i></div>
+                        <div class="loc-info">
+                            <div class="loc-name">${loc.name || 'Location'}</div>
+                            ${loc.description ? `<div class="loc-desc"><i class="fa-regular fa-info-circle"></i> ${loc.description}</div>` : ''}
+                        </div>
+                        <span class="loc-status"><i class="fa-regular fa-check"></i> Available</span>
+                    </div>
+                `).join('');
+            }
+
+            function renderReviews(data) {
+                const reviews = data.reviews || [];
+                const count = data.review_count || 0;
+                const avg = data.avg_rating || 0;
+                reviewSummary.innerHTML = `<i class="fa-regular fa-star"></i> ${count} review${count !== 1 ? 's' : ''} • ${avg.toFixed(1)}⭐`;
+
+                if (!reviews.length) {
+                    reviewsList.innerHTML =
+                        `<div style="text-align:center;padding:20px 0;color:var(--text-muted);font-size:13px;"><i class="fa-regular fa-star" style="font-size:32px;display:block;margin-bottom:8px;opacity:0.2;"></i>No reviews yet. Be the first to review!</div>`;
+                    viewAllReviews.style.display = 'none';
+                    return;
+                }
+                const displayReviews = reviews.slice(0, 3);
+                reviewsList.innerHTML = displayReviews.map(r => {
+                    const stars = Array.from({ length: 5 }, (_, i) =>
+                        i < (r.rating || 0) ?
+                        '<i class="fa-solid fa-star"></i>' :
+                        '<i class="fa-regular fa-star empty"></i>'
+                    ).join('');
+                    return `
+                        <div class="review-item">
+                            <div class="review-head">
+                                <span class="reviewer">${r.from || 'Anonymous'} <span class="date">• ${r.date || 'Recently'}</span></span>
+                                <span class="stars">${stars}</span>
+                            </div>
+                            <div class="review-comment"><span class="quote">“</span>${r.comment || 'No comment provided.'}<span class="quote">”</span></div>
+                        </div>
+                    `;
+                }).join('');
+                viewAllReviews.style.display = reviews.length > 3 ? 'block' : 'none';
+                viewAllReviews.onclick = () => {
+                    document.getElementById('reviewsList').scrollIntoView({ behavior: 'smooth' });
+                    showToast('View all reviews coming soon!', 'info');
+                };
+            }
+
+            function renderSimilar(data, type) {
+                const similar = SIMILAR_LISTINGS[type] || [];
+                if (!similar.length) {
+                    similarSection.style.display = 'none';
+                    return;
+                }
+                similarSection.style.display = 'block';
+                similarScroll.innerHTML = similar.map(item => `
+                    <div class="similar-card" onclick="showToast('Viewing ${item.title || 'listing'}', 'info')">
+                        <div class="sim-img">
+                            <img src="${item.image || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'150\' viewBox=\'0 0 200 150\'%3E%3Crect width=\'200\' height=\'150\' fill=\'%23f0f0f0\'/%3E%3Ctext x=\'100\' y=\'80\' font-family=\'Arial\' font-size=\'14\' fill=\'%23999\' text-anchor=\'middle\'%3ENo Image%3C/text%3E%3C/svg%3E'}" alt="${item.title}" loading="lazy" />
+                        </div>
+                        <div class="sim-info">
+                            <div class="sim-title">${item.title || 'Untitled'}</div>
+                            <div class="sim-price">${item.price ? '₦' + Number(item.price).toLocaleString() : 'Free'}</div>
+                            <div class="sim-meta">${item.category || ''}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // ============================================================
+            // LOAD DEMO DATA
+            // ============================================================
+            function loadDemoData(type) {
+                currentType = type;
+                document.querySelectorAll('.type-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.type === type);
+                });
+
+                loadingEl.style.display = 'block';
+                contentEl.style.display = 'none';
+
+                setTimeout(() => {
+                    const data = DEMO_DATA[type];
+                    if (!data) {
+                        loadingEl.style.display = 'none';
+                        showToast('No data available for this type', 'danger');
+                        return;
+                    }
+                    // Add status for demo
+                    const statusMap = {
+                        'sell': 'Active',
+                        'service': 'Active',
+                        'accommodation': 'Active',
+                        'owner': 'Active'
+                    };
+                    data.status = statusMap[type] || 'Active';
+
+                    currentData = data;
+                    renderGallery(data);
+                    renderBadges(data);
+                    renderHeader(data);
+                    renderSeller(data);
+                    renderDescription(data);
+                    renderDetails(data);
+                    renderHotspots(data);
+                    renderReviews(data);
+                    renderSimilar(data, type);
+
+                    loadingEl.style.display = 'none';
+                    contentEl.style.display = 'block';
+                    document.title = `${data.title || 'Listing'} – CampusHub`;
+                    const label = type === 'owner' ? 'Owner' : type.charAt(0).toUpperCase() + type.slice(1);
+                }, 500);
+            }
+            window.loadDemoData = loadDemoData;
+
+            // ============================================================
+            // INIT
+            // ============================================================
+            function init() {
+                loadDemoData('sell');
+                console.log('📟 Listing details page initialized');
+                showToast(`Loaded listing details`, 'success');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                setTimeout(init, 100);
+            }
+
+        })();
+    </script>
+</body>
+</html>

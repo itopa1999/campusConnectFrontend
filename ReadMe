@@ -2,3 +2,22 @@
 add campus delivery, accommodation listings, student jobs, tutor matching,
 
 add refeerall add help center
+
+
+TODO:
+page modification
+
+1. signup page: say make sure that first and last name are the same in the ID your student ID card.
+                say first name and last name cannot be self edited. 
+
+                add a feature to check the email for their domain buh for now comment it out. 
+2. explore page: let there be a distinguish between category and listing type please. style !!!!
+                 in mobile when user is searching please make a title or something to let the user knows that enter is the key to press on the phone.
+
+3. dashboard page: style the tab title header please. style!!!!!!!!!
+
+4. lost item page: i need the item to be like 5 in a row please. 
+
+5. create-listing page: the error is not removing after which they later inserted something into though.
+
+
